@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F9E39383-8243-4883-AE3C-76EFDF8CF917}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BalanziaSe.Scoring</RootNamespace>
+    <AssemblyName>BalanziaSe.Scoring</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NTech.Banking.Shared, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NTech.Banking.Shared.1.0.6\lib\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application\BalanziaSeCreateCompanyLoanRequest.cs" />
+    <Compile Include="BalanziaSeCompanyLoanInitialScoringProcess.cs" />
+    <Compile Include="BalanziaSeCompanyLoanPricingModelRule.cs" />
+    <Compile Include="Application\BalanziaSeCreateCompanyLoanApplicationPlugin.cs" />
+    <Compile Include="MinimumDemandRules\ActiveApplicationRule.cs" />
+    <Compile Include="MinimumDemandRules\CashflowSensitivityRule.cs" />
+    <Compile Include="MinimumDemandRules\ExternalBoardMembershipAgeRule.cs" />
+    <Compile Include="MinimumDemandRules\ExternalCreditReportCompanyStatusRule.cs" />
+    <Compile Include="MinimumDemandRules\ExternalCreditReportCompanyKeyNumbersRule.cs" />
+    <Compile Include="MinimumDemandRules\ExternalCreditReportCompanyTypeRule.cs" />
+    <Compile Include="MinimumDemandRules\ExternalCreditReportRiskClassRule.cs" />
+    <Compile Include="MinimumDemandRules\ExternalKFMRiskRule.cs" />
+    <Compile Include="MinimumDemandRules\InitialActiveLoanRule.cs" />
+    <Compile Include="MinimumDemandRules\ExternalCompanyAgeScoringRule.cs" />
+    <Compile Include="MinimumDemandRules\InitialPaymentHistoryRule.cs" />
+    <Compile Include="MinimumDemandRules\InitialHistoricalDebtCollectionRule.cs" />
+    <Compile Include="MinimumDemandRules\InitialCompanyYearlyRevenueScoringRule.cs" />
+    <Compile Include="MinimumDemandRules\InitialCompanyAgeScoringRule.cs" />
+    <Compile Include="MinimumDemandRules\PausedByPriorApplicationRule.cs" />
+    <Compile Include="PointRules\AdjustedEKPointsPointsRule.cs" />
+    <Compile Include="PointRules\BoardMemberBankruptcyAppPointsRule.cs" />
+    <Compile Include="PointRules\BoardMemberPaymentRemarkPointsRule.cs" />
+    <Compile Include="PointRules\BoardMemberBankruptcyPointsRule.cs" />
+    <Compile Include="PointRules\BoardMemberMonthsPointsRule.cs" />
+    <Compile Include="PointRules\BoardMemberRevisorKodPointsRule.cs" />
+    <Compile Include="PointRules\LoanPurposePointsRule.cs" />
+    <Compile Include="PointRules\ManagementCompetencyPointsRule.cs" />
+    <Compile Include="PointRules\CreditReportCompanyAgePointsRule.cs" />
+    <Compile Include="PointRules\CreditReportParentRiskClassPointsRule.cs" />
+    <Compile Include="PointRules\CreditReportRiskClassPointsRule.cs" />
+    <Compile Include="PointRules\InternalHistoryPointsRule.cs" />
+    <Compile Include="PointRules\NetDebtEbitApproximationPointsRule.cs" />
+    <Compile Include="PointRules\NetRevenuePointsRule.cs" />
+    <Compile Include="PointRules\NetRevenueYearlyChangePointsRule.cs" />
+    <Compile Include="PointRules\CashLiquidityPointsRule.cs" />
+    <Compile Include="PointRules\CreditReportRiskPercentPointsRule.cs" />
+    <Compile Include="PointRules\SolidityPointsRule.cs" />
+    <Compile Include="PointRules\ReturnOnCapitalPointsRule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\InterestRates.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

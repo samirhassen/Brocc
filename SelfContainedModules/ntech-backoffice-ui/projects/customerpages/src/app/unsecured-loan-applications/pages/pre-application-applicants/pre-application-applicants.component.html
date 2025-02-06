@@ -1,0 +1,66 @@
+<customerpages-shell [initialData]="shellData">
+    <div shell-body>
+        <div class="row" *ngIf="m">
+            <div class="col-xs-12">
+                <div class="flex-container">
+                    <div class="align-center frame">
+                        <h1 class="header-light text-center pb-3">Privatlån - ansökan</h1>
+                        <form [formGroup]="m.form.form">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantCivicRegNr', displayText: 'Vad är ditt personnummer?', $implicit: { placeholder: 'ÅÅÅÅMMDDXXXX' } }"></ng-container>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmail', displayText: 'Vilken epostadress når vi dig på?' }"></ng-container>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantPhone', displayText: 'Vilket telefonnummer når vi dig enklast på?' }"></ng-container>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantIncomePerMonthAmount', displayText: 'Vad är din månadsinkomst innan skatt?' }"></ng-container>
+                                    <div class="form-group pb-1" *ngIf="m.form.hasFormControl(null, 'loanObjective')" [ngClass]="{ 'has-error': m.form.hasError('loanObjective') }">
+                                        <label>Vad är syftet med lånet?</label>
+                                        <select  class="form-control" formControlName="loanObjective">
+                                            <option value=""></option>
+                                            <option *ngFor="let objective of m.loanObjectives" [value]="objective" >{{objective}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group pb-1" [ngClass]="{ 'has-error': m.form.hasError('mainApplicantEmployment') }">
+                                        <label>Vad har du för sysselsättning</label>
+                                        <select class="form-control" formControlName="mainApplicantEmployment">
+                                            <option value="" *ngIf="!m.form.getValue('mainApplicantEmployment')"></option>
+                                            <option [value]="opt.Code" *ngFor="let opt of m.employmentCodes">{{opt.DisplayName}}</option>
+                                        </select>
+                                    </div>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployedSince', displayText: 'Från när har du haft din sysselsättning?', $implicit: { placeholder: 'ÅÅÅÅ-MM' } }"></ng-container>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployedTo', displayText: 'Till när har du din sysselsättning?', $implicit: { placeholder: 'ÅÅÅÅ-MM' } }"></ng-container>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployer', displayText: 'Vem är din arbetsgivare?' }"></ng-container>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployerPhone', displayText: 'Vad är din arbetsgivares telefonnummer?' }"></ng-container>
+                                    <div class="form-group pb-1" [ngClass]="{ 'has-error': m.form.hasError('mainApplicantEmployment') }">
+                                        <label>Har du god man, förvaltare eller verklig huvudman?</label>
+                                        <select class="form-control" formControlName="mainApplicantHasLegalOrFinancialGuardian">
+                                            <option value="" *ngIf="!m.form.getValue('mainApplicantHasLegalOrFinancialGuardian')"></option>
+                                            <option value="yes">Ja</option>
+                                            <option value="no">Nej</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group pb-1" [ngClass]="{ 'has-error': m.form.hasError('mainApplicantClaimsToBeGuarantor') }">
+                                        <label>Har du några borgensåtaganden?</label>
+                                        <select class="form-control" formControlName="mainApplicantClaimsToBeGuarantor">
+                                            <option value="" *ngIf="!m.form.getValue('mainApplicantClaimsToBeGuarantor')"></option>
+                                            <option value="yes">Ja</option>
+                                            <option value="no">Nej</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right pt-2">
+                                <button class="n-main-btn n-green-btn" [disabled]="m.form.invalid()" (click)="apply($event)">Gå vidare</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</customerpages-shell>
+<ng-template #textGroup let-options let-displayText="displayText" let-formControlName="formControlName" >
+    <div class="form-group pb-1" *ngIf="m.form.hasFormControl(null, formControlName)" [ngClass]="{ 'has-error': m.form.hasError(formControlName) }" [formGroup]="m.form.form">
+        <label>{{displayText}}</label>
+        <input type="text" class="form-control" [formControlName]="formControlName" placeholder="{{options?.placeholder}}">
+    </div>
+</ng-template>

@@ -1,0 +1,32 @@
+<application-policy-info-wrapper [isVisible]="!!m">
+    <ng-container main-upper>
+        <div class="col-xs-4 text-center">
+            <p>LTL</p>
+            <p><b>{{m?.ltl?.missingMessage ? m?.ltl?.missingMessage : (m.ltl.value | number: '1.2-2')}}</b></p>
+        </div>
+        <div class="col-xs-4 text-center">
+            <p>DBR</p>
+            <p><b>{{m?.dbr?.missingMessage ? m?.dbr?.missingMessage : ((100 * m.dbr.value | number:'1.0-1') + ' %') }}</b></p>
+        </div>
+        <div class="col-xs-4 text-center">
+            <p>PD</p>
+            <p><b>{{m?.pd?.missingMessage ? m?.pd?.missingMessage : (m.pd.value | number:'1.0-2')}}</b></p>
+        </div>
+    </ng-container>
+    <ng-container main-lower>
+        <policy-filter-rule-result-icon [policy]="m.policy" ></policy-filter-rule-result-icon>
+        <hr class="hr-section custom-line">
+        <policy-filter-rejection-recommendations [recommendation]="initialData?.recommendation"></policy-filter-rejection-recommendations>
+    </ng-container>
+    <ng-container details>
+        <toggle-block [initialData]="{ headerText: 'Left to live on' }" *ngIf="m?.ltl?.details">
+            <application-policy-info-ltl-details [ltlDetails]="m?.ltl?.details"></application-policy-info-ltl-details>
+        </toggle-block>
+        <toggle-block [initialData]="{ headerText: 'Policy filters' }" *ngIf="m?.policy?.detailPhases">
+            <policy-filter-details [detailPhases]="m?.policy?.detailPhases"></policy-filter-details>
+        </toggle-block>
+        <toggle-block [initialData]="{ headerText: 'Policy filters - Pre Score' }" *ngIf="m?.preScore?.detailPhases">
+            <policy-filter-details [detailPhases]="m?.preScore?.detailPhases"></policy-filter-details>
+        </toggle-block>
+    </ng-container>
+</application-policy-info-wrapper>

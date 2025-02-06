@@ -1,0 +1,66 @@
+﻿<div ng-controller="repay" ng-show="uiMode=='repay'">    
+    <div class="frame">
+        <div class="form-horizontal">
+            <form name="repaymentform" novalidate>
+                <div class="row">
+                    <div class="col-sm-offset-1 col-sm-4">
+                        <div class="pt-2">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Repay</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.repaymentAmount | number:2}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Leave unplaced</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{leaveUnplacedAmount() | number:2}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-5">
+                        <div class="frame">
+                            <h4 class="text-center">Payment Info</h4>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Customer name</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.customerName}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="!d.ibanFormatted">
+                                <label class="col-sm-6 control-label">{{accountNrFieldLabel}}</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.iban}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="d.ibanFormatted">
+                                <label class="col-sm-6 control-label">IBAN</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.ibanFormatted.nr}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="d.ibanFormatted">
+                                <label class="col-sm-6 control-label">Bank</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.ibanFormatted.bankName}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Amount</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.repaymentAmount | number:2}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-3">
+                    <div class="text-center">
+                        <button class="n-main-btn n-green-btn" ng-click="repay($event)" ng-disabled="repaymentform.$invalid">Repay</button>
+                    </div>
+                </div>                
+            </form>
+        </div>
+    </div>
+</div>

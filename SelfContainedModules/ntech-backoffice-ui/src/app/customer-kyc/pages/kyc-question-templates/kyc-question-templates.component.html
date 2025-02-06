@@ -1,0 +1,56 @@
+<div *ngIf="m">
+    <ng-container *ngFor="let product of m.activeProducts">
+        <toggle-block [initialData]="{ headerText: formatRelationType(product.relationType) }">
+            <ng-container *ngIf="!product.editData">
+                <div class="editblock f-container">
+                    <view-questions-template [modelJson]="product?.currentQuestionsModelJson"></view-questions-template>
+                    <div class="text-center pb-1">
+                        <button class="n-main-btn n-blue-btn" (click)="beginEdit(product, $event)" [disabled]="m.isEditing">
+                            Edit questions <span class="glyphicon glyphicon-arrow-right"></span>
+                        </button>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <toggle-block [initialData]="{ headerText: 'History' }">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let historicalModel of product.historicalModels">
+                                    <td>{{historicalModel.date | date}}</td>
+                                    <td><button (click)="viewHistorical(historicalModel.id, $event)" class="btn">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </toggle-block>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="product.editData">
+                <edit-questions-template [initialData]="product.editData" >
+                
+                </edit-questions-template>
+            </ng-container>
+        </toggle-block>
+    </ng-container>
+</div>
+
+<ng-template #previewModalTemplate>
+    <div class="modal-header">
+        <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="previewModalRef.hide()">
+            <span class="arrows-close">
+                <span class="glyphicon glyphicon-arrow-down"></span>
+                <span class="glyphicon glyphicon-arrow-up"></span>
+            </span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ng-container *ngIf="m?.previewModelJson">
+            <pre>{{formatJson()}}</pre>
+        </ng-container>
+    </div>
+</ng-template>

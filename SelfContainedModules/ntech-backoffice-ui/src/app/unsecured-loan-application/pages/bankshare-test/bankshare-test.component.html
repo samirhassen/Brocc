@@ -1,0 +1,60 @@
+<div *ngIf="m">
+    <p *ngIf="!m.isEnabled">Bank account sharing testing is not enabled</p>
+    <ng-container *ngIf="m.startSharing">
+        <h2>Bank account sharing test</h2>
+        <p>This will start a sharing session where you will login to your bank and allow sharing. The data will be returned and showed to you on this page but not stored in the system anywhere.</p>
+        <div class="row" style="max-width:600px">
+            <form [formGroup]="m.startSharing.form.form">
+                <div class="col-xs-12">
+                    <div class="form-group" [ngClass]="{ 'has-error': m.startSharing.form.hasError('civicRegNr') }">
+                        <label>Civic regnr</label>
+                        <input type="text" class="form-control" formControlName="civicRegNr" [placeholder]="m.civicRegNrPlaceholder">
+                    </div>
+                    <ng-container *ngIf="m.startSharing.form.hasFormControl(null, 'monthCount')">
+                        <div class="form-group" [ngClass]="{ 'has-error': m.startSharing.form.hasError('monthCount') }">
+                            <label>Nr of months</label>
+                            <input type="text" class="form-control" formControlName="monthCount">
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="text-center pt-1 col-xs-12">
+                    <button class="n-main-btn n-green-btn" [disabled]="m.startSharing.form.invalid()" (click)="startSharing($event)">Start sharing</button>
+                </div>
+            </form>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="m.kreditz">
+        <kreditz-datashare-iframe [initialData]="m.kreditz.initialData"></kreditz-datashare-iframe>
+    </ng-container>
+    <ng-container *ngIf="m.polling">
+        <p>Waiting for data from your bank: {{m.polling.elapsedSeconds}} s</p>
+    </ng-container>
+    <ng-container *ngIf="m.bankData">
+        <h2>Bank data</h2>
+        <div>
+            <table *ngIf="m.bankData.tableRows.length > 0" class="table">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of m.bankData.tableRows">
+                        <td>{{row.title}}</td>
+                        <td>{{row.value}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ng-container *ngIf="m.bankData.scoringData">
+                <h2>Scoring data</h2>
+                <pre>{{m.bankData.scoringData.data}}</pre>
+            </ng-container>
+            <div *ngIf="m.bankData.rawData" class="pt-2">
+                <h2>All data <a style="float:right" [href]="m.bankData.rawData.downloadUrl" target="_blank">Download</a></h2>
+                <pre>{{m.bankData.rawData.data}}</pre>
+            </div>
+
+        </div>
+    </ng-container>
+</div>

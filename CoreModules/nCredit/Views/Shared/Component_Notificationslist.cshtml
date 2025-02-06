@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="notificationslist.html">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-xs-2">Due date</th>
+                <th class="col-xs-2 text-right">Initial amount</th>
+                <th class="col-xs-3 text-right">Written off amount</th>
+                <th class="col-xs-3 text-right">Remaining amount</th>
+                <th class="col-xs-2 text-right">Last paid date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="nn in $ctrl.notifications">
+                <td>
+                    <a ng-if="$ctrl.onClickNotification" class="n-anchor" href="#" ng-click="$ctrl.onClickNotification(nn, $event)">{{nn.DueDate | date:'shortDate'}}</a>
+                    <span ng-if="!$ctrl.onClickNotification">{{nn.DueDate | date:'shortDate'}}</span>
+                    <span nf-if="!nn.IsPaid" style="color:red;font-weight:bold" ng-show="nn.CurrentNrOfPassedDueDatesWithoutFullPayment >= 2" title="{{nn.CurrentNrOfPassedDueDatesWithoutFullPayment}}">!</span>
+                    <span nf-if="nn.IsPaid" style="color:red;font-weight:bold" ng-show="nn.AtPaymentNrOfPassedDueDatesWithoutFullPayment >= 2" title="{{nn.AtPaymentNrOfPassedDueDatesWithoutFullPayment}}">!</span>
+                </td>
+                <td class="text-right">{{nn.InitialAmount | currency}}</td>
+                <td class="text-right">{{nn.WrittenOffAmount | currency}}</td>
+                <td class="text-right">{{(nn.InitialAmount - nn.PaidAmount - nn.WrittenOffAmount) | currency}}</td>
+                <td class="text-right">{{nn.LastPaidDate | date:'shortDate'}}</td>
+            </tr>
+            <tr ng-show="$ctrl.notifications.length == 0">
+                <td colspan="5">-</td>
+            </tr>
+        </tbody>
+    </table>
+</script>

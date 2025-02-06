@@ -1,0 +1,176 @@
+<scheduled-tasks-menu [currentTaskName]="'Reminders'">
+  <ng-container task-area *ngIf="m">
+    <div class="mb-2">
+      <toggle-block
+        [initialData]="{
+          headerText: 'Reminder settings',
+          useFixedBorder: true
+        }"
+      >
+        <div>
+          <div class="col-sm-6 text-right">Fee amount</div>
+          <div class="col-sm-6">
+            {{ m.initialData.notificationProcessSettings.ReminderFeeAmount }}
+          </div>
+        </div>
+        <div>
+          <div class="col-sm-6 text-right">Skip limit amount</div>
+          <div class="col-sm-6">
+            {{
+              m.initialData.notificationProcessSettings.SkipReminderLimitAmount
+            }}
+          </div>
+        </div>
+      </toggle-block>
+    </div>
+    <toggle-block
+      [initialData]="{
+        headerText: 'Trigger job manually',
+        useFixedBorder: true
+      }"
+    >
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="frame">
+          <div class="row">
+            <div
+              *ngIf="m.initialData.status.NrOfCurrentDeliveredReminders > 0"
+              class="col-sm-6 text-right"
+            >
+              Delivered current count
+            </div>
+            <div
+              *ngIf="m.initialData.status.NrOfCurrentDeliveredReminders > 0"
+              class="col-sm-6"
+            >
+              <b>{{ m.initialData.status.NrOfCurrentDeliveredReminders }}</b>
+            </div>
+
+            <div
+              *ngIf="m.initialData.status.NrOfCurrentNotDeliveredReminders > 0"
+              class="col-sm-6 text-right"
+            >
+              Not Delivered count
+            </div>
+            <div
+              *ngIf="m.initialData.status.NrOfCurrentNotDeliveredReminders > 0"
+              class="col-sm-6"
+            >
+              <b>{{ m.initialData.status.NrOfCurrentNotDeliveredReminders }}</b>
+            </div>
+
+            <div class="col-sm-6 text-right">Pending</div>
+            <div class="col-sm-6">
+              <b>{{
+                m.initialData.status.NrOfNotificationsPendingReminders
+              }}</b>
+            </div>
+          </div>
+          <div
+            class="text-center pt-3"
+            *ngIf="
+              (m.initialData.status.NotificationCountInMonth > 0 ||
+                m.executeChecks.skipRunOrder ||
+                m.initialData.hasPerLoanDueDay) &&
+              (m.initialData.status.NrOfRecentlyCreatedReminders === 0 ||
+                m.executeChecks.skipRecentReminders ||
+                m.initialData.hasPerLoanDueDay)
+            "
+          >
+            <button
+              class="n-main-btn n-green-btn"
+              (click)="startExport($event)"
+            >
+              Create reminders
+            </button>
+          </div>
+          <div
+            class="pt-3"
+            *ngIf="
+              !m.initialData.hasPerLoanDueDay &&
+              !m.executeChecks.skipRunOrder &&
+              m.initialData.status.NotificationCountInMonth === 0
+            "
+          >
+            <p class="text-center">
+              No notifications have been created this month. Notifications
+              should normally be created before sending out reminders. If you
+              still want to send out reminders you can.
+            </p>
+            <div class="row pt-1">
+              <div class="col-sm-6 text-right">Override this check:</div>
+              <div class="col-sm-6">
+                <input
+                  type="checkbox"
+                  (change)="onChangeSkipRunOrder($event)"
+                  [checked]="this.m.executeChecks.skipRunOrder"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="pt-3"
+            *ngIf="
+              !m.initialData.hasPerLoanDueDay &&
+              !m.executeChecks.skipRecentReminders &&
+              m.initialData.status.NrOfRecentlyCreatedReminders > 0
+            "
+          >
+            <p class="text-center">
+              Reminders have been created recently. Are you sure you want to
+              create new reminders?
+            </p>
+            <div class="row pt-1">
+              <div class="col-sm-6 text-right">Override this check:</div>
+              <div class="col-sm-6">
+                <input
+                  type="checkbox"
+                  (change)="onChangeSkipRecentReminders($event)"
+                  [checked]="this.m.executeChecks.skipRecentReminders"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </toggle-block>
+
+    <div
+      class="pt-3 no-hits text-center"
+      *ngIf="m?.files?.TotalNrOfPages === 0"
+    >
+      <p>There are no reminder files yet.</p>
+    </div>
+    <div class="pt-3" *ngIf="m?.files?.TotalNrOfPages > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-xs-1">Date</th>
+            <th class="text-right col-xs-1">Reminders</th>
+            <th class="text-right col-xs-2">Download file</th>
+            <th class="text-right col-xs-3">By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of m.files.Page">
+            <td class="">{{ f.TransactionDate | date: "shortDate" }}</td>
+            <td class="text-right">{{ f.ReminderCount }}</td>
+            <td class="text-right">
+              <a
+                class="n-anchor"
+                target="_blank"
+                [href]="getDocumentUrl(f.FileArchiveKey)"
+                >Data <span class="glyphicon glyphicon-save"></span
+              ></a>
+            </td>
+            <td class="text-right">{{ f.UserDisplayName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <table-pager
+      *ngIf="m.filesPagingData"
+      [initialData]="m.filesPagingData"
+    ></table-pager>
+  </ng-container>
+</scheduled-tasks-menu>

@@ -1,0 +1,24 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="savings-account-documents.html">
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-3">Document type</th>
+                    <th class="text-right col-xs-4">Creation date</th>
+                    <th class="text-right col-xs-5"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="d in $ctrl.m.documents">
+                    <td>{{$ctrl.getDocumentDisplayName(d)}}</td>
+                    <td class="text-right">{{d.CreationDate | date}}</td>
+                    <td class="text-right"><a ng-href="{{d.DownloadUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>

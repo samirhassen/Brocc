@@ -1,0 +1,113 @@
+<div class="overview-container" *ngIf="m">
+  <div class="customer dotted-nomargin-top">
+    <div class="dotted-nomargin-bottom pb-1">
+      <customer-info
+        [initialData]="{
+          customerId: m.customerId,
+          backTarget: m.navigationTargetToHere
+        }"
+      ></customer-info>
+    </div>
+  </div>
+  <div class="entities">
+    <div *ngIf="m.loanGroups">
+      <h2>Loans</h2>
+      <hr class="hr-section" />
+      <p *ngIf="m.loanGroups.length === 0">None</p>
+      <ng-container *ngIf="m.loanGroups.length > 0">
+        <ng-container *ngFor="let loanGroup of m.loanGroups">
+            <h2 *ngIf="loanGroup.groupDisplayText">{{loanGroup.groupDisplayText}}</h2>
+            <table class="table table-responsive">
+              <thead>
+                <tr>
+                  <th>Loan nr</th>
+                  <th>Status</th>
+                  <th>Role/Connection</th>
+                  <th>Capital debt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loan of loanGroup.loans">
+                  <td>
+                    <a
+                      [href]="loan.url"
+                      class="n-anchor"
+                      [ngClass]="{ inactive: !loan.isActive }"
+                      >{{ loan.loanNr }}</a
+                    >
+                  </td>
+                  <td>{{ loan.statusText }}</td>
+                  <td>{{ loan.roleText }}</td>
+                  <td>{{ loan.capitalDebt | number: "1.0-2" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-container>
+      </ng-container>
+    </div>
+    <div *ngIf="m.savingsAccounts">
+      <h2>Savings accounts</h2>
+      <hr class="hr-section" />
+      <p *ngIf="m.savingsAccounts.length === 0">None</p>
+      <ng-container *ngIf="m.savingsAccounts.length > 0">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th>Account nr</th>
+              <th>Status</th>
+              <th>Role/Connection</th>
+              <th>Capital</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let account of m.savingsAccounts">
+              <td>
+                <a
+                  [href]="account.url"
+                  class="n-anchor"
+                  [ngClass]="{ inactive: !account.isActive }"
+                  >{{ account.accountNr }}</a
+                >
+              </td>
+              <td>{{ account.statusText }}</td>
+              <td>{{ account.roleText }}</td>
+              <td>{{ account.accountBalance | number: "1.0-2" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </div>
+    <div *ngIf="m.loanApplications">
+      <h2>Applications</h2>
+      <hr class="hr-section" />
+      <p *ngIf="m.loanApplications.length === 0">None</p>
+      <ng-container *ngIf="m.loanApplications.length > 0">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th>Account nr</th>
+              <th>Status</th>
+              <th>Role/Connection</th>
+              <th>Application startdate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let application of m.loanApplications">
+              <td>
+                <a
+                  [href]="application.url"
+                  class="n-anchor"
+                  [ngClass]="{ inactive: !application.isActive }"
+                  >{{ application.applicationNr }}</a
+                >
+              </td>
+              <td>{{ application.statusText }}</td>
+              <td>{{ application.roleText }}</td>
+              <td>{{ application.creationDate | date: "shortDate" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </div>
+  </div>
+</div>

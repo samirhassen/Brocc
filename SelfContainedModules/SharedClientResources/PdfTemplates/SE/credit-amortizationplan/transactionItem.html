@@ -1,0 +1,20 @@
+﻿<tr>
+	<td class="">{{date}}</td>
+	<td class="text-right">{{capitalBeforeAmount}}</td>
+    <td class="text-center">
+        {{#isWriteOff}}Avskrivning{{/isWriteOff}}<!--Writeoff-->
+        {{^isWriteOff}}
+        {{#isEventNewCredit}}Nytt lån{{/isEventNewCredit}}<!--New loan-->
+        {{#isEventCapitalizedInitialFee}}Uppläggningsavgift{{/isEventCapitalizedInitialFee}}<!--Capitalized initial fee-->
+        {{#isEventNewNotification}}{{/isEventNewNotification}}
+        {{#isEventNewManualIncomingPaymentBatch}}Extraamortering{{/isEventNewManualIncomingPaymentBatch}}<!--Extra amortization-->
+        {{#isEventPlacedUnplacedIncomingPayment}}Extraamortering{{/isEventPlacedUnplacedIncomingPayment}}<!--Extra amortization-->
+        {{#isEventNewIncomingPaymentFile}}Extraamortering{{/isEventNewIncomingPaymentFile}}<!--Extra amortization-->
+        {{#isEventPaymentFreeMonth}}Betalfri månad{{/isEventPaymentFreeMonth}}<!--Payment free month-->
+        {{#isEventNewAdditionalLoan}}Tilläggslån{{/isEventNewAdditionalLoan}}<!--New additional loan-->
+        {{/isWriteOff}}
+    </td>
+	<td class="text-right">{{capitalTransactionAmount}}</td>
+	<td class="text-right">{{interestTransactionAmount}}</td>
+	<td class="text-right">{{totalTransactionAmount}}</td>
+</tr>

@@ -1,0 +1,626 @@
+$background-color: white;
+$foreground-text-color: black;
+$button-background-color: black;
+$button-hover-background-color: #f9c134;
+$button-hover-text-color: black;
+$button-text-color: white;
+$slider-right-color: #e6e6e6;
+$slider-left-color: rgb(249, 214, 130);
+$slider-shadow-color: rgb(141, 121, 75);
+$bottom-border-color: #E6E6E6;
+$link-background-color: white;
+$link-text-color: black;
+$link-background-color-hover: white;
+$link-text-color-hover: black;
+$contact-text-color:black;
+$contact-background-color:#F9D682;
+$footer-text-color: #999999; /* From broccs homepage. Does not match guidelines rgb 153, 153, 153 */
+$footer-background-color:black;
+$section-separator-color: #E6E6E6;
+$disabled-button-background-color: rgb(64,64,64);
+$invalid-item-color: #D15757;
+$font-family-main: 'Kumbh Sans';
+
+.section-separator-bottom {
+    border-bottom: solid 2px $section-separator-color;
+}
+.section-separator-top {
+    border-top: solid 2px $section-separator-color;
+}
+
+/*BASIC STYLES*/
+.application {
+    .bg {
+        background-color: $background-color;
+    }
+
+    .bg-purple {
+        min-height: 30vh;
+        position: relative;
+        color: $contact-text-color;
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8f2bc9+10,8d34c1+30,6d2298+75,691b96+100 */
+        background: $contact-background-color; /* Old browsers */
+        background: -moz-linear-gradient(-45deg, $contact-background-color 10%, $contact-background-color 30%, $contact-background-color 75%, $contact-background-color 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(-45deg, $contact-background-color 10%,$contact-background-color 30%,$contact-background-color 75%,$contact-background-color 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(170deg, $contact-background-color 10%,$contact-background-color 30%,$contact-background-color 75%,$contact-background-color 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8f2bc9', endColorstr='#691b96',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    }
+
+    .bg-black{
+        min-height: 30vh;
+        position: relative;
+        background: $footer-background-color;
+        color: $footer-text-color;
+    }
+
+    .min-heigh-50{
+        min-height: 50vh;
+        position: relative;
+    }
+
+    .min-height-70{
+        min-height: 70vh;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .align-self-center {
+        align-self: center !important;
+    }
+
+    .align-self-end {
+        align-self: flex-end !important;
+    }
+    .flex-grow-1 {
+        flex-grow: 1 !important;
+    }
+
+    .flex-row {
+        flex-direction: row !important;
+    }
+
+    .pt-1{
+        padding-top: 10px;
+    }
+
+    .pt-2 {
+        padding-top: 20px;
+    }
+
+    .pr-2{
+        padding-right: 20px;
+    }
+
+    .pl-2{
+        padding-left: 20px;
+    }
+
+    .pt-3{
+        padding-top: 30px;
+    }
+
+    .pb-3{
+        padding-bottom: 30px;
+    }
+
+    .pb-5{
+        padding-bottom: 50px;
+    }
+
+    .pt-5{
+        padding-top: 50px;
+    }
+
+    .pl-5{
+        padding-left: 50px;
+    }
+
+    .pt-2{
+        padding-top: 20px;
+    }
+
+    .pb-2{
+        padding-bottom: 20px;
+    }
+
+    .mt-2 {
+        margin-top: 20px;
+    }
+
+    .mt-5{
+        margin-top: 50px;
+    }
+
+    /*Typografi*/
+
+    h1{
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-weight: 800;
+        font-size: 2.9em;
+        color: #000;
+        margin-top: 0px;
+    }
+
+    p{
+        font-size: 1.45em;
+        color: #000;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+    }
+
+    .bg h1 {
+        color: $foreground-text-color;    
+    }
+
+    .bg p {
+        color: $foreground-text-color;
+    }
+
+    .bg p.lead{
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .bg small {
+        color: $foreground-text-color;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+    }
+
+    .bg-purple h1,
+    .bg-purple p{
+        color: $contact-text-color;
+        background-color: $contact-background-color;
+    }
+
+    .bg-black p {
+        color: $footer-text-color;
+        background-color: $footer-background-color;
+    }
+
+    .bg-black h1 {
+        color: white!important;
+        background-color: $footer-background-color;
+    }    
+
+    /*Form*/
+
+    button.continue {
+        background-color: $button-background-color;
+        color: $button-text-color;
+        outline: 0px;
+        border: 0px;
+        padding: 11px 30px;        
+        font-size: 1.3em;
+        border-radius: 5px;        
+        cursor: pointer;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+    }
+
+    button.continue:hover {
+        background-color: $button-hover-background-color;
+        color: $button-hover-text-color;
+        -webkit-transition: .3s;
+        -moz-transition: .3s;
+        transition: .3s;
+    }
+
+    button.continue .glyphicon-play{
+        font-size: 8px;
+        padding-left: 15px;
+        margin-right: -15px;
+        top: -2px;
+    }
+
+    button.continue:disabled {
+        background-color: $disabled-button-background-color;
+        color: $button-text-color;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    button.continue:disabled span.glyphicon{
+        display: none;
+    }
+
+    button.calculate-btn {
+        background-color: $button-background-color;
+        color: $button-text-color;
+        outline: 0px;
+        border: 0px;
+        padding: 8px 11px;        
+        font-size: 1em;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500; 
+    }
+    button.calculate-btn:hover {
+        background-color: $button-hover-background-color;
+        color: $button-hover-text-color;
+    }
+
+    .custom-label {
+        display: block;
+        margin-bottom: 25px;
+        color: $foreground-text-color;
+        background-color: $background-color;
+        font-size: 1.45em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+    }
+
+    .custom-input {
+        width: 100%;
+        outline: 0;
+        border: 0px;
+        border-radius:0px;
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        border-bottom: 1px solid $foreground-text-color;
+        font-size: 1.2em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+        padding: 10px 0px;
+        background-color: $background-color;
+        color: $foreground-text-color;
+    }
+
+    input.custom-input:focus {
+        border-bottom: 1px solid $foreground-text-color;
+        -webkit-transition: .3s;
+        -moz-transition: .3s;
+        transition: .3s;
+    }
+
+    input.custom-input::placeholder {
+        color: $foreground-text-color;
+        font-weight: normal;
+        opacity: 0.6;
+    }
+
+    input.ng-invalid.ng-dirty {
+        border: solid 1px $invalid-item-color
+    }
+
+    .custom-select{       
+        background-color: $background-color;
+        color: $foreground-text-color;
+        outline: 0;
+        border:0px;
+        border-radius: 0px;
+        border-bottom: 1px solid $foreground-text-color;
+        font-size: 1.2em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+        padding: 10px 0px;        
+        width: 100%;
+        opacity: 0.6;
+    }
+
+    select option {
+        color: $foreground-text-color;
+        opacity: 1;
+    }
+    
+    .custom-select:active{
+        border-bottom: 1px solid $foreground-text-color;
+        opacity: 1;
+    }
+
+    .custom-select:focus{
+        border-bottom: 1px solid $foreground-text-color;
+        opacity: 1;
+    }
+
+    select.custom-select.ng-valid {
+        opacity: 1;
+    }
+
+    ul.custom-bullet{
+        padding-left: 50px;
+    }
+
+    ul.custom-bullet li{
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    ul.custom-bullet li .text{
+        display: block;
+    }
+
+    a {
+        color: $link-text-color;
+        background-color: $link-background-color;
+        text-decoration: underline;
+    }
+    a:hover {
+        color: $link-text-color-hover;
+        background-color: $link-background-color-hover;
+    }
+
+    a.download{
+        font-size: 1.45em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+    }
+
+    a.download .glyphicon{
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        position: absolute;
+        left: -50px;
+        top: 4px;
+    }
+
+    a.custom-link{
+        font-size: 1.25em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+    }
+
+    .bg a.custom-link {
+        color: $foreground-text-color;    
+    }
+
+        .bg a.custom-link:hover {
+            opacity: 1;
+            -webkit-transition: .3s;
+            -moz-transition: .3s;
+            transition: .3s;
+        }
+
+    .bg-black a.custom-link{
+        font-size: inherit;
+        color: $footer-text-color;
+        background-color: $footer-background-color;
+        text-decoration: underline;
+    }
+
+    button.custom-link {
+        color: $link-text-color;
+        text-decoration: underline;
+        font-size: 1.2em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+        border: 0px;
+        background-color: $link-background-color;
+        opacity: 0.8;
+        padding: 0px;
+    }
+
+        button.custom-link:hover {
+            opacity: 1;
+            -webkit-transition: .3s;
+            -moz-transition: .3s;
+            transition: .3s;
+        }
+
+        button.custom-link:focus{
+            border: 0px;
+            outline: 0px;
+        }
+
+    /*radiobutton styles*/
+
+    .custom-radio {
+        width: 100%;
+        text-align: left;
+        padding: 8px 15px 9px 0px;
+        cursor: pointer;
+        font-size: 1.2em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+        border-bottom: 1px solid transparent;
+        color: $foreground-text-color;
+        background-color: $background-color;
+    }
+
+        .custom-radio.active {
+            color: $foreground-text-color;
+            background-color: $background-color;
+            font-weight: bold;
+            border-bottom: 1px solid $foreground-text-color;
+        }
+
+        .custom-radio input[type=radio] {
+            margin-right: 20px;
+        }
+
+
+    /*checkbox style*/
+
+    .custom-checkbox {
+        width: 100%;
+        text-align: left;
+        padding: 7px 15px 13px 50px;
+        cursor: pointer;
+        font-size: 1.2em;
+        font-family: $font-family-main, sans-serif;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+        border-bottom: 1px solid transparent;
+        position: relative;
+        color: $foreground-text-color;
+        background-color: $background-color;
+        margin-bottom: 20px;
+    }
+
+        .custom-checkbox.active {
+            font-weight: bold;
+            border-bottom: 1px solid $foreground-text-color;
+        }
+
+        .custom-checkbox input[type=checkbox] {
+            margin-right: 20px;
+            left: 0px;
+            position:absolute;
+        }
+
+
+    /*progressbar*/
+
+    .progress {
+        background-color: $slider-right-color;
+        border-radius: 0px;
+        margin-bottom: 0px;
+        cursor: pointer;
+    }
+
+    .progress-bar{
+        background-color: $slider-left-color;
+        box-shadow: none;
+    }
+
+    .icon-only-button {
+        background-color: inherit;
+        color: inherit;
+        border: none!important;
+    }
+
+
+    /*animations*/
+
+    .movein {
+        animation-name: fadeinleft;
+        animation-duration: 0.6s;
+        animation-timing-function: ease-out;
+        animation-delay: 0;
+    }
+
+    @keyframes fadeinleft {
+        0% {
+            transform: translate(0vh, 5vh);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translate(0px, 0px);
+            opacity: 1;
+        }
+    }
+
+
+    /*diverse*/
+
+    .none {
+        display: none;
+    }
+
+    .nowrap{
+        white-space: nowrap;
+    }
+
+    img{
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    @media screen and (max-width: 768px) {
+        .mobile-not-visible {
+            display: none;
+        }
+
+        .mobile-pt-2{
+            padding-top: 0px;
+        }
+
+        .mobile-no-vh{
+            min-height: auto;
+        }
+
+    }
+
+    @media screen and (max-width: 500px) {
+        h1{
+            font-size: 2em;
+        }
+    }
+
+    .consent-page {
+        p {
+            font-size: 1.2em;
+            font-family: $font-family-main, sans-serif;
+        }
+
+        a.custom-link {
+            text-decoration: underline;
+            font-size: 1.2em;
+            font-family: $font-family-main, sans-serif;            
+        }
+    }
+}
+
+.grey-bottom-border {
+    border-bottom: 2px solid $bottom-border-color;
+}
+
+
+.n-main-btn {
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    min-width: 100px;
+    padding: 12px 40px;
+    box-sizing: border-box;
+    -webkit-transition: .3s;
+    -moz-transition: .3s;
+    transition: .3s;
+    border: 0px;
+    border-radius: 40px;
+    outline: 0px;
+    font-weight: bold;
+}
+
+    a.n-main-btn {
+        text-decoration: none;
+    }
+
+    .n-main-btn.disabled {
+        background-color: #999;
+        border-color: #999;
+        pointer-events: none;
+        box-shadow: none;
+    }
+
+    .n-main-btn:disabled {
+        background-color: #999;
+        border-color: #999;
+        pointer-events: none;
+        box-shadow: none;
+    }
+
+    .n-main-btn[disabled] {
+        background-color: #999;
+        border-color: #999;
+        pointer-events: none;
+        box-shadow: none;
+    }
+
+
+.n-dark-btn {
+    background-color: #000000;
+}
+
+    .n-dark-btn:hover {
+        background-color: #F9B013;
+        color:black;
+    }
+
+    .n-dark-btn:active {
+        box-shadow: 0px 0px #F9B013;
+    }

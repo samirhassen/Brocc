@@ -1,0 +1,18 @@
+tr.exception-row td {
+    border-bottom: none;
+    border-top: none;
+}
+tr.exception-row td b {
+    border-bottom:solid 1px black; 
+    display:block; 
+    width:auto
+}
+tr.action-row th {
+    border-bottom: none;
+}
+tr.header-row th {
+    border-top: none;
+}
+.mt-0 {
+    margin-top: 0px;
+}

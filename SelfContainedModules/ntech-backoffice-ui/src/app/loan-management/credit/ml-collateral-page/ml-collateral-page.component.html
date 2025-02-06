@@ -1,0 +1,65 @@
+<credit-menu
+  activeMenuItemCode="mortgageloanStandardCollateral"
+  [creditNr]="m?.creditNr"
+  *ngIf="m"
+>
+  <div current-item-content>
+    <div *ngIf="m">
+      <div class="col-xs-6">
+        <div class="form-horizontal">
+          <div *ngFor="let i of m.propertyItems" class="form-group">
+            <label class="control-label col-xs-6">{{ i.name }}</label>
+            <p class="form-control-static col-xs-6">
+              <span class="copyable">{{ i.value }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div *ngFor="let p of m.mortgageLoanStandardParties" class="pb-1">
+          <h3>{{ p.partyTypeDisplayName }}</h3>
+          <table class="table">
+            <tbody>
+              <tr *ngFor="let c of p.customers">
+                <td>
+                  <a [href]="c.customerCardUrl" class="n-anchor"
+                    >{{ c.firstName }}, {{ c.birthDate }}</a
+                  >
+                </td>
+                <td></td>
+              </tr>
+              <tr *ngIf="p.customers.length === 0">
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pb-1">
+          <h3>Other connecting loans</h3>
+          <table class="table">
+            <tbody>
+              <tr
+                *ngFor="
+                  let sameColCreditNr of m.otherCreditNrsWithSameCollateral
+                "
+              >
+                <td>
+                  <a
+                    href="#"
+                    [routerLink]="['/credit/details/', sameColCreditNr]"
+                    class="n-anchor"
+                    >{{ sameColCreditNr }}</a
+                  >
+                </td>
+                <td></td>
+              </tr>
+              <tr *ngIf="m.otherCreditNrsWithSameCollateral.length === 0">
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</credit-menu>

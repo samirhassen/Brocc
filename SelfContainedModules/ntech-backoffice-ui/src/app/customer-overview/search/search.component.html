@@ -1,0 +1,28 @@
+<div *ngIf="m">
+  <table class="table table-responsive table-striped">
+    <thead>
+      <tr>
+        <th>Person/Company</th>
+        <th>Address</th>
+        <th>E-mail</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of m.customers">
+        <td>
+          <a
+            [routerLink]="customer.customerLink.commands"
+            [queryParams]="customer.customerLink.queryParams"
+            class="n-anchor"
+            >{{ customer.personOrCompanyText }}</a
+          >
+        </td>
+        <td>{{ customer.addressText }}</td>
+        <td>{{ customer.email }}</td>
+      </tr>
+      <tr *ngIf="m.customers.length === 0">
+        <td colspan="3">No customers found</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

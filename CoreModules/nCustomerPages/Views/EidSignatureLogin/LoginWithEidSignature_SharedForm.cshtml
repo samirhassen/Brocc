@@ -1,0 +1,19 @@
+﻿@model dynamic
+
+<form name="fc" novalidate method="post" action="@Url.Action("StartLogin", "EidSignatureLogin")" ng-submit="onSubmit($event)">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8">
+            <div class="form-group pb-1" ng-class="{ 'has-error' : $scope.fc.$invalid }">
+                <label ng-if="baseCountry === 'FI'" class="control-label" translate="eidlogin_civicnr">Personbeteckning (ddmmyy-xxxx)</label>
+                <label ng-if="baseCountry === 'SE'" class="control-label">Personnummer (yyyymmddxxxx)</label>
+                <input type="text" name="civicRegNr" autocomplete="off" ng-model="civicRegNr" class="form-control" required custom-validate="isValidCivicNr" />
+                <input type="hidden" name="targetName" value="@Html.Raw(ViewBag.TargetName)" />
+                <input type="hidden" name="targetCustomData" value="@Html.Raw(ViewBag.TargetCustomData)" />
+                <input type="hidden" name="externalApplicationVariables" value="@Html.Raw(ViewBag.ExternalApplicationVariables)" />
+            </div>
+        </div>
+    </div>
+    <div class="pt-2 text-center">
+        <button type="submit" ng-disabled="fc.$invalid" class="@Model.SubmitButtonClasses" translate="eidlogin_bankid">Bank ID</button>
+    </div>
+</form>

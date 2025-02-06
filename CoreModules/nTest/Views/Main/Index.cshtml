@@ -1,0 +1,170 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Main";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-main-index")
+}
+
+<div ng-hide="resetting">
+    <div>
+        <h1>Test</h1>
+    </div>
+    <div class="pt-2">
+        <h2>Shared</h2>
+        <ul>
+            <li><a href="/Ui/GenerateTestData">New test person</a></li>
+            <li><a href="/Ui/EditTestEntity">Edit test entity</a></li>
+            <li><a ng-href="{{createPaymentFileUrl}}">Create a payment file</a></li>
+            @if (NEnv.IsStandardUnsecuredLoansEnabled)
+            {
+                if (NEnv.HasPreCredit)
+                {
+                    <li><a target="_blank" ng-href="{{urlLoginToCustomerPagesApplications}}">Customerpages - Applications <span class="glyphicon glyphicon-new-window"></span></a></li>
+                }
+                <li><a target="_blank" ng-href="{{urlLoginToCustomerPagesOverview}}">Customerpages - Overview <span class="glyphicon glyphicon-new-window"></span></a></li>
+            }
+            else if (NEnv.IsStandardMortgageLoansEnabled)
+            {
+                if (NEnv.HasPreCredit)
+                {
+                    <li><a target="_blank" ng-href="{{urlToCustomerPagesMortageLoanCalculator}}">Customer pages - Loan calculator<span class="glyphicon glyphicon-new-window"></span></a></li>
+                }
+                <li><a target="_blank" ng-href="{{urlLoginToCustomerPagesOverview}}">Customerpages - Overview <span class="glyphicon glyphicon-new-window"></span></a></li>
+            }
+            else
+            {
+                <li><a target="_blank" ng-href="{{urlLoginToCustomerPages}}">Customerpages - Overview <span class="glyphicon glyphicon-new-window"></span></a></li>
+            }
+
+            <li><a target="_blank" ng-href="{{urlToBackoffice}}">Backoffice <span class="glyphicon glyphicon-new-window"></span></a></li>
+            <li ng-if="urlToGccCustomerApplication"><a target="_blank" ng-href="{{urlToGccCustomerApplication}}">Web application <span class="glyphicon glyphicon-new-window"></span></a></li>
+            <li><a ng-href="/Ui/PhoneNrs">Phonenumbers</a></li>
+            <li><a ng-href="/Ui/BuyCreditReport">Buy creditreport</a></li>
+            <li><a ng-href="/Ui/BankAccounts" target="_blank">Bank account nrs</a></li>
+            <li><a href="/Ui/LoggedRequest" target="_blank">View raw provider requests</a></li>
+            <li><a ng-href="{{apiDocumentationUrl}}">Api documentation</a></li>
+            <li><a href="/Ui/PaymentPlanCalculation">Payment plan calculation</a></li>
+            @if (NEnv.IsUnsecuredLoansEnabled || NEnv.IsMortgageLoansEnabled)
+            {
+                <li><a ng-href="{{urlToBackoffice}}s/test/single-credit-function">Single credit functions</a></li>
+            }
+            @if (NEnv.IsUlStandardWebApplicationEnabled)
+            {
+                <li><a target="_blank" ng-href="{{urlToUlStandardWebApplication}}">Web application<span class="glyphicon glyphicon-new-window"></span></a></li>
+            }
+        </ul>
+    </div>
+    @if (NEnv.IsUnsecuredLoansEnabled && NEnv.ClientCfg.ClientName == "balanzia" && NEnv.HasPreCredit)
+    {
+        <div class="pt-2">
+            <h2>Credit</h2>
+            <ul>
+                <li><a ng-href="{{customApplicationUrl}}">Create a custom application</a></li>
+            </ul>
+        </div>
+    }
+    @if (NEnv.IsStandardUnsecuredLoansEnabled && NEnv.HasPreCredit)
+    {
+        <div class="pt-2">
+            <h2>Credit</h2>
+            <ul>
+                <li><a href="{{customUnsecuredLoansStandardApplicationUrl}}">Create a custom unsecured loans standard application</a></li>
+            </ul>
+        </div>
+    }
+
+    @if (NEnv.IsCompanyLoansEnabled)
+    {
+        <div class="pt-2">
+            <h2>Company loans</h2>
+            <ul>
+                @if (NEnv.HasPreCredit)
+                {
+                    <li><a ng-href="{{'/Ui/CompanyLoan/CreateApplication'}}">Create company loan application</a></li>
+                }
+                <li><a ng-href="{{'/Ui/CompanyLoan/CreateLoan'}}">Create company loan</a></li>
+                @if (NEnv.ServiceRegistry.ContainsService("nCustomerPages") && NEnv.HasPreCredit)
+                {
+                    <li><a target="_blank" href="/Ui/Gateway/nCustomerPages/a">Customerpages - Embedded application<span class="glyphicon glyphicon-new-window"></span></a></li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (NEnv.IsSavingsEnabled)
+    {
+        <div class="pt-2">
+            <h2>Savings</h2>
+            <ul>
+                <li><a href="/Ui/CustomSavingsAccountApplication">Create a savings account</a></li>
+                <li><a target="_blank" ng-href="{{urlApplyForSavingsAccountInCustomerPages}}">Customerpages - Apply for savings account<span class="glyphicon glyphicon-new-window"></span></a></li>
+            </ul>
+        </div>
+    }
+    @if (NEnv.IsMortgageLoansEnabled && !NEnv.IsStandardMortgageLoansEnabled)
+    {
+        <div class="pt-2">
+            <h2>Mortgage loans</h2>
+            <ul>
+                <li><a href="/Ui/MortgageLoans/CreateLoan">Create a mortgage loan</a></li>
+                @if (NEnv.HasPreCredit)
+                {
+                    <li><a href="/Ui/MortgageLoans/CreateApplication">Create mortgage loan application</a></li>
+                }
+                <li><a href="/Ui/CreateDirectDebitTestFiles">Create direct debit testfile</a></li>
+                @if (NEnv.ClientCfg.ClientName == "bluestepFi")
+                {
+                    <li><a href="/Ui/EditCreditCollateral">Edit Credit Collateral</a></li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (NEnv.IsStandardMortgageLoansEnabled)
+    {
+        <div class="pt-2">
+            <h2>Mortgage loans standard</h2>
+            <ul>
+                @if (NEnv.HasPreCredit)
+                {
+                    <li><a href="{{customMortgageLoansStandardApplicationUrl}}">Create a custom mortgage loan application</a></li>
+
+                }
+                <li><a href="{{customMortgageLoansStandardLoanUrl}}">Create a mortgage loan</a></li>
+                <li><a href="/Ui/EditCreditCollateral">Edit Credit Collateral</a></li>
+            </ul>
+        </div>
+    }
+
+    <div class="pt-2" ng-show="canResetEnvironment">
+        <h2>Reset environment</h2>
+        <select ng-show="resetEnvironmentOptions.length > 1" ng-model="resetOptionJobName" class="form-control" style="width:auto">
+            <option ng-repeat="resetOption in resetEnvironmentOptions" value="{{resetOption.JobName}}">Backup: {{resetOption.DisplayName}}</option>
+        </select>
+        <br />
+        <button class="btn" ng-click="startResetEnvironment()">Reset environment</button>
+    </div>
+
+    <div class="pt-2 pb-2">
+        @Html.Partial("Index_TimeMachine")
+    </div>
+
+    @Html.Partial("Index_SimulateMonths")
+</div>
+<div ng-if="resetting">
+    <div ng-switch="resetting.state">
+        <p ng-switch-when="startingJob">Starting the job</p>
+        <p ng-switch-when="waitingForAppPoolsToStop">Waiting for the service to be stopped by the restore job.</p>
+        <p ng-switch-when="waitingForAppPoolsToRestart">Waiting for the service to be restarted after a successful restore job.</p>
+        <p ng-switch-when="success">Done. Reloading page...</p>
+        <p ng-switch-when="failed">Failed: {{resetting.errorMessage}}</p>
+    </div>
+    <p>Elapsed: {{getResetTimeText()}}</p>
+</div>

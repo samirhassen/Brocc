@@ -1,0 +1,104 @@
+﻿<script type="text/ng-template" id="accountclosure.html">
+    <div ng-if="d.Status !== 'Active'">
+        <p>Account is not active</p>
+    </div>
+    <div ng-if="d.Status === 'Active'">
+        <div ng-if="d && d.AreWithdrawalsSuspended">
+            <h2 class="text-center">Transactions are blocked due to checkpoint</h2>
+            <hr class="hr-section">
+        </div>
+        <!--Calculate close account-->
+        <div class="row" ng-show="!previewData && !isDone">
+            <div class="col-xs-8 col-sm-offset-2">
+                <div class="editblock">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Account</label>
+                            <div class="col-xs-4 form-control-static"><p>{{d.SavingsAccountNr}}</p></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Closing date</label>
+                            <div class="col-xs-4 form-control-static"><p>{{d.Today | date}}</p></div>
+                        </div>
+                        <div class="form-group pt-2 text-center">
+                            <button class="n-direct-btn n-blue-btn" ng-click="calculate($event)">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--end calculate close-->
+        <!--erbjudande-->
+        <div class="row" ng-show="previewData">
+            <div class="col-xs-10 col-sm-offset-1">
+                <div class="frame">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-xs-offset-1 col-xs-10">
+                                <div class="row pt-2">
+                                    <div class="col-xs-6">
+                                        <div class="table-summery">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">Balance</td>
+                                                        <td class="col-xs-6 bold text-right">{{previewData.CapitalBalanceBefore | number:'2'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">Accumulated interest</td>
+                                                        <td class="col-xs-6 bold text-right" ng-if="previewData.CapitalizedInterest">{{previewData.CapitalizedInterest.InterestAmount | number:'2'}}</td>
+                                                        <td class="col-xs-6 bold text-right" ng-if="!previewData.CapitalizedInterest">{{0 | number:'2'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">Tax</td>
+                                                        <td class="col-xs-6 bold text-right" ng-if="previewData.CapitalizedInterest">- {{previewData.CapitalizedInterest.ShouldBeWithheldForTaxAmount | number:'2'}}</td>
+                                                        <td class="col-xs-6 bold text-right" ng-if="!previewData.CapitalizedInterest">- {{0 | number:'2'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">To recieve</td>
+                                                        <td class="col-xs-6 bold text-right">{{previewData.WithdrawalAmount | number:'2'}}</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">IBAN</label>
+                                            <p class="form-control-static col-xs-6">{{previewData.WithdrawalIban.Formatted}}</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">BANK</label>
+                                            <p class="form-control-static col-xs-6">{{previewData.WithdrawalIban.BankName}}</p>
+                                        </div>
+                                        <div class="form-group" ng-if="previewData.CapitalizedInterest">
+                                            <label class="control-label col-xs-6">Interest period</label>
+                                            <p class="form-control-static col-xs-6">{{previewData.CapitalizedInterest.FromInterestDate | date}} - {{previewData.CapitalizedInterest.ToInterestDate | date}} ({{previewData.CapitalizedInterest.NrOfInterestDays}} days) </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pt-2 text-center">
+                            <button class="n-main-btn n-green-btn" ng-click="closeAccount($event)">Close account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--slut på erbjudandet-->
+        <!--bekräftelse-->
+        <div class="row" ng-show="isDone">
+            <div class="col-xs-10 col-sm-offset-1">
+                <div class="frame text-center">
+                    <p class="pt-2">Account closed.</p>
+                </div>
+            </div>
+        </div>
+        <!--slut-->
+    </div>
+</script>

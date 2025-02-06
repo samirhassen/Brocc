@@ -1,0 +1,8 @@
+﻿@{
+    var text = (ViewData.Eval("text") ?? "").ToString();
+}
+<h2 class="custom-header">
+    <span class="glyphicon chevron-bg" ng-class="{ 'glyphicon-chevron-down' : showExecuteButton, 'glyphicon-chevron-right' : !showExecuteButton }" ng-click="showExecuteButton = !showExecuteButton"></span>
+    @text
+</h2>
+<hr class="hr-section" />

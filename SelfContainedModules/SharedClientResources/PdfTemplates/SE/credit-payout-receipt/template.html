@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+</head>
+<body>
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+
+    <div class="page">
+        <div class="blackborder">
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Utbetalningskvitto</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Lånenummer</td>
+                                <td class="text-right">{{creditNr}}</td>
+                            </tr>
+                            <tr>
+                                <td>Datum</td>
+                                <td class="text-right">{{printDate}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clear"></div>
+            </div>
+            
+            <div class="area pt-5">
+                <h2>Utbetalningar</h2>
+                <div class="area">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:10%">Typ</th>
+                                <th style="width:15%">Belopp</th>
+                                <th style="width:45%">Till</th>
+                                <th style="width:30%">Meddelande</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#payments}}
+                            <tr>
+                                <td style="width:10%">{{type}}</td>
+                                <td style="width:15%">{{amount}}</td>
+                                <td style="width:45%">{{toAccountFormatted}}{{#paymentReference}} <i>{{paymentReference}}</i>{{/paymentReference}}</td>
+                                <td style="width:30%">{{customerMessage}}</td>
+                            </tr>
+                            {{/payments}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>Postadress: {{documentClientData_footerAddress}}</p>
+    </div>    
+</body>
+</html>

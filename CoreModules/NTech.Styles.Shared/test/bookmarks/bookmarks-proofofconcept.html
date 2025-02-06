@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Navigation test</title>    
+	<link href="../bootstrap.min.css" rel="stylesheet"/>    
+	<link href="shared.css" rel="stylesheet" />
+    <link href="../../css/magellan.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.js"></script>
+    <script>
+        var initialData = JSON.parse(atob("eyJjdXJyZW50VXNlciI6eyJtZW51Um9sZXMiOlsiQ29uc3VtZXJDcmVkaXRGaS5NaWRkbGUiLCJDb25zdW1lckNyZWRpdEZpLkhpZ2giLCJBZG1pbiJdfSwibWVudUdyb3VwcyI6W3siZ3JvdXBOYW1lIjoiQXBwbGljYXRpb25zIiwiaWNvblVybCI6Ii9Db250ZW50L2ltZy9QcmVjcmVkaXQucG5nIiwiaXRlbXMiOlt7InVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MjYwOTMvQ3JlZGl0TWFuYWdlbWVudC9DcmVkaXRBcHBsaWNhdGlvbnM/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiSGFuZGxlIGNyZWRpdCBhcHBsaWNhdGlvbnMiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLk1pZGRsZSIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MjMifSx7InVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MjYwOTMvQ3JlZGl0RGVjaXNpb24vQ3JlZGl0QXBwbGljYXRpb25zVG9BcHByb3ZlP2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6IkNyZWRpdCBhcHBsaWNhdGlvbnMgdG8gYXBwcm92ZSIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuSGlnaCIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MjQifV0sImhhc0FueVBlcm1pdHRlZEl0ZW0iOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo1In0seyJncm91cE5hbWUiOiJQYXltZW50cyIsImljb25VcmwiOiIvQ29udGVudC9pbWcvUGF5bWVudC5wbmciLCJpdGVtcyI6W3sidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9PdXRnb2luZ1BheW1lbnRzL0xpc3Q/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiT3V0Z29pbmcgcGF5bWVudHMiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLk1pZGRsZSIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MzgifSx7InVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzMwMjgvVWkvSW5jb21pbmdQYXltZW50cy9JbXBvcnRGaWxlP2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6IkltcG9ydCBpbmNvbWluZyBwYXltZW50IGZpbGUiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLk1pZGRsZSIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MzkifSx7InVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzMwMjgvVWkvUGF5bWVudHMvUmVnaXN0ZXJNYW51YWw/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiTWFudWFsIHJlZ2lzdHJhdGlvbiIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuTWlkZGxlIiwiaXNQZXJtaXR0ZWQiOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo0MCJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9VbnBsYWNlZFBheW1lbnRzL0xpc3Q/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiVW5wbGFjZWQgcGF5bWVudHMiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLk1pZGRsZSIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6NDEifV0sImhhc0FueVBlcm1pdHRlZEl0ZW0iOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo2In0seyJncm91cE5hbWUiOiJDcmVkaXQiLCJpY29uVXJsIjoiL0NvbnRlbnQvaW1nL0FwcGxpY2F0aW9uX1NlYXJjaC5wbmciLCJpdGVtcyI6W3sidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9DcmVkaXQ/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiQ3JlZGl0IFNlYXJjaCIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuTWlkZGxlIiwiaXNQZXJtaXR0ZWQiOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo2NyJ9XSwiaGFzQW55UGVybWl0dGVkSXRlbSI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjcifSx7Imdyb3VwTmFtZSI6IlRlcm1pbmF0aW9uIiwiaWNvblVybCI6Ii9Db250ZW50L2ltZy9UZXJtaW5hdGlvbi5wbmciLCJpdGVtcyI6W3sidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9QcmVDb2xsZWN0aW9uL0xpc3Q/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiUHJlY29sbGVjdGlvbiIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuTWlkZGxlIiwiaXNQZXJtaXR0ZWQiOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo3NSJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9UZXJtaW5hdGlvbkxldHRlckNhbmRpZGF0ZXMvTGlzdD9iYWNrVXJsPWh0dHAlM2ElMmYlMmZsb2NhbGhvc3QlM2E3Mjc0JTJmU2VjdXJlJTJmTmF2TWVudSIsIm5hbWUiOiJUZXJtaW5hdGlvbiBsZXR0ZXIgY2FuZGlkYXRlcyIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuTWlkZGxlIiwiaXNQZXJtaXR0ZWQiOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo3NiJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9EZWJ0Q29sbGVjdGlvbkNhbmRpZGF0ZXMvTGlzdD9iYWNrVXJsPWh0dHAlM2ElMmYlMmZsb2NhbGhvc3QlM2E3Mjc0JTJmU2VjdXJlJTJmTmF2TWVudSIsIm5hbWUiOiJEZWJ0IGNvbGxlY3Rpb24gY2FuZGlkYXRlcyIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuTWlkZGxlIiwiaXNQZXJtaXR0ZWQiOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo3NyJ9XSwiaGFzQW55UGVybWl0dGVkSXRlbSI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjgifSx7Imdyb3VwTmFtZSI6IlRhc2tzIiwiaWNvblVybCI6Ii9Db250ZW50L2ltZy9UYXNrcy5wbmciLCJpdGVtcyI6W3sidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9EYWlseUt5Y1NjcmVlbi9MaXN0P2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6IkRhaWx5IEtZQyBzY3JlZW4iLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLk1pZGRsZSIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6OTcifSx7InVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzMwMjgvVWkvQm9va2tlZXBpbmdGaWxlcy9MaXN0P2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6IkNyZWF0ZSBib29ra2VlcGluZyBmaWxlcyIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuTWlkZGxlIiwiaXNQZXJtaXR0ZWQiOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDo5OCJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9TY2hlZHVsZWRUYXNrcy9DcmVkaXROb3RpZmljYXRpb24/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiQ3JlYXRlIG5vdGlmaWNhdGlvbnMiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLkhpZ2giLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0Ojk5In0seyJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjMzMDI4L1VpL0NyZWRpdFJlbWluZGVyRmlsZXMvTGlzdD9iYWNrVXJsPWh0dHAlM2ElMmYlMmZsb2NhbGhvc3QlM2E3Mjc0JTJmU2VjdXJlJTJmTmF2TWVudSIsIm5hbWUiOiJDcmVhdGUgcmVtaW5kZXJzIiwicmVxdWlyZWRSb2xlIjoiQ29uc3VtZXJDcmVkaXRGaS5IaWdoIiwiaXNQZXJtaXR0ZWQiOnRydWUsIiQkaGFzaEtleSI6Im9iamVjdDoxMDAifSx7InVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzMwMjgvVWkvVGVybWluYXRpb25MZXR0ZXJzL0xpc3Q/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiQ3JlYXRlIHRlcm1pbmF0aW9uIGxldHRlcnMiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLkhpZ2giLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjEwMSJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9TY2hlZHVsZWRUYXNrcy9TZW5kQ3JlZGl0c1RvRGVidENvbGxlY3Rpb24/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiQ3JlYXRlIGRlYnQgY29sbGVjdGlvbiBleHBvcnQiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLkhpZ2giLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjEwMiJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMzAyOC9VaS9DaGFuZ2VSZWZlcmVuY2VJbnRlcmVzdFJhdGUvTGlzdD9iYWNrVXJsPWh0dHAlM2ElMmYlMmZsb2NhbGhvc3QlM2E3Mjc0JTJmU2VjdXJlJTJmTmF2TWVudSIsIm5hbWUiOiJDaGFuZ2UgcmVmZXJlbmNlIGludGVyZXN0cmF0ZSIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuSGlnaCIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MTAzIn1dLCJoYXNBbnlQZXJtaXR0ZWRJdGVtIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6OSJ9LHsiZ3JvdXBOYW1lIjoiQW5hbHl0aWNzIiwiaWNvblVybCI6Ii9Db250ZW50L2ltZy9SZXBvcnRzLnBuZyIsIml0ZW1zIjpbeyJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjMzMDI4L1VpL1JlcG9ydHM/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiUmVwb3J0cyIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuSGlnaCIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MTQ3In0seyJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjMzMDI4L1VpL1NjaGVkdWxlZFRhc2tzL1VwZGF0ZURhdGF3YXJlaG91c2U/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiVXBkYXRlIGRhdGFXYXJlaG91c2UgLSBDcmVkaXQiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLkhpZ2giLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjE0OCJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDoyNjA5My9TY2hlZHVsZWRUYXNrcy9VcGRhdGVEYXRhd2FyZWhvdXNlP2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6IlVwZGF0ZSBkYXRhV2FyZWhvdXNlIC0gQ3JlZGl0IGFwcGxpY2F0aW9ucyIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuSGlnaCIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MTQ5In1dLCJoYXNBbnlQZXJtaXR0ZWRJdGVtIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MTAifSx7Imdyb3VwTmFtZSI6IkFkbWluaXN0cmF0ZSB1c2VyIiwiaWNvblVybCI6Ii9Db250ZW50L2ltZy9Vc2Vycy5wbmciLCJpdGVtcyI6W3sidXJsIjoiaHR0cDovL2xvY2FsaG9zdDo3Mjc0L0hpZ2gvVXNlckFkbWluP2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6Ik1hbmFnZSB1c2VycyIsInJlcXVpcmVkUm9sZSI6IkNvbnN1bWVyQ3JlZGl0RmkuSGlnaCIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MTY5In0seyJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjcyNzQvSGlnaC9DcmVhdGVBZG1pbj9iYWNrVXJsPWh0dHAlM2ElMmYlMmZsb2NhbGhvc3QlM2E3Mjc0JTJmU2VjdXJlJTJmTmF2TWVudSIsIm5hbWUiOiJDcmVhdGUgbmV3IGFkbWluIHVzZXIiLCJyZXF1aXJlZFJvbGUiOiJDb25zdW1lckNyZWRpdEZpLkhpZ2giLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjE3MCJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDo3Mjc0L0FkbWluL0FkbWluaXN0ZXJVc2Vycz9iYWNrVXJsPWh0dHAlM2ElMmYlMmZsb2NhbGhvc3QlM2E3Mjc0JTJmU2VjdXJlJTJmTmF2TWVudSIsIm5hbWUiOiJBZG1pbmlzdGVyIHVzZXJzIiwicmVxdWlyZWRSb2xlIjoiQWRtaW4iLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjE3MSJ9XSwiaGFzQW55UGVybWl0dGVkSXRlbSI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjExIn0seyJncm91cE5hbWUiOiJBZG1pbmlzdGVyIHN5c3RlbSIsImljb25VcmwiOiIvQ29udGVudC9pbWcvU3lzdGVtLnBuZyIsIml0ZW1zIjpbeyJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjcyNzQvQWRtaW4vU3lzdGVtSGVhbHRoP2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6IlN5c3RlbSBIZWFsdGgiLCJyZXF1aXJlZFJvbGUiOiJBZG1pbiIsImlzUGVybWl0dGVkIjp0cnVlLCIkJGhhc2hLZXkiOiJvYmplY3Q6MTkxIn0seyJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjE1NzI1L1BlcnNvbmFsRGF0YVZpZXdMb2cvQXVkaXQ/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiQXVkaXQgcGVyc29uYWwgZGF0YSB2aWV3bG9nIiwicmVxdWlyZWRSb2xlIjoiQWRtaW4iLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjE5MiJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDoxNTcyNS9DaGFuZ2VMb2cvQXVkaXQ/YmFja1VybD1odHRwJTNhJTJmJTJmbG9jYWxob3N0JTNhNzI3NCUyZlNlY3VyZSUyZk5hdk1lbnUiLCJuYW1lIjoiQXVkaXQgY2hhbmdlbG9nIiwicmVxdWlyZWRSb2xlIjoiQWRtaW4iLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjE5MyJ9LHsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDoxNTcyOS9VaS9TY2hlZHVsZWRKb2JzP2JhY2tVcmw9aHR0cCUzYSUyZiUyZmxvY2FsaG9zdCUzYTcyNzQlMmZTZWN1cmUlMmZOYXZNZW51IiwibmFtZSI6IlNjaGVkdWxlZCBqb2JzIiwicmVxdWlyZWRSb2xlIjoiQWRtaW4iLCJpc1Blcm1pdHRlZCI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjE5NCJ9XSwiaGFzQW55UGVybWl0dGVkSXRlbSI6dHJ1ZSwiJCRoYXNoS2V5Ijoib2JqZWN0OjEyIn1dLCJhcmVCb29rbWFya3NFbmFibGVkIjp0cnVlfQ=="))
+        initialData.currentUser.menuRoles = ['Admin', 'ConsumerCreditFi.Middle']
+
+        var app = angular.module('app', [])
+        app.controller('ctr', ['$scope', '$http', '$window', '$timeout', function ($scope, $http, $window, $timeout) {
+            $scope.model = initialData
+            $scope.userRoles = {}
+            angular.forEach($scope.model.currentUser.menuRoles, function (v) {
+                $scope.userRoles[v] = true
+            })
+            $scope.allowedFunctions = []
+            angular.forEach($scope.model.menuGroups, function (g) {
+                g.hasAnyPermittedItem = false
+                angular.forEach(g.items, function (i) {
+                    i.isPermitted = $scope.userRoles[i.requiredRole]
+                    if (i.isPermitted) {
+                        g.hasAnyPermittedItem = true
+                        $scope.allowedFunctions.push(i)
+                    }
+                })
+            })
+            
+            $scope.isItemShown = function (i) {
+                return !!(i.isPermitted || $scope.showDetails)
+            }
+
+            $scope.removeBookmark = function (item, evt) {
+                if (evt) {
+                    evt.preventDefault()
+                }
+
+                var index = null
+                for (var i = 0; i < $scope.bookmarkItems.length; i++) {
+                    if ($scope.bookmarkItems[i].name === item.name) {
+                        index = i
+                    }
+                }
+                if (index !== null) {
+                    $scope.bookmarkItems.splice(index, 1)
+                }
+            }
+            $scope.setBookmark = function (item, evt) {
+                if (evt) {
+                    evt.preventDefault()
+                }
+                if ($scope.isBookmarked(item.name)) {
+                    return
+                }
+                $scope.bookmarkItems.push({ name: item.name, url: item.url, requiredRole: item.requiredRole, isPermitted  : item.isPermitted })
+            }
+
+            $scope.isBookmarked = function (itemName, evt) {
+                if (evt) {
+                    evt.preventDefault()
+                }
+                for (var i = 0; i < $scope.bookmarkItems.length; i++) {
+                    if ($scope.bookmarkItems[i].name === itemName) {
+                        return true
+                    }
+                }
+                return false
+            }
+
+            $scope.areBookmarksEnabled = true
+            $scope.bookmarkItems = []
+            document.scope = $scope
+        }])
+    </script>
+</head>
+<body ng-app="app" ng-controller="ctr">
+    <div class="navigation">
+        <div class="branding">
+            <a class="navbar-brand" href="#">
+               Backoffice
+            </a>
+        </div>
+        <div class="navigation-right">
+                <ul class="navigation-list">
+                    <li>Test testsson</li>
+                    <li>2017-03-21</li>
+                    <li><a href="#" class="logout-link">Log out</a></li>
+                </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>    
+
+    <div class="container-fluid body-content">
+        <div class="col-sm-12">
+            <div class="row panel-body" ng-if="areBookmarksEnabled" ng-hide="bookmarkItems.length === 0">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="col-sm-2">
+                        <img src="img/Nav.png" class="meny-icons" />
+                    </div>
+                    <div class="col-sm-10">
+                        <h4 class="heading-border">Anchored links</h4>
+                        <span class="function-item" ng-repeat="i in bookmarkItems">
+                            <a href="#" ng-click="removeBookmark(i, $event)" class="bookmark-icon"><img src="img/Anchor_Black.png" alt="Remove bookmark" /></a>
+                            <a class="btn-link" href="#" ng-show="i.isPermitted">{{i.name}}</a><span ng-hide="i.isPermitted" class="noaccess">{{i.name}}</span><span ng-show="!i.isPermitted" class="reqrole">({{i.requiredRole}})</span>
+                        </span>
+                    </div>
+                    <br /><br />
+                </div>
+            </div>
+
+            <div class="row function-options form-group-expanded">
+                <h3 class="function-header">List of all functions</h3>
+                <div class="text-right" style="color: #fff;padding-top: 10px;">
+                    <form>
+                        <label>Show details</label>
+                        <input type="checkbox" style="margin-left: 10px;" ng-model="showDetails" ng-true-value="'true'" ng-false-value="''">
+                    </form>
+                </div>
+            </div>
+
+            <div class="row panel-body">
+                <div class="form-group-expanded col-sm-6" ng-repeat="g in model.menuGroups" ng-show="g.hasAnyPermittedItem || showDetails">
+                    <div class="col-sm-2 text-center">
+                        <img src="img/Reports.png" class="meny-icons" ng-class="{ 'noaccess' : !g.hasAnyPermittedItem}" />
+                    </div>
+                    <div class="col-sm-10">
+                        <h4 class="heading-border" ng-class="{ 'noaccess' : !g.hasAnyPermittedItem}">{{g.groupName}}</h4>
+                        <span class="function-item" ng-repeat="i in g.items | filter:isItemShown">
+                            <a href="#" class="bookmark-icon" ng-click="setBookmark(i, $event)" ng-if="areBookmarksEnabled" ng-hide="!i.isPermitted || isBookmarked(i.name)"><img src="img/Anchor_Black.png" alt="Set bookmark" /></a>
+                            <a class="btn-link" href="#" ng-show="i.isPermitted">{{i.name}}</a><span ng-hide="i.isPermitted" class="noaccess">{{i.name}}</span><span ng-show="showDetails" class="reqrole">({{i.requiredRole}})</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+            <p>&copy; 2021 - Näktergal AB </p>
+    </footer>
+</body>
+</html>

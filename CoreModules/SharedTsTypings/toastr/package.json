@@ -1,0 +1,73 @@
+{
+  "_args": [
+    [
+      "@types/toastr",
+      "C:\\Projects\\Näktergal\\Trunk\\Naktergal\\nPreCredit"
+    ]
+  ],
+  "_from": "@types/toastr@*",
+  "_id": "@types/toastr@2.1.35",
+  "_inCache": true,
+  "_location": "/@types/toastr",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/toastr-2.1.35.tgz_1503353128260_0.4902016380801797"
+  },
+  "_npmUser": {
+    "email": "ts-npm-types@microsoft.com",
+    "name": "types"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@types/toastr",
+    "raw": "@types/toastr",
+    "rawSpec": "",
+    "scope": "@types",
+    "spec": "*",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/toastr/-/toastr-2.1.35.tgz",
+  "_shasum": "9b29ee786744994c4f7eafee415b125f835dd854",
+  "_shrinkwrap": null,
+  "_spec": "@types/toastr",
+  "_where": "C:\\Projects\\Näktergal\\Trunk\\Naktergal\\nPreCredit",
+  "contributors": [
+    {
+      "name": "Boris Yankov",
+      "url": "https://github.com/borisyankov"
+    }
+  ],
+  "dependencies": {
+    "@types/jquery": "*"
+  },
+  "description": "TypeScript definitions for Toastr",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-NSPsNyBRxopghpNQLPqMLGK4oDIey5prT6RTkExljOfRrid0bkTr5v9NXYntBOwhEMmHjrmdsxY/g2/eKAJZpg==",
+    "shasum": "9b29ee786744994c4f7eafee415b125f835dd854",
+    "tarball": "https://registry.npmjs.org/@types/toastr/-/toastr-2.1.35.tgz"
+  },
+  "installable": true,
+  "license": "MIT",
+  "main": "",
+  "maintainers": [
+    {
+      "email": "ts-npm-types@microsoft.com",
+      "name": "types"
+    }
+  ],
+  "name": "@types/toastr",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+  },
+  "scripts": {},
+  "typeScriptVersion": "2.3",
+  "typesPublisherContentHash": "d6fa42b96f8f299a8367cf0acc0f91ee1f3e7ecbf75842d6f1f1e4ce64c2c59f",
+  "version": "2.1.35"
+}

@@ -1,0 +1,177 @@
+openapi: 3.0.1
+info:
+  title: CustomerPages module apis
+  description: This is a description of the apis exposed by the external CustomerPages
+    module
+  contact:
+    name: Näktergal AB
+    email: integration@naktergal.tech
+    url: 'https://naktergal.tech'
+  version: 1.0.0
+  license:
+    name: Proprietary license
+    url: 'https://naktergal.tech'
+externalDocs:
+  description: General technical documentation
+  url: https://naktergal.atlassian.net/wiki/spaces/TD/overview
+servers:
+- url: https://[nCustomerPages]/api/v1
+paths:
+  /unsecured-loan-standard/create-application:
+    post:
+      tags:
+      - Application
+      summary: Create a new application
+      operationId: createApplication:
+      requestBody:
+        description: Application
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateApplicationResponse'
+components:
+  schemas:
+    CreateApplicationRequest:
+      required:
+      - RequestedAmount
+      type: object
+      properties:
+        RequestedAmount:
+          type: integer
+        LoansToSettleAmount:
+          type: integer
+        RequestedRepaymentTimeInMonths:
+          type: integer
+        ProviderApplicationId:
+          type: string
+        CustomerExternalIpAddress:
+          type: string
+        Applicants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationRequestApplicantModel'
+        HouseholdOtherLoans:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationRequestOtherLoanModel'
+    CreateApplicationResponse:
+      required:
+      - ApplicationNr
+      type: object
+      properties:
+        ApplicationNr:
+          type: string
+    ApplicationRequestApplicantModel:
+      required:
+      - CivicRegNr
+      type: object
+      properties:
+        CivicRegNr:
+          type: string
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        Email:
+          type: string
+        Phone:
+          type: string
+        BirthDate:
+          type: string
+          format: yyyy-mm-dd
+        IsOnPepList:
+          type: boolean
+        ClaimsToBePep:
+          type: boolean
+        ClaimsToHaveKfmDebt:
+          type: boolean
+        CivilStatus:
+          type: string
+          enum:
+          - single
+          - co_habitant
+          - married
+          - divorced
+          - widowed
+        MonthlyIncomeAmount:
+          type: integer
+        NrOfChildren:
+          type: integer
+        EmploymentStatus:
+          type: string
+          enum:
+          - early_retiree
+          - project_employee
+          - full_time
+          - hourly_employment
+          - part_time
+          - student
+          - pensioner
+          - unemployed
+          - probationary
+          - self_employed
+          - substitute
+        EmployerName:
+          type: string
+        EmployerPhone:
+          type: string
+        EmployedSince:
+          type: string
+          format: yyyy-mm-dd
+        EmployedTo:
+          type: string
+          format: yyyy-mm-dd
+        HousingType:
+          type: string
+          enum:
+          - condominium
+          - house
+          - rental
+          - tenant
+        HousingCostPerMonthAmount:
+          type: integer
+        AddressStreet:
+          type: string
+        AddressZipcode:
+          type: string
+        AddressCity:
+          type: string
+        HasConsentedToCreditReport:
+          type: boolean
+        HasConsentedToShareBankAccountData:
+          type: boolean
+    ApplicationRequestOtherLoanModel:
+      type: object
+      properties:
+        LoanType:
+          type: string
+          enum:
+          - unknown
+          - student
+          - mortgage
+          - personal
+          - car
+          - creditcard
+          - boat
+          - other
+        CurrentDebtAmount:
+          type: integer
+        MonthlyCostAmount:
+          type: integer
+        ShouldBeSettled:
+          type: boolean
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+      x-basicInfoFunc: app.basic_auth
+security:
+  - basic: ['secret']

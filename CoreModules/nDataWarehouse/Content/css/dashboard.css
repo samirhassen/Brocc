@@ -1,0 +1,219 @@
+/*
+	http://meyerweb.com/eric/tools/css/reset/
+	1.0 | 20080212
+*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+    blockquote:before, blockquote:after, q:before, q:after {
+        content: '';
+        content: none;
+    }
+
+ins {
+    text-decoration: none;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* BASE STYLES */
+
+body {
+    background-color: #131428;
+    height: 100%;
+    position: relative; 
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.top {
+    box-sizing: border-box;
+    height: 55vh;
+    width: 100vw;
+    text-align: center;
+    background-image: url(../img/berg.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.mainText {
+    font-size: 8vw;
+    margin-top: 15vh;
+    color: #fff;
+    font-family: Arial;
+    font-weight: 100;
+    text-shadow: 2px 3px 4px #000;
+    right: 0px;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 10px 40px 10px 40px;
+}
+
+    .mainText span {
+        color: #fff;
+        float: left;
+        padding-right: 1vw;
+    }
+
+        .mainText span.text {
+            color: #6394ce;
+        }
+
+        .mainText span img {
+            width: 100%;
+            max-width: 100%;
+        }
+
+.circle {
+    width: 10vw;
+    height: 10vh;
+    margin-top: 13vh;
+    margin-left: 10vw;
+}
+
+.chart {
+    float: left;
+    width: 30vw;
+    height: 40vh;
+    padding-top: 5vh;
+    padding-right: 5vw;
+    padding-left: 5vw;
+    background-color: #001b44;
+}
+
+.chart-header {
+    text-align: center;
+    color: #3C578F;
+    text-shadow: 3px 3px 2px #000;
+    font-size: 2vw;
+    padding-top: 1vh;
+    font-family: Arial;
+    border-bottom: 2px dotted #3C578F;
+    box-shadow: 0px 2px 0px #000;
+}
+
+.capitaldebt {
+    font-size: 3vw;
+    padding-top: 12vh;
+    color: #6394CE;
+    font-family: Arial;
+    font-weight: 100;
+    text-shadow: 3px 3px 2px #000;
+    padding-left: 5vw;
+}
+
+span.context {
+    color: #3C578F;
+    text-shadow: 3px 3px 2px #000;
+    font-size: 2vw;
+}
+
+span.right-align {
+    float: right;
+    padding-top: 20px;
+}
+
+.average-rate {
+    font-size: 3vw;
+    padding-top: 5vh;
+    color: #6394CE;
+    font-family: Arial;
+    font-weight: 100;
+    text-shadow: 4px 4px 2px #000;
+    text-align: center;
+}
+
+.border {
+    border-bottom: 2px solid #4B69AD;
+    width: 80%;
+    display: block;
+    margin-bottom: 7vh;
+    box-shadow: 0px 2px 0px #000;
+}
+
+.bottom {
+    box-sizing: border-box;
+    height: 45vh;
+    width: 100vw;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.left {
+    float: left;
+    height: 45vh;
+    width: 70vw;
+    position: relative;
+}
+
+.right {
+    float: left;
+    height: 45vh;
+    width: 30vw;
+}
+
+.middle-area {
+    background-color: #001b44;
+    float: left;
+    width: 30vw;
+    height: 45vh;
+    background-image: url(../img/stripes-transperent.png);
+    background-size: cover;
+}
+
+.bg-darkblue {
+    background-color: #1d2748;
+}
+
+.debug-text {
+    color: #132650;
+}
+
+    .debug-text:hover {
+        background-color: #132650;
+        color: white;
+        cursor: pointer;
+    }
+    
+.settings{
+    position:fixed;
+    bottom:30px;
+    right:40px
+}
+
+    .settings a:hover img{
+        opacity: 0.5;
+        -webkit-transition: .3s;
+        -moz-transition: .3s;
+        transition: .3s;
+    }

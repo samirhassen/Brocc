@@ -1,0 +1,20 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label">Har bolaget kontanthantering?</label>    
+            <div>
+                <label class="custom-radio">
+                    <input type="radio" formControlName="cashHandlingOption" value="yes">
+                    Ja
+                </label>
+            </div>
+            <div>
+                <label class="custom-radio">
+                    <input type="radio" formControlName="cashHandlingOption" value="no">
+                    Nej
+                </label>
+            </div>    
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

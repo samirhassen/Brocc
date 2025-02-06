@@ -1,0 +1,87 @@
+{
+  "_args": [
+    [
+      "@types/underscore",
+      "C:\\Projects\\Näktergal\\Trunk\\Naktergal\\nPreCredit"
+    ]
+  ],
+  "_from": "@types/underscore@*",
+  "_id": "@types/underscore@1.8.6",
+  "_inCache": true,
+  "_location": "/@types/underscore",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/underscore-1.8.6.tgz_1513379359446_0.2608156984206289"
+  },
+  "_npmUser": {
+    "email": "ts-npm-types@microsoft.com",
+    "name": "types"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@types/underscore",
+    "raw": "@types/underscore",
+    "rawSpec": "",
+    "scope": "@types",
+    "spec": "*",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/underscore/-/underscore-1.8.6.tgz",
+  "_shasum": "3f4b9c5915379b420fe7de75bd8cb58a7d9835ed",
+  "_shrinkwrap": null,
+  "_spec": "@types/underscore",
+  "_where": "C:\\Projects\\Näktergal\\Trunk\\Naktergal\\nPreCredit",
+  "contributors": [
+    {
+      "name": "Boris Yankov",
+      "url": "https://github.com/borisyankov",
+      "githubUsername": "borisyankov"
+    },
+    {
+      "name": "Josh Baldwin",
+      "url": "https://github.com/jbaldwin",
+      "githubUsername": "jbaldwin"
+    },
+    {
+      "name": "Christopher Currens",
+      "url": "https://github.com/ccurrens",
+      "githubUsername": "ccurrens"
+    },
+    {
+      "name": "Cassey Lottman",
+      "url": "https://github.com/clottman",
+      "githubUsername": "clottman"
+    }
+  ],
+  "dependencies": {},
+  "description": "TypeScript definitions for Underscore",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-9r3G/aelGEmiGT6DKmvPvMxPQG387pQpS6gDuylq/oUZ7n1XkyRe/I+Kiln6Up9pjtIreusWJ8OjbczGX5g6Qg==",
+    "shasum": "3f4b9c5915379b420fe7de75bd8cb58a7d9835ed",
+    "tarball": "https://registry.npmjs.org/@types/underscore/-/underscore-1.8.6.tgz"
+  },
+  "installable": true,
+  "license": "MIT",
+  "main": "",
+  "maintainers": [
+    {
+      "email": "ts-npm-types@microsoft.com",
+      "name": "types"
+    }
+  ],
+  "name": "@types/underscore",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+  },
+  "scripts": {},
+  "typeScriptVersion": "2.0",
+  "typesPublisherContentHash": "c71f91ccb1c1490327d27155d80c9f2d8ccdaf09c79729050c2b49202fb6cfc5",
+  "version": "1.8.6"
+}

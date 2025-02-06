@@ -1,0 +1,158 @@
+<div *ngIf="m">
+  <p class="pb-2">
+    För att få dig som kund måste vi som långivare ha uppdaterad information om
+    dig och ditt engagemang. Därför är det viktigt att du besvarar och
+    uppdaterar alla frågor.
+  </p>
+
+  <h2 class="pb-1 text-center">God kunskap om dig</h2>
+  <hr class="hr-section" />
+
+  <div *ngIf="m.view">
+    <div class="row">
+      <div *ngFor="let customer of m.view.customers" class="col-xs-12">
+        <h3 class="pb-3">
+          <ins
+            ><b>{{ customer.displayName }}</b></ins
+          >
+        </h3>
+        <div *ngFor="let answer of customer.answers" class="pb-3">
+          <div class="pb-2">{{ answer.questionText }}</div>
+          <div class="bb-1">
+            <b>{{ answer.answerText || "-" }}</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="m.edit">
+    <form [formGroup]="m.edit.form.form">
+      <div *ngFor="let customer of m.edit.customers">
+        <h3 class="pb-3 text-center">
+          <ins
+            ><b>{{ customer.displayName }}</b></ins
+          >
+        </h3>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="pb-3">
+              <div
+                class="form-group"
+                [ngClass]="{
+                  'has-error': m.edit.form.hasError(
+                    customer.isPepFormControlName
+                  )
+                }"
+              >
+                <label
+                  [ngClass]="{
+                    'bg-warning': m.edit.form.hasErrorStrict(
+                      customer.isPepFormControlName
+                    )
+                  }"
+                  >{{ getQuestionText("isPep") }}</label
+                >
+                <select
+                  class="form-control"
+                  formControlName="{{ customer.isPepFormControlName }}"
+                >
+                  <option value=""></option>
+                  <option [ngValue]="'true'">Ja</option>
+                  <option [ngValue]="'false'">Nej</option>
+                </select>
+              </div>
+            </div>
+            <div class="pb-3">
+              <div class="form-group">
+                <label>{{ getQuestionText("citizenCountries") }}</label>
+                <div
+                  class="pb-1"
+                  *ngFor="let citizenCountry of customer.citizenCountries"
+                >
+                  <p
+                    class="form-control-static bb-1"
+                    style="padding-right: 1px"
+                  >
+                    <b>{{ getCountryDisplayName(citizenCountry) }}</b>
+                    <button
+                      class="n-white-btn n-direct-btn"
+                      (click)="
+                        customer.removeCitizenCountry(citizenCountry, $event)
+                      "
+                      style="float: right"
+                    >
+                      Ta bort
+                    </button>
+                  </p>
+                </div>
+                <select
+                  class="form-control"
+                  formControlName="{{
+                    customer.citizenCountriesFormControlName
+                  }}"
+                >
+                  <option value="">Välj land</option>
+                  <ng-container *ngFor="let opt of getCountryDropdownOptions()">
+                    <option
+                      *ngIf="!customer.isCitizenCountrySelected(opt.Code)"
+                      [ngValue]="opt.Code"
+                    >
+                      {{ opt.DisplayName }}
+                    </option>
+                  </ng-container>
+                </select>
+              </div>
+            </div>
+            <div class="pb-3">
+              <div class="form-group">
+                <label>{{ getQuestionText("taxCountries") }}</label>
+                <div
+                  class="pb-1"
+                  *ngFor="let taxCountry of customer.taxCountries"
+                >
+                  <p
+                    class="form-control-static bb-1"
+                    style="padding-right: 1px"
+                  >
+                    {{ getCountryDisplayName(taxCountry) }}
+                    <button
+                      class="n-white-btn n-direct-btn"
+                      (click)="customer.removeTaxCountry(taxCountry, $event)"
+                      style="float: right"
+                    >
+                      Ta bort
+                    </button>
+                  </p>
+                </div>
+                <select
+                  class="form-control"
+                  formControlName="{{ customer.taxCountriesFormControlName }}"
+                >
+                  <option value="">Välj land</option>
+                  <ng-container *ngFor="let opt of getCountryDropdownOptions()">
+                    <option
+                      *ngIf="!customer.isTaxCountrySelected(opt.Code)"
+                      [ngValue]="opt.Code"
+                    >
+                      {{ opt.DisplayName }}
+                    </option>
+                  </ng-container>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="text-center pt-3">
+      <button
+        [disabled]="invalid()"
+        (click)="onSave($event)"
+        class="n-main-btn n-green-btn"
+      >
+        Skicka in
+      </button>
+    </div>
+  </div>
+</div>

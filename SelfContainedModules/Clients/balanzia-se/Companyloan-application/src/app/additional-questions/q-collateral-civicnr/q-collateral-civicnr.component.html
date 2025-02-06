@@ -1,0 +1,9 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">           
+            <label class="custom-label">Ange borgensmans personnummer</label>    
+            <input type="text" class="custom-input" placeholder="ex ÅÅÅÅMMDD-XXXX" formControlName="civicNr">   
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

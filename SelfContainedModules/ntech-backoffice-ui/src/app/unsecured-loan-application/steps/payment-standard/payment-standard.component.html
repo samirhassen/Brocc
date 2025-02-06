@@ -1,0 +1,109 @@
+<div *ngIf="m">
+    <div class="row pb-3" *ngIf="m.isDirectDebitEnabled">
+        <div class="col-xs-8">
+            <div class="frame">
+              <div class="form-horizontal">
+                  <div class="form-group">
+                      <label class="control-label col-xs-10 text-left">
+                        {{!!m.signatureSession ?
+                          'Customer has confirmed direct debit account' :
+                          'Waiting for customer to confirm direct debit account'}}
+                      </label>
+                      <div class="col-xs-2">
+                          <span [ngClass]="getIconClass(!!m.signatureSession)" class="form-control-static-icon custom-glyph ntech-status-icon"></span>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <customer-link-button [application]="m.application" ></customer-link-button>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col-xs-8 pb-3">
+            <div class="frame" *ngIf="m.signatureSession">
+                <div class="pb-3 row">
+                    <div class="col-xs-6">
+                        <div *ngIf="m.signatureSession.unsignedAgreementPdfArchiveKey && !m.signatureSession.signedAgreementPdfArchiveKey">
+                            <label>Unsigned direct debit consent</label>
+                            <div>
+                                <a [href]="getDocumentUrl(m.signatureSession.unsignedAgreementPdfArchiveKey)" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+                            </div>
+                        </div>
+                        <div *ngIf="m.signatureSession.signedAgreementPdfArchiveKey">
+                            <label>Signed direct debit consent</label>
+                            <div>
+                                <a [href]="getDocumentUrl(m.signatureSession.signedAgreementPdfArchiveKey)" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="pull-right">
+                            <button class="n-main-btn n-white-btn" *ngIf="m.signatureSession.isCancelAllowed" (click)="cancelDirectDebitSignatureSession($event)">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-9">Applicant</th>
+                            <th class="col-xs-3">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{m.signatureSession.applicant.firstName}}, {{m.signatureSession.applicant.birthDate}}</td>
+                            <td><span [ngClass]="getIconClass(m.signatureSession.applicant.hasSigned, m.signatureSession.hasSignatureSessionFailed)" class="ntech-status-icon"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="row" *ngIf="m.areAllStepBeforeThisAccepted && m.isDirectDebitEnabled">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-3">Control</th>
+                        <th class="col-xs-1">Status</th>
+                        <th class="col-xs-6"></th>
+                        <th class="col-xs-3 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Direct debit management</td>
+                    <td><span [ngClass]="getIconClass(m.isDirectDebitApproved)" class="glyphicon"></span></td>
+                    <td></td>
+                    <td class="text-right">
+                        <a class="n-anchor" (click)="viewDirectDebitDetails($event)">View details</a>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row" *ngIf="!m.areAllStepBeforeThisAccepted">
+            <p>Waiting for previous steps</p>
+        </div>
+
+        <div class="row ng-scope" *ngIf="m.isCreateLoanAllowed">
+            <div class="text-center pt-3">
+                <button class="n-main-btn n-green-btn" (click)="createLoan($event)">
+                    Create loan <send-email-logo emailSettingName="creditCreatedSecureMessageTemplates"></send-email-logo>
+                </button>
+            </div>
+        </div>
+        <div class="row ng-scope" *ngIf="m.createdLoan">
+            <div class="text-center pt-3">
+                <p>Created loan <a class="n-anchor" [href]="m.createdLoan.url">{{m.createdLoan.creditNr}}</a></p>
+            </div>
+        </div>
+    </div>
+</div>

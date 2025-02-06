@@ -1,0 +1,162 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Savings - Account creation remarks";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Styles {
+    <style>
+        .comma:not(:first-child):before {
+            content: ", ";
+        }
+    </style>
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-accountcreationremarks")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Savings: Account creation remarks</h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-3">Account</th>
+                    <th class="col-sm-4">Reason</th>
+                    <th class="col-sm-3">Date</th>
+                    <th class="col-sm-2 text-right"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="a in frozenAccounts" ng-hide="a.isHidden">
+                    <td>{{a.savingsAccountNr}}</td>
+                    <td class="attention">
+                        <span class="comma" ng-repeat="c in a.reasonCodes">{{c}}</span>
+                    </td>
+                    <td>{{a.creationDate | date}}</td>
+                    <td class="text-right"><a class="n-anchor" href="#" ng-click="showAccount(a, $event)">Take</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal fade in" id="accountDialog">
+    <div class="modal-dialog" style="width:90%; max-width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="n-icon-btn n-white-btn pull-right" ng-click="hideAccount($event)"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Remarks</h1>
+            </div>
+            <div class="modal-body">               
+                <div class="pt-3 pb-3">
+                    <div class="row">
+                        <div class="col-sm-offset-0 col-sm-12 col-md-offset-2 col-md-8">
+                            <div class="editblock">
+                                <div class="text-right">
+                                    <button class="n-main-btn n-red-btn" ng-click="resolveAccountCreationRemarks(current, 'Close', $event)">Close account</button>
+                                </div>
+                                <div class="form-horizontal">
+                                    <div class="form-group" ng-repeat="r in current.account.reasons">
+                                        <label class="control-label col-sm-6 col-md-6">{{getRemarkCodeDisplayText(r.code)}}</label>
+                                        <p class="form-control-static col-sm-6 col-md-6">
+                                            <a ng-if="r.customerCardUrl" target="_blank" ng-href="{{r.customerCardUrl}}" class="n-anchor">View customer <span class="glyphicon glyphicon-new-window"></span></a>
+                                            <a ng-if="r.customerFatcaCrsUri" target="_blank" ng-href="{{r.customerFatcaCrsUri}}" class="n-anchor">View FATCA and CRS management <span class="glyphicon glyphicon-new-window"></span></a>
+                                            <a ng-if="r.customerPepKycUrl" target="_blank" ng-href="{{r.customerPepKycUrl}}" class="n-anchor">Pep &amp; Sanction <span class="glyphicon glyphicon-new-window"></span></a>
+                                            <a ng-if="r.savingsAccountUrl" target="_blank" ng-href="{{r.savingsAccountUrl}}" class="n-anchor">View savings account {{r.savingsAccountNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                                            <a ng-if="r.customerCheckpointUrl" target="_blank" ng-href="{{r.customerCheckpointUrl}}" class="n-anchor">View checkpoint details<span class="glyphicon glyphicon-new-window"></span></a>                                            
+                                            <span ng-if="r.customerContactInfoSourceWarningCode == 'RequiresManualAttention'" style="color:red"> ({{r.customerContactInfoSourceWarningMessage}})</span>
+                                            <span ng-if="r.customerContactInfoSourceWarningCode == 'ProviderDown'" style="color:red"> (Address provider was down)</span>
+                                            <span ng-if="r.customerContactInfoSourceWarningCode == 'InfoMissing'" style="color:red"> (Address provider was missing required data)</span>
+                                        </p>
+                                    </div>
+                                    <hr class="hr-section dotted"/>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-6 col-md-6">Controls ok?</label>
+                                        <p class="form-control-static col-sm-6 col-md-6">
+                                            <label class="n-toggle">
+                                                <input ng-model="current.areControlsOk" type="checkbox" />
+                                                <span class="n-slider"></span>
+                                            </label>
+                                        </p>
+                                    </div>
+                                    <hr class="hr-section dotted" />
+                                </div>
+                                <div class="text-center">
+                                    <button class="n-main-btn n-green-btn" ng-disabled="!current.areControlsOk" ng-click="resolveAccountCreationRemarks(current, 'Open', $event)">Open account</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-3 row">
+                    <div class="col-sm-offset-0 col-sm-12 col-md-offset-2 col-md-8">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-horizontal pt-3">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3 col-md-3 col-xs-6">Name</label>
+                                        <p class="form-control-static col-sm-9 col-md-9 col-xs-6">{{current.customer.firstName}} {{current.customer.lastName}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3 col-md-3 col-xs-6">Email</label>
+                                        <p class="form-control-static col-sm-9 col-md-9 col-xs-6">{{current.customer.email}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3 col-md-3 col-xs-6">Phone</label>
+                                        <p class="form-control-static col-sm-9 col-md-9 col-xs-6">{{current.customer.phone}}</p>
+                                    </div>
+                                    <div class="form-group pb-3">
+                                        <label class="control-label col-sm-3 col-md-3 col-xs-6"></label>
+                                        <p class="form-control-static col-sm-9 col-md-9 col-xs-6"><a ng-href="{{current.account.customerCardUrl}}" target="_blank" class="n-anchor">View details <span class="glyphicon glyphicon-new-window"></span></a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <h2 class="text-center">Screen</h2>
+                                <hr class="hr-section" />
+                                <div class="row">
+
+                                    <div class="col-sm-8 col-md-8 col-xs-8">
+                                        <div class="form-horizontal" ng-if="current.latestKycScreenResult">
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-8 col-md-8 col-xs-8">On PEP list?</label>
+                                                <p class="form-control-static col-sm-4 col-md-4 col-xs-4">{{current.latestKycScreenResult.IsPepHit ? 'Yes' : 'No'}}</p>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-8 col-md-8 col-xs-8">On Sanction list?</label>
+                                                <p class="form-control-static col-sm-4 col-md-4 col-xs-4">{{current.latestKycScreenResult.IsSanctionHit ? 'Yes' : 'No'}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-4 col-xs-4">
+                                        <div class="text-right pt-1">
+                                            <button class="n-direct-btn n-green-btn" ng-click="forceKycScreen(current, $event)">Screen <span class="glyphicon glyphicon-refresh"></span></button>
+                                            <p class="pt-1">{{current.latestKycScreenResult.QueryDate | date}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3">
+                    @Html.Partial("SavingsAccountComments")
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

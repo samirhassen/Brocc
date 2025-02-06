@@ -1,0 +1,224 @@
+<div *ngIf="model">
+  <ng-container *ngIf="initialData?.linksOnTheLeft">
+    <ng-container
+      *ngTemplateOutlet="links; context: { isLeft: true }"
+    ></ng-container>
+  </ng-container>
+
+  <div class="form-horizontal col-xs-10">
+    <div class="form-group pb-3" *ngIf="model.customer.isSanctionRejected">
+      <label class="col-sm-4 control-label"><span>Reject reason</span></label>
+      <div class="col-sm-8 form-control-static">
+        <span><b>Sanctioned</b></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-4 control-label">Name</label>
+      <div class="col-sm-8 form-control-static" *ngIf="!isCompany()">
+        <b
+          ><span class="copyable">{{
+            formatmissing(model.customer.firstName)
+          }}</span
+          >, <span class="copyable">{{ model.customer.birthDate }}</span></b
+        >
+      </div>
+      <div class="col-sm-8 form-control-static" *ngIf="isCompany()">
+        <b
+          ><span class="copyable">{{
+            formatmissing(model.customer.companyName)
+          }}</span></b
+        >
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-4 control-label">{{
+        isCompany() ? "Orgnr" : "Civic nr"
+      }}</label>
+      <p *ngIf="!model.civicRegNr" class="form-control-static col-sm-6">
+        <span class="n-unlock">
+          <a href="#" (click)="unlockCivicRegNr($event)"
+            ><span class="glyphicon glyphicon-lock"></span
+          ></a>
+        </span>
+      </p>
+      <p *ngIf="model.civicRegNr" class="form-control-static col-sm-6 copyable">
+        {{ model.civicRegNr }}
+      </p>
+    </div>
+    <div class="form-group" *ngIf="initialData?.showAmlRisk">
+      <label class="col-sm-4 control-label">AML risk</label>
+      <p *ngIf="!model.amlRiskClass" class="form-control-static col-sm-6">
+        <span class="n-unlock">
+          <a href="#" (click)="unlockAmlRiskClass($event)"
+            ><span class="glyphicon glyphicon-lock"></span
+          ></a>
+        </span>
+      </p>
+      <p
+        *ngIf="model.amlRiskClass"
+        class="form-control-static col-sm-6 copyable"
+      >
+        {{ model.amlRiskClass }}
+      </p>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-4 control-label">
+        <span
+          *ngIf="!model.contactInfo"
+          class="n-unlock"
+          (click)="toggleContactInfo($event)"
+          ><a href="#"
+            ><span class="glyphicon glyphicon-chevron-right"></span
+            ><span class="glyphicon glyphicon-lock"></span></a
+        ></span>
+        <a
+          *ngIf="model.contactInfo && model.contactInfo.isOpen"
+          href=""
+          (click)="toggleContactInfo($event)"
+          ><span class="glyphicon chevron-bg glyphicon-chevron-down"></span
+        ></a>
+        <a
+          *ngIf="model.contactInfo && !model.contactInfo.isOpen"
+          href=""
+          (click)="toggleContactInfo($event)"
+          ><span class="glyphicon chevron-bg glyphicon-chevron-right"></span
+        ></a>
+      </div>
+      <p class="form-control-static col-sm-6">Contact information</p>
+    </div>
+    <div *ngIf="model.contactInfo && model.contactInfo.isOpen">
+      <div class="form-group" *ngIf="!isCompany()">
+        <label class="control-label col-sm-4">Fullname</label>
+        <p
+          *ngIf="model.contactInfo.firstName || model.contactInfo.lastName"
+          class="form-control-static col-sm-6 copyable"
+        >
+          {{ model.contactInfo.firstName }}&nbsp;{{
+            model.contactInfo.lastName
+          }}
+        </p>
+        <p
+          *ngIf="!(model.contactInfo.firstName || model.contactInfo.lastName)"
+          class="form-control-static col-sm-6 copyable"
+        ></p>
+      </div>
+      <div class="form-group" *ngIf="isCompany()">
+        <label class="control-label col-sm-4">Name</label>
+        <p
+          *ngIf="model.contactInfo?.companyName"
+          class="form-control-static col-sm-6 copyable"
+        >
+          {{ model.contactInfo.companyName }}
+        </p>
+        <p
+          *ngIf="!model.contactInfo?.companyName"
+          class="form-control-static col-sm-6 copyable"
+        ></p>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4">Street</label>
+        <p class="form-control-static col-sm-6 copyable">
+          {{ model.contactInfo.addressStreet }}
+        </p>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4">Zip</label>
+        <p class="form-control-static col-sm-6 copyable">
+          {{ model.contactInfo.addressZipcode }}
+        </p>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4">City</label>
+        <p class="form-control-static col-sm-6 copyable">
+          {{ model.contactInfo.addressCity }}
+        </p>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4">Country</label>
+        <p class="form-control-static col-sm-6 copyable">
+          {{ model.contactInfo.addressCountry }}
+        </p>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4">Email</label>
+        <p class="form-control-static col-sm-6 copyable">
+          {{ model.contactInfo.email }}
+        </p>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4">Phone</label>
+        <p class="form-control-static col-sm-6 copyable">
+          {{ formatPhoneNr(model.contactInfo.phone) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="model.showKycBlock && !isCompany()">
+      <div class="col-sm-4 control-label">
+        <span
+          *ngIf="!model.pepKycInfo"
+          class="n-unlock"
+          (click)="togglePepKycInfo($event)"
+          ><a href="#"
+            ><span class="glyphicon glyphicon-chevron-right"></span
+            ><span class="glyphicon glyphicon-lock"></span></a
+        ></span>
+        <a
+          *ngIf="model.pepKycInfo && model.pepKycInfo.isOpen"
+          href=""
+          (click)="togglePepKycInfo($event)"
+          ><span class="glyphicon chevron-bg glyphicon-chevron-down"></span
+        ></a>
+        <a
+          *ngIf="model.pepKycInfo && !model.pepKycInfo.isOpen"
+          href=""
+          (click)="togglePepKycInfo($event)"
+          ><span class="glyphicon chevron-bg glyphicon-chevron-right"></span
+        ></a>
+      </div>
+      <p class="form-control-static col-sm-6">Pep/Kyc</p>
+    </div>
+    <div *ngIf="model.pepKycInfo && model.pepKycInfo.isOpen">
+      <div class="form-group">
+        <label class="control-label col-sm-4">Latest screen</label>
+        <p class="form-control-static col-sm-4 copyable">
+          {{
+            (toDate(model.pepKycInfo.latestScreeningDate)
+              | date: "shortDate") || "-"
+          }}
+        </p>
+        <p class="form-control-static col-sm-4">
+          <button
+            class="n-direct-btn n-green-btn"
+            (click)="doKycScreen($event)"
+          >
+            Screen <span class="glyphicon glyphicon-refresh"></span>
+          </button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!initialData?.linksOnTheLeft">
+    <ng-container
+      *ngTemplateOutlet="links; context: { isLeft: false }"
+    ></ng-container>
+  </ng-container>
+  <div class="clearfix"></div>
+</div>
+<ng-template #links let-isLeft="isLeft">
+  <div class="col-xs-2" style="display: flex; gap: 5px; flex-direction: column">
+    <div *ngIf="!model.hideDetailsLink">
+      <a class="n-anchor" [href]="model.customer.customerCardUrl">View details</a>
+    </div>
+    <div *ngIf="initialData.showPepSanctionLink && !model.customer.isCompany">
+      <a class="n-anchor" [href]="getPepSanctionUrl()">Pep/Sanction</a>
+    </div>
+    <div *ngIf="initialData.showFatcaCrsLink && !model.customer.isCompany">
+      <a class="n-anchor" [href]="getFatcaCrsUrl()">Fatca/Crs</a>
+    </div>
+    <div *ngIf="initialData.showKycQuestionsLink && !model.customer.isCompany">
+      <a class="n-anchor" (click)="navigateToKycQuestions($event)">KYC questions</a>
+    </div>
+  </div>
+</ng-template>

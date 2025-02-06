@@ -1,0 +1,63 @@
+<ng-container *ngIf="m">
+    <p *ngIf="m.notifications.length == 0">
+        <span *ngIf="m.nextNotificationDate">Du har inga obetalda avier, nästa avisering sker {{m.nextNotificationDate | date:'yyyy-MM-dd'}}.</span>
+        <span *ngIf="!m.nextNotificationDate">Du har inga obetalda avier.</span>
+    </p>
+    <div class="task-toggle-list" *ngIf="m.notifications.length > 0">
+        <div class="task-toggle" *ngFor="let n of m.notifications">
+            <div [ngClass]="{ 'task-toggle-expanded': n.isExpanded, 'task-toggle-contracted': !n.isExpanded }" (click)="n.isExpanded = !n.isExpanded">
+                <div class="col-xs-7 remove-bootstrap-gutter">
+                    <div class="pull-left pr-2">
+                        <p><span class="hide-on-mobile">Förfallodag</span> {{n.dueDate | date:'yyyy-MM-dd'}}</p>
+                    </div>
+                    <div class="pull-left">
+                        <div *ngIf="n.isOverdue" class="alert-icon">!</div>
+                    </div>
+                </div>
+                <div class="col-xs-5 text-right"><span class="mr-1">{{n.balanceAmount | number:'1.0-2'}} kr</span><span [ngClass]="{ 'glyphicon-chevron-down': n.isExpanded, 'glyphicon-plus': !n.isExpanded }" class="glyphicon"></span></div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="pb-3" *ngIf="n.isExpanded">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Autogiro</label>
+                                <p class="form-control-static col-xs-6">{{n.directDebit ? 'Ja' : 'Nej'}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Bankgiro</label>
+                                <p class="form-control-static col-xs-6">{{n.bankGiro}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">OCR</label>
+                                <p class="form-control-static col-xs-6">{{n.ocrPaymentReference}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Kvar att betala</label>
+                                <p class="form-control-static col-xs-6">{{n.balanceAmount | number:'1.0-2'}} kr</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-horizontal">
+                            <div class="form-group" *ngIf="m.isOverview">
+                                <label class="control-label col-xs-6">Lån</label>
+                                <p class="form-control-static col-xs-6">{{n.creditNr}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Avi</label>
+                                <p class="form-control-static col-xs-6"><a *ngIf="n.notificationUrl" [href]="n.notificationUrl" target="_blank" class="n-direct-btn n-white-btn">PDF</a></p>
+                            </div>
+                            <div class="form-group" *ngFor="let r of n.reminders">
+                                <label class="control-label col-xs-6">Påminnelse {{r.nr}}</label>
+                                <p class="form-control-static col-xs-6"><a *ngIf="r.url" [href]="r.url" target="_blank" class="n-direct-btn n-white-btn">PDF</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p *ngIf="n.directDebit" class="pt-3">Vi kommer att göra tre autogiroförsök fr.o.m. förfallodatum och tre bankdagar framåt. Om samtliga dragningsförsök misslyckats vänligen gör en inbetalning till bankgirot med ovan OCR.</p>
+            </div>
+        </div>
+    </div>
+</ng-container>

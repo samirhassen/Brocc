@@ -1,0 +1,17 @@
+/* Usage: <div class="direct-html-container">{{{INJECTED_RAW_HTML}}}</div> */
+.direct-html-container ol, .direct-html-container ul {
+    list-style: initial;
+    list-style-position: inside;
+}
+
+.direct-html-container ol {
+    list-style: decimal;
+    list-style-position: inside;    
+}
+
+.direct-html-container li {
+    font-family: Arial;
+    font-size: 13px;
+    line-height: 20px;
+    height: auto;
+}

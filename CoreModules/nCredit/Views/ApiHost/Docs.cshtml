@@ -1,0 +1,18 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Api documentation";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"apiHostCtr as c\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"c.isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-api-host")
+}
+
+<div ng-if="c.wsDocsInitialData">
+    <ntech-ws-docs initial-data="c.wsDocsInitialData"></ntech-ws-docs>
+</div>
+@Html.Partial("Components")

@@ -1,0 +1,90 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit - EInvoice - ErrorList";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"errorListCtrl as c\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"c.isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-einvoicefi-errorlist")
+}
+
+<div class="pt-2">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">E-invoice error list</h1>
+</div>
+
+<div class="pt-3 pb-3 col-sm-offset-2 col-sm-8">
+    <div ng-if="c.getUnhandledCount() == 0">
+        <p>No unhandled errors</p>
+    </div>
+    <table class="table" ng-if="c.getUnhandledCount() > 0">
+        <thead>
+            <tr>
+                <th class="col-sm-6" colspan="2">Request date</th>
+                <th class="text-right col-sm-6"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="i in c.unhandled.pageItems" ng-hide="i.IsHandledLocally">
+                <td class="col-sm-1">
+                    <span ng-show="!i.ItemDetails" class="n-unlock"><a ng-click="c.unlockHistoryItem(i, $event)" href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a></span>
+                    <span ng-show="i.ItemDetails" ng-click="i.IsHidden = !i.IsHidden" class="glyphicon" ng-class="{ 'chevron-bg glyphicon-chevron-down' : !i.IsHidden, 'chevron-bg glyphicon-chevron-right' : i.IsHidden }"></span>
+                </td>
+                <td class="col-sm-5">{{i.ActionDate | date:'shortDate'}} {{i.ActionDate | date:'shortTime'}}</td>
+                <td class="text-right"><button ng-click="c.markActionAsHandled(i, $event)" ng-hide="i.IsHandledLocally" class="n-direct-btn n-blue-btn">Handle</button></td>
+            </tr>
+            <tr class="opend" ng-if="i.ItemDetails && !i.IsHidden && !i.IsHandledLocally" ng-repeat-end="">
+                @Html.Partial("EInvoiceFi_ItemDetails")
+            </tr>
+            <tr ng-if="c.unhandled.totalCount > c.unhandled.pageItems.length">
+                <td colspan="2">And {{c.unhandled.totalCount - c.unhandled.pageItems.length}} more items after these</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="clearfix"></div>
+
+<div class="pt-3">
+    <h2><span ng-click="c.toggleHistory($event)" class="glyphicon" ng-class="{ 'chevron-bg glyphicon-chevron-down' : c.isHistoryVisible, 'chevron-bg glyphicon-chevron-right' : !c.isHistoryVisible }"></span> View history</h2>
+    <hr ng-if="c.isHistoryVisible" class="hr-section" />
+    <div ng-if="c.isHistoryVisible && c.loadedHistoryItems.length === 0">
+        <p>No history items</p>
+    </div>
+    <div class="col-sm-offset-2 col-sm-8 pt-2" ng-if="c.isHistoryVisible && c.loadedHistoryItems.length > 0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-4" colspan="2">Request date</th>
+                    <th class="col-sm-4">Handled date</th>
+                    <th class="text-right col-sm-4">Handled by</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="i in c.loadedHistoryItems">
+                    <td class="col-sm-1">
+                        <span ng-show="!i.ItemDetails" class="n-unlock"><a ng-click="c.unlockHistoryItem(i, $event)" href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a></span>
+                        <span ng-show="i.ItemDetails" ng-click="i.IsHidden = !i.IsHidden" class="glyphicon" ng-class="{ 'chevron-bg glyphicon-chevron-down' : !i.IsHidden, 'chevron-bg glyphicon-chevron-right' : i.IsHidden }"></span>
+                    </td>
+                    <td class="col-sm-3">{{i.ActionDate | date:'shortDate'}} {{i.ActionDate | date:'shortTime'}}</td>
+                    <td>{{i.HandledDate | date:'shortDate'}} {{i.HandledDate | date:'shortTime'}}</td>
+                    <td class="text-right">{{c.getUserDisplayNameByUserId(i.HandledByUserId)}}</td>
+                </tr>
+                <tr class="opend" ng-if="i.ItemDetails && !i.IsHidden" ng-repeat-end="">
+                    @Html.Partial("EInvoiceFi_ItemDetails")
+                </tr>
+                <tr ng-if="!c.isAllHistoryLoaded">
+                    <td colspan="4"><button class="btn" ng-click="c.fetchHistoryPage(c.lastHistoryPageNr+1, $event, null)">Fetch more...</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<div class="row pt-3">
+    <a href="@ViewBag.ManualMessageFileImportUrl" target="_blank">Manual message file import</a>
+</div>

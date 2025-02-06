@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+}
+<div ng-controller="searchCtr">
+    <div class="row pb-2">        
+        <form name="searchform" novalidate role="form">
+            <div class="col-xs-4">
+                <div class="relative">
+                    <span class="glyphicon glyphicon-search"></span>
+                    <input ng-model="searchInput.omniSearchValue" class="search form-control" ng-keyup="onOmnisearchKeyUp($event)" name="omniSearchValue" type="text" placeholder="{{civicRegNrMask}} · Savings account nr · Email · Name · Ocr" required autocomplete="off">
+                </div>
+            </div>
+            <div class="col-xs-8" ng-show="searchInput.omniSearchValue">
+                <!-- NOTE: Dont make the below a button or it will search twice on enter -->
+                <span class="n-icon-btn n-white-btn" ng-click="searchInput.omniSearchValue=null;$event.preventDefault();"><span class="glyphicon glyphicon-remove"></span></span>
+                <span class="n-main-btn n-blue-btn" ng-disabled="searchform.$invalid" ng-click="searchSavingsAccount({omniSearchValue : searchInput.omniSearchValue}, $event)">Search</span>
+            </div>
+        </form>
+    </div>
+    <div class="pt-3" ng-show="searchhits">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-3">Savings account number</th>
+                    <th class="col-xs-3">Status</th>
+                    <th class="col-xs-6">Start date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="s in searchhits">
+                    <td><a class="n-anchor" ng-href="#!/Details/{{s.SavingsAccountNr}}">{{s.SavingsAccountNr}}</a></td>
+                    <td>{{s.Status}}</td>
+                    <td>{{s.StartDate | date:'shortDate'}}</td>
+                </tr>
+                <tr ng-show="searchhits.length == 0">
+                    <td colspan="3">No hits</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

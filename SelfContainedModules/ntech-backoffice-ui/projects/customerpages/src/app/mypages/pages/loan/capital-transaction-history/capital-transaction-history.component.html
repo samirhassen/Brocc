@@ -1,0 +1,34 @@
+<div *ngIf="m">
+  <table class="table lined-table">
+    <thead>
+      <tr>
+        <th class="col-xs-6">Datum</th>
+        <th class="col-xs-6 text-right">Transaktion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let r of m.items">
+        <tr *ngIf="r.isVisible">
+          <td class="col-xs-6">
+            {{ r.description }}
+            <br />
+            <span class="transaction-date">{{
+              r.date | date: "yyyy-MM-dd"
+            }}</span>
+          </td>
+
+          <td class="col-xs-6 text-right">{{ r.amount | currency }}</td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+  <div class="text-center pt-3" *ngIf="hasMoreItems()">
+    <a
+      *ngIf="hasMoreItems()"
+      (click)="showMoreItems($event)"
+      href=""
+      class="n-anchor"
+      >Visa fler</a
+    >
+  </div>
+</div>

@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="affiliate-reporting-log.html">
+    <div ng-if="$ctrl.m">
+        <button class="n-popup-btn n-turquoise-btn" ng-click="$ctrl.showLog($event)">Provider log <span class="glyphicon glyphicon-resize-full"></span></button>
+        <modal-dialog dialog-title="'Provider log'" dialog-id="$ctrl.dialogId">
+            <p>
+                <button class="n-direct-btn n-green-btn" ng-click="$ctrl.refresh($event)">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+            </p>
+            <table ng-if="$ctrl.m.hasIntegration" class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2">Date</th>
+                        <th class="col-xs-2">Type</th>
+                        <th class="col-xs-2">Status</th>
+                        <th class="cols-xs-6">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="e in $ctrl.m.events">
+                        <td>
+                            <span ng-class="{ 'glyphicon glyphicon-chevron-down chevron-bg mr-1' : !!e.showDetails, 'glyphicon glyphicon-chevron-right chevron-bg mr-1' : !e.showDetails }" ng-click="e.showDetails = !e.showDetails"></span>
+                            {{e.CreationDate | date:'short'}}
+                        </td>
+                        <td>{{e.EventType}}</td>
+                        <td>{{e.ProcessedStatus}} <span ng-show="e.ProcessedDate">({{e.ProcessedDate | date:'short'}})</span></td>
+                        <td><button class="n-direct-btn n-purple-btn" ng-click="e.showEventData = !e.showEventData">Toggle event data</button> <pre ng-if="e.showEventData">{{e.EventDataJson ? (e.EventDataJson | json) : e.EventData}}</pre></td>
+                    </tr>
+                    <tr ng-repeat-end class="opend" ng-show="e.showDetails">
+                        <td colspan="4">
+                            <h3>Processing details</h3>
+                            <hr class="hr-section" />
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-2">Date</th>
+                                        <th class="col-xs-2">Status</th>
+                                        <th class="col-xs-2">Message</th>
+                                        <th class="col-xs-6">Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="i in e.Items">
+                                        <td>{{i.LogDate | date:'short'}}</td>
+                                        <td>{{i.ProcessedStatus}}</td>
+                                        <td>{{i.MessageText}}</td>
+                                        <td>
+                                            <button ng-if="i.OutgoingRequestBody" class="n-direct-btn n-purple-btn" ng-click="i.showOutgoingRequestBody = !i.showOutgoingRequestBody">Toggle request</button> <pre ng-if="i.showOutgoingRequestBody">{{i.OutgoingRequestBodyJson ? (i.OutgoingRequestBodyJson | json) : i.OutgoingRequestBody}}</pre>
+                                            <button ng-if="i.OutgoingResponseBody" class="n-direct-btn n-purple-btn" ng-click="i.showOutgoingResponseBody = !i.showOutgoingResponseBody">Toggle response</button> <pre ng-if="i.showOutgoingResponseBody">{{i.OutgoingResponseBodyJson ? (i.OutgoingResponseBodyJson | json) : i.OutgoingResponseBody}}</pre>
+                                            <button ng-if="i.ExceptionText" class="n-direct-btn n-purple-btn" ng-click="i.showExceptionText = !i.showExceptionText">Toggle</button><pre ng-if="i.showExceptionText">{{i.ExceptionText}}</pre>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h3>Send again</h3>
+                            <hr class="hr-section" />
+                            <button class="n-direct-btn n-green-btn" ng-click="$ctrl.resendEvent(e, $event)">Resend</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p ng-if="!$ctrl.m.hasIntegration">
+                This provider has no external integrations
+            </p>
+        </modal-dialog>
+    </div>
+</script>

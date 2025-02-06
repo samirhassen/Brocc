@@ -1,0 +1,23 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <p *ngIf="pText" >{{pText}}</p>
+            <label *ngIf="labelText" class="custom-label">{{labelText}}</label>
+            <div *ngIf="!useDropdown()">
+                <div *ngFor="let p of options">
+                    <label class="custom-radio">
+                        <input type="radio" formControlName="selectedOption" [value]="p.value">
+                        {{p.displayText}}
+                    </label>
+                </div>
+            </div>
+            <div *ngIf="useDropdown()">
+                <select class="custom-select" formControlName="selectedOption">
+                    <option value="" *ngIf="!form.value.selectedOption" >{{getSelectText()}}</option>
+                    <option *ngFor="let p of options" [value]="p.value">{{p.displayText}}</option>
+                </select>
+            </div>
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

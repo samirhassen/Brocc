@@ -1,0 +1,194 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Balanzialånet</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="~/Content/img/favicon.png" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    @Styles.Render("~/Content/css/bundle-balanzia-application")
+    @if (NEnv.IsProduction)
+    {
+        <!-- Google Tag Manager -->
+        <script>
+            (function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', 'GTM-MG7D4J');
+        </script>
+        <!-- End Google Tag Manager -->
+    }
+</head>
+<body ng-app="app" ng-controller="ctr" ng-cloak translate-cloak>
+    @if (NEnv.IsProduction)
+    {
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MG7D4J" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    }
+    <div class="content_wrap" ng-show="debugapp">
+        <pre>
+            {{debugapp | json}}
+        </pre>
+    </div>
+    <div class="content_wrap" ng-hide="debugapp">
+        <div class="header">
+            <div class="logo_area">
+                <a href="@Url.Action("Application", "Balanzia")"><img src="~/Content/img/Balanzia.png" alt="Balanzia" /></a>
+            </div>
+            <div class="flag_area">
+                <div class="flag_icon finnish">
+                    <a href="#" ng-click="changeLanguage('fi', $event)" ng-class="{ 'unselected_language': (currentLanguage() == 'sv') }">
+                        <img src="~/Content/img/finlands-flagga.png" width="50" height="31">
+                    </a>
+                </div>
+                <div class="flag_icon swedish">
+                    <a href="#" ng-click="changeLanguage('sv', $event)" ng-class="{ 'unselected_language': (currentLanguage() == 'fi') }">
+                        <img src="~/Content/img/sveriges-flagga.png" width="50" height="31">
+                    </a>
+                </div>
+            </div>
+            <div class="heading-background">
+                <h1 translate="ansokan_kreditansokan">Kredit&shy;ansökan</h1>
+            </div>
+            <div class="menu_area">
+                &nbsp;
+            </div>
+        </div>
+        <div class="bg-white">
+            <div class="bg-gray">
+
+                <div class="fields_area centered_section">
+                    <!-- Kredituppgifter -->
+                    <div>
+                        <form name="fc" novalidate>
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_soktbelopp">Sökt belopp</div>
+                                <div class="the_value">
+                                    <input type="text"
+                                           autocomplete="off"
+                                           placeholder="€"
+                                           custom-validate="isValidPositiveInt"
+                                           ng-model="app.amount"
+                                           required
+                                           class="constant_width" />
+                                </div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_aterbettid">Återbetalningstid</div>
+                                <div class="the_value">
+                                    <select class="constant_width" ng-model="app.repaymentTimeInYears" required>
+                                        <option value="" ng-hide="app.repaymentTimeInYears" translate="ansokan_valj">Välj</option>
+                                        <option value="{{y}}" ng-repeat="y in years">{{y}} {{'ansokan_ar' | translate }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_lansomloser">Lån som ska lösas med det sökta lånet</div>
+                                <div class="the_value">
+                                    <input type="text"
+                                           autocomplete="off"
+                                           placeholder="€"
+                                           custom-validate="isValidLoansToSettleAmount"
+                                           ng-model="app.loansToSettleAmount"
+                                           class="constant_width" />
+                                </div>
+                            </div>
+                            <div class="key_value" ng-if="!hasInitialCampaignCode">
+                                <div class="the_key" translate="ansokan_hardukampanjkod">Har du en kampanjkod?</div>
+                                <div class="the_subtext" translate="ansokan_cc_varkod">Koden hittar du t.ex. i brevet om du har fått direktreklam.</div>
+                                <div class="the_value" ng-class="{ 'invalid_radio': showInvalid(fc.has_campaigncode) }">
+                                    <div class="radio">
+                                        <input type="radio" name="has_campaigncode" value="yes" ng-model="app.hasCampaignCode" required>&nbsp;<span translate="ansokan_ja">Ja</span> &nbsp;&nbsp;
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="has_campaigncode" value="no" ng-model="app.hasCampaignCode" required>&nbsp;<span translate="ansokan_nej">Nej</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="key_value" ng-if="hasInitialCampaignCode || app.hasCampaignCode === 'yes'">
+                                <div class="the_key" translate="ansokan_kampanjkod">Kampanjkod</div>
+                                <div class="the_value">
+                                    <input type="text"
+                                           autocomplete="off"
+                                           ng-model="app.campaignCode"
+                                           class="constant_width"
+                                           required
+                                           ng-disabled="hasInitialCampaignCode" />
+                                </div>
+                            </div>
+                            <div class="key_value" ng-if="!hasInitialCampaignCode && app.hasCampaignCode === 'no'">
+                                <div class="the_key" translate="ansokan_hurhorttalasom">Hur har du hört talas om oss?</div>
+                                <div class="the_value">
+                                    <select class="constant_width" ng-model="app.campaignCode" required>
+                                        <option value="" ng-hide="app.campaignCode" translate="ansokan_valj">Välj</option>
+                                        <option ng-repeat="s in allSources" value="{{getCampaignCodeFromSource(s)}}" translate="{{s.k}}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_antalsokanden">Antal sökanden</div>
+                                <div class="the_value" ng-class="{ 'invalid_radio': showInvalid(fc.two_applicants) }">
+                                    <div class="radio">
+                                        <input type="radio" name="two_applicants" value="1" ng-model="app.nrOfApplicants" required>&nbsp;1&nbsp;&nbsp;
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="two_applicants" value="2" ng-model="app.nrOfApplicants" required>&nbsp;2
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="key_value" ng-show="hasApplicant2()">
+                                <div class="the_key" translate="ansokan_sokandesammaadr">Bor sökanden på samma adress?</div>
+                                <div class="the_value" ng-class="{ 'invalid_radio': showInvalid(fc.separate_housing) }">
+                                    <div class="radio">
+                                        <input type="radio" name="separate_housing" value="true" ng-model="app.applicantsHaveSameAddress" ng-required="hasApplicant2()">&nbsp;{{'ansokan_ja' | translate}}
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="separate_housing" value="false" ng-model="app.applicantsHaveSameAddress" ng-required="hasApplicant2()">&nbsp;{{'ansokan_nej' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Kunduppgifter om förste sökande -->
+                    <div ng-show="app.nrOfApplicants">
+                        <form name="f1">
+                            @Html.Partial("Applicant", new ApplicantPartialViewModel { Name = "applicant1", HeaderKey = "ansokan_kusokande1", FormName = "f1" })
+                        </form>
+                    </div>
+
+                    <!-- Andra sökande -->
+                    <div class="" ng-show="hasApplicant2()">
+                        <form name="f2">
+                            @Html.Partial("Applicant", new ApplicantPartialViewModel { Name = "applicant2", HeaderKey = "ansokan_kusokande2", FormName = "f2" })
+                        </form>
+                    </div>
+
+                    <!-- Navigering -->
+                    <div>
+                        <div class="button_area" ng-hide="isApplying">
+                            <button type="button" class="quit_button nft_button" ng-click="reset()" translate="ansokan_avbryt">Avbryt</button>
+                            <button type="submit" class="ansok_button nft_button" ng-click="apply()" translate="ansokan_skickain">Skicka in</button>
+                            <div class="invalid_mark hidden" ng-show="isFormInvalid() && fc.$submitted">!</div>
+                            <div class="invalid_message hidden" ng-show="isFormInvalid() && fc.$submitted" translate="ansokan_faltmastekorrigeras">Det finns fält som måste korrigeras.</div>
+                        </div>
+                        <div class="button_area" ng-show="isApplying">
+                            <img src="~/Content/img/loading.gif" ng-show="isApplying" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-functions">
+            <p ng-show="isTest"><a href="#" ng-click="loadTestData($event)">fyll i samma som föregående ansökan (endast i test)</a></p>
+        </div>
+    </div>
+    <script>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-balanzia-application")
+</body>
+</html>

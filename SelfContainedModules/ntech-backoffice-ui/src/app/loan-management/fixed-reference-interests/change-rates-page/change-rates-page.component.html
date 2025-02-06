@@ -1,0 +1,46 @@
+<div class="rates-container" *ngIf="m">
+  <div class="rates-block">
+    <h2>Current reference interest rates</h2>
+    <hr class="hr-section" />
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Fixed time</th>
+          <th>Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of m.serverRates">
+          <td>
+            {{ parseMonthCount(r.MonthCount).nrOfMonthsOrYears }}
+            {{ parseMonthCount(r.MonthCount).localizedUnitName }}
+          </td>
+          <td>{{ r.RatePercent | number }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-block" *ngIf="!m.pendingChangeInitialData">
+    <h2>Change reference interest rates</h2>
+    <hr class="hr-section" />
+    <button
+      *ngIf="!m.editInitialData"
+      class="n-main-btn n-blue-btn"
+      (click)="beginChange($event)"
+    >
+      Change rates
+    </button>
+    <ng-container *ngIf="m.editInitialData">
+      <rate-editor [initialData]="m.editInitialData"></rate-editor>
+    </ng-container>
+  </div>
+  <div class="rates-block" *ngIf="m.pendingChangeInitialData">
+    <h2>Pending change</h2>
+    <hr class="hr-section" />
+    <pending-change [initialData]="m.pendingChangeInitialData"></pending-change>
+  </div>
+  <test-functions-popup
+    *ngIf="m.testFunctions"
+    [model]="m?.testFunctions"
+  ></test-functions-popup>
+</div>

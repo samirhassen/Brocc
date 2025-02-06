@@ -1,0 +1,116 @@
+<ScoringSetup>
+  <RejectionReasons otherPauseDays="30">
+    <RejectionReason name="paymentRemark" displayName="Payment remark" pauseDays="360">
+      <RejectionReasonScoringRule>ApplicantPaymentRemark</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="minimumDemands" displayName="Minimum demands">
+      <RejectionReasonScoringRule>ApplicantAgeMinor</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ApplicantAge</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ApplicantEmployment</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>CombinedIncome</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ApplicantOwnCompanyAge</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ApplicantCreditOnDebtCollection</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>MissingCreditReport</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>PersonStatus</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>MissingSatConsent</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ApplicantRecentlyImmigrated</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ApplicantMissingHousing</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>CoApplicant</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>AdditionalLoan</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>RandomlyRejected</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="socialStatus" displayName="Social status" pauseDays="180">
+      <RejectionReasonScoringRule>ImmigratedRecently</RejectionReasonScoringRule>
+    </RejectionReason>    
+    <RejectionReason name="score" displayName="Score" pauseDays="90">
+      <RejectionReasonScoringRule>RiskTooHigh</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ScoreCutoff</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>InterestRateCutoff</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="dbrOrLtl" displayName="Dbr / Ltl" pauseDays="45" />
+    <RejectionReason name="priorHistory" displayName="Prior history">
+      <RejectionReasonScoringRule>HistoricalLateLoans</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>HistoricalDebtCollection</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>HistoricalLateNotifications</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule forceManualCheck="true">CurrentBalanceTooHigh</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule forceManualCheck="true">CustomersHaveSeparateLoans</RejectionReasonScoringRule>    
+    </RejectionReason>
+    <RejectionReason name="negativeCompanyConnection" displayName="Neg. company conn." pauseDays="180" />
+    <RejectionReason name="alreadyApplied" displayName="Already applied">
+      <RejectionReasonScoringRule>ActivePendingApplication</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="paused" displayName="Paused">
+      <RejectionReasonScoringRule>PausedByPriorApplication</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="address" displayName="Address" pauseDays="180">
+      <RejectionReasonScoringRule>ApplicantDomesticAddress</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>ApplicantPostboxAddress</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="differentAddress" displayName="Different adress">
+        <RejectionReasonScoringRule>ApplicantAddressesDiffer</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="sat60" displayName="SAT 60" pauseDays="180">
+      <RejectionReasonScoringRule>SatOverdueBalance</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="satLoans" displayName="SAT loans" pauseDays="120">
+      <RejectionReasonScoringRule>SatHighNrOfLoans</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>SatDbrHighAndSatLtlLow</RejectionReasonScoringRule>
+      <RejectionReasonScoringRule>SatCreditBalance</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="additionalLoan" displayName="Additional loan">
+      <RejectionReasonScoringRule>ActiveLoansPaymentCount</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="requestedVsOfferedDifference" displayName="Requested vs offered" pauseDays="7">
+      <RejectionReasonScoringRule>RequestedVsOfferedAmountDiff</RejectionReasonScoringRule>
+    </RejectionReason>
+    <RejectionReason name="otherProvenir" displayName="Other provenir" pauseDays="0"></RejectionReason>
+  </RejectionReasons>
+  <RejectionEmails>
+    <!-- They are checked in order. The first where conditions are satisifed is used -->
+    <RejectionEmail templateName="creditrejection-letter1-paymentremark">
+      <RequiredRejectionReason>paymentRemark</RequiredRejectionReason>
+    </RejectionEmail>
+    <RejectionEmail templateName="creditrejection-letter3-otherapplication">
+      <RequiredRejectionReason>alreadyApplied</RequiredRejectionReason>
+    </RejectionEmail>
+    <RejectionEmail templateName="creditrejection-letter4-extraloan">
+      <RequiredRejectionReason>additionalLoan</RequiredRejectionReason>
+    </RejectionEmail>
+    <RejectionEmail templateName="creditrejection-letter2-general" />
+  </RejectionEmails>
+  <ManualControlOnAcceptRules>
+    <ManualControlOnAcceptRule name="DbrApplication" displayText="High application dbr" />
+    <ManualControlOnAcceptRule name="DbrSat" displayText="High sat dbr" />
+    <ManualControlOnAcceptRule name="LtlApplication" displayText="Low application ltl" />
+    <ManualControlOnAcceptRule name="LtlSat" displayText="Low sat ltl" />
+    <ManualControlOnAcceptRule name="SelfEmployed" displayText="Self employed applicant" />
+    <ManualControlOnAcceptRule name="HistoricalRejectedApplication" displayText="Prior rejected application" />
+    <ManualControlOnAcceptRule name="YoungAndRetired" displayText="Young, retired applicant" />
+    <ManualControlOnAcceptRule name="LivesWithParents" displayText="Applicant living with parents" />
+    <ManualControlOnAcceptRule name="HighIncome" displayText="High applicant income" />
+    <ManualControlOnAcceptRule name="AllYoungApplicants" displayText="All applicants are young" />
+    <ManualControlOnAcceptRule name="ApplicantsAgeDiff" displayText="Large age difference between applicants" />
+    <ManualControlOnAcceptRule name="ApplicantsAddressDiff" displayText="Applicants have different addresses" />
+    <ManualControlOnAcceptRule name="LivingCostExpectedButMissing" displayText="Housing cost are low or missing" />
+    <ManualControlOnAcceptRule name="RequestedVsOfferedAmountDiff" displayText="Large difference between requested and offered amount" />
+    <ManualControlOnAcceptRule name="HighAgeAfterRepayment" displayText="Old age after repayment" />
+    <ManualControlOnAcceptRule name="TempEmployed" displayText="Temp employed applicant" />
+    <ManualControlOnAcceptRule name="SameAddress" displayText="Other applications with same address" />
+    <ManualControlOnAcceptRule name="LowRequestedForAmount" displayText="Low requested amount" />
+    <ManualControlOnAcceptRule name="LowOfferedAdditionalLoan" displayText="Low offered additional loan" />
+    <ManualControlOnAcceptRule name="LowOfferedLoan" displayText="Low offered loan" />
+    <ManualControlOnAcceptRule name="AutoFollowAcceptNotEnabled" displayText="Auto follow accept is disabled" />
+    <ManualControlOnAcceptRule name="ManuallyControlledRiskGroup" displayText="Risk group requires manual control">
+      <ManualControlOnAcceptRuleSetting name="riskGroups" value="['D']" />
+    </ManualControlOnAcceptRule>
+    <ManualControlOnAcceptRule name="LowRequestedRepaymentTimeForAmount" displayText="Requested amount is high and requested repayment time is short" />
+    <ManualControlOnAcceptRule name="AnyOldApplicant" displayText="At least one applicant is old" />
+    <ManualControlOnAcceptRule name="CampaignCode" displayText="Campaign code forces manual control" />
+    <ManualControlOnAcceptRule name="SatLatestLoanIsRecent" displayText="Latest SAT loan is recent" />
+    <ManualControlOnAcceptRule name="RecentlyImmigrated" displayText="At least one applicant has recently immigrated" />  
+    <ManualControlOnAcceptRule name="SatHighNrOfLoansManualControl" displayText="High nr of SAT loans"></ManualControlOnAcceptRule>
+    <ManualControlOnAcceptRule name="HighOfferedInterestRate" displayText="Interest rate above 10%">
+      <ManualControlOnAcceptRuleSetting name="cutOffRate" value="10" />
+    </ManualControlOnAcceptRule>
+  </ManualControlOnAcceptRules>
+</ScoringSetup>

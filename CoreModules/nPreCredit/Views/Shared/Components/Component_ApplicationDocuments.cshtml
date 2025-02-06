@@ -1,0 +1,35 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="application-documents.html">
+    <div>
+        <div class="editblock">
+            <div class="pull-right pb-3">
+                <button class="n-icon-btn n-turquoise-btn" ng-show="$ctrl.isEditAllowed() && !$ctrl.isEditMode" ng-click="$ctrl.setEditMode(true, $event)"><span class="glyphicon glyphicon-pencil"></span></button>
+                <button class="n-icon-btn n-white-btn" ng-show="$ctrl.isEditMode" ng-click="$ctrl.setEditMode(false, $event)"><span class="glyphicon glyphicon-remove"></span></button>
+                <button class="n-icon-btn n-green-btn" ng-show="$ctrl.isEditMode" ng-click="$ctrl.saveEdits($event)"><span class="glyphicon glyphicon-ok"></span></button>
+            </div>
+
+            <table class="table">
+                <tr ng-repeat="d in $ctrl.documents">
+                    <td class="col-xs-3">{{d.model.documentTitle}}</td>
+                    <td class="text-right col-xs-4">
+                        <a ng-show="!d.localState && d.serverState" ng-href="{{d.serverState.downloadUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a>
+                        <span ng-show="!d.localState && !d.serverState">Missing</span>
+                        <span ng-show="d.localState && d.localState.isAttach">{{d.localState.filename}}</span>
+                    </td>
+                    <td class="text-right col-xs-5">
+                        <button class="n-direct-btn n-red-btn" ng-show="!d.localState && $ctrl.isEditMode && d.serverState" ng-click="$ctrl.removeDocument(d, $event)">Remove</button>
+                        <span ng-show="d.localState && !d.localState.isAttach">Pending removal...</span>
+                        <button class="n-direct-btn n-white-btn" ng-show="!d.localState && $ctrl.isEditMode && !d.serverState" ng-click="$ctrl.attachDocument(d, $event)">
+                            Attach <span class="glyphicon glyphicon-paperclip"></span>
+                        </button>
+                        <span ng-show="d.localState && d.localState.isAttach">Pending upload...</span>
+                    </td>
+                </tr>
+            </table>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</script>

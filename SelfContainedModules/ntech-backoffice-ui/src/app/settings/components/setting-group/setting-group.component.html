@@ -1,0 +1,7 @@
+<div>
+  <ng-container *ngFor="let setting of m.settings">
+    <toggle-block [initialData]="{ headerText: setting.displayName }">
+      <setting-single [initialData]="setting.initialData"> </setting-single>
+    </toggle-block>
+  </ng-container>
+</div>

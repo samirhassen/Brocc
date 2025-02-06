@@ -1,0 +1,60 @@
+﻿DECLARE @name VARCHAR(50) -- database name  
+DECLARE @path VARCHAR(256) -- path for backup files  
+DECLARE @fileName VARCHAR(256) -- filename for backup  
+DECLARE @fileDate VARCHAR(20) -- used for file name
+DECLARE @dbFileName VARCHAR(max) 
+DECLARE @logFileName VARCHAR(max) 
+
+-- specify filename format
+SELECT @fileDate = CONVERT(VARCHAR(20),GETDATE(),112) 
+
+SET @fileName = 'C:\NaktergalTemp\Backups\Customer.BAK' 
+set @name = 'AnonTempCustomer'
+set @dbFileName = 'C:\Naktergal\Databases\' + @name + '.mdf'
+set @logFileName = 'C:\Naktergal\Databases\' + @name + '_log.ldf'
+
+declare @sql as varchar(20), @spid as int
+
+select @spid = min(spid)  from master..sysprocesses  where dbid = db_id(@name)  and spid != @@spid    
+while (@spid is not null)
+    begin
+	print 'Killing process ' + cast(@spid as varchar) + ' ...'
+	set @sql = 'kill ' + cast(@spid as varchar)
+	exec (@sql)
+		select 	@spid = min(spid)  
+		from 	master..sysprocesses  
+		where	dbid = db_id(@name) 
+		and 	spid != @@spid
+    end 
+   
+RESTORE DATABASE @name FROM DISK = @fileName 
+	WITH REPLACE, 
+	MOVE 'PrimaryRowData' TO @dbFileName,
+	MOVE 'PrimaryLogData' TO @logFileName
+
+exec ('create table ' + @name + '.dbo.StagingDatabaseState (Id int identity not null primary key, StageName nvarchar(128) not null)')
+exec ('insert into ' + @name + '.dbo.StagingDatabaseState (StageName) values (''RestoredFromBackup'')')
+
+-----------------------------
+--- GCC backup på prod-------
+-----------------------------
+DECLARE @databaseNames TABLE (DatabaseName NVARCHAR(max))
+INSERT INTO @databaseNames VALUES ('NTechProdPreCredit')
+INSERT INTO @databaseNames VALUES ('NTechProdCustomer')
+
+DECLARE @databaseName NVARCHAR(max)
+declare @diskPath nvarchar(max)
+
+DECLARE db_cursor CURSOR FOR SELECT DatabaseName FROM @databaseNames
+OPEN db_cursor   
+FETCH NEXT FROM db_cursor INTO @databaseName   
+
+WHILE @@FETCH_STATUS = 0   
+BEGIN   
+       set @diskPath = 'C:\Naktergal\Backups\ForStaging\' +@databaseName + '.bak'
+	   BACKUP DATABASE @databaseName TO DISK = @diskPath WITH COPY_ONLY, COMPRESSION, INIT
+       FETCH NEXT FROM db_cursor INTO @databaseName
+END
+
+CLOSE db_cursor   
+DEALLOCATE db_cursor

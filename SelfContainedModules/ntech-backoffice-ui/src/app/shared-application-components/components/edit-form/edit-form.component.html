@@ -1,0 +1,34 @@
+<div class="row pb-1" *ngIf="m">
+  <div
+    class="col-xs-12 text-right"
+    *ngIf="m.isEditAllowed && !m.inEditMode.value"
+  >
+    <button
+      class="n-icon-btn n-blue-btn"
+      [disabled]="m.isEditing.value"
+      (click)="beginEdit($event)"
+    >
+      <span class="glyphicon glyphicon-pencil"></span>
+    </button>
+  </div>
+  <div class="col-xs-12 text-right" *ngIf="m.inEditMode.value">
+    <button
+      (click)="onCancel($event)"
+      class="n-icon-btn n-white-btn"
+      style="margin-right: 5px"
+    >
+      <span class="glyphicon glyphicon-remove"></span>
+    </button>
+    <button
+      (click)="onSave($event)"
+      [disabled]="isInvalid()"
+      class="n-icon-btn n-green-btn"
+    >
+      <span class="glyphicon glyphicon-ok"></span>
+    </button>
+  </div>
+</div>
+
+<div class="pb-2" *ngIf="m">
+  <ng-content select="[form-area]"></ng-content>
+</div>

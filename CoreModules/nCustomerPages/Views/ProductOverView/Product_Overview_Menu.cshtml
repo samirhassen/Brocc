@@ -1,0 +1,10 @@
+﻿@{
+    Func<string, string> tr = x => Model.Translations.ContainsKey(x) ? Model.Translations[x] : x;
+}
+<!-- ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'productoverview' }" -->
+<a class="item" href="@Url.Action("Index", "ContactInfo")">@tr("global_m_contactinfo")</a>
+<a class="item mobile" href="@Url.Action("Logout", "Common")"><span>@tr("logout")</span></a>
+<span class="desktop">
+    <a href="@Url.Action("Logout", "Common")" class="item logout-link"><span>@tr("logout")</span></a>
+</span>
+    

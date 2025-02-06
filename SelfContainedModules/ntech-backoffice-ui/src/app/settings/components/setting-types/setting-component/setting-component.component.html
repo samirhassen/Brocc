@@ -1,0 +1,15 @@
+
+<div *ngIf="m">
+  <div *ngIf="m.componentName === 'KycQuestionTemplatesComponent'">
+    <app-kyc-question-templates></app-kyc-question-templates>
+  </div>
+  <div *ngIf="m.componentName === 'BookkeepingRulesEditComponent'">
+    <bookkeeping-rules-edit></bookkeeping-rules-edit>
+  </div>
+  <div *ngIf="m.componentName === 'CreditHandlerLimitsComponent'">
+    <credit-handler-limit></credit-handler-limit>
+  </div>
+  <div *ngIf="m.componentName === 'LoanPolicyFiltersComponent'">
+    <policyfilter-rulesets></policyfilter-rulesets>
+  </div>
+</div>

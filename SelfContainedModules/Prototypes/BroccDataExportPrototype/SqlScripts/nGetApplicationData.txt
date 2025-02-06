@@ -1,0 +1,353 @@
+---Gets Application Data
+---example:
+---
+---Execute query in [DB-nPreCredit] (nPreCredit database)
+---Find and replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+---Query:
+---
+---exec nGetApplicationData @DateFrom ='2018-06-03', @DateTo = '2018-06-05'
+---
+
+CREATE OR ALTER PROCEDURE nGetApplicationData
+@DateFrom DateTime, 
+@DateTo DateTime
+
+AS
+
+SELECT
+cah.ApplicationNr, 
+cah.ApplicationDate,  
+cah.ProviderName,
+cah.NrOfApplicants, 
+
+
+--EffectiveInterestRatePercent
+	    --
+		--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+		--
+(SELECT TOP 1 f.EffectiveInterestRate FROM [BalanziaFiDev-nDatawarehouse].dbo.Fact_CurrentCreditDecisionEffectiveInterestRate f 
+WHERE f.ApplicationNr = cah.ApplicationNr ORDER BY f.DwUpdatedDate DESC) AS EffectiveInterestRatePercent, 
+
+
+--CurrentStatus 
+CASE
+	--Inactive
+	WHEN 
+		cah.IsActive = 0 
+	THEN 'Inactive'
+
+	--PendingCreditCheck
+    WHEN 
+		cah.CreditCheckStatus = 'Initial' AND cah.WaitingForAdditionalInformationDate IS NULL 
+    THEN 'PendingCreditCheck'
+
+	--CustomerCheckStatus
+    WHEN 
+		((cah.CustomerCheckStatus = 'Rejected') OR (cah.CustomerCheckStatus != 'Accepted' AND cah.AgreementStatus = 'Accepted')) 
+		AND cah.WaitingForAdditionalInformationDate IS NULL 
+	THEN 'CustomerCheckStatus'
+    
+	--WaitingForData
+	WHEN 
+		((SELECT TOP 1 c.ChangedDate FROM CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr 
+		AND AddedInStepName = 'AdditionalQuestions' ORDER BY c.ChangedDate asc) IS NULL
+		OR cah.CanSkipAdditionalQuestions = 1) AND cah.CreditCheckStatus = 'Accepted'
+		AND cah.WaitingForAdditionalInformationDate IS NULL
+	THEN 'WaitingForData'
+
+	--WaitingForSignature
+	WHEN 
+		cah.CreditCheckStatus = 'Accepted' AND cah.AgreementStatus != 'Accepted'
+		AND ((SELECT TOP 1 c.ChangedDate FROM CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr 
+		AND AddedInStepName = 'AdditionalQuestions' ORDER BY c.ChangedDate ASC) IS NOT NULL
+		OR cah.CanSkipAdditionalQuestions = 1)
+		AND cah.WaitingForAdditionalInformationDate IS NULL 
+	THEN 'WaitingForSignature'
+
+	--PendingFraudCheck
+	WHEN 
+		cah.CreditCheckStatus = 'Accepted' AND cah.AgreementStatus = 'Accepted'
+		AND ((SELECT TOP 1 c.ChangedDate FROM CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr 
+		AND AddedInStepName = 'AdditionalQuestions' ORDER BY c.ChangedDate ASC) IS NOT NULL
+		OR cah.CanSkipAdditionalQuestions = 1)
+		AND cah.FraudCheckStatus = 'Initial'
+		AND cah.CustomerCheckStatus != 'Rejected'
+		AND (SELECT TOP 1 c.ChangedDate FROM CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr AND [Name] = 'documentCheckStatus' 
+		AND [Value] = 'Accepted' ORDER BY c.ChangedDate DESC) IS NOT NULL 
+		AND cah.WaitingForAdditionalInformationDate IS NULL
+	THEN 'PendingFraudCheck' 
+
+	--PendingFinalDecision
+	WHEN
+		cah.IsPartiallyApproved = 0 AND cah.IsActive = 1
+		AND ((cah.CreditCheckStatus = 'Accepted' AND cah.FraudCheckStatus = 'accepted' AND cah.CustomerCheckStatus = 'Accepted' AND cah.AgreementStatus = 'Accepted')
+		OR cah.CreditCheckStatus = 'Rejected')
+		AND cah.WaitingForAdditionalInformationDate IS NULL
+	THEN 'PendingFinalDecision'
+
+	--WaitingForAdditionalInformation
+	WHEN 
+		cah.WaitingForAdditionalInformationDate IS NOT NULL
+	THEN 'WaitingForAdditionalInformation'
+	
+	--WaitingForDocument
+	WHEN 
+		cah.IsActive = 1 AND cah.AgreementStatus = 'Accepted' AND
+		((NOT EXISTS(SELECT 1 FROM CreditApplicationDocumentHeader c WHERE c.ApplicationNr = cah.ApplicationNr)
+		OR (SELECT c.ApplicationNr FROM CreditApplicationDocumentHeader c WHERE c.ApplicationNr = cah.ApplicationNr GROUP BY c.ApplicationNr 
+		HAVING COUNT(C.ApplicationNr) < cah.NrOfApplicants) IS NOT NULL))
+		AND cah.WaitingForAdditionalInformationDate IS NULL
+	THEN 'WaitingForDocument'
+
+	--PendingDocumentCheck
+	WHEN 
+		cah.IsActive = 1 AND  cah.AgreementStatus = 'Accepted'
+		AND (SELECT c.ApplicationNr FROM CreditApplicationDocumentHeader c WHERE c.ApplicationNr = cah.ApplicationNr GROUP BY c.ApplicationNr HAVING COUNT(*) >= cah.NrOfApplicants) IS NOT NULL
+		AND ((SELECT TOP 1 c.[Value] FROM CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr AND [Name] = 'documentCheckStatus') = 'Accepted'
+		OR  (SELECT TOP 1 c.[Value] FROM CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr AND [Name] = 'documentCheckStatus') = 'Rejected')
+		AND cah.WaitingForAdditionalInformationDate IS NULL
+	THEN 'PendingDocumentCheck'
+
+	ELSE NULL
+
+END AS CurrentStatus,
+
+--WinDate (First AdditionalQuestionsAnswered date)
+(SELECT TOP 1 c.ChangedDate FROM CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr AND AddedInStepName = 'AdditionalQuestions' ORDER BY c.ChangedDate ASC) AS WinDate, 
+
+--CustomerId (Applicant1)
+(SELECT TOP 1 c.[Value] from CreditApplicationItem c WHERE c.ApplicationNr = cah.ApplicationNr AND c.[Name] = 'customerid' AND c.GroupName = 'applicant1' ORDER BY c.ChangedDate DESC) AS CustomerId,
+
+--PriceMatrixId
+(SELECT CASE WHEN EXISTS(SELECT 1 FROM ComplexApplicationListItem a WHERE a.ApplicationNr = cah.ApplicationNr AND  a.ItemName = 'HasVariation' AND a.ItemValue = 'true') 
+THEN (SELECT TOP 1 a.ItemValue FROM ComplexApplicationListItem a WHERE a.ApplicationNr = cah.ApplicationNr AND  a.ItemName = 'VariationName') ELSE NULL END) AS PriceMatrixId, 
+
+
+--PreApprovalDate and PreRejectedDate 
+(SELECT TOP 1 cd.DecisionDate WHERE cd.Discriminator = 'AcceptedCreditDecision') AS PreApprovalDate, 
+(SELECT TOP 1 cd.DecisionDate WHERE cd.Discriminator = 'RejectedCreditDecision') AS PreRejectedDate, 
+
+--SignedDate
+(SELECT TOP 1 CASE WHEN cah.AgreementStatus = 'Accepted' THEN (SELECT MAX(c.CommentDate) FROM CreditApplicationComment c WHERE c.ApplicationNr = cah.ApplicationNr AND c.EventType = 'AgreementSigned') ELSE NULL END) AS SignedDate,
+
+--BookedDate
+cah.FinalDecisionDate AS BookedDate, 
+
+--PostRejectedDate
+(SELECT TOP 1 cah.RejectedDate WHERE IsRejected = 1 AND cd.Discriminator != 'RejectedCreditDecision') AS PostRejectedDate, 
+
+--Datawarehouse 
+fa.CreditNr,
+fa.LeftToLiveOn,
+fa.LoansToSettleAmount,
+fa.ApplicantsHaveSameAddress,
+fa.DecisionDate,
+fa.DecisionStatus,
+fa.OfferedAmount,
+fa.RequestedAmount,
+fa.RequestedRepaymentTimeInMonths,
+fa.OfferedRepaymentTimeInMonths,
+fa.OfferedMarginInterestRatePercent,
+fa.OfferedAdditionalLoanNewMarginInterestRatePercent, 
+fa.OfferedAdditionalLoanNewAnnuityAmount,
+fa.OfferedAdditionalLoanCreditNr,
+fa.CampaignCode,
+fc.InitialPaymentDate,
+fc.InitialPaymentAmount,
+fa.Score,
+fa.ScoreGroup,
+
+--RiskClass and RiskGroup computation - custom logic for Balanzia
+CASE
+    WHEN fa.Score >= -1230.46 THEN 1
+    WHEN fa.Score >= -1658.66 THEN 2
+	WHEN fa.Score >= -2061.08 THEN 3
+	WHEN fa.Score >= -2442.76 THEN 4
+	WHEN fa.Score >= -2813.62 THEN 5 
+	WHEN fa.Score >= -3178.13 THEN 6 
+	WHEN fa.Score >= -3536.41 THEN 7 
+	WHEN fa.Score >= -3899.89 THEN 8 
+	WHEN fa.Score >= -4254.43 THEN 9
+    ELSE NULL
+END AS RiskClass,
+
+CASE
+    WHEN fa.Score >= -1230.46 THEN 'E'
+    WHEN fa.Score >= -1658.66 THEN 'E'
+	WHEN fa.Score >= -2061.08 THEN 'D'
+	WHEN fa.Score >= -2442.76 THEN 'D'
+	WHEN fa.Score >= -2813.62 THEN 'C' 
+	WHEN fa.Score >= -3178.13 THEN 'C' 
+	WHEN fa.Score >= -3536.41 THEN 'B' 
+	WHEN fa.Score >= -3899.89 THEN 'B' 
+	WHEN fa.Score >= -4254.43 THEN 'A'
+    ELSE NULL
+END AS RiskGroup,
+
+--------------------------------------------------
+--------------Applicant1--------------------------
+--------------------------------------------------
+
+--Applicant1CustomerId
+(SELECT TOP 1 c.[Value] FROM CreditApplicationItem c 
+WHERE c.ApplicationNr = cah.ApplicationNr 
+AND c.[Name] = 'customerid' 
+AND c.GroupName = 'applicant1' 
+ORDER BY c.ChangedDate DESC) AS Applicant1CustomerId,
+
+--Applicant1Age 
+(SELECT DATEDIFF(YY,(SELECT TOP 1 c.[Value] FROM CreditApplicationItem c 
+WHERE c.ApplicationNr = cah.ApplicationNr 
+AND c.[Name] = 'birthDate' 
+AND c.GroupName = 'applicant1' 
+ORDER BY c.ChangedDate DESC),GETDATE())) as Applicant1Age,
+
+fd.Applicant1IsMale, 
+fa.Applicant1Housing, 
+fa.Applicant1HousingCostPerMonth,
+fa.Applicant1CarOrBoatLoanAmount, 
+fa.Applicant1CarOrBoatLoanCostPerMonth, 
+fa.Applicant1CreditCardAmount, 
+fa.Applicant1CreditCardCostPerMonth, 
+fa.Applicant1DomesticAddressSinceDate, 
+fa.Applicant1Education, 
+fa.Applicant1Employment, 
+fa.Applicant1EmployedSince,
+fa.Applicant1IncomePerMonth, 
+fa.Applicant1Marriage, 
+fa.Applicant1NrOfChildren, 
+fa.Applicant1MortgageLoanAmount, 
+fa.Applicant1MortgageLoanCostPerMonth,
+fa.Applicant1StudentLoanAmount, 
+fa.Applicant1StudentLoanCostPerMonth, 
+fa.Applicant1OtherLoanAmount, 
+fa.Applicant1OtherLoanCostPerMonth, 
+fa.Applicant1BricRiskOfPaymentRemark, 
+fa.Applicant1HasPaymentRemark, 
+
+--Applicant1 SATValues
+fa.Applicant1SatConsentStatus, 
+(SELECT TOP 1 dc_applicant1.[Value] WHERE dc_applicant1.CreditReportProviderName = 'SatFi' AND dc_applicant1.[Name] = 'c01' ORDER BY dc_applicant1.[RequestDate] DESC) AS Applicant1SatValueC01, 
+(SELECT TOP 1 dc_applicant1.[Value] WHERE dc_applicant1.CreditReportProviderName = 'SatFi' AND dc_applicant1.[Name] = 'c03' ORDER BY dc_applicant1.[RequestDate] DESC) AS Applicant1SatValueC03, 
+(SELECT TOP 1 dc_applicant1.[Value] WHERE dc_applicant1.CreditReportProviderName = 'SatFi' AND dc_applicant1.[Name] = 'c04' ORDER BY dc_applicant1.[RequestDate] DESC) AS Applicant1SatValueC04, 
+(SELECT TOP 1 dc_applicant1.[Value] WHERE dc_applicant1.CreditReportProviderName = 'SatFi' AND dc_applicant1.[Name] = 'k11' ORDER BY dc_applicant1.[RequestDate] DESC) AS Applicant1SatValueK11, 
+(SELECT TOP 1 dc_applicant1.[Value] WHERE dc_applicant1.CreditReportProviderName = 'SatFi' AND dc_applicant1.[Name] = 'count' ORDER BY dc_applicant1.[RequestDate] DESC) AS Applicant1SatValueCount, 
+
+--------------------------------------------------
+--------------Applicant2--------------------------
+--------------------------------------------------
+
+--Applicant2Age 
+(SELECT DATEDIFF(YY,(SELECT TOP 1 c.[Value] FROM CreditApplicationItem c 
+WHERE c.ApplicationNr = cah.ApplicationNr 
+AND c.[Name] = 'birthDate' 
+AND c.GroupName = 'applicant2' 
+ORDER BY c.ChangedDate DESC),GETDATE())) as Applicant2Age,
+
+--Applicant2CustomerId,
+(SELECT TOP 1 c.[Value] FROM CreditApplicationItem c 
+WHERE c.ApplicationNr = cah.ApplicationNr 
+AND c.[Name] = 'customerid' 
+AND c.GroupName = 'applicant2' 
+ORDER BY c.ChangedDate DESC) AS Applicant2CustomerId,
+
+fd.Applicant2IsMale, 
+fa.Applicant2Housing, 
+fa.Applicant2HousingCostPerMonth,
+fa.Applicant2CarOrBoatLoanAmount, 
+fa.Applicant2CarOrBoatLoanCostPerMonth, 
+fa.Applicant2CreditCardAmount, 
+fa.Applicant2CreditCardCostPerMonth, 
+fa.Applicant2DomesticAddressSinceDate, 
+fa.Applicant2Education, 
+fa.Applicant2Employment, 
+fa.Applicant2EmployedSince,
+fa.Applicant2IncomePerMonth, 
+fa.Applicant2Marriage, 
+fa.Applicant2NrOfChildren, 
+fa.Applicant2MortgageLoanAmount, 
+fa.Applicant2MortgageLoanCostPerMonth,
+fa.Applicant2StudentLoanAmount, 
+fa.Applicant2StudentLoanCostPerMonth, 
+fa.Applicant2OtherLoanAmount, 
+fa.Applicant2OtherLoanCostPerMonth, 
+fa.Applicant2BricRiskOfPaymentRemark, 
+fa.Applicant2HasPaymentRemark,
+fa.Applicant2HasPositiveBusinessConnection,
+fa.Applicant2HasNegativeBusinessConnection,
+
+--Applicant2 SatValues
+fa.Applicant2SatConsentStatus, 
+(SELECT TOP 1 dc_applicant2.[Value] WHERE dc_applicant2.CreditReportProviderName = 'SatFi' AND dc_applicant2.[Name] = 'c01' ORDER BY dc_applicant2.[RequestDate] DESC) AS Applicant2SatValueC01, 
+(SELECT TOP 1 dc_applicant2.[Value] WHERE dc_applicant2.CreditReportProviderName = 'SatFi' AND dc_applicant2.[Name] = 'c03' ORDER BY dc_applicant2.[RequestDate] DESC) AS Applicant2SatValueC03, 
+(SELECT TOP 1 dc_applicant2.[Value] WHERE dc_applicant2.CreditReportProviderName = 'SatFi' AND dc_applicant2.[Name] = 'c04' ORDER BY dc_applicant2.[RequestDate] DESC) AS Applicant2SatValueC04, 
+(SELECT TOP 1 dc_applicant2.[Value] WHERE dc_applicant2.CreditReportProviderName = 'SatFi' AND dc_applicant2.[Name] = 'k11' ORDER BY dc_applicant2.[RequestDate] DESC) AS Applicant2SatValueK11, 
+(SELECT TOP 1 dc_applicant2.[Value] WHERE dc_applicant2.CreditReportProviderName = 'SatFi' AND dc_applicant2.[Name] = 'count' ORDER BY dc_applicant2.[RequestDate] DESC) AS Applicant2SatValueCount
+
+
+FROM CreditApplicationHeader cah
+OUTER APPLY
+	   (SELECT  TOP 1 *
+	    --
+		--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+		--
+        FROM     [BalanziaFiDev-nDatawarehouse].dbo.Fact_CreditApplicationSnapshot fa
+        WHERE   fa.ApplicationNr = cah.ApplicationNr
+		AND fa.[Date] BETWEEN @DateFrom AND @DateTo
+		ORDER BY fa.[Date] desc) fa
+
+OUTER APPLY 
+        (SELECT TOP 1 
+		MAX(cop.PaymentFileTransactionDate) AS InitialPaymentDate,
+        SUM(cop.PaymentAmount) as InitialPaymentAmount
+		--
+		--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+		--
+		FROM [BalanziaFiDev-nDatawarehouse].dbo.Fact_CreditOutgoingPayment cop
+		WHERE cop.CreditNr = fa.CreditNr
+		AND cop.SourceBusinessEventType = 'NewCredit' 
+		AND cop.PaymentFileTransactionDate BETWEEN @DateFrom AND @DateTo
+		GROUP BY cop.CreditNr) fc
+
+OUTER APPLY 
+	    (SELECT TOP 1 * 
+		--
+		--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+		--
+		FROM     [BalanziaFiDev-nDatawarehouse].dbo.Dimension_CreditApplication fd
+        WHERE   fd.ApplicationNr = cah.ApplicationNr
+		AND fd.[ApplicationDate] BETWEEN @DateFrom AND @DateTo
+		ORDER BY fd.[ApplicationDate] desc) fd
+
+OUTER APPLY
+	    (SELECT TOP 1 *
+		--
+		--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+		--
+		FROM [BalanziaFiDev-nDatawarehouse].dbo.Dimension_CreditReportItem  dc
+		WHERE dc.CreditReportHeaderId = fa.Applicant1CreditDecisionCreditReportId
+		ORDER BY dc.RequestDate desc) dc_applicant1
+
+OUTER APPLY
+	    (SELECT TOP 1 *
+		--
+		--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+		--
+		FROM [BalanziaFiDev-nDatawarehouse].dbo.Dimension_CreditReportItem  dc
+		WHERE dc.CreditReportHeaderId = fa.Applicant2CreditDecisionCreditReportId
+		ORDER BY dc.RequestDate desc) dc_applicant2
+
+OUTER APPLY
+        (SELECT  TOP 1 *
+        FROM     CreditDecision cd
+        WHERE   cd.ApplicationNr = cah.ApplicationNr
+		ORDER BY cd.[ChangedDate] desc) cd
+
+WHERE cah.ApplicationDate BETWEEN @DateFrom AND @DateTo
+AND cah.ArchivedDate IS NULL 
+ORDER BY cah.ApplicationDate DESC
+
+GO 
+
+
+

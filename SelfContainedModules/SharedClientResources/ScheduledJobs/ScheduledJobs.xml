@@ -1,0 +1,18 @@
+<SchedulerSetup>
+    <ScheduleRunner>ModuleDbSqlAgent</ScheduleRunner>
+    <ServiceCalls>
+        <ServiceCall name="SendBoundInterestExpirationReminders" featureToggle="ntech.feature.mortgageloans.standard" clientCountry="SE">
+            <ServiceUrl service="NTechHost">Api/Credit/SeMortgageLoans/Send-BoundInterest-Expiration-Reminders</ServiceUrl>
+        </ServiceCall>
+    </ServiceCalls>
+    <TimeSlots>
+        <TimeSlot name="Morning">
+
+        </TimeSlot>
+        <TimeSlot name="Evening">
+            <TimeSlotItem serviceCallName="SendBoundInterestExpirationReminders">
+                <TriggerRule>AlwaysRun</TriggerRule>
+            </TimeSlotItem>
+        </TimeSlot>
+    </TimeSlots>
+</SchedulerSetup>

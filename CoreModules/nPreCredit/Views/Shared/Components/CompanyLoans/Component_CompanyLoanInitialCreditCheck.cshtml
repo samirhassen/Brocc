@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-initial-credit-check.html">
+    <div>
+    <div class="text-right" ng-if="$ctrl.isViewCreditCheckDetailsPossible()">
+        <a class="n-anchor" ng-click="$ctrl.viewCreditCheckDetails($event)">View details</a>
+    </div>
+    <div ng-if="$ctrl.d">
+        <div ng-if="!$ctrl.d.Decision.WasAccepted" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Reasons</label>
+                <div class="col-xs-9 form-control-static">
+                    <span ng-repeat="r in $ctrl.d.Decision.RejectionReasons"><span ng-hide="$first">, </span>{{$ctrl.getRejectionReasonDisplayName(r)}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.d.Decision.WasAccepted" class="form-horizontal">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Loan amount</label>
+                    <div class="col-xs-6 form-control-static">{{$ctrl.d.Decision.CompanyLoanOffer.LoanAmount | currency}}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Repayment time</label>
+                    <div class="col-xs-6 form-control-static">{{$ctrl.d.Decision.CompanyLoanOffer.RepaymentTimeInMonths }} months</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Interest rate</label>
+                    <div class="col-xs-6 form-control-static">
+                        <span>{{$ctrl.d.Decision.CompanyLoanOffer.NominalInterestRatePercent | number}} %</span>                        
+                        <span ng-if="$ctrl.d.Decision.CompanyLoanOffer.ReferenceInterestRatePercent">&nbsp;({{($ctrl.d.Decision.CompanyLoanOffer.ReferenceInterestRatePercent > 0 ? '+' : '') + ($ctrl.d.Decision.CompanyLoanOffer.ReferenceInterestRatePercent | number:2)}} %)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Initial fee</label>
+                    <div class="col-xs-6 form-control-static">{{$ctrl.d.Decision.CompanyLoanOffer.InitialFeeAmount | currency}}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Monthly fee</label>
+                    <div class="col-xs-6 form-control-static">{{$ctrl.d.Decision.CompanyLoanOffer.MonthlyFeeAmount | currency}}</div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="pt-2" ng-if="$ctrl.isNewCreditCheckPossible()">
+        <a class="n-main-btn n-blue-btn" ng-click="$ctrl.newCreditCheck($event)">
+            New credit check <span class="glyphicon glyphicon-arrow-right"></span>
+        </a>
+    </div>
+    </div>
+</script>

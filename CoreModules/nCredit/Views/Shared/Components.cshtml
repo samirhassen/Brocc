@@ -1,0 +1,11 @@
+@{
+    Layout = null;
+}
+
+@Html.Partial("Components/Component_ModalDialog")
+@Html.Partial("Components/Component_CreditComments")
+@Html.Partial("Components/Component_BookkeepingRulesEdit")
+@if (NEnv.IsCompanyLoansEnabled)
+{
+    @Html.Partial("Components/CompanyLoans/Component_CompanyLoanImport")
+}

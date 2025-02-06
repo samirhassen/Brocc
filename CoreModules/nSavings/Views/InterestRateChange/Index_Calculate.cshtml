@@ -1,0 +1,72 @@
+﻿<div class="row pb-1 pt-3" ng-if="!(c.upcomingChanges && c.upcomingChanges.length > 0)">
+    <div class="col-sm-offset-2 col-xs-8">
+        <!--tabs-->
+        <div class="row" ng-if="c.regular || c.split">
+            <div class="col-sm-offset-2 col-xs-3">
+                <span class="btn" ng-click="c.isRegularTabActive = true" ng-class="{ 'decision-form-inactive-btn' : !c.isRegularTabActive,  'decision-form-active-btn' : c.isRegularTabActive }">
+                    Regular
+                </span>
+            </div>
+            <div class="col-sm-offset-1 col-sm-3">
+                <span class="btn" ng-click="c.isRegularTabActive = false" ng-class="{ 'decision-form-inactive-btn' : c.isRegularTabActive,  'decision-form-active-btn' : !c.isRegularTabActive }">
+                    Existing / New
+                </span>
+            </div>
+        </div>
+        <!--regular change-->
+        <div class="decision-form" ng-if="c.split && c.isRegularTabActive">
+            <form name="fr" novalidate>
+                <div class="form-horizontal">
+                    <div class="form-group" ng-class="{ 'has-error' : fr.newInterestRate.$invalid && fr.newInterestRate.$touched }">
+                        <label class="control-label col-xs-5">Interest rate</label>
+                        <div class="col-xs-4">
+                            <input class="form-control" name="newInterestRate" placeholder="0.00" autocomplete="off" ng-model="c.regular.newInterestRate" required custom-validate="c.isValidDecimal">
+                        </div>
+                    </div>
+                    <div class="form-group"  ng-class="{ 'has-error' : fr.validFromDate.$invalid  && fr.validFromDate.$touched }">
+                        <label class="control-label col-xs-5">From date</label>
+                        <div class="col-xs-4">
+                            <input class="form-control" placeholder="YYYY-MM-DD" name="validFromDate" autocomplete="off" ng-model="c.regular.validFromDate" required custom-validate="c.isValidDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-2 text-center">
+                    <button class="n-direct-btn n-blue-btn"  ng-disabled="fr.$invalid" ng-click="c.calculateRegular($event)">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                </div>
+            </form>
+        </div>
+
+        <!-- split (existing / new) change-->
+        <div class="decision-form" ng-if="c.regular && !c.isRegularTabActive">
+            <form name="fs" novalidate>
+                <div class="form-horizontal">
+                    <div class="form-group" ng-class="{ 'has-error' : fs.newInterestRate.$invalid && fs.newInterestRate.$touched }">
+                        <label class="control-label col-xs-5">Interest rate</label>
+                        <div class="col-xs-4">
+                            <input class="form-control" name="newInterestRate" placeholder="0.00" autocomplete="off" ng-model="c.split.newInterestRate" required custom-validate="c.isValidDecimal">
+                        </div>
+                    </div>
+                    <div class="form-group pt-2">
+                        <label class="control-label col-xs-5"> </label>
+                        <div class="col-xs-4">From date</div>
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error' : fs.validFromDateNewAccounts.$invalid && fs.validFromDateNewAccounts.$touched }">
+                        <label class="control-label col-xs-5">New accounts</label>
+                        <div class="col-xs-4">
+                            <input class="form-control" name="validFromDateNewAccounts" placeholder="YYYY-MM-DD" autocomplete="off" ng-model="c.split.validFromDateNewAccounts" required custom-validate="c.isValidDate">
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error' : fs.validFromDateExistingAccounts.$invalid && fs.validFromDateExistingAccounts.$touched }">
+                        <label class="control-label col-xs-5">Existing accounts</label>
+                        <div class="col-xs-4">
+                            <input class="form-control" name="validFromDateExistingAccounts" placeholder="YYYY-MM-DD" autocomplete="off" ng-model="c.split.validFromDateExistingAccounts" required custom-validate="c.isValidDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-2 text-center">
+                    <button class="n-direct-btn n-blue-btn" ng-disabled="fs.$invalid" ng-click="c.calculateSplit($event)">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

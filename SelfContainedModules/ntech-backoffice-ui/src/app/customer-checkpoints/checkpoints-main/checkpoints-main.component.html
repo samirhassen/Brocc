@@ -1,0 +1,11 @@
+<div>
+    <customer-checkpoints-search (search)="onSearch($event)">
+            
+    </customer-checkpoints-search>
+
+    <ng-container *ngIf="viewAndEditData">
+        <view-and-edit-checkpoint [initialData]="viewAndEditData">
+
+        </view-and-edit-checkpoint>
+    </ng-container>
+</div>

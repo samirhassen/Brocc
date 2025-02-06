@@ -1,0 +1,255 @@
+<div class="page extra-padding-top kyc">
+    <h1>Känn din kund</h1>
+    <br />
+    <div class="area">
+        <p>Som kreditmarknadsbolag måste vi på Balanzia ha god kännedom om våra kunder för att kunna bedöma risken att utnyttjas för penningtvätt eller finansiering av terrorism. Därför ber vi dig besvara frågorna om den juridiska personen, vad du ska använda pengarna till m.m. så vi på Balanzia kan ta vårt samhällsansvar.</p>
+
+        <div class="pt-1">
+            <table class="green">
+                <thead>
+                    <tr>
+                        <td colspan="2">Kontakuppgifter</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Företagets namn</label>
+                            {{#CompanyCustomer}}
+                            <p>{{Name}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                        <td>
+                            <label>Organisationsnummer</label>
+                            {{#CompanyCustomer}}
+                            <p>{{Orgnr}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pt-2">
+            <table class="green">
+                <thead>
+                    <tr>
+                        <td>I vilken bransch är ni verksamma?</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {{#CompanyCustomer}}
+                            <p>{{CompanySector}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="pt-2">
+            <table class="green">
+                <thead>
+                    <tr>
+                        <td colspan="2">Berätta mer om er och ert bolag</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Antal anställda i verksamheten</label>
+                            {{#CompanyCustomer}}
+                            <p>{{CompanyEmployeeCount}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                        <td>
+                            <label>Hur mycket omsätter verksamheten du representerar per år? (SEK)</label>
+                            {{#CompanyCustomer}}
+                            <p>{{CompanyYearlyRevenue}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>Bedriver ni verksamhet som betaltjänstleverantör?</label>
+                            {{#CompanyCustomer}}
+                            <p>{{IsPaymentServiceProvider}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                    {{#CashHandling}}
+                    <tr>
+                        <td colspan="2">
+                            <label>Har bolaget kontanthantering?</label>
+                            {{#HasCashHandling}}
+                            <p>Ja</p>
+                            {{/HasCashHandling}}
+                            {{^HasCashHandling}}
+                            <p>Nej</p>
+                            {{/HasCashHandling}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label>Vad består kontanthanteringen i?</label>
+                            {{#HasCashHandling}}
+                            <p>{{Description}}</p>
+                            {{/HasCashHandling}}
+
+                        </td>
+                        <td>
+                            <label>Vad är den förväntade årsvolymen?</label>
+                            {{#HasCashHandling}}
+                            <p>{{YearlyVolume}}</p>
+                            {{/HasCashHandling}}
+                        </td>
+                    </tr>
+                    {{/CashHandling}}
+                    <tr>
+                        <td colspan="2">
+                            <label>Omfattar verksamhet valutaväxling, betalningsförmedling, betalplattformar eller virtuella valutor?</label>
+                            {{#CurrencyExchange}}
+                            {{#HasCurrencyExchange}}
+                            <p>Ja</p>
+                            {{/HasCurrencyExchange}}
+                            {{^HasCurrencyExchange}}
+                            <p>Nej</p>
+                            {{/HasCurrencyExchange}}
+                            {{/CurrencyExchange}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>Beskriv verksamheten</label>
+                            {{#CurrencyExchange}}
+                            {{#HasCurrencyExchange}}
+                            <p>{{Description}}</p>
+                            {{/HasCurrencyExchange}}
+                            {{/CurrencyExchange}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>Vad är syftet med ert lån?</label>
+                            {{#CompanyCustomer}}
+                            <p>{{LoanPurposeCode}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>Varifrån kommer de pengar som betalas in till Balanzia?</label>
+                            {{#CompanyCustomer}}
+                            <p>{{PaymentSource}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>Kan vi förvänta oss att ni kommer amortera/betala in snabbare än vad som krävs?</label>
+                            {{#CompanyCustomer}}
+                            <p>{{ExtraPayments}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>Har företaget en revisor?</label>
+                            {{#CompanyCustomer}}
+                            <p>{{Auditor}}</p>
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="page extra-padding-top kyc">
+    <div>
+        <h2>Verklig huvudman – vem utövar kontrollen?</h2>
+        <p>Fysisk person som ensam eller tillsammans med någon annan, ytterst äger eller kontrollerar en juridisk person. En juridisk person är till exempel ett bolag, en förening eller en stiftelse. En verklig huvudman kan också vara den eller de personer som tjänar på att någon annan agerar åt dem. Ett exempel på att ytterst kontrollera ett företag eller en förening är om en fysisk person har mer än 25 % av rösterna genom aktier, andelar eller medlemskap. Det kan också vara den som genom avtal, medlemskap eller liknande kan utöva kontroll. En fullständig redogörelse av vad som avses med att ha den yttersta kontrollen framgår av lagen (2017:631) om registrering av verkliga huvudmän 4-7 §§</p>
+
+        <div class="pt-2">
+            <table class="green td-three">
+                <thead>
+                    <tr>
+                        <td colspan="3">Ägare</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">
+                            {{#HasBeneficialOwners}}
+                            Ja
+                            {{/HasBeneficialOwners}}
+                            {{^HasBeneficialOwners}}
+                            Nej
+                            {{/HasBeneficialOwners}}
+                        </td>
+                    </tr>
+                    {{#PercentBeneficialOwners}}
+                    <tr>
+
+                        <td>
+                            <label>Namn på ägare</label>
+                            <p>{{FullName}}</p>
+                        </td>
+                        <td>
+                            <label>Personnummer</label>
+                            <p>{{CivicRegNr}}</p>
+                        </td>
+                        <td>
+                            <label>Andel av bolaget (%)</label>
+                            <p>{{OwnershipPercent}}</p>
+                        </td>
+                    </tr>
+                    {{/PercentBeneficialOwners}}
+                   
+                    <tr>
+                        <td colspan="3">
+                            <label>Är någon av ovanstående ägare deklarations- eller skattskyldiga i USA?</label>
+                            {{#UsPersonOwners}}
+                            <p>Ja, {{FullName}}</p>
+                            {{/UsPersonOwners}}
+                            {{^HasUsPersonOwners}}
+                            Nej
+                            {{/HasUsPersonOwners}}
+
+                        </td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+        </div>
+        {{#HasBeneficialOwners}}
+        <div class="pt-2">
+            <table class="green td-three">
+                <thead>
+                    <tr>
+                        <td colspan="3">Person i politisk utsatt ställning (PEP)</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">
+                            <p><i>Med PEP avses person som till exempel har eller har haft viktig offentlig funktion i en stat, statligt eller mellanstatligt organ eller bolag senaste 18 månaderna. För mer information se www.balanzia.se/penningtvätt</i></p>
+                            <label>Är någon av de personer du uppgett som Ägare ovan eller en firmatecknare för bolaget PEP?</label>
+                            {{#CompanyCustomer}}
+                            {{#IsAnyPep}}
+                            <p>Ja</p>
+                            {{/IsAnyPep}}
+                            {{^IsAnyPep}}
+                            <p>Nej</p>
+                            {{/IsAnyPep}}
+                            {{/CompanyCustomer}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+        {{/HasBeneficialOwners}}
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="row" *ngIf="enabledTasks">
+    <div class="col-xs-2">
+        <div class="custom-submenu">
+            <ul class="nav nav-pills nav-stacked" *ngFor="let task of enabledTasks">
+                <li [ngClass]="{ active: currentTaskName === task.TaskName }" class="active">
+                    <a [href]="task.AbsoluteUrl">{{ task.TaskDisplayName }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xs-10">
+        <ng-content select="[task-area]"></ng-content>
+    </div>
+</div>

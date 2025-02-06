@@ -1,0 +1,82 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-loan-application-work-list.html">
+    <div>
+        <toggle-block header-text="list.isAssigned ? 'Assigned applications' : 'Unassigned applications'" on-expanded="list.onExpanded" event-id="list.expandEventId" ng-repeat="list in $ctrl.m.lists">
+            
+            <div class="pb-3" ng-if="list.data && list.isAssigned">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <ngForm name="m.filterform" novalidate>
+                            <div class="form-group">
+                                <select class="form-control" ng-model="list.data.assignedHandlerUserId" ng-change="$ctrl.onAssignedUserChanged(list, list.data.assignedHandlerUserId, $event)">
+                                    <option ng-repeat="h in $ctrl.m.possibleHandlers" value="{{h.UserId.toString()}}">{{h.UserDisplayName}}</option>
+                                </select>
+                            </div>
+                        </ngForm>
+                    </div>                
+                </div>
+            </div>
+            
+            <div class="pb-3" ng-if="list.data && !list.data.separatedWorkList">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <ngForm name="m.filterform" novalidate>
+                            <div class="form-group">
+                                <select class="form-control" ng-model="list.data.currentCode" ng-change="$ctrl.onCodeChanged(list, list.data.currentCode, $event)">
+                                    <option ng-repeat="c in list.data.codesWithCount" value="{{c.Code}}">{{c.DisplayName}} ({{c.Count}})</option>
+                                </select>
+                            </div>
+                        </ngForm>
+                    </div>                
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-4" ng-if="list.data.separatedWorkLists">
+                    <ngForm name="m.separatedwlform" novalidate>
+                        <div class="form-group">
+                            <select class="form-control" ng-model="list.data.separatedWorkList" ng-change="$ctrl.onSeparatedWorkListChanged(list, list.data.separatedWorkList, $event)">
+                                <option value="">Separated lists</option>
+                                <option value="{{s.ListName}}" ng-repeat="s in list.data.separatedWorkLists">{{s.ListDisplayName}}</option>
+                            </select>
+                        </div>
+                    </ngForm>
+                </div>
+            </div>                       
+
+            <div class="pt-3" ng-if="list.data && list.data.result.Applications.length > 0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-1">Number</th>
+                            <th class="col-xs-2">Date</th>
+                            <th class="col-xs-7">System comment</th>
+                            <th class="text-right col-xs-2">Provider</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="a in list.data.result.Applications">
+                            <td><a class="n-anchor" ng-click="$ctrl.gotoApplication(list, a, $event)"><span ng-if="a.ApplicationNr === list.data.latestNavigatedApplicationNr" class="glyphicon glyphicon-forward"></span>{{a.ApplicationNr}}</a></td>
+                            <td>{{a.ApplicationDate | date:'yyyy-MM-dd'}}</td>
+                            <td>{{a.LatestSystemCommentText}}</td>
+                            <td class="text-right">{{a.ProviderDisplayName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ntech-table-pager paging-object="list.data.paging"></ntech-table-pager>
+            <div class="clearfix"></div>
+            <div class="row" ng-if="list.data && list.data.result.Applications.length === 0">
+                <div class="col-md-offset-2 col-md-2 no-hits">
+                    <p>No hits</p>
+                </div>
+            </div>
+        </toggle-block>
+
+
+    </div>
+
+</script>

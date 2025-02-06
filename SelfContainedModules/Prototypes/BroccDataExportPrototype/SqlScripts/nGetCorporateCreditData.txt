@@ -1,0 +1,324 @@
+---Gets Application Data
+---example:
+---
+---Execute query in [DB-nCredit] (nCredit database)
+---Find and replace '[BalanziaSeDev-nDatawarehouse]' with nDatawarehouse-database name 
+---Find and replace  '[BalanziaSeDev-Customer]' with Customer-database name 
+---Query:
+---
+---exec nGetCorporateCreditData @DateFrom ='2008-05-05', @DateTo = '2021-06-05'
+---
+---optional parameters: 
+---@EncryptKeyName (Overrides hardscripted encryption key name)
+---@EncryptKey (Overrides hardscripted encryption key)
+
+CREATE OR ALTER PROCEDURE nGetCorporateCreditData
+@DateFrom DateTime, 
+@DateTo DateTime, 
+---
+---Encryption keyName and key for CustomerProperties (CounterpartyName, SniNace, OrgNr)
+---Change to encryption key for environment from encriptionsettings-file 
+---
+@EncryptKeyName nvarchar(max) = 'xxxxdummykeynamexxxx',  
+@EncryptKey nvarchar(max) = 'xxxxdummykeyxxxx' 
+
+
+AS
+
+with NotificationEvent
+as
+(
+	select	
+		t.CreditNr,
+		n.DueDate,
+		case when t.AccountCode = 'NotNotifiedCapital' then 'CapitalDebt' else t.AccountCode end as NotificationTransactionAccountCode,
+		case when t.AccountCode = 'NotNotifiedCapital' then -t.Amount else t.Amount end as NotificationTransactionAmount,
+		n.Id as CreditNotificationId
+	from	AccountTransaction t
+	join	CreditNotificationHeader n on n.Id = t.CreditNotificationId
+	where	t.TransactionDate <= @DateTo
+),
+NotificationExtendedPre1
+as
+(
+	select	n.*,
+			(select isnull(sum(e.NotificationTransactionAmount), 0) from NotificationEvent e where e.CreditNotificationId = n.Id) as CurrentNotificationBalance,
+			(select isnull(sum(e.NotificationTransactionAmount), 0) from NotificationEvent e where e.CreditNotificationId = n.Id and e.NotificationTransactionAccountCode = 'ReminderFeeDebt') as CurrentReminderFeeBalance
+	from	CreditNotificationHeader n
+	where	n.TransactionDate <= @DateTo
+),
+NotificationExtendedPre2
+as
+(
+	select	p.*,
+			p.CurrentNotificationBalance - p.CurrentReminderFeeBalance as ReservationNotificationBalance
+	from	NotificationExtendedPre1 p
+),
+NotificationExtended
+as
+(
+	select	p.*,
+			case when p.ReservationNotificationBalance > 0 and p.DueDate <= @DateTo then 1 else 0 end IsReservationOvedue,
+			case when p.CurrentNotificationBalance > 0 and p.DueDate <= @DateTo then 1 else 0 end IsOverdue
+	from	NotificationExtendedPre2 p
+),
+
+NotificationStateExt
+as
+(
+    select  s.*,
+			case 
+				when s.ClosedDate is null then @DateTo 
+				when s.ClosedDate > @DateTo then @DateTo
+				else s.ClosedDate
+			end as ToDate,
+			case 
+				when s.ClosedDate is null then 1 
+				when s.ClosedDate <= @DateTo then 0
+				else 1
+			end as IsOpenOnForDate,
+            day(s.DueDate) as DueDay
+    from    [BalanziaSeDev-Datawarehouse].dbo.Fact_CreditNotificationState s
+),
+Latest_Fact_CreditNotificationBalanceSnapshot
+as
+(
+    select  cnl.NotificationId, cnl.CreditNr, max(cnl.TransactionDate) as LatestDate
+	--
+	--Replace '[BalanziaSeDev-Datawarehouse]' with nDatawarehouse-database name 
+	--
+    from    [BalanziaSeDev-Datawarehouse].dbo.Fact_CreditNotificationBalanceSnapshot cnl
+	join	NotificationStateExt e on e.NotificationId = cnl.NotificationId
+    where   cnl.TransactionDate <= @DateTo
+	and		e.IsOpenOnForDate = 1
+    group by cnl.NotificationId, cnl.CreditNr
+),
+LowBalanceNotificationIds
+as
+(
+	select	s.NotificationId
+	from	Latest_Fact_CreditNotificationBalanceSnapshot a
+	--
+	--Replace '[BalanziaSeDev-Datawarehouse]' with nDatawarehouse-database name 
+	--
+	join	[BalanziaSeDev-Datawarehouse].dbo.Fact_CreditNotificationState s on a.NotificationId = s.NotificationId
+    join	[BalanziaSeDev-Datawarehouse].dbo.Fact_CreditNotificationBalanceSnapshot n on n.NotificationId = a.NotificationId and n.TransactionDate = a.LatestDate
+	where   s.DueDate <= @DateTo
+	and     (s.ClosedDate is null or s.ClosedDate > @DateTo)
+	and		n.TotalBalance <= 10
+),
+OpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @DateTo
+    and     (s.ClosedDate is null or s.ClosedDate > @DateTo)
+),
+OldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    OpenNotification s
+    where   s.RankNr = 1
+),
+ReservationOpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @DateTo
+    and     (s.ClosedDate is null or s.ClosedDate > @DateTo)
+	and		s.NotificationId not in(select x.NotificationId from LowBalanceNotificationIds x)
+),
+ReservationOldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    ReservationOpenNotification s
+    where   s.RankNr = 1
+),
+NotifiedUnpaidBalancePerCredit
+as
+(
+    select  cn.CreditNr,
+            sum(cn.TotalBalance) as TotalBalance
+    from    Latest_Fact_CreditNotificationBalanceSnapshot cnl
+	--
+	--Replace '[BalanziaSeDev-Datawarehouse]' with nDatawarehouse-database name 
+	--
+    join    [BalanziaSeDev-Datawarehouse].dbo.Fact_CreditNotificationBalanceSnapshot cn on cn.NotificationId = cnl.NotificationId and cn.TransactionDate = cnl.LatestDate
+    group by cn.CreditNr
+)
+
+-------------------------------------------------------
+-------------------------------------------------------
+-------------------------------------------------------
+
+SELECT
+GETDATE() as ReferenceDateTime,
+h.CreditNr as CreditNr,
+
+--Product (Always 'Digital')
+'Digital' as product, 
+
+--StartDate (IssuanceDate)
+h.StartDate, 
+
+--LateInvoicesCount 
+(select count(*) from NotificationExtended n where n.IsReservationOvedue = 1 and n.CreditNr = h.CreditNr) as LateInvoicesCount,
+(select count(*) from NotificationExtended n where n.IsOverdue = 1 and n.CreditNr = h.CreditNr) as ActualLateInvoicesCount,
+
+--LateInvoicesAmount 
+(select isnull(sum(n.ReservationNotificationBalance), 0) from NotificationExtended n where n.IsReservationOvedue = 1 and n.CreditNr = h.CreditNr) as LateInvoicesAmount,
+(select isnull(sum(n.CurrentNotificationBalance), 0) from NotificationExtended n where n.IsOverdue = 1 and n.CreditNr = h.CreditNr) as ActualLateInvoicesAmount,
+
+--NrOfDaysOverdue (DaysPastDue)
+isnull(mm.NrOfDaysOverdue, 0) as NrOfDaysOverdue, 
+isnull(nn.NrOfDaysOverdue, 0) as ActualNrOfDaysOverdue,  
+
+--CurrentCapitalDebt (TotalOutstandingLoanLiability) 
+hextended.CurrentCapitalDebt AS TotalOutstandingLoanLiability,
+
+--ClosedDate
+(select top 1 case 
+				when 
+				((select top 1 c.[Value] from DatedCreditString c where c.[Name] = 'CreditStatus' and c.CreditNr = h.CreditNr and  c.TransactionDate <= @DateTo order by c.BusinessEventId desc))
+				<> 'Normal' and 
+				((select top 1 c.TransactionDate from DatedCreditString c where c.[Name] = 'CreditStatus' and c.CreditNr = h.CreditNr and c.TransactionDate <= @DateTo order by c.BusinessEventId desc))
+				<= @DateTo then 
+				((select top 1 c.TransactionDate from DatedCreditString c where c.[Name] = 'CreditStatus' and c.CreditNr = h.CreditNr and c.TransactionDate <= @DateTo order by c.BusinessEventId desc))
+				else null
+			end 
+) AS ClosedDate,
+
+--SettledDate (PrepaidDate)
+(select max(d.TransactionDate) from DatedCreditString d where d.CreditNr = h.CreditNr and d.TransactionDate <= @DateTo and d.[Name] = 'CreditStatus' and d.[Value] = 'Settled') as SettledDate,
+
+--SentToDebtCollectionDate
+(select max(d.TransactionDate) from DatedCreditString d where d.CreditNr = h.CreditNr and d.TransactionDate <= @DateTo and d.[Name] = 'CreditStatus' and d.[Value] = 'SentToDebtCollection') as SentToDebtCollectionDate,
+
+
+--InitialCapitalDebt (OriginalLoanSize)
+hextended.InitialCapitalDebt AS OriginalLoanSize,
+
+--InitialRepaymentTimeInMonths (OriginalLoanTerm)
+CEILING(Log10((0-hextended.InitialAnnuityAmount)
+			/ (-hextended.InitialAnnuityAmount + (hextended.InitialInterestRate/100/12) * hextended.InitialCapitalDebt))
+			/ Log10(1 + (hextended.InitialInterestRate/100/12))) as OriginalLoanTerm, 
+
+
+--OriginalMaturityDate (calculated from InitialRepaymentTimeInMonths)
+(select DATEADD(m, 
+CEILING(Log10((0-hextended.InitialAnnuityAmount)
+			/ (-hextended.InitialAnnuityAmount + (hextended.InitialInterestRate/100/12) * hextended.InitialCapitalDebt))
+			/ Log10(1 + (hextended.InitialInterestRate/100/12)))
+, h.StartDate)) as OriginalMaturityDate,
+
+--OriginalInterestRate
+hextended.InitialInterestRate AS OriginalInterestRate, 
+
+--Status 
+(select top 1 d.[Value] from DatedCreditString d where d.[Name] = 'CreditStatus' and d.CreditNr = h.CreditNr and d.TransactionDate <= @DateTo order by d.Id desc) as [Status], 
+
+--CounterpartyName (Applicant1)
+(select case when c.IsEncrypted = 0 then c.[Value]
+		     when e.EncryptionKeyName = @EncryptKeyName then convert(nvarchar(max), DecryptByPassphrase(@EncryptKey, e.[Value]))
+        else null end 
+--
+--Replace  '[BalanziaSeDev-Customer]' with Customer-database name 
+--
+ from [BalanziaSeDev-Customer].dbo.CustomerProperty c
+ left outer join [BalanziaSeDev-Customer].dbo.EncryptedValue e 
+ on c.IsEncrypted = 1 and (case when c.IsEncrypted = 1 then cast(c.[Value] as bigint) else -1 end) = e.Id
+ where  c.IsCurrentData = 1 and c.[Name] = 'companyName' and c.CustomerId = cc.CustomerId) as CounterpartyName,
+
+
+--SniNace
+(select case when c.IsEncrypted = 0 then c.[Value]
+		     when e.EncryptionKeyName = @EncryptKeyName then convert(nvarchar(max), DecryptByPassphrase(@EncryptKey, e.[Value]))
+        else null end 
+--
+--Replace  '[BalanziaSeDev-Customer]' with Customer-database name 
+--
+ from [BalanziaSeDev-Customer].dbo.CustomerProperty c
+ left outer join [BalanziaSeDev-Customer].dbo.EncryptedValue e 
+ on c.IsEncrypted = 1 and (case when c.IsEncrypted = 1 then cast(c.[Value] as bigint) else -1 end) = e.Id
+ where  c.IsCurrentData = 1 and c.[Name] = 'snikod' and c.CustomerId = cc.CustomerId) as SniNace,
+
+
+--OrgNr 
+(select case when c.IsEncrypted = 0 then c.[Value]
+		     when e.EncryptionKeyName = @EncryptKeyName then convert(nvarchar(max), DecryptByPassphrase(@EncryptKey, e.[Value]))
+        else null end 
+--
+--Replace  '[BalanziaSeDev-Customer]' with Customer-database name 
+--
+ from [BalanziaSeDev-Customer].dbo.CustomerProperty c
+ left outer join [BalanziaSeDev-Customer].dbo.EncryptedValue e 
+ on c.IsEncrypted = 1 and (case when c.IsEncrypted = 1 then cast(c.[Value] as bigint) else -1 end) = e.Id
+ where  c.IsCurrentData = 1 and c.[Name] = 'orgNr' and c.CustomerId = cc.CustomerId) as OrgNumber,
+
+
+--Country
+(
+select top 1
+cp.[Value] from CreditCustomer c
+--
+--Replace '[BalanziaSeDev-Customer]' with Customer-database name 
+--
+left join [BalanziaSeDev-Customer].dbo.CustomerProperty cp
+on c.CustomerId = cp.CustomerId
+Where c.CreditNr = h.CreditNr
+and cp.[Name] = 'orgnr_country'
+order by cp.ChangedDate desc 
+) as Country,
+
+--InitialProbabilityOfDefault (pd_rk_initial)
+(select top 1 c.[Value] from DatedCreditValue c where c.CreditNr = h.CreditNr and c.[Name] = 'ApplicationProbabilityOfDefault' order by c.ChangedDate desc
+) as InitialProbabilityOfDefault, 
+
+--InitialLossGivenDefault (lgd_rk_initial)
+(select top 1 c.[Value] from DatedCreditValue c where c.CreditNr = h.CreditNr and c.[Name] = 'ApplicationLossGivenDefault' order by c.ChangedDate desc
+) as InitialLossGivenDefault, 
+
+
+--Currency (Always 'SEK')
+'SEK' as Currency
+
+
+from CreditHeader h
+
+OUTER APPLY  (
+	select  
+			(select sum(a.Amount) from AccountTransaction a where a.AccountCode = 'CapitalDebt' and a.CreditNr = h.CreditNr and a.TransactionDate <= @DateTo) as CurrentCapitalDebt,
+			((select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'MarginInterestRate' and d.BusinessEventId = h.CreatedByBusinessEventId)
+			+ (select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'ReferenceInterestRate' and d.BusinessEventId = h.CreatedByBusinessEventId))  as InitialInterestRate,
+			(select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'AnnuityAmount' and d.BusinessEventId = h.CreatedByBusinessEventId) as InitialAnnuityAmount,
+			(select sum(a.Amount) from AccountTransaction a join BusinessEvent b on b.Id = a.BusinessEventId  where a.AccountCode = 'CapitalDebt' and a.CreditNr = h.CreditNr and b.EventType in('NewCredit', 'CapitalizedInitialFee')) as InitialCapitalDebt
+	from	BusinessEvent b
+	where b.Id = h.CreatedByBusinessEventId
+	and	b.TransactionDate BETWEEN @DateFrom AND @DateTo
+) hextended 
+
+LEFT OUTER JOIN OldestOpenNotification nn on nn.CreditNr = h.CreditNr
+LEFT OUTER JOIN ReservationOldestOpenNotification mm on mm.CreditNr = h.CreditNr
+LEFT OUTER JOIN NotifiedUnpaidBalancePerCredit cb on cb.CreditNr = h.CreditNr
+LEFT OUTER JOIN CreditCustomer cc 
+on cc.CreditNr = h.CreditNr
+WHERE h.StartDate BETWEEN @DateFrom AND @DateTo 
+AND cc.ApplicantNr = 1
+
+Go 

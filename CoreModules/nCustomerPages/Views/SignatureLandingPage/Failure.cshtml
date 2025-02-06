@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-angular-translateonly")
+}
+
+<div class="content">
+    <div class="vh-50">
+        <div class="aligned-center">
+            <p translate="SignatureLandingPage_Failure_header">Signature failed</p>
+            <p translate="SignatureLandingPage_Failure_text"></p>
+        </div>
+    </div>    
+</div>

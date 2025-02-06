@@ -1,0 +1,7 @@
+<div class="pt-3 pb-5 movein mobile-pt-2">
+    <button class="continue" type="submit" [disabled]="!forwardBackService.isForwardAllowed.value" (click)="forward($event)">
+        <span *ngIf="!forwardBackService.isFinalStep.value" [translate]="'steps.forwardBackButtons.forward'">Fortsätt</span>
+        <span *ngIf="forwardBackService.isFinalStep.value" [translate]="'steps.forwardBackButtons.apply'">Skicka in</span>
+        <span class="glyphicon glyphicon-play"></span>
+    </button>  
+</div>

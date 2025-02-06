@@ -1,0 +1,257 @@
+<div *ngIf="m">
+  <div class="pt-3">
+    <h2>Company connections</h2>
+    <hr class="hr-section custom-line mt-0" />
+  </div>
+  <label>Add new company connection</label>
+  <form
+    [formGroup]="m.searchCivicRegNrForm.form"
+    *ngIf="!m.newCompanyConnectionCustomer"
+  >
+    <div class="row">
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'Civic nr',
+              formControlName: 'searchCivicRegNr',
+              form: m.searchCivicRegNrForm,
+              placeholderText: 'YYYYMMDD-XXXX'
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="col-xs-4">
+        <div class="pt-3">
+          <button
+            class="n-main-btn n-blue-btn"
+            [disabled]="m.searchCivicRegNrForm.invalid()"
+            (click)="searchCivicRegNr($event)"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form
+    *ngIf="m.newCompanyConnectionCustomer"
+    [formGroup]="m.addCompanyConnectionDetailsForm.form"
+  >
+    <div class="row">
+      <div class="col-xs-4">
+        <div class="form-group">
+          <label>Civic nr</label>
+          <p class="form-control-static">
+            {{ m.newCompanyConnectionCustomer.civicRegNr }}
+          </p>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              $implicit: '',
+              label: 'First name',
+              formControlName: 'firstName',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'Last name',
+              formControlName: 'lastName',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+    </div>
+    <div class="row pt-1">
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'Street',
+              formControlName: 'addressStreet',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'Zip',
+              formControlName: 'addressZipcode',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'City',
+              formControlName: 'addressCity',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+    </div>
+    <div class="row pt-1">
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'Country',
+              formControlName: 'addressCountry',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'E-mail',
+              formControlName: 'email',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="col-xs-4">
+        <ng-container
+          *ngTemplateOutlet="
+            ntechInput;
+            context: {
+              label: 'Phone',
+              formControlName: 'phone',
+              form: m.addCompanyConnectionDetailsForm
+            }
+          "
+        ></ng-container>
+      </div>
+    </div>
+    <div class="row pt-1">
+      <div class="col-xs-4">Roles</div>
+      <br />
+      <div class="col-xs-3">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" formControlName="isBeneficialOwner" />
+            Beneficial owner
+          </label>
+        </div>
+      </div>
+      <div class="col-xs-3">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" formControlName="isAuthorizedSignatory" />
+            Authorized signatory
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <div class="pt-3" style="display: flex; gap: 5px">
+          <button
+            class="n-main-btn n-green-btn"
+            [disabled]="m.addCompanyConnectionDetailsForm.invalid()"
+            (click)="addCompanyConnection($event)"
+          >
+            Add
+          </button>
+          <button
+            class="n-main-btn n-white-btn"
+            (click)="cancelAddCompanyConnection($event)"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="pt-3">
+    <ng-container *ngFor="let list of m.lists; let i = index">
+      <div [ngClass]="{ 'pt-1': i > 0 }">
+        <h3>{{ list.listDisplayName }}</h3>
+        <hr class="hr-section custom-line mt-0" />
+        <div *ngFor="let c of list.customers">
+          <div class="row">
+            <div class="col-xs-11">
+              <customer-info
+                [initialData]="c.customerInfoInitialData"
+              ></customer-info>
+            </div>
+            <div class="col-xs-1">
+              <div style="float: right">
+                <button
+                  *ngIf="list.minCount !== null"
+                  class="n-icon-btn n-red-btn"
+                  (click)="
+                    removeCustomerFromList(c.customerId, c.listName, $event)
+                  "
+                  [disabled]="list.customers.length <= list.minCount"
+                >
+                  <span class="glyphicon glyphicon-minus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr class="hr-section custom-line mt-0" />
+        </div>
+        <div *ngIf="list.customers.length === 0">None on this credit.</div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template
+  #ntechInput
+  let-formControlName="formControlName"
+  let-form="form"
+  let-label="label"
+  let-placeholderText="placeholderText"
+>
+  <div
+    [formGroup]="form.form"
+    class="form-group"
+    [ngClass]="{ 'has-error': form.hasError(formControlName) }"
+  >
+    <label class="control-label">
+      {{ label }}
+    </label>
+    <div>
+      <div>
+        <input
+          type="text"
+          [formControlName]="formControlName"
+          class="form-control"
+          autocomplete="off"
+          placeholder="{{ placeholderText }}"
+        />
+      </div>
+    </div>
+  </div>
+</ng-template>

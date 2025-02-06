@@ -1,0 +1,21 @@
+﻿<div id="messageAnchor">
+    <div id="serverUserMessage">
+        @if (ViewBag.Message != null)
+            {
+            <div class="alert alert-info" role="alert" style="margin-top:0px; margin-bottom:2px;max-width: 1400px;margin-left:auto;margin-right:auto">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>@ViewBag.Message.Title</strong> @Html.Raw(ViewBag.Message.Link == null ? ViewBag.Message.Text : "<a href=\"" + ViewBag.Message.Link + "\" target=\"_blank\">" + ViewBag.Message.Text + "</a>")
+            </div>
+        }
+    </div>
+    <div id="clientUserMessage" style="display:none">
+        <div class="alert alert-info" role="alert" style="margin-top:0px; margin-bottom:2px;max-width: 1400px;margin-left:auto;margin-right:auto" id="useMessageJs">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong id="clientUserMessageTitle"></strong>
+            <span id="clientUserMessageTextOnly" style="display:none"></span>
+            <span id="clientUserMessageTextAndLinkWrapper" style="display:none">
+                <a id="clientUserMessageLink" href="#" target="_blank"></a>
+            </span>
+        </div>
+    </div>
+</div>

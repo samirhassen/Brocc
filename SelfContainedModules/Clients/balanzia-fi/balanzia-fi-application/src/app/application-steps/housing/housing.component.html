@@ -1,0 +1,14 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label" [translate]="'steps.housing.header'">Hur bor du idag?</label>
+            <div *ngFor="let h of housingModels">
+                <label class="custom-radio" [class.active]="h.code === form.value.housing">
+                    <input type="radio" formControlName="housing" value="{{h.code}}">
+                    {{h.translationCode | translate}}
+                </label>
+            </div>
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

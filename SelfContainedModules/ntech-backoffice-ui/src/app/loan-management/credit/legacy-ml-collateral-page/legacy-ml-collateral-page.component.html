@@ -1,0 +1,50 @@
+<credit-menu activeMenuItemCode="security" [creditNr]="m?.creditNr" *ngIf="m">
+  <div current-item-content>
+    <div class="row" *ngFor="let a of m.collaterals">
+      <toggle-block
+        [initialData]="{ headerText: a.c.IsMain ? 'Object' : 'Collateral' }"
+      >
+        <div class="col-sm-5">
+          <div class="form-horizontal">
+            <div class="form-group" *ngFor="let t of a.c.Properties">
+              <label class="col-xs-6 control-label">{{ t.DisplayName }}</label>
+              <p class="form-control-static">{{ t.DisplayValue }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-7">
+          <ng-container *ngFor="let customer of a.customers; let i = index">
+            <br ng-repeat-start="customer in a.customers" *ngIf="i > 0" />
+            <hr />
+            <customer-info [initialData]="customer"></customer-info>
+          </ng-container>
+
+          <hr />
+        </div>
+        <br class="clearfix" style="clear: both" />
+        <br />
+        <br />
+        <br />
+        <br />
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="col-xs-3">Valuation Date</th>
+              <th class="col-xs-3">Type</th>
+              <th class="col-xs-4">Source</th>
+              <th class="text-right col-xs-2">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of a.c.Valuations">
+              <td>{{ d.ValuationDate | date: "shortDate" }}</td>
+              <td>{{ d.TypeCode }}</td>
+              <td>{{ d.SourceDescription }}</td>
+              <td class="text-right">{{ d.Amount | number: "1.0-2" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </toggle-block>
+    </div>
+  </div>
+</credit-menu>

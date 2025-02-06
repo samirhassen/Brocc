@@ -1,0 +1,56 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "View reports";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-view-reports")
+}
+
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" ng-href="{{whitelistedBackUrl}}"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Report history for {{reportName}}</h1>
+</div>
+
+
+<div ng-show="isBroken"><h2>Error</h2><p ng-repeat="e in errors">{{e}}</p></div>
+<div ng-show="!isBroken">
+    <div class="row pt-3">
+        <div class="col-sm-offset-2 col-sm-8">
+            <div class="frame text-center">
+                <p class="pb-1">Generate a new report. This may take some time.</p>
+                <button class="n-main-btn n-green-btn" ng-click="createReport($event)">Generate</button>
+            </div>
+        </div>
+    </div>
+    <div class="pt-3">
+        <table class="table" ng-show="reports">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Report</th>
+                    <th>Download</th>
+                    <th>Generation time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in reports">
+                    <td>{{r.ReportDate | date:'short'}}</td>
+                    <td>{{r.ReportName}}</td>
+                    <td><a ng-href="{{r.ReportArchiveUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></td>
+                    <td>{{r.GenerationTimeInMs / 1000 | number:'1'}} seconds</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>    
+    
+    <div>
+        <a href="#" ng-click="fetchMore($event)" ng-show="showFetchMore">Load more...</a>
+    </div>
+</div>

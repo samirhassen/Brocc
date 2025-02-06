@@ -1,0 +1,26 @@
+{
+    "SatFiCreditReport": [
+    ],
+    "TestOnlyFi": [   
+    ],
+    "BisnodeFi": [
+    ],
+    "SharedBetweenAllProviders": [
+        { "title": "personStatus", "field": "personStatus" },  
+        { "title": "firstName", "field": "firstName" },
+        { "title": "lastName", "field": "lastName" },
+        { "title": "addressStreet", "field": "addressStreet" },  
+        { "title": "addressZipcode", "field": "addressZipcode" },  
+        { "title": "addressCity", "field": "addressCity" },    
+        { "title": "addressCountry", "field": "addressCountry" },
+        { "title": "hasDomesticAddress", "field": "hasDomesticAddress" },    
+        { "title": "domesticAddressSinceDate", "field": "domesticAddressSinceDate" },  
+        { "title": "hasPostBoxAddress", "field": "hasPostBoxAddress" },    
+        { "title": "hasPosteRestanteAddress", "field": "hasPosteRestanteAddress" },  
+        { "title": "immigrationDate", "field": "immigrationDate" },  
+        { "title": "hasPaymentRemark", "field": "hasPaymentDefaults" },  
+        { "title": "nrOfPaymentRemarks", "field": "numberOfPaymentDefaults" },  
+        { "title": "hasBusinessConnection", "field": "participatesInCompanies" },
+        { "title": "civicRegNr", "field": "personIdentityNumber" }
+    ]
+}

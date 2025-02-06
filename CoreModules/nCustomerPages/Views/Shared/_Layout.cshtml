@@ -1,0 +1,112 @@
+﻿@{
+    var clientCfg = NEnv.ClientCfg;
+    var isCreditActive = NEnv.IsCreditOverviewActive;
+    var isSavingsActive = NEnv.IsSavingsOverviewActive;
+    var baseCountry = clientCfg.Country.BaseCountry;
+    var productGroup = ViewBag.CurrentPageProductGroup ?? "";
+    var customFavIcon = clientCfg.OptionalSetting("ntech.customerpages.favicon");
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    @if (customFavIcon != null)
+    {
+        <link rel="icon" href="@(Url.Content(customFavIcon) + "?v=" + DateTime.Now.ToString("yyyyMMdd"))" type="image/vnd.microsoft.icon">
+    }
+    else
+    {
+        <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+    }
+    <title>Customer pages</title>
+    @if (ViewBag.SkipDefaultStyles == null || ViewBag.SkipDefaultStyles == false)
+    {
+        @Styles.Render("~/Content/css/bundle-base")
+        @Styles.Render("~/Content/css/bundle-magellan-customerpages")
+    }
+    @RenderSection("Styles", false)
+
+    @if (NEnv.IsSkinningCssEnabled)
+    {
+        <link href="@(Url.Content("~/Skinning/css/skinning.css") + "?v=" + DateTime.Now.ToString("yyyyMMddHH"))" rel="stylesheet" />
+    }
+    @RenderSection("LastInHead", false)
+</head>
+<body @Html.Raw(" " + (ViewBag.AngularDeclaration ?? "") + " ")>
+    @RenderSection("FirstInBody", false)
+    <div class="wrapper">
+        @if (!(ViewBag.HideHeader ?? false))
+        {
+            <div class="navigation">
+                <div class="content-position">
+                    <div class="branding">
+                        <a href="@Url.Action("Index", "ProductOverView")">
+                            @if (NEnv.IsSkinningEnabled)
+                            {
+                                <img src="@Url.Content("~/Skinning/img/customer-page-logo.png")" style="max-height:38px;">
+                            }
+                            else
+                            {
+                                <span translate="customerpages">Customer pages</span>
+                            }
+                        </a>
+                    </div>
+                    <div class="pull-right" style="padding-top: 15px;">
+                        <ul class="navigation-list">
+                            @if (Request.IsAuthenticated && !(ViewBag.HideUserHeader ?? false)) //Not shown after logout
+                            {
+                                if (isCreditActive || isSavingsActive)
+                                { //If username is readded put it here
+                                    <li></li>
+                                    <li></li>
+                                }
+                                <li>
+                                    @if ((ViewBag.ShowLogoutButton ?? false))
+                                    {
+                                        <a href="@Url.Action("Logout", "Common")" class="logout-link" style="color:black"><span translate="logout">Logga ut</span></a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        }
+
+        <div class="body-content">
+            @RenderBody()
+            <div class="loading" @Html.Raw(" " + (ViewBag.LoaderDeclaration ?? "style=\"display:none\"") + " ") translate="loading">Loading&#8230;</div>
+        </div>
+    </div>
+    <div class="footer">
+        <ul class="navigation-list">
+            @if (baseCountry == "FI")
+            {
+                <li class="language-settings"><a data-changetolanguage="fi" href="#"><img src="~/Content/img/fi-cutout.png" /></a></li>
+                <li class="language-settings"><a data-changetolanguage="sv" href="#"><img src="~/Content/img/se-cutout.png" /></a></li>
+                if (!NEnv.IsProduction)
+                {
+                    <li class="language-settings">@NTech.ClockFactory.SharedInstance.Now.ToString("yyyy-MM-dd HH:mm")</li>
+                }
+            }
+        </ul>
+    </div>
+    <script>
+        ntechClientCountry = '@Html.Raw(NEnv.ClientCfg.Country.BaseCountry)';
+    </script>
+    @Scripts.Render("~/Content/js/bundle-layout-support")
+    @RenderSection("Scripts", true)
+    @Scripts.Render("~/Content/js/bundle-handle-angular-accessdenied")
+    <script>
+        if (initialData && initialData.translation && initialData.translation.uiLanguage) {
+            uiLanguageSwitcher.init(initialData.translation.uiLanguage)
+        } else {
+            uiLanguageSwitcher.init()
+        }
+    </script>
+</body>
+</html>

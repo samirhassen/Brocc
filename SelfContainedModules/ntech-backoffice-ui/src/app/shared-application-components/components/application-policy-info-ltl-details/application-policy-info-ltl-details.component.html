@@ -1,0 +1,77 @@
+<ng-container *ngIf="ltlDetails">
+  <ng-container *ngFor="let group of ltlDetails.Groups">
+    <div class="pb-1">
+      <p>
+        <b>{{ group.DisplayGroupHeader }}</b>
+      </p>
+      <div class="row">
+        <div class="col-xs-6">
+          <table class="table">
+            <tbody>
+              <tr *ngFor="let infoItem of group.InformationItems">
+                <td class="col-sm-8">{{ infoItem.DisplayLabel }}</td>
+                <td class="col-sm-4 text-right">{{ infoItem.DisplayValue }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-xs-6">
+          <table class="table">
+            <tbody>
+              <tr *ngFor="let contributionItem of group.ContributionItems">
+                <td class="col-sm-8">{{ contributionItem.DisplayLabel }}</td>
+                <td class="col-sm-4 text-right">
+                  {{ contributionItem.DisplayContributionAmount }}
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td class="col-xs-8">
+                  <b>{{ group.DisplayContributionHeader }}</b>
+                </td>
+                <td class="col-xs-4 text-right">
+                  <b>{{ group.DisplayContributionAmount }}</b>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div class="pb-1">
+    <p>
+      <b>{{ ltlDetails.DisplaySummaryHeader }}</b>
+    </p>
+    <div class="row">
+      <div class="col-xs-6">
+        <table class="table">
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="col-xs-6">
+        <table class="table">
+          <tbody>
+            <tr *ngFor="let group of ltlDetails.Groups">
+              <td class="col-sm-8">{{ group.DisplayContributionHeader }}</td>
+              <td class="col-sm-4 text-right">
+                {{ group.DisplayContributionAmount }}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td class="col-xs-8">
+                <b>{{ ltlDetails.DisplaySummaryFooter }}</b>
+              </td>
+              <td class="col-xs-4 text-right">
+                <b>{{ ltlDetails.DisplayLtlAmount }}</b>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</ng-container>

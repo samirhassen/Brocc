@@ -1,0 +1,19 @@
+<form [formGroup]="m.form.form">
+    <div class="row text-center pt-3">
+        <div class="col-sm-12">
+            <p>Vad är priset på bostaden?</p>
+            <h2>{{m.form.getValue('objectPriceAmount') | number:'1.0-2'}} kr</h2>
+        </div>
+    </div>
+    
+    <calculator-slider [initialData]="m.objectPriceSliderData"></calculator-slider>
+    
+    <div class="row text-center pt-3">
+        <div class="col-sm-12">
+            <p>Hur mycket kan du lägga i kontantinsats?</p>
+            <h2>{{m.form.getValue('ownSavingsAmount') | number:'1.0-2'}} kr</h2>
+        </div>
+    </div>
+
+    <calculator-slider [initialData]="m.ownSavingsSliderData"></calculator-slider>
+</form>

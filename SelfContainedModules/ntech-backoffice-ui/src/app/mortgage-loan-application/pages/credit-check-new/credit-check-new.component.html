@@ -1,0 +1,75 @@
+<div *ngIf="m">
+  <ml-credit-check-decision-editor
+    *ngIf="m.isNewCreditCheck && m.decisionEditorInitialData"
+    [initialData]="m.decisionEditorInitialData"
+  ></ml-credit-check-decision-editor>
+  <ml-credit-check-decision-view
+    *ngIf="!m.isNewCreditCheck"
+    [application]="m.application"
+  ></ml-credit-check-decision-view>
+
+  <h2 class="custom-header">Decision basis</h2>
+  <hr class="hr-section" />
+
+  <div class="row pt-1">
+    <div class="col-xs-8">
+      <div class="editblock">
+        <ml-application-general-data-editor
+          [initialData]="m.applicationGeneralDataInitialData"
+        ></ml-application-general-data-editor>
+        <div class="pb-1">
+          <h2 class="custom-header">Property</h2>
+          <hr class="hr-section" />
+          <ml-property-editor
+            [initialData]="m.propertyInitialData"
+          ></ml-property-editor>
+        </div>
+        <div class="pb-1">
+          <h2 class="custom-header">{{ getApplicantHeader(1) }}</h2>
+          <hr class="hr-section" />
+          <applicant-data-editor
+            [initialData]="m.mainApplicantInitialData"
+          ></applicant-data-editor>
+
+          <div *ngIf="m.coApplicantInitialData">
+            <h2 class="custom-header pt-1">{{ getApplicantHeader(2) }}</h2>
+            <hr class="hr-section" />
+            <div>
+              <applicant-data-editor
+                [initialData]="m.coApplicantInitialData"
+              ></applicant-data-editor>
+            </div>
+          </div>
+        </div>
+        <h2 class="custom-header">Household economy</h2>
+        <hr class="hr-section" />
+        <household-economy-data-editor
+          [initialData]="m.householdEconomyInitialData"
+        ></household-economy-data-editor>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div>
+        <ml-application-policy-info
+          [initialData]="m.policyInfoInitialData"
+        ></ml-application-policy-info>
+      </div>
+      <div>
+        <property-loans
+          [initialData]="m.propertyLoansInitialData"
+        ></property-loans>
+      </div>
+      <div class="pt-3" *ngIf="m.valuationsInitialData">
+        <application-valuations
+          [initialData]="m.valuationsInitialData"
+        ></application-valuations>
+      </div>
+      <div class="pt-3">
+        <application-creditreports
+          [initialData]="m.creditReportInitialData"
+        ></application-creditreports>
+      </div>
+    </div>
+  </div>
+  <test-functions-popup [model]="m.testFunctions"></test-functions-popup>
+</div>

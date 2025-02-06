@@ -1,0 +1,86 @@
+<div class="row" *ngIf="m">
+  <div class="col-xs-6">
+    <h2 class="custom-header">Creditors</h2>
+    <hr class="hr-section" />
+    <p>Kontaktuppgifter till andra banker med panträtt.</p>
+
+    <div class="editblock party-editblock">
+      <edit-form [initialData]="m.creditor.editFormInitialData">
+        <ng-container form-area>
+          <button
+            (click)="addCreditor(m, null, $event)"
+            *ngIf="m.creditor.editFormInitialData.inEditMode.value"
+            class="n-main-btn n-green-btn"
+          >
+            Add
+          </button>
+          <hr class="hr-section mt-1" />
+          <form [formGroup]="m.creditor.form.form" class="creditors-form">
+            <div *ngFor="let row of m.creditor.rows" class="creditor-row">
+              <div style="flex-grow: 1">
+                <div class="form-horizontal">
+                  <editblock-form-field
+                    *ngFor="let f of row.fields"
+                    [model]="f"
+                  ></editblock-form-field>
+                </div>
+              </div>
+              <div class="remove-btn-container">
+                <button
+                  (click)="removeCreditor(row.rowNr, $event)"
+                  *ngIf="m.creditor.editFormInitialData.inEditMode.value"
+                  class="n-icon-btn n-red-btn"
+                >
+                  <span class="glyphicon glyphicon-minus"></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </ng-container>
+      </edit-form>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <h2 class="custom-header">Mäklare</h2>
+    <hr class="hr-section" />
+    <p>Kontaktuppgifter till mäklare.</p>
+
+    <div class="editblock party-editblock">
+      <edit-form [initialData]="m.broker.editFormInitialData">
+        <ng-container form-area>
+          <form [formGroup]="m.broker.form.form">
+            <div class="form-horizontal">
+              <editblock-form-field
+                *ngFor="let f of m.broker.fields"
+                [model]="f"
+              ></editblock-form-field>
+            </div>
+          </form>
+        </ng-container>
+      </edit-form>
+    </div>
+
+    <ng-container *ngIf="m.brfAdmin">
+      <h2 class="custom-header">Förvaltare av BRF</h2>
+      <hr class="hr-section" />
+      <p>
+        Kontaktuppgifter till bostadsrättsföreningens förvaltare eller styrelse.
+      </p>
+
+      <div class="editblock party-editblock">
+        <edit-form [initialData]="m.brfAdmin.editFormInitialData">
+          <ng-container form-area>
+            <form [formGroup]="m.brfAdmin.form.form">
+              <div class="form-horizontal">
+                <editblock-form-field
+                  *ngFor="let f of m.brfAdmin.fields"
+                  [model]="f"
+                ></editblock-form-field>
+              </div>
+            </form>
+          </ng-container>
+        </edit-form>
+      </div>
+    </ng-container>
+  </div>
+</div>

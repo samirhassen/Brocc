@@ -1,0 +1,76 @@
+<customerpages-shell [initialData]="shellData">
+    <div shell-body>
+        <div class="row" *ngIf="m">
+            <div class="col-xs-12">
+                <div class="flex-container">
+                    <div class="align-center frame">
+                        <h1 class="header-light text-center pb-3">Privatlån</h1>
+                        <form [formGroup]="m.form.form">
+                            <div class="row text-center pt-3">
+                                <div class="col-sm-12">
+                                    <p>Hur mycket kan du låna?</p>
+                                    <h2>{{getLoanAmount(m) | number:'1.0-2'}} kr</h2>
+                                </div>
+                            </div>
+                            <calculator-slider [initialData]="m.loanAmountSliderData"></calculator-slider>
+                            <div class="row text-center pt-3">
+                                <div class="col-sm-12">
+                                    <p>Hur lång återbetalningstid vill du ha?</p>
+                                    <h2>{{formatRepaymentTimeForDisplay(getRepaymentTime(m))}}</h2>
+                                </div>
+                            </div>
+                            <calculator-slider [initialData]="m.repaymentTimeSliderData"></calculator-slider>
+                            <div class="row text-center pt-3">
+                                <div class="col-sm-12">
+                                    <h2>Total att återbetala:</h2>
+                                </div>
+                                <div class="col-sm-12">
+                                    <h2>{{m.calculatedPaymentPlan.TotalPaidAmount  | number:'1.0-0'}} kr</h2>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="pt-5 terms-box">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group pb-1">
+                                        <p class="col-xs-12">Räkneexemplet baseras på beviljat belopp {{m.calculatedPaymentPlan.LoanAmount | number:'1.0-0'}} kr, återbetalningstid {{formatRepaymentTimeForDisplay(getRepaymentTime(m))}}, ränta {{m.calculatedPaymentPlan.MarginInterestRatePercent | number:'1.0-2'}}%, uppläggningsavgift {{getTermsBoxPaymentPlanInitialFee() | number:'1.0-0'}} kr, aviavgift {{getTermsBoxNotificationFee() | number:'1.0-0'}} kr, effektiv ränta {{m.calculatedPaymentPlan.EffectiveInterstRatePercent?.value | number:'1.0-4'}}%, månadskostnad {{m.calculatedPaymentPlan.MonthlyCostIncludingFeesAmount | number:'1.0-0'}} kr, totalt att återbetala inklusive alla avgifter: {{m.calculatedPaymentPlan.TotalPaidAmount | number:'1.0-0'}} kr.</p>
+                                    </div>
+                                </div>
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="pt-5" *ngIf="m.calculatedPaymentPlan.EffectiveInterstRatePercent?.value > 30">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <div class="highcost-image-container">
+                                        <img src="data:image/png;base64,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" alt="" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-9">
+                                    <h2>Det här är en högkostnadskredit</h2>
+                                    <p>Om du inte kan betala tillbaka hela skulden riskerar du en betalningsanmärkning. För stöd, vänd dig till budget- och skuldrådgivning i din kommun. Kontaktuppgifter finns på <a href="https://www.hallakonsument.se/" target="_blank" rel="nofollow">hallå konsument</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right pt-2">
+                            <button class="n-main-btn n-green-btn" (click)="apply($event)">Ansök</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="hasNoActiveProducts">
+            <div class="col-xs-12">
+                <div class="flex-container">
+                    <div class="align-center frame">
+                        <h1 class="header-light text-center pb-3">Privatlån</h1>
+                        <p class="text-center">För tillfälligt har vi inga aktiva produkter.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</customerpages-shell>
+

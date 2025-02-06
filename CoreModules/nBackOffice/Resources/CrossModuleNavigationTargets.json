@@ -1,0 +1,317 @@
+{
+  "targets": [
+    {
+      "name": "CompanyLoanApplication",
+      "module": "nPreCredit",
+      "localUrl": "Ui/CompanyLoan/Application",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.companyloans" ]
+    },
+    {
+      "name": "MortgageLoanApplication",
+      "module": "nPreCredit",
+      "localUrl": "Ui/MortgageLoan/Application",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans" ]
+    },
+    {
+      "name": "UnsecuredLoanApplication",
+      "module": "nPreCredit",
+      "localUrl": "CreditManagement/CreditApplication",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.unsecuredloans" ]
+    },
+    {
+      "name": "MortgageLoanApplicationEditCollateral",
+      "module": "nPreCredit",
+      "localUrl": "Ui/MortgageLoan/Edit-Collateral",
+      "urlParameters": [ "applicationNr", "listNr" ],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans" ]
+    },
+    {
+      "name": "MortgageLoanApplicationWorkListLead",
+      "module": "nPreCredit",
+      "localUrl": "Ui/MortgageLoan/Lead",
+      "urlParameters": [ "applicationNr", "workListId" ],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans" ]
+    },
+    {
+      "name": "MortgageLoanApplicationLead",
+      "module": "nPreCredit",
+      "localUrl": "Ui/MortgageLoan/Lead",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans" ]
+    },
+    {
+      "name": "Campaign",
+      "module": "nPreCredit",
+      "localUrl": "Ui/Campaign",
+      "urlParameters": [ "campaignId" ],
+      "requireFeaturesAll": [ "ntech.feature.campaignui" ]
+    },
+    {
+      "name": "Campaigns",
+      "module": "nPreCredit",
+      "localUrl": "Ui/Campaigns",
+      "urlParameters": [],
+      "requireFeaturesAll": [ "ntech.feature.campaignui" ]
+    },
+    {
+      "name": "UnsecuredCreditApplicationsToApprove",
+      "module": "nPreCredit",
+      "localUrl": "CreditDecision/CreditApplicationsToApprove",
+      "urlParameters": [],
+      "requireFeaturesAll": [ "ntech.feature.unsecuredloans" ]
+    },
+    {
+      "name": "CreditReports",
+      "module": "nCredit",
+      "localUrl": "Ui/Reports",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "TestModuleApiDocumentation",
+      "module": "nTest",
+      "localUrl": "Ui/ApiDocumentation",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "TestModuleStartPage",
+      "module": "nTest",
+      "localUrl": "Ui/Main",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "CompanyLoanSearch",
+      "module": "nPreCredit",
+      "localUrl": "Ui/CompanyLoan/Search",
+      "urlParameters": [],
+      "requireFeaturesAll": [ "ntech.feature.companyloans" ]
+    },
+    {
+      "name": "UnsecuredLoanFraudCheckNew",
+      "module": "nPreCredit",
+      "localUrl": "FraudCheck/New",
+      "urlParameters": [ "applicationNr", "applicantNr", "continueExisting" ],
+      "requireFeaturesAll": [ "ntech.feature.unsecuredloans" ]
+    },
+    {
+      "name": "UnsecuredLoanFraudCheckView",
+      "module": "nPreCredit",
+      "localUrl": "FraudCheck/View",
+      "urlParameters": [ "applicationNr", "applicantNr" ],
+      "requireFeaturesAll": [ "ntech.feature.unsecuredloans" ]
+    },
+    {
+      "name": "CompanyLoanApplication",
+      "module": "nPreCredit",
+      "localUrl": "Ui/CompanyLoan/Application",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.companyloans" ]
+    },
+    {
+      "name": "CompanyLoanNewCreditCheck",
+      "module": "nPreCredit",
+      "localUrl": "Ui/CompanyLoan/NewCreditCheck",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.companyloans" ]
+    },
+    {
+      "name": "CompanyLoanViewCreditCheckDetails",
+      "module": "nPreCredit",
+      "localUrl": "Ui/CompanyLoan/ViewCreditCheckDetails",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.companyloans" ]
+    },
+    {
+      "name": "CreditOverview",
+      "module": "nCredit",
+      "localUrl": "Ui/Credit",
+      "urlParameters": [ "creditNr", "initialTab" ],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "CreditOverviewCustomer",
+      "module": "nBackOffice",
+      "localUrl": "s/credit/customer/:creditNr",
+      "urlParameters": [ "creditNr" ],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "CreditMortgageloanStandardCollateral",
+      "module": "nBackOffice",
+      "localUrl": "s/credit/mortgageloanStandardCollateral/:creditNr",
+      "urlParameters": [ "creditNr" ],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "CreditMortgageloanLegacyCollateral",
+      "module": "nBackOffice",
+      "localUrl": "s/credit/security/:creditNr",
+      "urlParameters": [ "creditNr" ],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "CreditSearch",
+      "module": "nBackOffice",
+      "localUrl": "s/credit/search",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "SavingsAccountOverview",
+      "module": "nSavings",
+      "localUrl": "Ui/SavingsAccount",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "SavingsAccountOverviewSpecificTab",
+      "module": "nSavings",
+      "localUrl": "Ui/SavingsAccount#!/:tab/:savingsAccountNr",
+      "urlParameters": [ "savingsAccountNr", "tab" ],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "SecureMessagesList",
+      "module": "nBackOffice",
+      "localUrl": "s/secure-messages/list",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "SecureMessagesCreate",
+      "module": "nBackOffice",
+      "localUrl": "s/secure-messages/create",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "NewUnsecuredLoanApplication",
+      "module": "nBackOffice",
+      "localUrl": "s/unsecured-loan-application/application/:applicationNr",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.unsecuredloans.standard" ]
+    },
+    {
+      "name": "NewUnsecuredLoanApplications",
+      "module": "nBackOffice",
+      "localUrl": "s/unsecured-loan-application/applications",
+      "urlParameters": [],
+      "requireFeaturesAll": [ "ntech.feature.unsecuredloans.standard" ]
+    },
+    {
+      "name": "NewAdministerUsers",
+      "module": "nBackOffice",
+      "localUrl": "s/user-management/administer-users",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "LoanStandardPolicyFilters",
+      "module": "nBackOffice",
+      "localUrl": "s/loan-policyfilters/rulesets",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "UnsecuredLoanStandardRegisterApplication",
+      "module": "nBackOffice",
+      "localUrl": "s/unsecured-loan-application/register-application",
+      "urlParameters": [],
+      "requireFeaturesAll": []
+    },
+    {
+      "name": "MortgageLoanApplicationStandard",
+      "module": "nBackOffice",
+      "localUrl": "s/mortgage-loan-application/application/:applicationNr",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans.standard" ]
+    },
+    {
+      "name": "MortgageLoanApplicationsStandard",
+      "module": "nBackOffice",
+      "localUrl": "s/mortgage-loan-application/applications",
+      "urlParameters": [],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans.standard" ]
+    },
+    {
+      "name": "Settings",
+      "module": "nBackOffice",
+      "localUrl": "s/settings/list",
+      "urlParameters": [],
+      "requireFeaturesAny": []
+    },
+    {
+      "name": "CreditHandlerLimits",
+      "module": "nPreCredit",
+      "localUrl": "CreditHandlerLimitSettings/Index",
+      "urlParameters": [],
+      "requireFeaturesAny": [ "ntech.feature.unsecuredloans", "ntech.feature.companyloans" ]
+    },
+    {
+      "name": "EditBookKeepingRules",
+      "module": "nCredit",
+      "localUrl": "Ui/BookKeeping/EditRules",
+      "urlParameters": [],
+      "requireFeaturesAny": []
+    },
+    {
+      "name": "LoanPolicyFilters",
+      "module": "nBackOffice",
+      "localUrl": "s/loan-policyfilters/rulesets",
+      "urlParameters": [],
+      "requireFeaturesAny": [ "ntech.feature.unsecuredloans.standard", "ntech.feature.mortgageloans.standard" ]
+    },
+    {
+      "name": "MortgageLoanStandardNewCreditCheck",
+      "module": "nBackOffice",
+      "localUrl": "s/mortgage-loan-application/new-credit-check/:applicationNr",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans.standard" ]
+    },
+    {
+      "name": "MortgageLoanAppOwnerShipAndPossession",
+      "module": "nBackOffice",
+      "localUrl": "s/mortgage-loan-application/ownership-and-possession/:applicationNr",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.mortgageloans.standard" ]
+    },
+    {
+      "name": "CustomerOverviewSearch",
+      "module": "nBackOffice",
+      "localUrl": "/s/customer-overview/search/:searchQuery",
+      "urlParameters": [ "searchQuery" ]
+    },
+    {
+      "name": "CustomerOverview",
+      "module": "nBackOffice",
+      "localUrl": "/s/customer-overview/customer/:customerId",
+      "urlParameters": [ "customerId" ]
+    },
+    {
+      "name": "CreditApplicationLink",
+      "module": "nPreCredit",
+      "localUrl": "Ui/Application/:applicationNr",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.precredit" ]
+    },
+    {
+      "name": "KycQuestionTemplates",
+      "module": "nBackOffice",
+      "localUrl": "/s/customer-kyc/templates",
+      "urlParameters": [],
+      "requireFeaturesAll": [ "feature.customerpages.kyc" ]
+    },
+    {
+      "name": "UllApplicationBasis",
+      "module": "nBackOffice",
+      "localUrl": "s/loan-application/application-basis/:applicationNr",
+      "urlParameters": [ "applicationNr" ],
+      "requireFeaturesAll": [ "ntech.feature.ullegacy" ]
+    }
+  ]
+}

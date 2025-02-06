@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    @RenderSection("Scripts", true)
+}
+@RenderSection("PageHeader", true)
+<div class="row">
+    <div class="col-xs-2">
+        <div class="custom-submenu">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="@Html.Raw(ViewBag.CurrentTaskName  == "BookkeepingFiles" ? "active" : "")"><a href="@ViewBag.BookkeepingFilesUrl">Bookkeeping files</a></li>
+                @if (ViewBag.IsDailyKycScreenEnabled)
+                {
+                    <li class="@Html.Raw(ViewBag.CurrentTaskName  == "DailyKycScreen" ? "active" : "")"><a href="@ViewBag.DailyKycScreenUrl">KYC screening</a></li>
+                }
+                @if (ViewBag.IsTrapetsAmlExportEnabled)
+                {
+                    <li class="@Html.Raw(ViewBag.CurrentTaskName  == "TrapetsAmlExport" ? "active" : "")"><a href="@ViewBag.TrapetsAmlExportUrl">Trapets AML export</a></li>
+                }
+                <li class="@Html.Raw(ViewBag.CurrentTaskName == "FatcaExport" ? "active" : "")"><a href="@ViewBag.FatcaExportUrl">FATCA export</a></li>
+                @if (ViewBag.IsCm1AmlExportEnabled)
+                {
+                    <li class="@Html.Raw(ViewBag.CurrentTaskName  == "Cm1AmlExport" ? "active" : "")"><a href="@ViewBag.Cm1AmlExportUrl">Cm1 AML export</a></li>
+                }
+                @if (ViewBag.IsTreasuryAmlExportEnabled)
+                {
+                    <li class="@Html.Raw(ViewBag.CurrentTaskName  == "TreasuryAmlExport" ? "active" : "")"><a href="@ViewBag.TreasuryAmlExportUrl">Treasury AML export</a></li>
+                }
+                @if (ViewBag.IsCustomsAccountsExportEnabled)
+                {
+                    <li class="@Html.Raw(ViewBag.CurrentTaskName  == "CustomsAccountsExport" ? "active" : "")"><a href="@ViewBag.CustomsAccountsExportUrl">Customs Accounts export</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-xs-10">
+        @RenderSection("CurrentTask", true)
+    </div>
+</div>

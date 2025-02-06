@@ -1,0 +1,16 @@
+﻿@model TitleAndBackModel
+<div>
+    <div class="pull-left" ng-show="@Model.BackUrlSource">
+        <div class="back-nav">
+            <a class="item" ng-href="@Html.Raw("{{" + Model.BackUrlSource + "}}")"><img src="/Content/img/icons-back.png" /></a>
+        </div>            
+    </div>
+    @if(Model.IsTitleSourceTranslationKey)
+    {
+        <h1 class="panel-title" translate="@Model.TitleSource" ng-class="{ 'adjusted' : @Model.BackUrlSource }">@Model.TitleSource</h1>
+    }
+    else
+    {
+        <h1 class="panel-title" ng-class="{ 'adjusted' : @Model.BackUrlSource }">@Html.Raw("{{" + Model.TitleSource + "}}")</h1>
+    }
+</div>

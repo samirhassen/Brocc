@@ -1,0 +1,95 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-approve-agreement.html">
+<div ng-if="$ctrl.m">
+    <div ng-if="$ctrl.m.pendingApproval" class="frame">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Loan amount</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.pendingApproval.loanAmount | currency}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Unsigned agreement </label>
+                        <p class="col-xs-6 form-control-static">
+                            <a ng-href="{{$ctrl.m.pendingApproval.agreementUrl}}" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Audited by</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.getUserDisplayNameByUserId($ctrl.m.pendingApproval.auditedByUserId)}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Audited date</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.pendingApproval.auditedDate | date:'short'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center pt-3" ng-if="$ctrl.m.pendingApproval.isApprovePossible">
+            <button class="n-main-btn n-green-btn" ng-click="$ctrl.approve($event)" ng-if="$ctrl.m.pendingApproval.isLoanAmountToLimitApproved">
+                Approve
+            </button>
+            <div ng-if="$ctrl.m.pendingApproval.showWaitingForApproval">
+                <span style="font-weight:bold;font-style:italic">Waiting for approval</span>
+            </div>
+            <div ng-if="!$ctrl.m.pendingApproval.showWaitingForApproval && !$ctrl.m.pendingApproval.isLoanAmountToLimitApproved">
+                <span style="font-weight:bold;font-style:italic">Handler limit to low</span>
+            </div>
+        </div>
+    </div>
+    <div ng-if="$ctrl.m.approved" class="frame">
+        <div class="pb-1 text-right" ng-if="$ctrl.m.approved.isCancelAllowed">
+            <button class="n-main-btn n-white-btn" ng-click="$ctrl.cancel($event)">
+                Cancel
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Loan amount</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.approved.loanAmount | currency}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Unsigned agreement </label>
+                        <p class="col-xs-6 form-control-static">
+                            <a ng-href="{{$ctrl.m.approved.agreementUrl}}" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Audited by</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.getUserDisplayNameByUserId($ctrl.m.approved.auditedByUserId)}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Audited date</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.approved.auditedDate | date:'short'}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Approved by</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.getUserDisplayNameByUserId($ctrl.m.approved.approvedByUserId)}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Approved date</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.approved.approvedDate | date:'short'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div ng-if="!($ctrl.m.pendingApproval || $ctrl.m.approved)">
+         <p>Waiting for previous steps</p>
+     </div>  
+</div>
+</script>

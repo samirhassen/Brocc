@@ -1,0 +1,30 @@
+<div  *ngIf="m && !m.edit">
+    <div class="row pb-3">
+        <div class="col-sm-offset-2 col-xs-8">
+            <div class="editblock">
+                <div class="pull-right" style="min-height:25px">
+                    <span class="n-unlock" *ngIf="!m.showSensitive">
+                        <a href="#" (click)="showSensitive($event)"><span class="glyphicon glyphicon-lock"></span></a>
+                    </span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-horizontal">
+                    <div class="form-group" *ngFor="let i of m.items">
+                        <label class="control-label col-xs-6" *ngIf="!i.isSeparator">{{i.displayLabelText}}</label>
+                        <p class="form-control-static col-xs-4" *ngIf="!i.isSeparator">
+                            <a href="#" *ngIf="i.hasValue && i.isEditable" (click)="editItem(i, $event)" class="n-anchor n-longer">{{i.value}}</a>
+                            <span *ngIf="i.hasValue && !i.isEditable" class="copyable">{{i.value}}</span>
+                            <span *ngIf="!i.hasValue && !i.isEditable">• • • •</span>
+                            <a href="#" *ngIf="!i.hasValue && i.isEditable" (click)="editItem(i, $event)" class="n-anchor n-longer"><span>• • • •</span></a>
+                        </p>
+                        <p class="form-control-static col-xs-10" *ngIf="i.isSeparator">&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div  *ngIf="m && m.edit">
+    <customer-card-item-editor [initialData]="m.edit" ></customer-card-item-editor>
+</div>
+

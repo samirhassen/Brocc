@@ -1,0 +1,231 @@
+<SchedulerSetup>
+  <ScheduleRunner>ModuleDbSqlAgent</ScheduleRunner>
+  <ServiceCalls>
+    <ServiceCall name="KycScreenActiveCreditCustomers" allowManualTrigger="true">
+      <ServiceUrl service="nCredit">Api/Kyc/ScreenCustomers</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="KycScreenActiveSavingsCustomers" allowManualTrigger="true">
+      <ServiceUrl service="nSavings">Api/Kyc/ScreenCustomers</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreditBookkeeping">
+      <ServiceUrl service="nCredit">Api/BookkeepingFiles/CreateFile</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateCreditNotifications">
+      <ServiceUrl service="nCredit">Api/Credit/CreateNotifications</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateCreditReminders">
+      <ServiceUrl service="nCredit">Api/Credit/CreateReminders</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateCreditTerminationLetters">
+      <ServiceUrl service="nCredit">Api/Credit/CreateTerminationLetters</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="UpdateDataWarehouseCredit" allowManualTrigger="true">
+      <ServiceUrl service="nCredit">Api/DataWarehouse/Update</ServiceUrl>
+      <Tag>UpdateDataWarehouse</Tag>
+    </ServiceCall>
+    <ServiceCall name="UpdateDataWarehousePreCredit" allowManualTrigger="true">
+      <ServiceUrl service="nPreCredit">Api/DataWarehouse/Update</ServiceUrl>
+      <Tag>UpdateDataWarehouse</Tag>
+    </ServiceCall>
+    <ServiceCall name="UpdateDataWarehouseCreditReport" allowManualTrigger="true">
+      <ServiceUrl service="nCreditReport">Api/DataWarehouse/Update</ServiceUrl>
+      <Tag>UpdateDataWarehouse</Tag>
+    </ServiceCall>
+    <ServiceCall name="CreateSatExport">
+      <ServiceUrl service="nCredit">Api/Sat/Export</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateCreditCm1AmlExport" allowManualTrigger="true">
+      <ServiceUrl service="nCredit">Api/Cm1Aml/Export</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateSavingsCm1AmlExport" allowManualTrigger="true">
+      <ServiceUrl service="nSavings">Api/Cm1Aml/Export</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateLoanTreasuryExport" allowManualTrigger="true">
+      <ServiceUrl service="nCredit">Api/TreasuryAml/Export</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateSavingsAccountTreasuryExport" allowManualTrigger="true">
+      <ServiceUrl service="nSavings">Api/TreasurySavingsAccount/Export</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="SavingsYearlyInterestCapitalization" allowManualTrigger="true">
+      <ServiceUrl service="nSavings">Api/YearlyInterestCapitalization/Run</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="SavingsPeriodicMaintenance" allowManualTrigger="true">
+      <ServiceUrl service="nSavings">Api/PeriodicMaintenance/Run</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreditPeriodicMaintenance" allowManualTrigger="true">
+      <ServiceUrl service="nCredit">Api/PeriodicMaintenance/Run</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreditInvoicingMetricsExport">
+      <ServiceUrl service="nCredit">Api/CreditInvoicingMetricsExport/Run</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="SavingsInvoicingMetricsExport">
+      <ServiceUrl service="nSavings">Api/SavingsInvoicingMetricsExport/Run</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="PreCreditPeriodicMaintenance" allowManualTrigger="true">
+      <ServiceUrl service="nPreCredit">api/PeriodicMaintenance/Run</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CustomerPeriodicMaintenance" allowManualTrigger="true">
+      <ServiceUrl service="nCustomer">Customer/RunPeriodicMaintenance</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="SavingsBookkeeping">
+      <ServiceUrl service="nSavings">Api/BookkeepingFiles/CreateFile</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="ImportAndProcessEInvoiceMessages" allowManualTrigger="true" featureToggle="ntech.feature.einvoicefi.v1">
+      <ServiceUrl service="nCredit">Api/EInvoiceFi/ImportAndRemoveMessageFilesFromFtp</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="ArchiveOldApplications" allowManualTrigger="true">
+      <ServiceUrl service="nPreCredit">Api/Application/ArchiveBulk</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="ArchiveOldCreditReports" allowManualTrigger="true">
+      <ServiceUrl service="nCreditReport">Api/Jobs/Archive</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="CreateFinnishCustomsAccountsExportFile" featureToggle="ntech.feature.savingsCustomsAccountsExport.v1">
+      <ServiceUrl service="nSavings">Api/FinnishCustomsAccounts/CreateExportFile</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="ImportRiskClassesFromCm1" allowManualTrigger="true">
+      <ServiceUrl service="nCustomer">Api/Jobs/ImportRiskClassesFromCm1</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="PreCreditArchiveCustomers" allowManualTrigger="true">
+      <ServiceUrl service="nPreCredit">Api/Jobs/ArchiveCustomers</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="SendKycReminders" allowManualTrigger="true">
+      <ServiceUrl service="nCustomer">Api/Kyc-Reminders/Send</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="Cm1SendUpdatesForAllCustomers" allowManualTrigger="true">
+        <ServiceUrl service="nCustomer">Api/Kyc/SendUpdatesForAllCustomers</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="SendAlternatePaymentPlanMessages" allowManualTrigger="true">
+      <ServiceUrl service="nCredit">Api/Credit/SendAlternatePaymentPlanMessages</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="PositiveCreditRegisterExport" allowManualTrigger="true" featureToggle="ntech.feature.positivecreditregister" clientCountry="FI">
+      <ServiceUrl service="NTechHost">Api/Credit/PositiveCreditRegisterExport</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="PositiveCreditRegisterImportStatus" allowManualTrigger="true" featureToggle="ntech.feature.positivecreditregister" clientCountry="FI">
+      <ServiceUrl service="NTechHost">Api/Credit/PositiveCreditRegisterExport/CheckBatchStatus</ServiceUrl>
+    </ServiceCall>
+    <ServiceCall name="SendLoanSettledSecureMessages" allowManualTrigger="true">
+        <ServiceUrl service="NTechHost">Api/Credit/SendLoanSettledSecureMessages</ServiceUrl>
+    </ServiceCall>
+  </ServiceCalls>
+  <TimeSlots>
+    <TimeSlot name="Morning">
+      <TimeSlotItem serviceCallName="KycScreenActiveCreditCustomers">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="KycScreenActiveSavingsCustomers">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="SavingsYearlyInterestCapitalization">
+        <TriggerRule>
+          <OnlyTheseDays>1</OnlyTheseDays>
+          <OnlyTheseMonths>1</OnlyTheseMonths>
+        </TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreditBookkeeping">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="SavingsBookkeeping">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="ImportAndProcessEInvoiceMessages">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateCreditNotifications">
+        <TriggerRule>
+          <OnlyTheseDays>14</OnlyTheseDays>
+        </TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateCreditReminders">
+        <TriggerRule>
+          <OnlyTheseDays>14</OnlyTheseDays>
+          <OnlyOnOtherCallStatus serviceCallName="CreateCreditNotifications" allowedStatuses="Success,Warning" />
+        </TriggerRule>
+        <TriggerRule>
+          <OnlyTheseDays>28</OnlyTheseDays>
+        </TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateCreditTerminationLetters">
+        <TriggerRule>
+          <OnlyTheseDays>14</OnlyTheseDays>
+          <OnlyOnOtherCallStatus serviceCallName="CreateCreditNotifications" allowedStatuses="Success,Warning" />
+          <OnlyOnOtherCallStatus serviceCallName="CreateCreditReminders" allowedStatuses="Success,Warning" />
+        </TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateFinnishCustomsAccountsExportFile">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateSatExport">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="ImportRiskClassesFromCm1">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="SendAlternatePaymentPlanMessages">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="SendLoanSettledSecureMessages">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="PositiveCreditRegisterImportStatus">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+    </TimeSlot>
+    <TimeSlot name="Evening">
+      <TimeSlotItem serviceCallName="CreditPeriodicMaintenance">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="SavingsPeriodicMaintenance">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="PreCreditPeriodicMaintenance">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CustomerPeriodicMaintenance">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="UpdateDataWarehousePreCredit">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="UpdateDataWarehouseCredit">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="UpdateDataWarehouseCreditReport">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="ArchiveOldApplications">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="ArchiveOldCreditReports">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="PreCreditArchiveCustomers">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateCreditCm1AmlExport">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateSavingsCm1AmlExport">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateLoanTreasuryExport">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreateSavingsAccountTreasuryExport">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="CreditInvoicingMetricsExport">
+        <TriggerRule>
+		<OnlyTheseDays>1</OnlyTheseDays>
+        </TriggerRule>
+        </TimeSlotItem>
+        <TimeSlotItem serviceCallName="SavingsInvoicingMetricsExport">
+            <TriggerRule>
+            <OnlyTheseDays>1</OnlyTheseDays>
+        </TriggerRule>
+      </TimeSlotItem>
+      <TimeSlotItem serviceCallName="PositiveCreditRegisterExport">
+        <TriggerRule>AlwaysRun</TriggerRule>
+      </TimeSlotItem>
+    </TimeSlot>
+  </TimeSlots>
+</SchedulerSetup>

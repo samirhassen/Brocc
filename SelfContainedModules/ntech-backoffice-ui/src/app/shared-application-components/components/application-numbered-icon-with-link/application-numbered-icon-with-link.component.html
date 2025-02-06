@@ -1,0 +1,14 @@
+<div>
+  <span class="the-icon"
+    ><span class="glyphicon {{ iconClass }}"></span
+    ><span *ngIf="iconNumber && iconNumber > 0" class="the-icon-number">{{
+      iconNumber
+    }}</span></span
+  >
+  <a *ngIf="linkRoute" [routerLink]="linkRoute" class="n-anchor">{{
+    linkText
+  }}</a>
+  <a *ngIf="!linkRoute" href="#" (click)="navigate($event)" class="n-anchor">{{
+    linkText
+  }}</a>
+</div>

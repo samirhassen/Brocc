@@ -1,0 +1,91 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-application-search.html">
+    <div>
+        <div class="pt-1 pb-2">
+            <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+            <h1 class="adjusted">Company loan applications</h1>
+        </div>
+
+        <div class="pb-3">
+            <ngForm name="filterform" class="" novalidate>
+                <div class="row">
+                    <div class="col-sm-5 col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Provider</label>
+                            <select class="form-control" ng-model="$ctrl.m.providerName" ng-disabled="$ctrl.isSpecialSearchMode()" ng-change="$ctrl.search(0, $event)">
+                                <option value="">All</option>
+                                <option ng-repeat="a in $ctrl.m.providers" value="{{a.ProviderName}}">{{a.DisplayToEnduserName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="">&nbsp;</label>
+                            <select class="form-control" ng-model="$ctrl.m.listName" ng-disabled="$ctrl.isSpecialSearchMode()" ng-change="$ctrl.search(0, $event)">
+                                <option value="">All</option>
+                                <option ng-repeat="step in $ctrl.m.steps" value="{{step.initialListName}}">{{$ctrl.getDisplayListName(step.stepName)}} ({{$ctrl.getListCountLabel(step.initialListName)}})</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-7 col-md-7 col-md-offset-1">
+                        <label>Search</label>
+                        <div class="row">
+                            <div class="col-sm-7 col-md-7">
+                                <div class="relative">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                    <input type="text" class="form-control search" placeholder="Civic regnr/Orgnr/email/name/application nr" ng-keyup="$event.keyCode == 13 && $ctrl.search($event)" ng-model="$ctrl.m.omniSearchValue">
+                                </div>
+                            </div>
+                            <div class="col-sm-5 col-md-5" ng-show="$ctrl.isSpecialSearchMode()">
+                                <button class="n-icon-btn n-white-btn" ng-click="$ctrl.reset($event)" ng-hide="!$ctrl.m.omniSearchValue"><span class="glyphicon glyphicon-remove"></span></button>
+                                <button class="n-main-btn n-blue-btn" ng-click="$ctrl.search(0, $event)" ng-hide="!$ctrl.m.omniSearchValue">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ngForm>
+        </div>
+
+        <div class="pt-3" ng-show="$ctrl.m.searchResult && $ctrl.m.searchResult.items.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2">Number</th>
+                        <th class="col-xs-2">Date</th>
+                        <th class="col-xs-4">System comment</th>
+                        <th class="col-xs-2 text-right">Requested loan amount</th>
+                        <th class="col-xs-2 text-right">Provider</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="i in $ctrl.m.searchResult.items">
+                        <td><a ng-href="{{$ctrl.getApplicationUrl(i)}}" class="n-anchor" ng-class="{ 'inactive' : !i.IsActive }">{{i.ApplicationNr}}</a></td>
+                        <td>{{i.ApplicationDate | date:'yyyy-MM-dd'}}</td>
+                        <td>{{i.LatestSystemCommentText}}</td>
+                        <td class="text-right">{{i.Amount | currency}}</td>
+                        <td class="text-right">{{$ctrl.getProviderDisplayName(i.ProviderName)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="dataTables_paginate paging_simple_numbers custom-pagination" ng-show="$ctrl.m.searchResult.paging && $ctrl.m.searchResult.paging.pages.length > 1">
+                <ul class="pagination">
+                    <li class="paginate_button previous" ng-show="$ctrl.m.searchResult.paging.isPreviousAllowed"><a href="#" ng-click="$ctrl.search($ctrl.m.searchResult.paging.previousPageNr, $event)">Previous</a></li>
+                    <li class="paginate_button previous disabled" ng-hide="$ctrl.m.searchResult.paging.isPreviousAllowed"><a href="#" ng-click="$event.preventDefault()">Previous</a></li>
+
+                    <li ng-repeat="p in $ctrl.m.searchResult.paging.pages" class="paginate_button" ng-class="{ 'active' : p.isCurrentPage, 'disabled' : p.isSeparator }">
+                        <a href="#" ng-click="$ctrl.search(p.pageNr, $event)" ng-hide="p.isSeparator">{{p.pageNr+1}}</a>
+                        <a href="#" ng-show="p.isSeparator" ng-click="$event.preventDefault()">...</a>
+                    </li>
+
+                    <li class="paginate_button next" ng-show="$ctrl.m.searchResult.paging.isNextAllowed"><a href="#" ng-click="$ctrl.search($ctrl.m.searchResult.paging.nextPageNr, $event)">Next</a></li>
+                    <li class="paginate_button next disabled" ng-hide="$ctrl.m.searchResult.paging.isNextAllowed"><a href="#" ng-click="$event.preventDefault()">Next</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="no-hits" ng-if="$ctrl.m.searchResult && $ctrl.m.searchResult.items.length === 0">
+            <p>No hit</p>
+        </div>
+    </div>
+</script>

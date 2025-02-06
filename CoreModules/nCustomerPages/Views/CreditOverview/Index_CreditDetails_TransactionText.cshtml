@@ -1,0 +1,11 @@
+﻿<span ng-switch="(!!t.BusinessEventRoleCode) ? t.BusinessEventType + '_' + t.BusinessEventRoleCode : t.BusinessEventType">
+    <span ng-switch-when="NewCredit" translate="cao_details_tr_t_NewCredit">Utbetalning</span>
+    <span ng-switch-when="CapitalizedInitialFee" translate="cao_details_tr_t_CapitalizedInitialFee">Uppläggningsavgift</span>
+    <span ng-switch-when="NewIncomingPaymentFile" translate="cao_details_tr_t_NewIncomingPaymentFile">Amortering</span>
+    <span ng-switch-when="PlacedUnplacedIncomingPayment" translate="cao_details_tr_t_PlacedUnplacedIncomingPayment">Amortering</span>
+    <span ng-switch-when="PaymentFreeMonth" translate="cao_details_tr_t_PaymentFreeMonth">Betalfri månad</span>
+    <span ng-switch-when="NewAdditionalLoan" translate="cao_details_tr_t_NewAdditionalLoan">Utbetalning</span>    
+    <span ng-switch-default>
+        {{t.BusinessEventType}}
+    </span>
+</span>

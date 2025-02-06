@@ -1,0 +1,20 @@
+<customerpages-shell
+  [initialData]="{ logoRouterLink: ['/unsecured-loan-applications/overview'] }"
+>
+  <ng-container shell-body>
+    <ng-content select="[shell-body]"></ng-content>
+  </ng-container>
+  <ng-container navigation-area>
+    <ul class="navigation-list">
+      <li>
+        <a
+          *ngIf="config?.isAuthenticated()"
+          (click)="logOut($event)"
+          href="#"
+          class="n-direct-btn n-white-btn"
+          >Logga ut</a
+        >
+      </li>
+    </ul>
+  </ng-container>
+</customerpages-shell>

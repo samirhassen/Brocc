@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+    <ProjectReference Include="..\..\NTech.Banking.Shared\NTech.Banking.Shared.csproj" />
+    <ProjectReference Include="..\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+	<PackageReference Include="SharpZipLib" Version="1.3.3" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Update="Integrations\CreditRegistry\sharkV2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,86 @@
+<div *ngIf="m">
+  <form>
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          <th class="col-xs-2">Document</th>
+          <th class="col-xs-1">Status</th>
+          <th class="col-xs-5"></th>
+          <th class="col-xs-1"></th>
+          <th class="col-xs-2"></th>
+          <th class="col-xs-1 text-right">Verified</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let document of m.documents">
+          <td>{{ document.documentType.displayName }}</td>
+          <td>
+            <status-icon
+              [isAccepted]="!!document.serverDocument?.VerifiedDate"
+            ></status-icon>
+          </td>
+          <td>
+            <button
+              *ngIf="!document.serverDocument && !m.isReadOnly"
+              (click)="selectDocumentToAttach(document, $event)"
+              class="n-direct-btn n-white-btn"
+            >
+              Attach <span class="glyphicon glyphicon-paperclip"></span>
+            </button>
+            <a
+              *ngIf="document.serverDocument"
+              [href]="document.serverDocumentArchiveUrl"
+              target="_blank"
+              class="n-direct-btn n-purple-btn"
+              >{{ document.serverDocument.Filename }}
+              <span class="glyphicon glyphicon-save"></span
+            ></a>
+          </td>
+          <td>
+            <button
+              *ngIf="
+                document.serverDocument &&
+                !document.serverDocument.VerifiedDate &&
+                !m.isReadOnly
+              "
+              (click)="removeDocument(document, $event)"
+              class="n-icon-btn n-red-btn table-button"
+            >
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+          </td>
+          <td class="check-container">
+            <!-- Will be added in the future
+                        <label><input type="checkbox">Request from customer</label>
+                        -->
+          </td>
+          <td class="text-right">
+            <ntech-toggle
+              *ngIf="document.serverDocument"
+              [isToggled]="!!document.serverDocument?.VerifiedDate"
+              (requestToggle)="toggleVerified(document)"
+              [isDisabled]="m.isReadOnly"
+            ></ntech-toggle>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+  <form
+    #fileInputForm
+    novalidate
+    class="form-inline"
+    name="fileInputForm"
+    id="fileInputForm"
+    style="display: none"
+  >
+    <input
+      #fileInput
+      type="file"
+      id="file"
+      name="file"
+      style="display: none"
+      (change)="onDocumentAttached($event)"
+    />
+  </form>
+</div>

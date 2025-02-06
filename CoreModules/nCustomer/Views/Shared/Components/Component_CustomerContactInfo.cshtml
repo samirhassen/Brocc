@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="customer-contact-info.html">
+    <div>
+        <div ng-if="!$ctrl.m.editCustomerContactInfoValueInitialData">
+            <div class="pt-1 pb-2">
+                <div class="pull-left"><a href="#" ng-click="$ctrl.onBack($event)" class="n-back"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+                <h1 class="adjusted">Customer</h1>
+            </div>
+
+            <div class="row pb-3">
+                <div class="col-sm-offset-2 col-xs-8">
+
+                    <div class="editblock">
+                        <div class="pull-right" style="min-height:25px">
+                            <!-- Min height to prevent the form moving vertically when unlocking causing misclicks -->
+                            <span class="n-unlock" ng-hide="$ctrl.m.showSensitive">
+                                <a href="#" ng-click="$ctrl.showSensitive($event)"><span class="glyphicon glyphicon-lock"></span></a>
+                            </span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-horizontal">
+                            <div class="form-group" ng-repeat="i in $ctrl.m.items">
+                                <label class="control-label col-xs-6" ng-if="!i.isSeparator">{{$ctrl.getDisplayLabelText(i)}}</label>
+                                <p class="form-control-static col-xs-4" ng-if="!i.isSeparator">
+                                    <a href="" ng-if="i.hasValue && i.isEditable" ng-click="$ctrl.editItem(i, $event)" class="n-anchor n-longer">{{i.value}}</a>
+                                    <span ng-if="i.hasValue && !i.isEditable" class="copyable">{{i.value}}</span>
+                                    <span ng-if="!i.hasValue && !i.isEditable">• • • •</span>
+                                    <a href="" ng-if="!i.hasValue && i.isEditable" ng-click="$ctrl.editItem(i, $event)" class="n-anchor n-longer"><span>• • • •</span></a>
+                                </p>
+                                <p class="form-control-static col-xs-10" ng-if="i.isSeparator">&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="$ctrl.m.editCustomerContactInfoValueInitialData">
+            <edit-customer-contact-info-value initial-data="$ctrl.m.editCustomerContactInfoValueInitialData"></edit-customer-contact-info-value>
+        </div>
+    </div>
+</script>

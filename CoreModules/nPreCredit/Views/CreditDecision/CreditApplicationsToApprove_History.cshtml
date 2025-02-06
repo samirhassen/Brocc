@@ -1,0 +1,97 @@
+﻿<div class=" pt-3">
+    <h2 class="custom-header">
+        <span class="glyphicon chevron-bg" ng-class="{ 'glyphicon-chevron-down' : showHistoryBlock, 'glyphicon-chevron-right' : !showHistoryBlock }" ng-click="showHistoryBlock = !showHistoryBlock"></span>
+        View history
+    </h2>
+    <hr class="hr-section" />
+</div>
+<div ng-show="showHistoryBlock">
+    <form name="filterform" bootstrap-validation class="" novalidate>
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="control-label">From Date</label>
+                    <input type="text" class="form-control" custom-validate="isValidDate" placeholder="YYYY-MM-DD" ng-model="historyFromDate" required>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="control-label">To Date</label>
+                    <input type="text" class="form-control" custom-validate="isValidDate" placeholder="YYYY-MM-DD" ng-model="historyToDate" required>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <label class="control-label col-sm-12">&nbsp;</label>
+                    <button class="n-main-btn n-blue-btn" ng-click="filterHistory($event)" ng-disabled="filterform.$invalid">Search</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <table class="table" ng-show="historyBatches" style="margin-top:50px">
+        <thead>
+            <tr>
+                <th class="col-sm-3">Date</th>
+                <th class="col-sm-3">Count</th>
+                <th class="col-sm-3">Number of attentions</th>
+                <th class="col-sm-3">Total amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="b in historyBatches" ng-class="{ 'active-chevron' : b.details }">
+                <td>
+                    <span class="glyphicon chevron-bg mr-1" ng-class="{ 'glyphicon-chevron-down' : b.details, 'glyphicon-chevron-right' : !b.details }" ng-click="loadBatchDetails(b, $event)"></span>
+                    {{b.ApprovedDate | date:'short'}}
+                </td>
+                <td>{{b.TotalCount}}</td>
+                <td>{{b.OverridesCount}}</td>
+                <td>{{b.TotalAmount | currency}}</td>
+            </tr>
+            <tr ng-repeat-end ng-show="b.details" class="nested-table-parent">
+                <td colspan="4">
+                    <div class="nested-table-child">
+                        <table class="col-sm-offset-1 col-sm-11">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-2">Application</th>
+                                    <th class="col-sm-2">Type</th>
+                                    <th class="col-sm-1">Amount</th>
+                                    <th class="col-sm-5">Attention</th>
+                                    <th class="col-sm-2">Handler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="n in b.details.batchItems">
+                                    <td>
+                                        <a ng-href="{{n.applicationUrl}}" class="n-anchor" target="_blank">{{n.applicationNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                                    </td>
+                                    <td>
+                                        <span ng-if="n.typeName == 'NewLoan'">
+                                            New Loan
+                                        </span>
+                                        <span ng-if="n.typeName == 'AdditionalLoan'">
+                                            Additional Loan: <a ng-href="{{n.loanUrl}}" class="n-anchor" target="_blank">{{n.creditNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                                        </span>
+                                    </td>
+                                    <td>{{n.amount | currency}}</td>
+                                    <td class="attention-text">
+                                        <ng-switch on="i.code" ng-repeat="i in n.overrides" class="override">
+                                            <span ng-switch-when="systemRecommendation">Override{{$last ? '' : ','}}</span>
+                                            <span ng-switch-when="handlerLimit">Handler limit{{$last ? '' : ','}}</span>
+                                            <span ng-switch-when="globalLimit">Global limit{{$last ? '' : ','}}</span>
+                                            <span ng-switch-when="oneApplication">Shares applicants with: {{i.applicationNrs.join(', ')}}{{$last ? '' : ','}}</span>
+                                            <span ng-switch-when="checkpoint">Checkpoint{{$last ? '' : ','}}</span>
+                                            <span ng-switch-when="decisionBasisEdited">Decision basis edited{{$last ? '' : ','}}</span>
+                                        </ng-switch>
+                                    </td>
+                                    <td>{{n.handlerDisplayName}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="clearfix"></div>
+                    </div>                    
+                </td>
+            <tr>
+        </tbody>
+    </table>
+</div>

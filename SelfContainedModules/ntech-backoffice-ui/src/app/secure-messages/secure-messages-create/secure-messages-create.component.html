@@ -1,0 +1,70 @@
+<menu-shell [initialData]="{ activeItemName: 'create' }">
+  <div right-content>
+    <div *ngIf="m">
+      <div class="pb-3">
+        <form name="filterform" class="" novalidate>
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="relative">
+                <span class="glyphicon glyphicon-search"></span>
+                <input
+                  name="omniSearch"
+                  (keydown.enter)="omniSearch($event)"
+                  type="text"
+                  class="form-control search"
+                  placeholder="Civic regnr/email/name/loan nr"
+                  [(ngModel)]="m.omniSearchValue"
+                />
+              </div>
+            </div>
+            <div class="col-sm-5 col-md-5" *ngIf="m.omniSearchValue">
+              <button
+                class="n-icon-btn n-white-btn"
+                (click)="clearSearch($event)"
+              >
+                <span class="glyphicon glyphicon-remove"></span>
+              </button>
+              <button
+                class="n-main-btn n-blue-btn"
+                (click)="omniSearch($event)"
+              >
+                Search
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-responsive pt-3" *ngIf="m.channels">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="col-md-3">Product</th>
+              <th class="col-md-8">First name</th>
+              <th class="col-md-1">Birth date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of m.channels">
+              <td>
+                <a
+                  class="n-anchor"
+                  [ngClass]="{ inactive: c.channel.RelationEndDate }"
+                  href="#"
+                  (click)="openChannel(c, $event)"
+                  >{{ getProductName(c) }}</a
+                >
+              </td>
+              <td>{{ c.firstName }}</td>
+              <td>{{ c.birthDate | date: "yyyyMMdd" }}</td>
+            </tr>
+            <tr *ngIf="m.channels.length === 0">
+              <td colspan="3">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</menu-shell>

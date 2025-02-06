@@ -1,0 +1,87 @@
+{
+  "_args": [
+    [
+      "@types/angular@^1.6.39",
+      "C:\\Projects\\Näktergal\\Trunk\\Naktergal\\nPreCredit"
+    ]
+  ],
+  "_from": "@types/angular@>=1.6.39-0 <2.0.0-0",
+  "_id": "@types/angular@1.6.39",
+  "_inCache": true,
+  "_location": "/@types/angular",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/angular-1.6.39.tgz_1510078341184_0.24639952089637518"
+  },
+  "_npmUser": {
+    "email": "ts-npm-types@microsoft.com",
+    "name": "types"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@types/angular",
+    "raw": "@types/angular@^1.6.39",
+    "rawSpec": "^1.6.39",
+    "scope": "@types",
+    "spec": ">=1.6.39-0 <2.0.0-0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/angular/-/angular-1.6.39.tgz",
+  "_shasum": "0c34938fc546f360c14817686f2e453ebf22312f",
+  "_shrinkwrap": null,
+  "_spec": "@types/angular@^1.6.39",
+  "_where": "C:\\Projects\\Näktergal\\Trunk\\Naktergal\\nPreCredit",
+  "contributors": [
+    {
+      "name": "Diego Vilar",
+      "url": "https://github.com/diegovilar",
+      "githubUsername": "diegovilar"
+    },
+    {
+      "name": "Georgii Dolzhykov",
+      "url": "https://github.com/thorn0",
+      "githubUsername": "thorn0"
+    },
+    {
+      "name": "Caleb St-Denis",
+      "url": "https://github.com/calebstdenis",
+      "githubUsername": "calebstdenis"
+    },
+    {
+      "name": "Leonard Thieu",
+      "url": "https://github.com/leonard-thieu",
+      "githubUsername": "leonard-thieu"
+    }
+  ],
+  "dependencies": {},
+  "description": "TypeScript definitions for Angular JS",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-fRj26foAwYbjOwnGSpIaY05+jRxZevHWwzcSrQIsJgh5Xrosbu4fX99+obJH4YFFS8+EkYRwsSpf2vpVddSNVw==",
+    "shasum": "0c34938fc546f360c14817686f2e453ebf22312f",
+    "tarball": "https://registry.npmjs.org/@types/angular/-/angular-1.6.39.tgz"
+  },
+  "installable": true,
+  "license": "MIT",
+  "main": "",
+  "maintainers": [
+    {
+      "name": "types",
+      "email": "ts-npm-types@microsoft.com"
+    }
+  ],
+  "name": "@types/angular",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+  },
+  "scripts": {},
+  "typeScriptVersion": "2.3",
+  "typesPublisherContentHash": "4f81590ece6a43953b022a34bcc2386ad087ccaaf1cfa99a7da3fb712123ef07",
+  "version": "1.6.39"
+}

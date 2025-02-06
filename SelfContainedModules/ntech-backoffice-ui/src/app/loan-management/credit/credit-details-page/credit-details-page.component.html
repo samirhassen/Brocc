@@ -1,0 +1,210 @@
+<credit-menu activeMenuItemCode="details" [creditNr]="c?.creditNr" *ngIf="c">
+  <div current-item-content>
+    <div class="row pb-3">
+      <div class="col-xs-6 pt-2">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-xs-6">Credit number</label>
+            <p class="form-control-static col-xs-6">
+              <span class="copyable">{{ c.details.creditNr }}</span>
+              <span *ngIf="c.details.childCreditCreditNr">
+                (Child: <a [routerLink]="['/credit/details/',c.details.childCreditCreditNr]">{{ c.details.childCreditCreditNr }}</a>)
+              </span>
+              <span *ngIf="c.details.mainCreditCreditNr">
+                (Main: <a [routerLink]="['/credit/details/',c.details.mainCreditCreditNr]">{{ c.details.mainCreditCreditNr }}</a>)
+              </span>
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-6">Create date</label>
+            <p class="form-control-static col-xs-6">
+              {{ c.details.startDate | date: "shortDate" }}
+            </p>
+          </div>
+          <div class="form-group" *ngIf="c.details.mortgageLoanEndDate">
+            <label class="control-label col-xs-6">End date</label>
+            <p class="form-control-static col-xs-6">
+              {{ c.details.mortgageLoanEndDate | date: "shortDate" }}
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-6">Provider</label>
+            <p class="form-control-static col-xs-6 copyable">
+              {{ c.details.providerDisplayNameLong }}
+            </p>
+          </div>
+          <div *ngIf="c.details.mortgageLoanAgreementNr" class="form-group">
+            <label class="control-label col-xs-6">Agreement nr</label>
+            <p class="form-control-static col-xs-6 copyable">
+              {{ c.details.mortgageLoanAgreementNr }}
+            </p>
+          </div>
+          <div class="form-group" *ngIf="c.details.campaignCode">
+            <label class="control-label col-xs-6">Campaign code</label>
+            <p class="form-control-static col-xs-6 copyable">
+              {{ c.details.campaignCode }}
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-6">Agreement</label>
+            <p class="form-control-static col-xs-6" *ngIf="c.details.signedAgreementLink1 && !c.details.signedAgreementLink2">
+                <a class="n-anchor" target="_blank" [href]="creditUrl(c.details.signedAgreementLink1)">PDF <span class="glyphicon glyphicon-save"></span></a>
+            </p>
+            <p class="form-control-static col-xs-6" *ngIf="c.details.signedAgreementLink1 && c.details.signedAgreementLink2">
+              <a class="n-anchor" target="_blank" [href]="creditUrl(c.details.signedAgreementLink1)">C1 <span class="glyphicon glyphicon-save"></span></a>
+              <a target="_blank" class="n-anchor" style="margin-left: 5px" [href]="creditUrl(c.details.signedAgreementLink2)">C2 <span class="glyphicon glyphicon-save"></span></a>
+            </p>
+            <p class="form-control-static col-xs-6" *ngIf="c.details.coSignedAgreementLink">
+              <a class="n-anchor" target="_blank" [href]="creditUrl(c.details.coSignedAgreementLink)">PDF <span class="glyphicon glyphicon-save"></span></a>
+            </p>
+          </div>
+          <div class="form-group" *ngIf="c.details.applicationLink">
+            <label class="control-label col-xs-6">Application</label>
+            <p class="form-control-static col-xs-6">
+              <a class="n-anchor" target="_blank" [href]="creditUrl(c.details.applicationLink)">
+                {{c.details.applicationNr ? c.details.applicationNr : "Find"}}<span class="glyphicon glyphicon-new-window"></span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6" *ngIf="!(c.details.currentStatusCode === 'SentToDebtCollection')">
+        <div class="frame">
+          <div class="row pb-1" *ngIf="c.details.currentStatusCode == 'Normal'">
+            <div class="pull-right">
+              <button type="button" class="n-popup-btn n-turquoise-btn n-help" (click)="showAmortizationPlan(popup, $event)">
+                Amortization plan
+                <span class="glyphicon glyphicon-resize-full"></span>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-xs-4">Capital debt</label>
+                  <p class="form-control-static col-xs-8">
+                    <span class="copyable">{{c.details.capitalDebtAmount | currency}}</span>
+                    &nbsp;&nbsp;<a target="_blank" [href]="getBalanceDebugDetailsUrl()" class="n-anchor">Details <span class="glyphicon glyphicon-save"></span></a>
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-xs-4">Not notified capital</label>
+                  <p class="form-control-static col-xs-8">
+                    {{ c.details.notNotifiedCapitalAmount | currency }}
+                  </p>
+                </div>
+                <div class="form-group" *ngIf="!c.details.singlePaymentLoanRepaymentDays">
+                  <label class="control-label col-xs-4">Repayment time</label>
+                  <p *ngIf="!c.details.repaymentTimeInMonthsFailedMessage" class="form-control-static col-xs-8">
+                    {{ c.details.repaymentTimeInMonths }} months
+                  </p>
+                  <p *ngIf="c.details.repaymentTimeInMonthsFailedMessage" class="form-control-static col-xs-8">
+                    {{ c.details.repaymentTimeInMonthsFailedMessage }}
+                  </p>
+                </div>
+                <div class="form-group" *ngIf="c.details.singlePaymentLoanRepaymentDays">
+                    <label class="control-label col-xs-4">Initial repayment time</label>
+                    <p *ngIf="!c.details.repaymentTimeInMonthsFailedMessage" class="form-control-static col-xs-8">
+                        {{c.details.singlePaymentLoanRepaymentDays}} days
+                    </p>
+                  </div>
+                <div class="form-group">
+                  <label class="control-label col-xs-4">Interest rate</label>
+                  <p class="form-control-static col-xs-8">
+                    {{ c.details.totalInterestRatePercent | number: "1.2-4" }} %
+                    <span *ngIf="c.details.mortgageLoanNextInterestRebindDate" style="font-size: smaller">
+                      ({{formatMortgageLoanInterestRebindMonthCount(c.details.mortgageLoanInterestRebindMonthCount)}} {{c.details.referenceInterestRatePercent | number: "1.2-4"}}%: next rebind {{c.details.mortgageLoanNextInterestRebindDate | date: "shortDate"}})
+                    </span>
+                  </p>
+                </div>
+                <div class="form-group" *ngIf="c.details.mortgageLoanNextInterestRebindDate">
+                    <label class="control-label col-xs-4">Margin interest rate</label>
+                    <p class="form-control-static col-xs-8">
+                      {{ c.details.marginInterestRatePercent | number: "1.2-4" }} %
+                      <span *ngIf="c.details.marginInterestRatePercent !== c.details.requestedMarginInterestRatePercent" style="font-size: smaller">
+                        (requested {{ c.details.requestedMarginInterestRatePercent | number: "1.2-4" }} %)
+                      </span>
+                    </p>
+                </div>
+                <div class="form-group" *ngIf="c.details.currentStatusCode == 'Normal'">
+                  <ng-container *ngTemplateOutlet="stageOfImpairment;context: { nrOfOverdueDays: c.details.currentNrOfOverdueDays }"></ng-container>
+                </div>
+                <ng-container *ngIf="c.companyLoans">
+                  <credit-number-editor *ngFor="let editorData of c.companyLoans.editableNumbers" [initialData]="editorData"></credit-number-editor>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="c.details.isMortgageLoan">
+          <div class="pt-2">
+            <ml-se-loan-owner-management [creditNr]="c.creditNr"></ml-se-loan-owner-management>
+          </div>
+        </ng-container>
+
+      </div>
+      <div class="col-xs-6" *ngIf="c.details.currentStatusCode === 'SentToDebtCollection'">
+        <div class="frame">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-xs-10" style="font-size: larger; text-decoration: underline">DEBT COLLECTION EXPORT INFORMATION</label>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-xs-4">Date</label>
+              <p class="form-control-static col-xs-8">
+                {{ c.details.sentToDebtCollectionDate | date }}
+              </p>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-xs-4">Amount</label>
+              <p class="form-control-static col-xs-8">
+                <span>{{c.details.totalSentToDebtCollectionAmount | currency}}</span>&nbsp;<span><a target="_blank" [href]="getBalanceDebugDetailsUrl()" class="n-anchor">(?)</a></span>
+              </p>
+            </div>
+            <div class="form-group">
+              <ng-container *ngTemplateOutlet="stageOfImpairment; context: { nrOfOverdueDays: c.details.debtCollectionExportNrOfOverdueDays }"></ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <credit-details-transactions [capitalTransactions]="c.capitalTransactions"></credit-details-transactions>
+  </div>
+</credit-menu>
+
+<ng-template #stageOfImpairment let-nrOfOverdueDays="nrOfOverdueDays">
+  <label class="control-label col-xs-4">Stage of impairment</label>
+  <p class="form-control-static col-xs-8">
+    <span *ngIf="!nrOfOverdueDays || nrOfOverdueDays < 30">Performing</span>
+    <span *ngIf="nrOfOverdueDays >= 30 && nrOfOverdueDays < 90"
+      >Underperforming</span
+    >
+    <span *ngIf="nrOfOverdueDays >= 90">Impaired</span>
+    <span *ngIf="nrOfOverdueDays > 0">
+      ({{ nrOfOverdueDays }} days overdue)</span
+    >
+  </p>
+</ng-template>
+
+<ng-template #popup>
+  <div class="modal-header">
+    <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="modalRef.hide()">
+      <span class="arrows-close"
+        ><span class="glyphicon glyphicon-arrow-down"></span
+        ><span class="glyphicon glyphicon-arrow-up"></span
+      ></span>
+    </button>
+    <h1>{{ c?.popup?.title }}</h1>
+  </div>
+  <div class="modal-body" *ngIf="c?.popup">
+    <div class="pt-2">
+      <ng-container *ngIf="c?.popup">
+        <credit-amortization-plan [creditNr]="c.popup.creditAmortizationPlanCreditNr"></credit-amortization-plan>
+        <mortgage-amortization-plan [creditNr]="c.popup.mortgageLoanAmortizationPlanCreditNr"></mortgage-amortization-plan>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

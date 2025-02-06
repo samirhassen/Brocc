@@ -1,0 +1,55 @@
+.f-container {
+    display:flex;
+    flex-direction:column;
+    gap:10px;                 
+}
+
+.f-cancel-btn{
+    margin-right:5px;
+}
+
+.f-readonly-value{
+    font-weight: bold;
+    width:100%;
+    height: 34px;
+    font-size:14px;
+    line-height: 1.42857143;
+    border-bottom: solid 2px black;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    padding-bottom:3px;
+}
+
+.f-row {
+    height: 36px;
+}
+
+.f-header-row {
+    height: 16px;
+}
+
+.f-input-container {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding-right:0px;
+}
+
+.f-input-and-button {
+    display:flex;
+    flex-direction:row;
+    gap:10px;
+
+    input {
+        flex-grow: 1
+    }
+    button {
+        width: 40px;   
+    }
+}
+
+.f-add-button {
+    float:right;
+    min-width: 100px;
+}

@@ -1,0 +1,17 @@
+﻿@model IndexApplicantPartialViewModel
+@if(Model.ApplicantNr == 1)
+{
+                            <div class="key_value">
+                                <div class="the_key"><h4 translate="ansokan_iban_header1">Uppgifter för utbetalning</h4></div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_iban_header2">Kontonummer för utbetalning</div>
+                                <div class="the_value"><input custom-validate="isValidIBAN" ng-model="aq.answers.iban" class="constant_width" placeholder="FIkk bbbb bbcc cccc cx" required /></div>
+                            </div>
+}
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_consent_header">Samtycke</div>
+                                <div class="the_value checkbox_list">
+                                    <div ng-class="{ 'invalid_checkbox' : aq.fc.customerConsent@(Html.Raw(Model.ApplicantNr)).$invalid && aq.fc.$submitted }"><input required type="checkbox" value="true" ng-model="aq.aa(@Html.Raw(Model.ApplicantNr)).customerConsent" name="customerConsent@(Html.Raw(Model.ApplicantNr))" />&nbsp;<span translate="ansokan_consent_text">Jag bekräftar att jag har tagit del av uppgifterna ovan samt läst GCC Capital AB:s information om hur GCC Capital AB behandlar mina personuppgifter.</span></div>
+                                </div>
+                            </div>

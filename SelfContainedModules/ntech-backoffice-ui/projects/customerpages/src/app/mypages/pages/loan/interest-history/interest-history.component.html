@@ -1,0 +1,29 @@
+<div *ngIf="m">
+  <table class="table lined-table">
+    <thead>
+      <tr>
+        <th class="col-xs-6">Datum</th>
+        <th class="col-xs-6 text-right">Ränta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let r of m.items">
+        <tr *ngIf="r.isVisible">
+          <td class="col-xs-6">{{ r.date | date: "yyyy-MM-dd" }}</td>
+          <td class="col-xs-6 text-right">
+            {{ r.percent | number: "1.0-4" }} %
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+  <div class="text-center pt-3" *ngIf="hasMoreInterestHistoryItems()">
+    <a
+      *ngIf="hasMoreInterestHistoryItems()"
+      (click)="showMoreInterestHistoryItems($event)"
+      href=""
+      class="n-anchor"
+      >Visa fler</a
+    >
+  </div>
+</div>

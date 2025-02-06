@@ -1,0 +1,25 @@
+<ClientConfiguration clientName="balanziaSe">
+  <CountrySetup>
+    <BaseCountry>SE</BaseCountry>
+    <BaseCurrency>SEK</BaseCurrency>    
+    <BaseFormattingCulture>sv-SE</BaseFormattingCulture>
+  </CountrySetup> 
+  <Settings>
+    <Setting key="ntech.handlerlimits.levelamounts" value="300000,1000000" />
+    <Setting key="ntech.credit.manualpayment.dualitydisabled" value="true" />
+    <Setting key="ntech.kycscreen.reportemail" value="foretagslan@balanzia.se" />
+    <Setting key="ntech.customCompanyLoanLedgerReport.systemName" value="Bacs LÅN" />
+    <Setting key="ntech.customCompanyLoanLedgerReport.productType" value="Corporate Loan" />
+    <Setting key="ntech.customCompanyLoanLedgerReport.overdueDaysLimit" value="300" />
+  </Settings>
+  <ActiveFeatures>
+    <Feature name="ntech.feature.companyloans"/>
+    <Feature name="ntech.feature.handlerlimits.v1"/>
+    <Feature name="ntech.feature.Treasuryaml.v1"/>
+    <Feature name="ntech.feature.amortizationFreeWhilePromiseToPay" />
+    <Feature name="ntech.feature.Cm1aml.v1"/>
+    <Feature name="ntech.feature.kycbatchscreening"/>
+    <Feature name="ntech.feature.customCompanyLoanLedgerReport.v1" />
+    <Feature name="ntech.customerpages.allowembeddedsiteapieidlogin" />
+  </ActiveFeatures>
+</ClientConfiguration>

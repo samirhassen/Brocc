@@ -1,0 +1,365 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+
+
+@page { 
+	size: A4;
+	margin-top: 28mm;
+	margin-bottom: 0mm;
+	margin-left: 20mm;
+	margin-right: 10mm;
+}
+
+h1 {
+	font-family: sans-serif;
+	font-size: 20px;
+	margin: 5px 0 5px 0;
+	padding: 0;
+}
+
+h2 { 
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: bold;
+	padding-top: 15px;
+	border: 0;	
+}
+
+h3 {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	margin-top: 0px;
+	border: 0;
+}
+
+p {
+	font-family: Arial;
+	font-size: 14px;
+	margin: 0;
+	border: 0;
+}
+
+p.info{
+    padding: 5px 0px 5px 0px;
+}
+
+td {
+	font-family: Arial;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+.border {
+	font-family: Arial;
+	font-size: 14px;
+	margin-top: 10px;
+	border-bottom: 1px dotted #ccc;
+}
+
+.date {
+	float:right;
+	padding:0px;
+}
+.senderlogo{
+    float: left;
+    width: 25mm;
+    height: 17mm;
+}
+
+.senderlogo img{
+    max-width: 22mm;
+    max-height: 17mm;
+}
+
+.addressArea{
+    width: 87mm;
+    height: 47mm;
+    position: relative;
+    float: left;
+}
+
+.returnaAdress{
+     float: left;
+     height: 17mm;
+     width: 44mm;
+}
+
+.destinationAddress{
+    width: 69mm;
+    position: absolute;
+    bottom: 0px;
+    height: 22.5mm;
+}
+.clear{
+    clear: both;
+}
+
+.right-area{
+    float:right;
+	width:88mm;
+    margin-top: 2mm;
+}
+
+.print-info {	
+	font-family: Arial;
+	font-weight: bold;
+	font-size: 10px;    
+    padding-right: 15mm;
+    padding-left: 5mm;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.print-info table {
+	width:100%;
+}
+
+.print-info td {
+	width:50%;
+}
+
+.print-info td:last-child{
+    text-align: right;
+}
+
+
+.summation {
+	vertical-align: top;
+	border: 2px solid #F9B013;	
+	font-family: Arial;
+	font-weight: bold;
+	font-size: 10px;
+
+    padding-right: 15mm;
+    padding-left: 5mm;
+    padding-top: 2mm;
+    padding-bottom: 2mm;
+    margin-top: 7mm;
+    margin-right: 0mm;
+
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.summation table {
+    width:100%;
+}
+
+.summation td {
+    width:30%;
+}
+
+.summation td:last-child{
+    width: 70%;
+    text-align: right;
+}
+
+/**/
+.row {
+	padding-bottom:30px;
+}
+
+.right_table {
+	float:right;
+	display: inline-block;
+}
+
+.conditions {
+	padding-top: 5px;
+	width: 100%;
+	display:inline-block;
+}
+
+.conditions table {
+	padding-top: 5px;
+	padding-bottom:5px;
+	width:165mm;	
+}
+
+
+.conditions th {
+	text-align: left;
+	font-family: Arial;
+	font-size: 14px;
+}
+
+.width-adjust {
+	width: 60%;
+}
+
+
+.orange {
+	background-color: #e2a250;
+	color: #fff;
+	padding:10px;
+	margin-top:30px;
+	margin-bottom: 30px;
+}
+
+.pay-info {
+	width:40%;
+	vertical-align: top;
+	background-color:transparent;
+	border: 2px solid #30b457;
+	padding:10px;
+	font-family: Arial;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+.pay-info table {
+	width:80%;
+	margin-left:10px;
+}
+
+.pay-info td {
+	width:80%;
+	margin-left:10px;
+	border: none;
+}
+
+.letter-text {
+	padding-top:40px;
+	padding-bottom: 20px;
+}
+
+.letter-text p {
+	font-size: 14px;
+	padding-bottom:10px;
+}
+
+.contact {
+	background-color:#F0F0F0;
+	padding:5px;
+   
+	position: absolute;
+	bottom:110mm;
+	width:165mm;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.text-right {
+	text-align: right;
+}
+
+thead {
+	font-weight: bold;
+	font-size: 12px;
+}
+
+thead .text-right {
+	text-align: right;
+}
+
+.paymentCard{
+    position: absolute;
+	bottom:0mm;
+    left: -15.5mm;
+    width: 201mm;
+    height: 101.6mm;
+}
+
+.paymentCard img{
+	width: 100%;
+}
+
+.paymentCardValues{
+    position: absolute;
+    height: 101.6mm;
+    width: 201mm;
+    bottom:0mm;
+    left: -15.5mm;   
+}
+
+.iban{
+    position: absolute;
+    bottom: 87mm;
+    left: 21.3mm;
+    font: 9pt Arial, sans-serif; 
+    width: 89mm;
+    height: 10mm;
+}
+
+.iban .left{
+    float: left;
+    width: 30%;
+    margin-right: 5%;
+}
+
+.iban .right{
+    float: left;
+    width: 65%;
+}
+
+.bic{
+    position: absolute;
+    bottom: 94mm;
+    left: 111.5mm;
+    font: 9pt Arial, sans-serif; 
+}
+
+.recieveradress{
+    position: absolute;
+    bottom: 72mm;
+    left: 21.3mm;
+    font: 9pt Arial, sans-serif; 
+}
+
+.ocr{
+    position: absolute;
+    bottom: 37mm;
+    left: 126.5mm;
+    font: 9pt Arial, sans-serif; 
+}
+
+.msg{
+    position: absolute;
+    bottom: 46mm;
+    left: 111.5mm;
+    font: 9pt Arial, sans-serif;
+    width: 89mm;
+    height: 38mm;
+}
+
+.duedate{
+    position: absolute;
+    bottom: 29mm;
+    left: 126.5mm;
+    font: 9pt Arial, sans-serif; 
+}
+
+.amount{
+    position: absolute;
+    bottom: 29mm;
+    left: 157mm;
+    font: 9pt Arial, sans-serif; 
+    text-align: right;
+    width: 35mm;
+}

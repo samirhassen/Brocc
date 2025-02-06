@@ -1,0 +1,83 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="bookkeeping-rules-edit.html">
+<div ng-show="$ctrl.m">
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" ng-href="{{$ctrl.m.backUrl}}"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Edit bookkeeping rules</h1>
+</div>
+
+<div class="row pt-3 pb-3">
+ <form class="form-horizontal decision-form col-sm-6" name="$ctrl.editform" bootstrap-validation="'parent'" novalidate>
+     <div class="pull-right">
+        <button class="n-icon-btn n-blue-btn" ng-hide="$ctrl.m.edit" ng-click="$ctrl.beginEdit($event)"><span class="glyphicon glyphicon-pencil"></span></button>
+        <span>
+            <button class="n-icon-btn n-white-btn" ng-show="$ctrl.m.edit" ng-click="$ctrl.cancelEdit($event)"><span class="glyphicon glyphicon-remove"></span></button> 
+            <button class="n-icon-btn n-green-btn" ng-show="$ctrl.m.edit" ng-click="$ctrl.commitEdit($event)" ng-disabled="$ctrl.editform.$invalid"><span class="glyphicon glyphicon-ok"></span></button>
+        </span>
+    </div>
+    <div class="row">
+        <div class="form-group" ng-repeat="accountName in $ctrl.m.accountNames" ng-class="{ 'has-error' : $ctrl.m.edit && $ctrl.editform[accountName].$invalid }">
+            <label class="col-sm-5 control-label">{{accountName}}</label>
+            <div class="col-sm-3 no-padding-left">
+                <input ng-show="$ctrl.m.edit" type="text" class="form-control" name="{{accountName}}" custom-validate="$ctrl.isValidPositiveInt" required ng-model="$ctrl.m.edit.accountNrByAccountName[accountName]">
+                <p ng-hide="$ctrl.m.edit" class="form-control-static">{{$ctrl.m.accountNrByAccountName[accountName]}}</p>
+            </div>
+        </div>
+    </div>
+    </form>
+    <form class="form-horizontal decision-form col-sm-offset-2 col-sm-4" name="$ctrl.importexportform" ng-hide="$ctrl.m.edit">
+         <div class="row pt-2">
+             <div>
+                 <h2>Export</h2>
+                 <p>Copy this code</p>
+                 <div>
+                     <p class="copyable overflowhidden bold">{{$ctrl.m.exportCode}}</p>
+                 </div>
+                 <h2>Import</h2>
+                 <p>Paste the code here</p>
+                 <div>
+                    <input class="col-sm-11" ng-model="$ctrl.m.importText" placeholder="B_[...]_B" ng-change="$ctrl.onImportTextChanged($ctrl.m.importText)" />
+                 </div>
+             </div>
+         </div>
+    </form>
+</div>
+
+<div class="row pt-3 pb-3">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event name</th>
+                <th>Ledger account</th>
+                <th ng-repeat="connectionName in $ctrl.m.allConnections">{{connectionName}}</th>
+                <th colspan="2">Debet account</th>
+                <th colspan="2">Credit account</th>
+                <th>Filter</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in $ctrl.m.ruleRows">
+                <td>{{row.EventName}}</td>
+                <td>{{row.LedgerAccountName}}</td>
+                <td ng-repeat="connectionName in $ctrl.m.allConnections">{{$ctrl.hasConnection(row, connectionName) ? 'X' : ''}}</td>
+                <td ng-class="{ 'edited-bookkeeping-nr': $ctrl.getRowAccountNr(row, false).isEdited }">{{$ctrl.getRowAccountNr(row, false).currentValue}}</td>
+                <td ng-class="{ 'edited-bookkeeping-nr': $ctrl.getRowAccountNr(row, false).isEdited }">{{row.DebetAccountName}}</td>                                
+                <td ng-class="{ 'edited-bookkeeping-nr': $ctrl.getRowAccountNr(row, true).isEdited }">{{$ctrl.getRowAccountNr(row, true).currentValue}}</td>                
+                <td ng-class="{ 'edited-bookkeeping-nr': $ctrl.getRowAccountNr(row, true).isEdited }">{{row.CreditAccountName}}</td>
+                <td class="bg-info">{{row.Filter}}</td>
+            </tr>
+            <tr ng-show="$ctrl.m.isTest">
+                <td colspan="{{$ctrl.m.allConnections.length + 7}}">
+                    <a style="float:right" href="/Api/Reports/BookKeepingPreview">Preview based on last months transactions</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div>
+</script>

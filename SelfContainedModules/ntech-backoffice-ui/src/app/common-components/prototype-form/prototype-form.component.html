@@ -1,0 +1,14 @@
+<div class="editblock" *ngIf="m">
+  <form [formGroup]="m.form.form" class="form-horizontal">
+    <editblock-form-field
+      *ngFor="let field of m.editFields"
+      [model]="field"
+    ></editblock-form-field>
+    <div class="form-group">
+      <div class="col-xs-6"></div>
+      <div class="col-xs-6" style="display: flex; justify-content: center">
+        <button class="n-main-btn n-blue-btn" (click)="doGo($event)">Go</button>
+      </div>
+    </div>
+  </form>
+</div>

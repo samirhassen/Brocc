@@ -1,0 +1,98 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-additional-questions.html">
+    <div>
+        <div ng-if="$ctrl.m">
+            <div class="form-horizontal">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Sent</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.AnswerableSinceDate | date}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Customer link</label>
+                        <div class="col-xs-6 form-control-static">
+                            <button ng-if="$ctrl.m.AdditionalQuestionsLink" ng-click="$ctrl.showDirectLink($event)" class="n-direct-btn n-turquoise-btn">Link <span class="glyphicon glyphicon-resize-full"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Answered</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.AnsweredDate | date}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Answers</label>
+                        <div class="col-xs-6 form-control-static"><a ng-if="$ctrl.m.AnsweredDate" class="n-direct-btn n-turquoise-btn" href="#" ng-click="$ctrl.showAnswers($event)">Show <span class="glyphicon glyphicon-resize-full"></span></a></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <modal-dialog dialog-title="'Answers'" dialog-id="$ctrl.answersDialogId">
+                    <h2>Answers</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Fråga</th>
+                                <th>Svar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="a in $ctrl.a.Answers">
+                                <td ng-if="a.Type === 'answer'">
+                                    <span ng-if="a.QuestionText">{{a.QuestionText}}</span>
+                                    <span ng-if="!a.QuestionText" ng-switch="a.QuestionCode">
+                                        <span ng-switch-when="isApplicantCollateral">Är sökande borgensman?</span>
+                                        <span ng-switch-when="collateralFirstName">Borgensman - förnamn</span>
+                                        <span ng-switch-when="collateralLastName">Borgensman - efternamn</span>
+                                        <span ng-switch-when="collateralEmail">Borgensman - email</span>
+                                        <span ng-switch-when="collateralPhone">Borgensman - telefon</span>
+                                        <span ng-switch-when="isPep">Pep?</span>
+                                        <span ng-switch-when="pepWho">Vem/på vilket sätt pep?</span>
+                                        <span ng-switch-when="beneficialOwnerFirstName">Verklig huvudman - förnamn</span>
+                                        <span ng-switch-when="beneficialOwnerLastName">Verklig huvudman - efternamn</span>
+                                        <span ng-switch-when="beneficialOwnerOwnershipPercent">Verklig huvudman - äger %</span>
+                                        <span ng-switch-when="beneficialOwnerConnection">Verklig huvudman - annan koppling</span>
+                                        <span ng-switch-when="bankAccountNrType">Bankkonto - typ</span>
+                                        <span ng-switch-when="bankAccountNr">Bankkonto - nr</span>
+                                        <span ng-switch-when="beneficialOwnerPercentCount">Finns fysisk person som direkt eller indirekt äger 25 % eller mer än företaget?</span>
+                                        <span ng-switch-when="beneficialOwnerConnectionCount">Finns fysisk person som på annat sätt kontrollerar företaget?</span>
+                                        <span ng-switch-when="answeredYesOnIsUSPersonQuestion">Är deklarations- eller skatteskyldig i USA?</span>
+                                        <span ng-switch-default>{{a.QuestionCode}}</span>
+                                    </span>
+                                </td>
+                                <td ng-if="a.Type === 'answer'">
+                                    <span ng-if="a.AnswerText">{{a.AnswerText}}</span>
+                                    <span ng-if="!a.AnswerText" ng-switch="$ctrl.getSwitchableAnswerCode(a)">
+                                        <span ng-switch-when="true">Ja</span>
+                                        <span ng-switch-when="false">Nej</span>
+                                        <span ng-switch-when="BankAccountSe">Vanligt bankkonto</span>
+                                        <span ng-switch-when="BankGiroSe">Bankgiro</span>
+                                        <span ng-switch-when="PlusGiroSe">Plusgiro</span>
+                                        <span ng-switch-default>{{a.AnswerCode}}</span>
+                                    </span>
+                                </td>
+                                <td ng-if="a.Type === 'customer'" colspan="2">
+                                    <a class="n-anchor" ng-if="a.CustomerCardUrl" ng-href="{{a.CustomerCardUrl}}">{{$ctrl.a.CustomerFirstNameByCustomerId[a.CustomerId]}}</a>
+                                </td>
+                                <td ng-if="a.Type === 'separator'" colspan="2">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </modal-dialog>
+            </div>
+
+            <modal-dialog dialog-title="'Customer link'" dialog-id="$ctrl.linkDialogId">
+                <div class="modal-body">
+                    <textarea rows="1" style="width:100%;resize: none" ng-click="$ctrl.focusAndSelect($event)" readonly="readonly">{{$ctrl.m.AdditionalQuestionsLink}}</textarea>
+                </div>
+            </modal-dialog>
+        </div>
+        <div ng-if="$ctrl.isWaitingForPreviousSteps">
+            <p>Waiting for previous steps</p>
+        </div>
+    </div>
+</script>

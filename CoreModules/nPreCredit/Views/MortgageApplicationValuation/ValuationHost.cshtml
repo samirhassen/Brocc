@@ -1,0 +1,23 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Mortage Application Valuation";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"mortgageApplicationValuationHostCtr as c\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"c.isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-mortgage-valuation-host")
+}
+
+<div>
+    <div class="pt-1 pb-3">
+        <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+        <h1 class="adjusted">Valuation</h1>
+    </div>
+    <mortgage-application-object-valuation-new initial-data="c.newInitialData"></mortgage-application-object-valuation-new>
+</div>
+
+@Html.Partial("Components")

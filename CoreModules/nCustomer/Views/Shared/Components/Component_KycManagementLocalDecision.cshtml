@@ -1,0 +1,84 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="kyc-management-local-decision.html">
+    <div>
+        <div class="row pb-3" ng-if="$ctrl.m && !$ctrl.m.editModel && !$ctrl.m.editAmlRiskModel">
+            <div class="col-sm-offset-2 col-xs-8">
+                <!--beslut-->
+                <div class="editblock">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Politically exposed person</label>
+                            <p class="form-control-static col-xs-4"><a ng-click="$ctrl.edit(true, $event)" href="" class="n-anchor n-longer">{{$ctrl.getKycStateDisplayName($ctrl.m.localIsPep)}}</a></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Sanction</label>
+                            <p class="form-control-static col-xs-4"><a ng-click="$ctrl.edit(false, $event)" href="" class="n-anchor n-longer">{{$ctrl.getKycStateDisplayName($ctrl.m.localIsSanction)}}</a></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Aml risk</label>
+                            <p class="form-control-static col-xs-4"><a ng-click="$ctrl.editAmlRiskClass($event)" href="#" class="n-anchor n-longer">{{$ctrl.m.amlRiskClass}}</a></p>
+                        </div>
+                    </div>
+                </div>
+                <!--beslut-->
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.m && $ctrl.m.editModel">
+            <div class="row pb-3">
+                <div class="col-sm-offset-2 col-xs-8">
+                    <!--beslut-->
+                    <div class="editblock">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label ng-if="$ctrl.m.editModel.isEditingPep" class="control-label col-xs-6">Politically exposed person</label>
+                                <label ng-if="!$ctrl.m.editModel.isEditingPep" class="control-label col-xs-6">Sanctioned person</label>
+                                <div class="col-xs-4">
+                                    <select class="form-control" ng-model="$ctrl.m.editModel.currentState">
+                                        <option value="{{$ctrl.boolToString(null)}}" ng-hide="$ctrl.m.editModel.currentState !== $ctrl.boolToString(null)">{{$ctrl.getKycStateDisplayName(null)}}</option>
+                                        <option value="{{$ctrl.boolToString(true)}}">{{$ctrl.getKycStateDisplayName(true)}}</option>
+                                        <option value="{{$ctrl.boolToString(false)}}">{{$ctrl.getKycStateDisplayName(false)}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col-xs-6 text-right"><button ng-click="$ctrl.cancelEdit($event)" class="n-main-btn n-white-btn">Cancel</button></div>
+                            <div class="col-xs-6"><button ng-click="$ctrl.saveEdit($event)" ng-disabled="$ctrl.m.editModel.currentState === $ctrl.boolToString(null)" class="n-main-btn n-green-btn">Save</button></div>
+                        </div>
+                    </div>
+                    <!--beslut-->
+                </div>
+            </div>
+
+            <div class="row pt-3">
+                <div class="col-xs-10 col-sm-offset-1">
+                    <h2 class="custom-header">PEP decision history</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-3">Date</th>
+                                <th class="col-xs-3">Value</th>
+                                <th class="col-xs-3 text-right">By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="h in $ctrl.m.editModel.historicalValues">
+                                <td>{{h.ChangeDate | date:'short'}}</td>
+                                <td>{{$ctrl.getKycStateDisplayName(h.Value)}}</td>
+                                <td class="text-right">{{h.ChangedByUserDisplayName}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.m && $ctrl.m.editAmlRiskModel">
+            <edit-customer-contact-info-value initial-data="$ctrl.m.editAmlRiskModel"></edit-customer-contact-info-value>
+        </div>
+    </div>    
+</script>

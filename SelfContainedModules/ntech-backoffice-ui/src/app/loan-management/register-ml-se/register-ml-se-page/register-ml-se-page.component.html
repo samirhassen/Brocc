@@ -1,0 +1,103 @@
+<div *ngIf="m">
+    <div class="row pt-1 pb-1">
+        <button style="float:right" class="n-direct-btn n-white-btn" (click)="reload(true, $event)">Reset</button>  
+    </div>
+
+    <div class="row pt-3 pb-3" *ngIf="!m.preview && !m.loansCreated">
+        <div class="col-sm-offset-2 col-sm-8">
+            <div class="editblock" *ngIf="!m.attachedAgreementFile">
+                <p class="text-center">If you have an agreement file attach that before importing</p>
+                <div class="text-center">
+                    <button (click)="selectAndLoadAgreement($event)" class="n-direct-btn n-blue-btn">1. Select agreement file (.pdf) <span class="glyphicon glyphicon-paperclip"></span></button>
+                </div>
+                <form #fileInputFormAgreement name="fileinputformagreement" style="display: none">
+                    <input #fileInputAgreement type="file" id="fileAgreement" name="file" style="display: none" (change)="onAgreementFileAttached($event)" />
+                </form>
+            </div>
+            <div class="editblock" *ngIf="m.attachedAgreementFile"><p class="text-center">Agreement {{m.attachedAgreementFile.name}} will be used.</p></div>
+        </div>
+    </div>
+
+    <div class="row pt-3 pb-3" *ngIf="!m.preview && !m.loansCreated">       
+        <div class="col-sm-offset-2 col-sm-8">
+            <div class="editblock">
+                <div class="text-center">
+                    <button (click)="selectAndLoadLoans($event)" class="n-direct-btn n-blue-btn">2. Import loans file (.xlsx) <span class="glyphicon glyphicon-paperclip"></span></button>
+                </div>
+                <form #fileInputFormLoans name="fileinputformloans" style="display: none">
+                    <input #fileInputLoans type="file" id="fileLoans" name="file" style="display: none" (change)="onLoansFileAttached($event)" />
+                </form>
+            </div>
+        </div>
+    </div>    
+
+    <div *ngIf="m.loansCreated">
+        <h2>Loans created</h2>
+        <table class="table">
+            <tbody>
+                <tr *ngFor="let creditNr of m.loansCreated.creditNrs">
+                    <td><a [routerLink]="['/credit/mortgageloanStandardAmortizationSe', creditNr]" target="_blank" class="n-anchor">{{creditNr}}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-container *ngIf="m?.preview">
+        <h2>Preview</h2>
+        <br><br>
+        <ng-container *ngIf="m.preview.errors.length > 0 || m.preview.warnings.length > 0">
+            <table class="table">
+                <tbody>
+                    <ng-container *ngIf="m.preview.errors.length > 0">
+                        <tr><th>Errors</th></tr>
+                        <tr *ngFor="let e of m.preview.errors" ><td>{{e}}</td></tr>
+                    </ng-container>
+                    <ng-container *ngIf="m.preview.warnings.length > 0">
+                        <tr><th>Warnings</th></tr>
+                        <tr *ngFor="let w of m.preview.warnings" ><td>{{w}}</td></tr>
+                    </ng-container>                    
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-container *ngIf="m.preview?.amortBasisPreview">
+            <toggle-block [initialData]="{ headerText: 'Amorteringsgrund' }">
+                <ml-se-amortization-basis [preloadedBasis]="m.preview.amortBasisPreview">
+    
+                </ml-se-amortization-basis>
+            </toggle-block>
+        </ng-container>
+        <ng-container *ngIf="m.preview.rawDataPoints">
+            <toggle-block [initialData]="{ headerText: 'Raw datapoints' }">
+                <table class="table">
+                    <tbody>
+                        <ng-container *ngFor="let group of m.preview.rawDataPoints">
+                            <tr>
+                                <th colspan="2">{{group.groupName}}</th>
+                            </tr>
+                            <tr *ngFor="let value of group.values">
+                                <td>{{value.key}}</td>
+                                <td>{{value.value}}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </toggle-block>
+        </ng-container>
+        <ng-container *ngIf="m.preview.createLoansRequest">
+            <toggle-block [initialData]="{ headerText: 'Api requests' }">
+                <h3>Create loans</h3>
+                <pre>{{m.preview.createLoansRequest | json}}</pre>
+                <h3>Create customers</h3>
+                <pre *ngFor="let r of m.preview.createCustomersRequests">{{r | json}}</pre>
+            </toggle-block>
+        </ng-container>
+        <div class="row pt-3 pb-3">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div>
+                    <div class="text-center">
+                        <button (click)="importAndCreateLoans($event)" [disabled]="!m.isCreateAllowed" class="n-direct-btn n-blue-btn">Create loans</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </ng-container>
+</div>

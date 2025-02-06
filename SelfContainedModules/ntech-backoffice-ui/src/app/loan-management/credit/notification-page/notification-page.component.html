@@ -1,0 +1,235 @@
+<credit-menu
+  activeMenuItemCode="notifications"
+  [creditNr]="m?.creditNr"
+  *ngIf="m"
+>
+  <div current-item-content>
+    <h4 class="custom-breadcrumb pb-3 no-underline">
+      <a href="#" [routerLink]="['/credit/notifications', m.creditNr]"
+        >Notifications</a
+      >
+      / Specification
+    </h4>
+    <div class="row pb-2">
+      <div class="col-xs-6">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-xs-6">Notification</label>
+            <p class="form-control-static col-xs-6">
+              <a
+                class="n-anchor"
+                *ngIf="m.NotificationArchiveKey"
+                target="_blank"
+                [href]="getArchiveDocumentUrl(m.NotificationArchiveKey)"
+                >PDF
+                <span
+                  *ngIf="
+                    m.CoNotificationCreditNrs &&
+                    m.CoNotificationCreditNrs.length > 0
+                  "
+                  >(<span
+                    *ngFor="let creditNr of m.CoNotificationCreditNrs"
+                    class="comma"
+                    >{{ creditNr }}</span
+                  >)</span
+                >
+                <span class="glyphicon glyphicon-save"></span
+              ></a>
+            </p>
+          </div>
+          <div class="form-group" *ngFor="let r of m.Reminders">
+            <label class="control-label col-xs-6">Reminder {{ r.ReminderNumber }}</label>
+            <p class="form-control-static col-xs-6">
+                <a class="n-anchor" target="_blank" [href]="getArchiveDocumentUrl(r.ArchiveKey)">
+                    PDF
+                    <span *ngIf="r.CoReminderCreditNrs && r.CoReminderCreditNrs.length > 0">
+                        (<span *ngFor="let creditNr of r.CoReminderCreditNrs" class="comma">{{ creditNr }}</span>)
+                    </span>
+                    <span class="glyphicon glyphicon-save"></span>
+                </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-3">
+      <div class="col-xs-6">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-xs-6">Notification date</label>
+            <p class="form-control-static col-xs-6">
+              {{ m.NotificationDate | date: "shortDate" }}
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-6">Due date</label>
+            <p class="form-control-static col-xs-6">
+              {{ m.DueDate | date: "shortDate" }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label *ngIf="m.PaymentIBAN" class="control-label col-xs-6"
+              >IBAN</label
+            >
+            <p *ngIf="m.PaymentIBAN" class="form-control-static col-xs-6 copyable">
+              {{ m.PaymentIBAN }}
+            </p>
+          </div>
+          <div class="form-group">
+            <label *ngIf="m.PaymentBankGiro" class="control-label col-xs-6"
+              >Bankgiro</label
+            >
+            <p *ngIf="m.PaymentBankGiro" class="form-control-static col-xs-6 copyable">
+              {{ m.PaymentBankGiro }}
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-6">Reference number{{m.singleCreditOcr ? ' (shared)' : ''}}</label>
+            <p class="form-control-static col-xs-6 copyable">{{m.primaryOcr}}</p>
+          </div>
+          <div class="form-group" *ngIf="m.singleCreditOcr">
+            <label class="control-label col-xs-6">Reference number (this credit only)</label>
+            <p class="form-control-static col-xs-6">{{m.singleCreditOcr}}</p>
+          </div>          
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="editblock">
+        <div class="pull-right pb-1" *ngIf="isEditEnabled()">
+          <button
+            class="n-icon-btn n-blue-btn"
+            (click)="beginEdit()"
+            *ngIf="!isEdit()"
+          >
+            <span class="glyphicon glyphicon-pencil"></span>
+          </button>
+          <button
+            class="n-icon-btn n-white-btn"
+            (click)="cancelEdit()"
+            *ngIf="isEdit()"
+          >
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button
+            class="n-icon-btn n-green-btn"
+            (click)="saveEdit()"
+            *ngIf="isEdit()"
+          >
+            <span class="glyphicon glyphicon-ok"></span>
+          </button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="col-xs-2"></th>
+              <th *ngIf="!isEdit()" class="col-xs-2 text-right">
+                Initial amount
+              </th>
+              <th *ngIf="!isEdit()" class="col-xs-2 text-right">Paid</th>
+              <th class="col-xs-2 text-right">Written off</th>
+              <th class="col-xs-2 text-right">Remaining</th>
+              <th *ngIf="isEdit()" class="col-xs-4"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let t of m.PaymentOrderItems">
+              <tr>
+                <td>
+                  <b>{{ t.Text }}</b>
+                </td>
+                <td *ngIf="!isEdit()" class="text-right">
+                  {{ m.Balance[t.UniqueId + "InitialAmount"] | currency }}
+                </td>
+                <td *ngIf="!isEdit()" class="text-right">
+                  {{ m.Balance[t.UniqueId + "PaidAmount"] | currency }}
+                </td>
+                <td class="text-right">
+                  <span [ngClass]="{ 'green-text': isPendingWriteOff(t) }">{{
+                    m.Balance[t.UniqueId + "WrittenOffAmount"] + pendingWriteOffAmount(t)
+                      | currency
+                  }}</span>
+                </td>
+                <td class="text-right">
+                  <span [ngClass]="{ 'line-through': isPendingWriteOff(t) }">{{
+                    m.Balance[t.UniqueId + "RemainingAmount"] - pendingWriteOffAmount(t)
+                      | currency
+                  }}</span>
+                </td>
+                <td *ngIf="isEdit()">
+                  <a
+                    *ngIf="isEditAllowed(t) && !isPendingWriteOff(t)"
+                    href="#"
+                    (click)="writeOff(t, $event)"
+                    class="n-direct-btn n-blue-btn"
+                    >Write off</a
+                  >
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>TOTAL</td>
+              <td *ngIf="!isEdit()" class="text-right">
+                {{ m.Balance["TotalInitialAmount"] | currency }}
+              </td>
+              <td *ngIf="!isEdit()" class="text-right">
+                {{ m.Balance["TotalPaidAmount"] | currency }}
+              </td>
+              <td class="text-right">
+                {{
+                  m.Balance["TotalWrittenOffAmount"] + totalPendingWriteOffSum()
+                    | currency
+                }}
+              </td>
+              <td class="text-right">
+                {{
+                  m.Balance["TotalRemainingAmount"] - totalPendingWriteOffSum()
+                    | currency
+                }}
+              </td>
+              <td *ngIf="isEdit()"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="pt-3">
+      <h2 class="custom-header">Payments</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Placed</th>
+            <th>Amount</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of m.Payments">
+            <td>{{ p.TransactionDate | date: "shortDate" }}</td>
+            <td>{{ p.Amount | currency }}</td>
+            <td>
+              <a
+                class="n-anchor"
+                target="_blank"
+                [href]="getCreditFilteredPaymentDetailsAsXlsUrl(p.PaymentId)"
+                >XLS<span class="glyphicon glyphicon-save"></span
+              ></a>
+            </td>
+          </tr>
+          <tr *ngIf="m.Payments.length == 0">
+            <td colspan="2">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</credit-menu>

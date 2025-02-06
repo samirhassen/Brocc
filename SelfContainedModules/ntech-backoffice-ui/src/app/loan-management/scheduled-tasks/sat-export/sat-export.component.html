@@ -1,0 +1,83 @@
+<scheduled-tasks-menu [currentTaskName]="'SatExport'">
+    <ng-container task-area *ngIf="m">
+        <toggle-block [initialData]="{ headerText: 'Trigger job manually', useFixedBorder: true }">
+            <div class="frame col-sm-8 col-sm-offset-2" *ngIf="m.status">
+                <div class="row pt-3">
+                    <div class="col-sm-6 text-right">
+                        <p>Number of active loans</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p><b>{{m.status.nrOfActiveCredits}}</b></p>
+                    </div>
+                </div>
+                <div class="text-center pt-3">
+                    <button class="n-main-btn n-green-btn" (click)="exportToSat($event)">
+                        <span *ngIf="m.status.exportProfileName">Create file and deliver it to '{{m.status.exportProfileName}}'</span>
+                        <span *ngIf="!m.status.exportProfileName">Create file but don't deliver it</span>
+                    </button>
+                </div>
+            </div>
+        </toggle-block>
+
+        <div class="row mt-2">
+            <form [formGroup]="m.form.form">
+                <div class="col-xs-2">
+                    <div class="form-group" [ngClass]="{ 'has-error': m.form.hasError('fromDate') }">
+                        <label class="control-label">From date</label>
+                        <input type="text" formControlName="fromDate" class="form-control" placeholder="YYYY-MM-DD">
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-group" [ngClass]="{ 'has-error': m.form.hasError('toDate') }">
+                        <label class="control-label">To date</label>
+                        <input type="text" formControlName="toDate" class="form-control" placeholder="YYYY-MM-DD">
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <div class="form-group">
+                        <label class="control-label col-xs-12">&nbsp;</label>
+                        <button class="n-main-btn n-blue-btn" [disabled]="m.form.invalid()" (click)="search($event)">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <ng-container *ngIf="m.files">
+            <div class="pt-3 text-center no-hits" *ngIf="m.files.TotalNrOfPages === 0"><p>No exports have been done.</p></div>
+            <div class="pt-3" *ngIf="m.files.TotalNrOfPages > 0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="">Date</th>
+                            <th class="text-left">Status</th>
+                            <th class="text-left">Delivered to</th>
+                            <th class="text-right">Download file</th>
+                            <th class="text-right">By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let f of m.files.Page">
+                            <td class="">{{f.TransactionDate | date:'shortDate'}}</td>
+                            <td class="text-left">
+                                <span class="glyphicon" [ngClass]="{ 'glyphicon-exclamation-sign' : f.ExportResultStatus.status == 'Warning', 'glyphicon-ok' : f.ExportResultStatus.status == 'Success',  'glyphicon-remove' : f.ExportResultStatus.status == 'Error' }"></span>
+                                <span *ngIf="f.ExportResultStatus.warnings && f.ExportResultStatus.warnings.length > 0">({{f.ExportResultStatus.warnings[0]}})</span>
+                                <span *ngIf="f.ExportResultStatus.errors && f.ExportResultStatus.errors.length > 0">({{f.ExportResultStatus.errors[0]}})</span>
+                            </td>
+                            <td class="text-left">
+                                <span *ngIf="f.ExportResultStatus.deliveredToProfileName && !f.ExportResultStatus.deliveredToProfileNames">{{f.ExportResultStatus.deliveredToProfileName}}</span>
+                                <span *ngIf="f.ExportResultStatus.deliveredToProfileNames && f.ExportResultStatus.deliveredToProfileNames.length > 0">
+                                    <span *ngFor="let n of f.ExportResultStatus.deliveredToProfileNames" class="comma">{{n}}</span>
+                                </span>
+                                <span *ngIf="!f.ExportResultStatus.deliveredToProfileName">Not delivered</span>
+                            </td>
+                            <td class="text-right"><a class="n-direct-btn n-purple-btn" *ngIf="f.FileArchiveKey" target="_blank" [href]="getArchiveDocumentUrl(f.FileArchiveKey)">File <span class="glyphicon glyphicon-save"></span></a></td>
+                            <td class="text-right">{{f.UserDisplayName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table-pager [initialData]="m.files.pagingData"></table-pager>
+        </ng-container>
+
+    </ng-container>
+</scheduled-tasks-menu>

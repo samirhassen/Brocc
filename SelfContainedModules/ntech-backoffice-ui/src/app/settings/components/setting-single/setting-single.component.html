@@ -1,0 +1,26 @@
+<ng-container *ngIf="m">
+  <ng-container *ngIf="m.isPage">
+    <setting-component [initialData]="m.componentInitialData">        
+    </setting-component>
+  </ng-container>
+  <ng-container *ngIf="m.isForm">
+    <setting-form [initialData]="m.formInitialData">        
+    </setting-form>
+  </ng-container>
+  <ng-container *ngIf="m.isHtmlTemplate">
+    <setting-htmltemplate [initialData]="m.htmlTemplateInitialData">
+    </setting-htmltemplate>
+  </ng-container>
+  <ng-container *ngIf="m.isAddRemoveRows">
+    <setting-add-remove-rows [initialData]="m.addRemoveRowsInitialData">
+    </setting-add-remove-rows>
+  </ng-container>
+  <ng-container *ngIf="m.isBankAccount">
+    <setting-bankaccount [initialData]="m.bankAccountInitialData">        
+    </setting-bankaccount>
+  </ng-container>
+  <ng-container *ngIf="m.isKycUpdateFrequency">
+    <setting-kyc-update-frequency [initialData]="m.kycUpdateFrequencyInitialData">        
+    </setting-kyc-update-frequency>
+  </ng-container>  
+</ng-container>

@@ -1,0 +1,54 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="customer-comments.html">
+   <div>
+        <div class="pb-3">
+            <div class="custom-comment">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <form novalidate class="form-inline" name="commentform" id="commentform">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <textarea ng-model="$ctrl.newCommentText" ng-class="{ 'comment-textarea-expanded': $ctrl.isExpanded }" class="comment-textarea-control custom-control expand" ng-focus="$ctrl.onFocusGained()" ng-blur="$ctrl.onFocusLost()" placeholder="Add comment" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true"></textarea>
+                                </div>
+                                <div class="col-xs-4" ng-show="$ctrl.isExpanded">
+                                    <div class="input-group-addon n-main-btn n-white-btn" style="border-radius: 5px;" ng-disabled="!$ctrl.newCommentText || $ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true" ng-click="$ctrl.selectCommentFileToAttach($event)">
+                                        Attach <span class="glyphicon glyphicon-paperclip"></span>
+                                    </div>
+                                    <span class="input-group-addon" ng-show="$ctrl.attachedFileName">{{$ctrl.attachedFileName}}</span>
+                                    <div class="n-main-btn n-blue-btn" style="margin-top:20px; padding: 8px 8px 5px 8px;" ng-click="$ctrl.addComment($event)" ng-disabled="!$ctrl.newCommentText || $ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true">
+                                        Add <span class="glyphicon glyphicon-comment"></span>
+                                    </div>
+                                    <input type="file" id="file" name="file" style="display:none" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-2">Date</th>
+                    <th class="col-xs-6">Comment</th>
+                    <th class="col-xs-2">File</th>
+                    <th class="col-xs-2 text-right">By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="c in $ctrl.comments">
+                    <td>{{c.CommentDate | date:'short'}}</td>
+                    <td>{{c.CommentText}}</td>
+                    <td ng-show="c.AttachmentUrl">{{c.AttachmentFilename}} <a target="_blank" class="n-direct-btn n-purple-btn" ng-href="{{c.AttachmentUrl}}">Document <span class="glyphicon glyphicon-save"></span></a></td>
+                    <td ng-show="c.DirectUrl && !c.AttachmentUrl"><a target="_blank" class="n-anchor" ng-href="{{c.DirectUrl}}">{{c.DirectUrlShortName}}&nbsp;<span class="glyphicon glyphicon-new-window"></span></a></td>
+                    <td ng-hide="c.AttachmentUrl || c.DirectUrl"></td>
+                    <td class="text-right">{{c.CommentByName}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>

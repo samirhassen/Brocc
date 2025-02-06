@@ -1,0 +1,17 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit Management - Archived application";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak id=\"creditApp\"";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>    
+    @Scripts.Render("~/Content/js/bundle-creditmanagement-archivedapplication")
+}
+
+<archived-unsecured-loan-application initial-data="applicationInitialData" ></archived-unsecured-loan-application>
+
+@Html.Partial("Components")

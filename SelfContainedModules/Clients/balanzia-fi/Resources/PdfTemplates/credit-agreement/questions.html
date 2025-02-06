@@ -1,0 +1,117 @@
+
+    
+<div class="page extra-padding-top">
+    <p>Tietoja henkilöstä {{fullName}}</p>
+    <br />
+    <div class="area">
+        <h2>Tietoa taloudesta</h2>
+        <table>
+            {{#education}}
+            <tr>
+                <td>Koulutus</td>
+                <td>{{education}}</td>
+            </tr>
+            {{/education}}
+            <tr>
+                <td>Asumismuoto</td>
+                <td>{{housing}}</td>
+            </tr>
+            <tr>
+                <td>Vuokra/vastike</td>
+                <td>{{housingMonthlyCost}}</td>
+            </tr>
+            <tr>
+                <td>Työsuhde</td>
+                <td>{{employment}}</td>
+            </tr>
+            <tr>
+                <td>Työsuhde/muu alkaen</td>
+                <td>{{employedSince}}</td>
+            </tr>
+            {{#employer}}
+            <tr>
+                <td>Työnantaja</td>
+                <td>{{employer}}</td>
+            </tr>
+            {{/employer}}
+            {{#employerPhone}}
+            <tr>
+                <td>Työnantajan puhelinnumero</td>
+                <td>{{employerPhone}}</td>
+            </tr>
+            {{/employerPhone}}
+            <tr>
+                <td>Kuukausitulot (brutto)</td>
+                <td>{{monthlyIncome}}</td>
+            </tr>
+            <tr>
+                <td>Siviilisääty</td>
+                <td>{{marriageStatus}}</td>
+            </tr>
+            <tr>
+                <td>Kotona asuvien lasten lukumäärä</td>
+                <td>{{nrOfChildren}}</td>
+            </tr>
+            {{#mortgageLoanAmount}}
+            <tr>
+                <td>Asuntolaina</td>
+                <td>{{mortgageLoanAmount}}</td>
+            </tr>
+            {{/mortgageLoanAmount}}
+            {{#mortgageLoanCostPerMonthAmount}}
+            <tr>
+                <td>Asuntolaina kuukausierä</td>
+                <td>{{mortgageLoanCostPerMonthAmount}}</td>
+            </tr>
+            {{/mortgageLoanCostPerMonthAmount}}
+            {{#carOrBoatLoanAmount}}
+            <tr>
+                <td>Auto-/venelaina</td>
+                <td>{{carOrBoatLoanAmount}}</td>
+            </tr>
+            {{/carOrBoatLoanAmount}}
+            {{#carOrBoatLoanCostPerMonthAmount}}
+            <tr>
+                <td>Auto-/venelaina kuukausierä</td>
+                <td>{{carOrBoatLoanCostPerMonthAmount}}</td>
+            </tr>
+            {{/carOrBoatLoanCostPerMonthAmount}}
+            {{#studentLoanAmount}}
+            <tr>
+                <td>Opintolaina</td>
+                <td>{{studentLoanAmount}}</td>
+            </tr>
+            {{/studentLoanAmount}}
+            {{#studentLoanCostPerMonthAmount}}
+            <tr>
+                <td>Opintolaina kuukausierä</td>
+                <td>{{studentLoanCostPerMonthAmount}}</td>
+            </tr>
+            {{/studentLoanCostPerMonthAmount}}
+            {{#otherLoanAmount}}
+            <tr>
+                <td>Muu laina</td>
+                <td>{{otherLoanAmount}}</td>
+            </tr>
+            {{/otherLoanAmount}}
+            {{#otherLoanCostPerMonthAmount}}
+            <tr>
+                <td>Muu laina kuukausierä</td>
+                <td>{{otherLoanCostPerMonthAmount}}</td>
+            </tr>
+            {{/otherLoanCostPerMonthAmount}}
+            {{#creditCardAmount}}
+            <tr>
+                <td>Luottokortti</td>
+                <td>{{creditCardAmount}}</td>
+            </tr>
+            {{/creditCardAmount}}
+            {{#creditCardCostPerMonthAmount}}
+            <tr>
+                <td>Luottokortti kuukausierä</td>
+                <td>{{creditCardCostPerMonthAmount}}</td>
+            </tr>
+            {{/creditCardCostPerMonthAmount}}
+        </table>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+<div *ngIf="m && !m.generatedKey">
+  <form [formGroup]="m.form.form">
+    <div class="row pb-2">
+      <div class="col-sm-8 col-xs-12">
+        <div
+          class="form-group"
+          [ngClass]="{ 'has-error': m.form.hasError('scopeName') }"
+        >
+          <label class="control-label">Scope</label>
+          <select
+            class="form-control"
+            formControlName="scopeName"
+            (change)="updateDescription()"
+          >
+            <option value="">Select scope</option>
+            <option
+              [value]="scope.name"
+              *ngFor="let scope of m.availableScopes"
+            >
+              {{ scope.displayName }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-2" *ngIf="selectedScope()?.isConnectedToProvider">
+      <div class="col-sm-8 col-xs-12">
+        <div
+          class="form-group"
+          [ngClass]="{ 'has-error': m.form.hasError('providerName') }"
+        >
+          <label class="control-label">Provider</label>
+          <select
+            class="form-control"
+            formControlName="providerName"
+            (change)="updateDescription()"
+          >
+            <option value="">Select provider</option>
+            <option
+              [value]="provider.providerName"
+              *ngFor="let provider of m.availableProviders"
+            >
+              {{ provider.providerDisplayName }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="isProviderAndScopeSelected()">
+      <div class="row pb-2">
+        <div class="col-sm-8 col-xs-12">
+          <div
+            class="form-group"
+            [ngClass]="{ 'has-error': m.form.hasError('description') }"
+          >
+            <label class="control-label">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="description"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row pb-2">
+        <div class="col-sm-8 col-xs-12">
+          <div
+            class="form-group"
+            [ngClass]="{ 'has-error': m.form.hasError('expirationDays') }"
+          >
+            <label class="control-label">Expires after #days</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="expirationDays"
+              placeholder="Key expires after this nr of days (optional)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row pb-2">
+        <div class="col-sm-8 col-xs-12">
+          <div
+            class="form-group"
+            [ngClass]="{ 'has-error': m.form.hasError('ipAddressFilter') }"
+          >
+            <label class="control-label">Ip address filter</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="ipAddressFilter"
+                placeholder="Can only be used from these ips (optional)"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn btn-info"
+                  type="button"
+                  (click)="toggleIpAddressFilterHelp($event)"
+                >
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="row col-sm-8 col-xs-12 pb-2"
+        style="display: flex; justify-content: center"
+        *ngIf="m.isIpFilterHelpVisible"
+      >
+        <div class="bg-info" style="padding: 15px; border-radius: 10px">
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="2">Ip filter examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Just from 127.0.0.1</td>
+                <td>127.0.0.1</td>
+              </tr>
+              <tr>
+                <td>From either 127.0.0.1 or 127.0.0.2</td>
+                <td>127.0.0.1,127.0.0.2</td>
+              </tr>
+              <tr>
+                <td>All allowed</td>
+                <td>Leave it empty</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+    <div
+      class="row col-sm-8 col-xs-12"
+      style="display: flex; justify-content: center"
+      *ngIf="!m.form.invalid()"
+      (click)="generateKey($event)"
+    >
+      <button class="n-main-btn n-green-btn">
+        Generate key <span class="glyphicon glyphicon-plus"></span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<div
+  class="row col-sm-8 col-xs-12"
+  style="display: flex; flex-direction: column"
+  *ngIf="m && m.generatedKey"
+>
+  <h2>{{ m.form.getValue("description") }} created</h2>
+  <div class="mt-2">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        [value]="m.generatedKey"
+        readonly
+        #generatedKeyInput
+        (click)="generatedKeyInput.select()"
+      />
+      <span class="input-group-btn">
+        <button class="btn btn-info" type="button" (click)="copyKey($event)">
+          Copy key <span class="glyphicon glyphicon-copy"></span>
+        </button>
+      </span>
+    </div>
+  </div>
+  <p class="bg-warning mt-2" style="padding: 15px; border-radius: 10px">
+    Warning! Once you leave this page the key will no longer be available. Make
+    sure to copy it before you leave.
+  </p>
+</div>

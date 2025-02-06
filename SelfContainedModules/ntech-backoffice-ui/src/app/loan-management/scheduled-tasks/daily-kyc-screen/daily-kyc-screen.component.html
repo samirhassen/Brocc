@@ -1,0 +1,66 @@
+<scheduled-tasks-menu [currentTaskName]="'DailyKycScreen'">
+    <ng-container task-area *ngIf="m">
+        <toggle-block [initialData]="m.triggerInitialData">
+            <div class="col-xs-8 col-sm-offset-2" *ngIf="m.counts">
+                <div class="frame">
+                    <div class="text-center" *ngIf="m.counts.unscreenedCount === 0">
+                        <p>No customers need screening</p>
+                    </div>
+                    <div class="row" *ngIf="m.counts.unscreenedCount > 0">
+                        <div class="col-sm-6 text-right"><p>Waiting to be screened</p></div>
+                        <div class="col-sm-6"><p><b> {{m.counts.unscreenedCount}}</b></p></div>
+                    </div>
+                    <div class="text-center pt-3">
+                        <button class="n-main-btn n-green-btn" (click)="screenCustomers($event)">Screen customers</button>
+                    </div>
+                </div>
+            </div>
+        </toggle-block>
+        <div class="row">
+            <form [formGroup]="m.form.form">
+                <div class="col-xs-2">
+                    <div class="form-group" [ngClass]="{ 'has-error': m.form.hasError('fromDate') }">
+                        <label class="control-label">From date</label>
+                        <input type="text" formControlName="fromDate" class="form-control" placeholder="YYYY-MM-DD">
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-group" [ngClass]="{ 'has-error': m.form.hasError('toDate') }">
+                        <label class="control-label">To date</label>
+                        <input type="text" formControlName="toDate" class="form-control" placeholder="YYYY-MM-DD">
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <div class="form-group">
+                        <label class="control-label col-xs-12">&nbsp;</label>
+                        <button class="n-main-btn n-blue-btn" [disabled]="m.form.invalid()"  (click)="search($event)">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <ng-container *ngIf="m.files">
+            <div class="pt-3 text-center no-hits" *ngIf="m.files.TotalNrOfPages === 0"><p>No screenings have been done in this date interval.</p></div>
+            <div class="pt-3" *ngIf="m.files.TotalNrOfPages > 0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="">Screening date</th>
+                            <th class="text-right">Count screened</th>
+                            <th class="text-right">Count conflicted</th>
+                            <th class="text-right">By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let f of m.files.Page">
+                            <td class="">{{f.TransactionDate | date:'shortDate'}}</td>
+                            <td class="text-right">{{f.NrOfCustomersScreened}}</td>
+                            <td class="text-right">{{f.NrOfCustomersConflicted}}</td>
+                            <td class="text-right">{{f.UserDisplayName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table-pager [initialData]="m.files.pagingData"></table-pager>
+        </ng-container>
+    </ng-container>
+</scheduled-tasks-menu>

@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]" alt="Logo">
+    </div>
+    <div class="page">
+        <div class="blackborder">
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Påminnelse {{reminderNumber}}</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Påminnelsedatum</td>
+                                <td class="text-right">{{reminderDate}}</td>
+                            </tr>
+                            <tr>
+                                <td>Lånenummer</td>
+                                <td class="text-right">{{creditNr}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column2 greenborder">
+                    <p>{{fullName}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area">
+                <div class="column1">
+                    <p>{{documentClientData_contactText}}</p>        
+                    {{#isReminder1}}
+                    <p>
+                        Sista betalningsdag för nedanstående förfallodag har passerat och vi har inte registrerat någon betalning från dig. Har du betalat de senaste dagarna så kan du bortse från detta meddelande, annars ber vi dig betala omgående.
+                    <p>
+                    {{/isReminder1}}
+                    {{^isReminder1}}
+                    <p>
+                        Trots tidigare påminnelse har vi inte registrerat någon betalning från dig. Har du betalat de senaste dagarna så kan du bortse från detta meddelande, annars ber vi dig betala omgående.
+                    </p>
+                    {{/isReminder1}}
+                </div>
+            </div>
+            <div class="column2 ">
+                <table class="summery">
+                    <tbody>
+                        <tr>
+                            <td>Bankgiro</td>
+                            <td class="text-right">{{paymentBankGiroNr}}</td>
+                        </tr>
+                        <tr>
+                            <td>OCR</td>
+                            <td class="text-right">{{ocrPaymentReference}}</td>
+                        </tr>
+                        <tr>
+                            <td class="greenborder" style="padding-top: 20px;">Att betala</td>
+                            <td class="text-right greenborder" style="padding-top: 20px;">{{totalCurrentAmount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        <div class="area pt-5">
+            <h2>Specifikation</h2>
+
+            <div class="area">
+                <table class="spec">
+                    <thead>
+                        <tr>
+                            <th>Avser</th>
+                            <th>Förfallodatum</th>
+                            <th class="text-right">Ursprungsbelopp</th>
+                            <th class="text-right">Obetalt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{notificationMonth}}</td>
+                            <td>{{notificationDueDate}}</td>
+                            <td class="text-right">{{notificationTotalAmount}}</td>
+                            <td class="text-right">{{notificationCurrentAmount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="area">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Specifikation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Avser {{notificationMonth}}</td>
+                            <td class="text-right">{{notificationCurrentAmount}}</td>
+                        </tr>                        
+                        {{#newNotificationFeeAmount}}
+                        <tr>
+                            <td>Påminnelseavgift</td>
+                            <td class="text-right">{{newNotificationFeeAmount}}</td>
+                        </tr>
+                        {{/newNotificationFeeAmount}}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="area">
+                <table class="total">
+                    <thead>
+                        <tr>
+                            <th class="">Att betala</b></th>
+                            <th class="text-right">{{totalCurrentAmount}}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div id="footer">
+        <p>Postadress: {{documentClientData_footerAddress}}</p>
+    </div>
+</body>
+    
+</html>

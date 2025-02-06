@@ -1,0 +1,9 @@
+<label class="n-toggle{{ isDisabled ? ' disabled' : '' }}">
+  <input
+    [disabled]="isDisabled"
+    [checked]="isToggled"
+    type="checkbox"
+    (click)="toggle($event)"
+  />
+  <span class="n-slider" (click)="toggle($event)"></span>
+</label>

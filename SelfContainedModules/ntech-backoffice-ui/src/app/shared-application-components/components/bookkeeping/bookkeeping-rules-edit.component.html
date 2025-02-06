@@ -1,0 +1,88 @@
+<div *ngIf="m">
+    <div class="row pb-3">
+        <form class="form-horizontal decision-form col-sm-6">
+            <div class="pull-right">
+                <button class="n-icon-btn n-blue-btn" *ngIf="!m.edit?.isEdit" (click)="beginEdit($event)">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <span>
+                    <button class="n-icon-btn n-white-btn" *ngIf="m.edit?.isEdit" (click)="cancelEdit($event)">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <button class="n-icon-btn n-green-btn" *ngIf="m.edit?.isEdit" (click)="commitEdit($event)" [disabled]="m.edit?.form.invalid()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </button>
+                </span>
+            </div>
+            <div class="row">
+                <form [formGroup]="m.edit?.form?.form">
+                <div class="form-group" *ngFor="let accountName of m.accountNames">
+                    <label class="col-sm-5 control-label">{{accountName}}</label> 
+                    <div class="col-sm-3 no-padding-left"
+                     [ngClass]="{
+                                'has-error':
+                                m.edit?.form?.hasError(accountName)
+                            }">
+                        <input *ngIf="m.edit?.isEdit" type="text" 
+                        class="form-control" [formControlName]="accountName">
+                        <p *ngIf="!m.edit?.isEdit" class="form-control-static"> {{m.accountNrByAccountName[accountName]}}</p> 
+                    </div>
+                </div>
+                </form>
+            </div>
+        </form>
+        <form [formGroup]="m.importExportForm?.form" class="form-horizontal import-form decision-form col-sm-offset-2 col-sm-4" *ngIf="!m.edit?.isEdit">
+            <div class="row pt-2">
+                <div>
+                    <h2>Export</h2>
+                    <p>Copy this code</p>
+                    <div>
+                        <p class="copyable overflowhidden bold">{{m.exportCode}}</p>
+                    </div>
+                    <h2>Import</h2>
+                    <p>Paste the code here</p>
+                    <div>
+                        <input class="col-sm-11" [formControlName]="'importText'" placeholder="B_[...]_B"
+                            (change)="onImportTextChanged()" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row pt-3 pb-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Event name</th>
+                    <th>Ledger account</th>
+                    <th *ngFor="let connectionName of m.allConnections">{{connectionName}}</th>
+                    <th colspan="2">Debet account</th>
+                    <th colspan="2">Credit account</th>
+                    <th>Filter</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of m.ruleRows">
+                    <td>{{row.EventName}}</td>
+                    <td>{{row.LedgerAccountName}}</td>
+                    <td *ngFor="let connectionName of m.allConnections">{{hasConnection(row, connectionName) ?
+                        'X' : ''}}</td>
+                    <td [ngClass]="{ 'edited-bookkeeping-nr': getRowAccountNr(row, false).isEdited }">
+                        {{getRowAccountNr(row, false).currentValue}}</td>
+                    <td [ngClass]="{ 'edited-bookkeeping-nr': getRowAccountNr(row, false).isEdited }">
+                        {{row.DebetAccountName}}</td>
+                    <td [ngClass]="{ 'edited-bookkeeping-nr': getRowAccountNr(row, true).isEdited }">
+                        {{getRowAccountNr(row, true).currentValue}}</td>
+                    <td [ngClass]="{ 'edited-bookkeeping-nr': getRowAccountNr(row, true).isEdited }">
+                        {{row.CreditAccountName}}</td>
+                    <td>{{row.Filter}}</td>
+                </tr>
+                <tr *ngIf="m.isTest">
+                    <td colspan="12"> 
+                        <a style="float:right" [href]="m.previewUrl">Preview based on last months transactions</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

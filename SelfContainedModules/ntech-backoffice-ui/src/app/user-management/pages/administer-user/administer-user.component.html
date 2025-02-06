@@ -1,0 +1,579 @@
+<div *ngIf="m">
+  <p *ngIf="m.isEditingSelf">
+    You are editing your own user. Some functions will be unavailable.
+  </p>
+  <p *ngIf="m.isDeactivated">
+    <span class="glyphicon glyphicon-remove"></span> This user has been
+    deactivated<span *ngIf="m.user.DeletedBy">
+      by user {{ m.user.DeletedBy }} on
+      {{ m.user.DeletionDate | date: "yyyy-MM-dd" }}</span
+    >.
+  </p>
+
+  <div *ngIf="m.isRegularUser">
+    <h2 class="custom-header">Groups</h2>
+    <hr class="hr-section custom-line mt-0" />
+    <div class="row pb-3">
+      <div class="col-sm-3">
+        <div class="text-center">
+          <p>Add new group</p>
+          <button
+            type="button"
+            class="n-main-btn n-blue-btn"
+            [disabled]="m.isEditingSelf || m.isDeactivated"
+            (click)="showAddGroupMembership(addGroupMembershipDialog, $event)"
+          >
+            Add <span class="glyphicon glyphicon-resize-full"></span>
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="col-sm-2">Start date</th>
+              <th class="col-sm-2">End date</th>
+              <th class="col-sm-2">Group name</th>
+              <th class="col-sm-2">Approved</th>
+              <th class="col-sm-4 text-right"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of m.groupMemberships">
+              <td>{{ x.StartDate | date: "yyyy-MM-dd" }}</td>
+              <td>{{ x.EndDate | date: "yyyy-MM-dd" }}</td>
+              <td>{{ x.GroupName }}</td>
+              <td>{{ x.IsApproved }}</td>
+              <td class="text-right">
+                <button
+                  type="button"
+                  class="n-direct-btn n-red-btn"
+                  *ngIf="!x.PendingCancellation && !m.isEditingSelf"
+                  (click)="
+                    showCancelGroupMembershipDialog(
+                      cancelGroupMembershipDialog,
+                      x,
+                      $event
+                    )
+                  "
+                >
+                  Remove <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <span *ngIf="x.PendingCancellation"
+                  >(Pending) Needs approval from a user in group 'High'</span
+                >
+                <span *ngIf="!x.PendingCancellation && m.isEditingSelf"
+                  >You cannot cancel your own groups</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pt-3">
+          <h2 class="custom-header">Expired groups</h2>
+          <hr class="hr-section custom-line mt-0" />
+          <table
+            class="table"
+            *ngIf="
+              m.expiredGroupMemberships && m.expiredGroupMemberships.length > 0
+            "
+          >
+            <thead>
+              <tr>
+                <th class="col-sm-2">Start date</th>
+                <th class="col-sm-2">End date</th>
+                <th class="col-sm-8">Group name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of m.expiredGroupMemberships">
+                <td>{{ x.StartDate | date: "yyyy-MM-dd" }}</td>
+                <td>{{ x.EndedOrCancelledDate | date: "yyyy-MM-dd" }}</td>
+                <td>{{ x.GroupName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="custom-header">Login methods</h2>
+  <hr class="hr-section custom-line mt-0" />
+  <div class="row pb-3">
+    <div class="col-sm-3">
+      <div class="text-center">
+        <p>Add new login method</p>
+        <button
+          type="button"
+          class="n-main-btn n-blue-btn"
+          (click)="showAddLoginMethod(addLoginMethodDialog, $event)"
+          [disabled]="m.isDeactivated"
+        >
+          Add <span class="glyphicon glyphicon-resize-full"></span>
+        </button>
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-sm-5">User identity</th>
+            <th class="col-sm-3">Provider</th>
+            <th class="col-sm-3">Type</th>
+            <th class="col-sm-1 text-right"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of m.loginMethods">
+            <td>{{ x.UserIdentity }}</td>
+            <td>{{ x.AuthenticationProvider }}</td>
+            <td>{{ x.AuthenticationType }}</td>
+            <td class="text-right">
+              <button
+                type="button"
+                class="n-direct-btn n-red-btn"
+                (click)="removeLoginMethod(x, $event)"
+                [disabled]="m.isDeactivated"
+              >
+                Remove <span class="glyphicon glyphicon-remove"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2 class="custom-header">Deactivate user</h2>
+  <hr class="hr-section custom-line mt-0" />
+  <div class="row pb-3">
+    <div class="col-sm-12">
+      <button
+        type="button"
+        class="n-main-btn n-red-btn"
+        [disabled]="m.isDeactivated"
+        *ngIf="!m.isEditingSelf && !m.isDeactivated"
+        (click)="showDeactivateDialog(deactivateUserDialog, $event)"
+      >
+        Deactivate user '{{ m.user.DisplayName }}'
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+      <p *ngIf="m.isEditingSelf">You cannot deactivate yourself.</p>
+      <button
+        type="button"
+        class="n-main-btn n-blue-btn"
+        style="margin-left: 20px"
+        *ngIf="m.isDeactivated"
+        (click)="showReactivateDialog(reactivateUserDialog, $event)"
+      >
+        Reactivate user '{{ m.user.DisplayName }}'
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #deactivateUserDialog>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="n-icon-btn n-white-btn pull-right"
+        (click)="modalRef?.hide()"
+      >
+        <span class="arrows-close"
+          ><span class="glyphicon glyphicon-arrow-down"></span
+          ><span class="glyphicon glyphicon-arrow-up"></span
+        ></span>
+      </button>
+      <h1>Are you sure?</h1>
+    </div>
+
+    <div class="modal-body">
+      <div class="pt-2">
+        <div class="text-center pb-2">
+          This will remove the groups of the user, but leave the login methods.
+        </div>
+        <div class="editblock">
+          <div class="row">
+            <div class="col-sm-3">
+              <button
+                type="button"
+                class="n-main-btn n-white-btn"
+                (click)="modalRef?.hide()"
+              >
+                Cancel
+              </button>
+            </div>
+            <div class="col-sm-9">
+              <form role="form" novalidate>
+                <div class="text-center">
+                  <button
+                    type="button"
+                    class="n-main-btn n-red-btn pull-right"
+                    (click)="deactivateUser($event)"
+                  >
+                    Yes, deactivate user
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #reactivateUserDialog>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="n-icon-btn n-white-btn pull-right"
+        (click)="modalRef?.hide()"
+      >
+        <span class="arrows-close"
+          ><span class="glyphicon glyphicon-arrow-down"></span
+          ><span class="glyphicon glyphicon-arrow-up"></span
+        ></span>
+      </button>
+      <h1>Are you sure?</h1>
+    </div>
+
+    <div class="modal-body">
+      <div class="pt-2">
+        <div class="editblock">
+          <div class="row">
+            <div class="col-sm-3">
+              <button
+                type="button"
+                class="n-main-btn n-white-btn"
+                (click)="modalRef?.hide()"
+              >
+                Cancel
+              </button>
+            </div>
+            <div class="col-sm-9">
+              <form role="form" novalidate>
+                <div class="text-center">
+                  <button
+                    type="button"
+                    class="n-main-btn n-blue-btn pull-right"
+                    (click)="reactivateUser($event)"
+                  >
+                    Yes, reactivate user '{{ m.user.DisplayName }}'
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cancelGroupMembershipDialog>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="n-icon-btn n-white-btn pull-right"
+        (click)="modalRef?.hide()"
+      >
+        <span class="arrows-close"
+          ><span class="glyphicon glyphicon-arrow-down"></span
+          ><span class="glyphicon glyphicon-arrow-up"></span
+        ></span>
+      </button>
+      <h1>Are you sure?</h1>
+    </div>
+
+    <div class="modal-body">
+      <div class="pt-2">
+        <div class="editblock">
+          <form role="form" novalidate>
+            <div class="text-center">
+              <button
+                type="button"
+                class="n-main-btn n-blue-btn"
+                (click)="beginGroupmembershipCancellation($event)"
+              >
+                Initate cancel group membership
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addGroupMembershipDialog>
+  <div class="modal-content" *ngIf="m?.addGroupForm?.form">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="n-icon-btn n-white-btn pull-right"
+        (click)="modalRef?.hide()"
+      >
+        <span class="arrows-close"
+          ><span class="glyphicon glyphicon-arrow-down"></span
+          ><span class="glyphicon glyphicon-arrow-up"></span
+        ></span>
+      </button>
+      <h1>Add group</h1>
+    </div>
+    <div class="modal-body">
+      <div class="pt-2">
+        <div class="editblock">
+          <form [formGroup]="m?.addGroupForm?.form" role="form">
+            <div class="row">
+              <div
+                class="form-group col-sm-6"
+                [ngClass]="{
+                  'has-error': m.addGroupForm.hasError('startDate')
+                }"
+              >
+                <label>Start date</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="startDate"
+                  placeholder="YYYY-MM-DD"
+                />
+              </div>
+              <div
+                class="form-group col-sm-6"
+                [ngClass]="{ 'has-error': m.addGroupForm.hasError('endDate') }"
+              >
+                <label>End date</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="endDate"
+                  placeholder="YYYY-MM-DD"
+                />
+              </div>
+            </div>
+            <div
+              class="form-group pt-1"
+              [ngClass]="{ 'has-error': m.addGroupForm.hasError('product') }"
+            >
+              <label>Product</label>
+              <select class="form-control" formControlName="product">
+                <option
+                  value=""
+                  *ngIf="!m.addGroupForm.getValue('product')"
+                ></option>
+                <option *ngFor="let p of m.products" [value]="p.v">
+                  {{ p.n }}
+                </option>
+              </select>
+            </div>
+            <div
+              class="form-group pt-1"
+              [ngClass]="{ 'has-error': m.addGroupForm.hasError('group') }"
+            >
+              <label>Group</label>
+              <select class="form-control" formControlName="group">
+                <option
+                  value=""
+                  *ngIf="!m.addGroupForm.getValue('group')"
+                ></option>
+                <option *ngFor="let p of m.groups" [value]="p.v">
+                  {{ p.n }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group text-center pt-2">
+              <button
+                type="button"
+                class="n-main-btn n-blue-btn"
+                (click)="addGroupMembership($event)"
+                [disabled]="m?.addGroupForm?.invalid()"
+              >
+                Initate add group membership
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addLoginMethodDialog>
+  <div class="modal-content" *ngIf="m?.addLoginMethodForm?.form">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="n-icon-btn n-white-btn pull-right"
+        (click)="modalRef?.hide()"
+      >
+        <span class="arrows-close"
+          ><span class="glyphicon glyphicon-arrow-down"></span
+          ><span class="glyphicon glyphicon-arrow-up"></span
+        ></span>
+      </button>
+      <h1>Add login method</h1>
+    </div>
+
+    <div class="modal-body">
+      <div class="pt-2">
+        <div class="editblock">
+          <form
+            [formGroup]="m?.addLoginMethodForm?.form"
+            role="form"
+            class="form-horizontal"
+          >
+            <div
+              class="form-group"
+              [ngClass]="{
+                'has-error': m.addLoginMethodForm.hasError('loginMethodLocalId')
+              }"
+            >
+              <label>Login method</label>
+              <select class="form-control" formControlName="loginMethodLocalId">
+                <option
+                  value=""
+                  *ngIf="!m.addLoginMethodForm.getValue('loginMethodLocalId')"
+                ></option>
+                <option
+                  [value]="x.localId"
+                  *ngFor="let x of m.activeLoginMethods"
+                >
+                  {{ x.method.DisplayName }}
+                </option>
+              </select>
+            </div>
+            <div
+              class="form-group"
+              *ngIf="m.addLoginMethodForm.form.contains('adUsername')"
+              [ngClass]="{
+                'has-error': m.addLoginMethodForm.hasError('adUsername')
+              }"
+            >
+              <label>Active directory username</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="adUsername"
+                placeholder="DOMAIN\username"
+              />
+            </div>
+
+            <div
+              class="form-group"
+              *ngIf="m.addLoginMethodForm.form.contains('providerEmail')"
+              [ngClass]="{
+                'has-error': m.addLoginMethodForm.hasError('providerEmail')
+              }"
+            >
+              <label
+                >Email on
+                {{ getSelectedLoginMethod()?.DisplayName }}-account</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="providerEmail"
+                placeholder="your.name@provider.com"
+              />
+            </div>
+
+            <div
+              class="form-group"
+              *ngIf="m.addLoginMethodForm.form.contains('providerObjectId')"
+              [ngClass]="{
+                'has-error': m.addLoginMethodForm.hasError('providerObjectId')
+              }"
+            >
+              <label
+                >Object id
+                {{ getSelectedLoginMethod()?.DisplayName }}-account</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="providerObjectId"
+                placeholder="b6800fe7-7300-4ba1-92a5-45fc14163f45"
+              />
+            </div>
+
+            <div
+              class="form-group"
+              *ngIf="m.addLoginMethodForm.form.contains('upwUsername')"
+              [ngClass]="{
+                'has-error': m.addLoginMethodForm.hasError('upwUsername')
+              }"
+            >
+              <label>Username</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="upwUsername"
+                autocomplete="off"
+                placeholder="username"
+              />
+            </div>
+            <div
+              class="form-group"
+              *ngIf="m.addLoginMethodForm.form.contains('upwPassword1')"
+              [ngClass]="{
+                'has-error': m.addLoginMethodForm.hasError('upwPassword1')
+              }"
+            >
+              <label>Password</label>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="password"
+                autocomplete="off"
+                formControlName="upwPassword1"
+              />
+            </div>
+            <div
+              class="form-group"
+              *ngIf="m.addLoginMethodForm.form.contains('upwPassword2')"
+              [ngClass]="{
+                'has-error': m.addLoginMethodForm.hasError('upwPassword2')
+              }"
+            >
+              <label>Password (retype)</label>
+              <input
+                type="password"
+                class="form-control"
+                autocomplete="off"
+                placeholder="retype password"
+                formControlName="upwPassword2"
+              />
+            </div>
+            <div class="form-group" *ngIf="getPasswordStrength()">
+              <label>Password length</label>
+              <div class="form-control-static">
+                <span [class]="getPasswordStrength()?.cssClass">{{
+                  getPasswordStrength()?.text
+                }}</span>
+              </div>
+            </div>
+            <div class="form-group text-center pt-2">
+              <button
+                type="button"
+                class="n-main-btn n-blue-btn"
+                [disabled]="m.addLoginMethodForm.invalid()"
+                (click)="addLoginMethod($event)"
+              >
+                Add login method
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

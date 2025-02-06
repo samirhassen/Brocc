@@ -1,0 +1,50 @@
+﻿@{
+    var n = (ViewData.Eval("n") ?? "").ToString();
+}
+
+<div ng-if="!ds.isForcedBankAccountDataSharing">
+    <p class="text-center" style="font-weight: bold;">{{state.ActiveState.DocumentUploadData.Applicant@(n).FirstName}} ({{state.ActiveState.DocumentUploadData.Applicant@(n).CivicRegNr}})</p>
+    <br />
+    <p class="text-center">
+        <span translate="ansokan_payslip_text_1">Vi behöver en kopia på din senaste lönespecifikation, högst 2 månader gammal, eller annat bevis på nuvarande inkomst.</span><br />
+        <span translate="accountshare_text_1">Du kan välja att dela med dig uppgifter från ditt lönekonto via SAT eller ladda upp lönespecifikation manuellt.</span>
+    </p>
+    <br />
+    <div class="fields_area centered_section">
+        <form name="ds.form" novalidate>
+            <div class="text-center">
+                <input required type="radio" id="shareAccountOption" value="shareAccount" ng-model="ds.sourceCode" />
+                <label for="shareAccountOption" translate="accountshare_source_share_text">Gå till Asakatiesto...</label>
+                <br /><br />
+                <input required type="radio" name="sourceName" id="manualOption" value="manual" ng-model="ds.sourceCode" />
+                <label for="manualOption" translate="accountshare_source_manual_text">Ladda upp dokument manuellt.</label>
+            </div>
+
+            <div class="text-center pt-5">
+                <button class="main-btn green-btn" ng-hide="ds.isLoading" ng-click="ds.commitShouldChooseDocumentSource(@(n))" ng-disabled="ds.form.$invalid" translate="accountshare_next_button_text">Gå vidare</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div ng-if="ds.isForcedBankAccountDataSharing">
+    <p class="text-center" style="font-weight: bold;">{{state.ActiveState.DocumentUploadData.Applicant@(n).FirstName}} ({{state.ActiveState.DocumentUploadData.Applicant@(n).CivicRegNr}})</p>
+    <br />
+    <p class="text-center">
+        <span translate="forcedaccountshare_text_1">För att kunna bedöma din ansökan behöver vi information som styrker din inkomst.</span>
+    </p>
+    <br />
+    <div class="fields_area centered_section">
+        <form name="ds.form" novalidate>
+            <div class="text-center">
+                <input required type="checkbox" ng-true-value="'shareAccount'" id="shareAccountOption" value="shareAccount" ng-model="ds.sourceCode" />
+                <label for="shareAccountOption" translate="accountshare_source_share_text">Gå till Asakatiesto...</label>
+                <br /><br />
+            </div>
+
+            <div class="text-center pt-5">
+                <button class="main-btn green-btn" ng-hide="ds.isLoading" ng-click="ds.commitShouldChooseDocumentSource(@(n))" ng-disabled="ds.form.$invalid" translate="accountshare_next_button_text">Gå vidare</button>
+            </div>
+        </form>
+    </div>
+</div>

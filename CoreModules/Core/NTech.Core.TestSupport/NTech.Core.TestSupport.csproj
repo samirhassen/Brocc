@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\ApprovedApplicationPattern.json" />
+    <None Remove="Resources\ApprovedApplicationPattern2.json" />
+    <None Remove="Resources\exempel_foretagsuc.zip" />
+    <None Remove="Resources\FinnishCamt54TestFile.xml" />
+    <None Remove="Resources\personsampledata-fi-addressCity.txt" />
+    <None Remove="Resources\personsampledata-fi-addressStreet.txt" />
+    <None Remove="Resources\personsampledata-fi-addressZipcode.txt" />
+    <None Remove="Resources\personsampledata-fi-email.txt" />
+    <None Remove="Resources\personsampledata-fi-firstName.txt" />
+    <None Remove="Resources\personsampledata-fi-lastName.txt" />
+    <None Remove="Resources\personsampledata-fi-phone.txt" />
+    <None Remove="Resources\personsampledata-se-addressCity.txt" />
+    <None Remove="Resources\personsampledata-se-addressStreet.txt" />
+    <None Remove="Resources\personsampledata-se-addressZipcode.txt" />
+    <None Remove="Resources\personsampledata-se-email.txt" />
+    <None Remove="Resources\personsampledata-se-firstName.txt" />
+    <None Remove="Resources\personsampledata-se-lastName.txt" />
+    <None Remove="Resources\personsampledata-se-phone.txt" />
+    <None Remove="Resources\RejectedApplicationPattern.json" />
+    <None Remove="Resources\RejectedApplicationPattern2.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ApprovedApplicationPattern.json" />
+    <EmbeddedResource Include="Resources\ApprovedApplicationPattern2.json" />
+    <EmbeddedResource Include="Resources\exempel_foretagsuc.zip" />
+    <EmbeddedResource Include="Resources\FinnishCamt54TestFile.xml" />
+    <EmbeddedResource Include="Resources\personsampledata-fi-addressCity.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-fi-addressStreet.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-fi-addressZipcode.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-fi-email.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-fi-firstName.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-fi-lastName.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-fi-phone.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-se-addressCity.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-se-addressStreet.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-se-addressZipcode.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-se-email.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-se-firstName.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-se-lastName.txt" />
+    <EmbeddedResource Include="Resources\personsampledata-se-phone.txt" />
+    <EmbeddedResource Include="Resources\RejectedApplicationPattern.json" />
+    <EmbeddedResource Include="Resources\RejectedApplicationPattern2.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NTech.Banking.Shared\NTech.Banking.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

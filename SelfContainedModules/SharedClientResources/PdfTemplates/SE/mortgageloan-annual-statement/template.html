@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+    <div class="page">
+        <div class="blackborder">
+            
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Årsbesked {{statementForYear}}, <br>Sparas till deklarationen</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Utskriftsdatum</td>
+                                <td class="text-right">{{printDate}}</td>
+                            </tr>
+                            <tr>
+                                <td>Personnummer</td>
+                                <td class="text-right">{{customerCivicRegNr}}</td>
+                            </tr>
+                            {{#mortgageLoanPropertyId}}
+                            <tr>
+                                <td>Säkerhet</td>
+                                <td class="text-right">{{mortgageLoanPropertyId}}</td>
+                            </tr>
+                            {{/mortgageLoanPropertyId}}                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column2 greenborder">
+                    <p>{{customerFullName}}</p>
+                    <p>{{customerStreetAddress}}</p>
+                    <p>{{customerZipCodeAndArea}}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        <div class="area pt-5">
+            <h2>Lån</h2>            
+            <p>Årsbeskedet visar ränteinbetalningar som erlagts och bokförts under {{statementForYear}} för de lån som framgår i listan nedan. Uppgiften har redovisats till Skatteverket och kommer att framgå av din deklaration.  Om det finns flera låntagare fördelas utgiftsräntan lika mellan låntagarna, är du ensam låntagare är din ränteandel 100 %. Önskas en annan räntefördelning kan detta begäras i din självdeklaration.</p>
+            <p>Kapitalskulden är angiven per {{lastDateOfYear}}.</p>
+        </div>
+        <div class="area pt-2">
+            <table class="spec">
+                <thead>
+                    <tr>
+                        <td>Lånenummer</td>
+                        <td class="text-right">Total kapitalskuld</td>
+                        <td class="text-right">Inbetald ränta</td>
+                        <td class="text-right">Inbetald räntekompensation</td>
+                        <td class="text-right">Total inbetald ränta</td>
+                        <td class="text-right">Din skattemässiga andel, ränta</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{creditNr}}</td>
+                        <td class="text-right">{{endOfYearCapitalDebt}}</td>
+                        <td class="text-right">{{totalPaidNonRseInterestDuringYear}}</td>
+                        <td class="text-right">{{totalPaidRseInterestDuringYear}}</td>
+                        <td class="text-right">{{totalPaidInterestDuringYear}}</td>
+                        <td class="text-right">{{customerPaidInterestDuringYear}}</td>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_footerAddress}}</p>
+    </div>

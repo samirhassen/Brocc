@@ -1,0 +1,205 @@
+<div *ngIf="m && !m.isPlacing" class="frame">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="table-summery">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="col-xs-6 text-right">Matched credits</td>
+                                    <td class="col-xs-6 bold">{{m.matchedCreditNrsText}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="frame">
+                <div class="table-summery">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="col-xs-6 text-right">Amount</td>
+                                <td class="col-xs-6 bold">{{m.initialInstruction.initialPaymentAmount | number: "1.2-2"}}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-6 text-right">Placed amount</td>
+                                <td class="col-xs-6 bold">{{placedAmount() | number: "1.2-2"}}</tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="col-xs-6 text-right">Remaining amount unplaced</td>
+                                <td class="col-xs-6 bold">{{m.unplacedAmount | number: "1.2-2"}}<button style="margin-left:5px" class="n-direct-btn n-blue-btn compact-btn" (click)="distributeUnplaced($event)" *ngIf="m.unplacedAmount > 0">Distribute unplaced</button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h2>Notified</h2>
+        <hr class="hr-section custom-line mt-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-2">Due date</th>
+                    <th class="col-sm-2">Loan nr</th>
+                    <th class="col-sm-2">Current outstanding</th>
+                    <th class="col-sm-2">Place</th>
+                    <th class="col-sm-2">Write off</th>
+                    <th class="col-sm-2">Remaining</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let notification of m.notifications">
+                    <tr>
+                        <td>
+                            <button class="btn toggle-btn" (click)="notification.isExpanded=!notification.isExpanded"><span class="glyphicon"
+                                [ngClass]="{ 'glyphicon-chevron-right': !notification.isExpanded, 'glyphicon-chevron-down':notification.isExpanded }"></span></button>
+                            <span>{{notification.dueDate | date:'shortDate'}}</span>
+                        </td>
+                        <td>{{notification.creditNr}}</td>
+                        <td>{{currentSum(notification.items) | number: "1.2-2"}}</td>
+                        <td>{{placedSum(notification.items) | number: "1.2-2"}}</td>
+                        <td>{{writtenOffSum(notification.items) | number: "1.2-2"}}</td>
+                        <td>{{remainingSum(notification.items) | number: "1.2-2"}}</td>
+                    </tr>
+                    <ng-container *ngIf="notification.isExpanded">
+                        <tr>
+                            <td colspan="6">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <th>Write off</th>
+                            <th></th>
+                            <th>Current outstanding</th>
+                            <th>Place</th>
+                            <th>Write off</th>
+                            <th>Remaining</th>
+                        </tr>
+                        <ng-container *ngFor="let item of notification.items">
+                            <tr *ngIf="item.amountCurrent > 0">
+                                <td>
+                                    <button class="n-direct-btn n-blue-btn compact-btn"
+                                        *ngIf="item.itemType === 'PlaceOrWriteoff' && item.amountCurrent > item.amountWrittenOff && !m.notNotified.editItem"
+                                        (click)="writeOffNotificationItem(item, 'all', $event)">All</button>
+                                    <button class="n-direct-btn n-blue-btn compact-btn"
+                                        *ngIf="item.itemType === 'PlaceOrWriteoff' && remainingAmount(item) > 0 && !m.notNotified.editItem"
+                                        (click)="writeOffNotificationItem(item, 'remaining', $event)">Remaining</button>
+                                    <button class="n-direct-btn n-blue-btn compact-btn"
+                                        *ngIf="item.itemType === 'MoveToUnplacedOrPlace' && item.amountCurrent > item.amountWrittenOff && !m.notNotified.editItem"
+                                        (click)="moveNotificationItemToNotNotified(item, 'all', $event)">All</button>
+                                    <button class="n-direct-btn n-blue-btn compact-btn"
+                                        *ngIf="item.itemType === 'MoveToUnplacedOrPlace' && remainingAmount(item) > 0 && !m.notNotified.editItem"
+                                        (click)="moveNotificationItemToNotNotified(item, 'remaining', $event)">Remaining</button>
+                                </td>
+                                <td>{{itemText(item)}}</td>
+                                <td>{{item.amountCurrent | number: "1.2-2"}}</td>
+                                <td>{{item.amountPlaced | number: "1.2-2"}}</td>
+                                <td>{{item.amountWrittenOff | number: "1.2-2"}}</td>
+                                <td>{{remainingAmount(item) | number: "1.2-2"}}</td>
+                            </tr>
+                        </ng-container>
+                        <tr>
+                            <td colspan="6">&nbsp;</td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+            <tfoot class="bold-footer">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>{{totalNotifiedCurrent() | number: "1.2-2"}}</td>
+                    <td>{{totalNotifiedPlaced() | number: "1.2-2"}}</td>
+                    <td>{{totalNotifiedWrittenOff() | number: "1.2-2"}}</td>
+                    <td>{{totalNotifiedRemaining() | number: "1.2-2"}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div>
+        <h2>Not notified</h2>
+        <hr class="hr-section custom-line mt-0">
+        <form [formGroup]="m.notNotified.editForm.form">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-sm-2"></th>
+                        <th class="col-sm-2">Loan nr</th>
+                        <th class="col-sm-2">Current outstanding</th>
+                        <th class="col-sm-2">Place</th>
+                        <th class="col-sm-2">Write off</th>
+                        <th class="col-sm-2">Remaining</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let loan of m.notNotified.loans">
+                        <tr>
+                            <td>
+                                <button class="btn toggle-btn" (click)="loan.isExpanded=!loan.isExpanded"><span class="glyphicon"
+                                    [ngClass]="{ 'glyphicon-chevron-right': !loan.isExpanded, 'glyphicon-chevron-down':loan.isExpanded }"></span></button>
+                            </td>
+                            <td>{{loan.creditNr}}</td>
+                            <td>{{currentSum(loan.items) | number: "1.2-2"}}</td>
+                            <td>{{placedSum(loan.items) | number: "1.2-2"}}</td>
+                            <td>{{writtenOffSum(loan.items) | number: "1.2-2"}}</td>
+                            <td>{{remainingSum(loan.items) | number: "1.2-2"}}</td>
+                        </tr>
+                        <ng-container *ngIf="loan.isExpanded">
+                            <tr>
+                                <td colspan="6">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Current outstanding</th>
+                                <th>Place</th>
+                                <th>Write off</th>
+                                <th>Remaining</th>
+                            </tr>
+                            <ng-container *ngFor="let item of loan.items">
+                                <tr *ngIf="isVisibleNotNotifiedItem(item)">
+                                    <td>
+                                        <button class="n-direct-btn n-blue-btn compact-btn" *ngIf="!m.notNotified.editItem" (click)="editNotNotifiedItem(item, $event)">
+                                            {{item.itemType === 'PlaceOrWriteoff' ? 'Write off' : 'Edit'}}
+                                        </button>
+                                        <button class="n-direct-btn n-blue-btn compact-btn" *ngIf="isThisBeingEdited(item)" [disabled]="m.notNotified.editForm.invalid()" (click)="commitEdit($event)">Save</button>
+                                        <button class="n-direct-btn n-blue-btn compact-btn" *ngIf="isThisBeingEdited(item)" (click)="cancelEdit($event)">Cancel</button>
+                                    </td>
+                                    <ng-container *ngIf="!isThisBeingEdited(item)">
+                                        <td>{{itemText(item)}}</td>
+                                        <td>{{item.amountCurrent | number: "1.2-2"}}<span *ngIf="computedNotNotifiedCurrent(item) !== null">({{computedNotNotifiedCurrent(item) | number: "1.2-2"}})</span></td>
+                                        <td>{{item.amountPlaced | number: "1.2-2"}}</td>
+                                        <td>{{item.amountWrittenOff | number: "1.2-2"}}</td>
+                                        <td>{{item.amountCurrent - item.amountPlaced - item.amountWrittenOff | number: "1.2-2"}}</td>
+                                    </ng-container>
+                                    <ng-container *ngIf="isThisBeingEdited(item) && item.itemType === 'CreateAndPlace'">
+                                        <td>Current/Placed amount</td>
+                                        <td colspan="4" [ngClass]="{ 'has-error': m.notNotified.editForm.hasError('editAmount') }"><input class="form-control" formControlName="editAmount" /></td>
+                                    </ng-container>
+                                    <ng-container *ngIf="isThisBeingEdited(item) && item.itemType === 'PlaceOrWriteoff'">
+                                        <td colspan="2">Write off amount (Max: {{getMaxNotNotifiedWriteOffAmount(item) | number: "1.2-2"}}) </td>
+                                        <td colspan="3" [ngClass]="{ 'has-error': m.notNotified.editForm.hasError('editAmount') }"><input class="form-control" formControlName="editAmount" /></td>
+                                    </ng-container>
+                                </tr>
+                            </ng-container>
+                            <tr>
+                                <td colspan="6">&nbsp;</td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                </tbody>
+            </table>
+            <div class="pt-3">
+                <div class="text-center">
+                    <button class="n-main-btn n-white-btn" style="float:left" (click)="reset($event)">Reset</button>
+                    <button class="n-main-btn n-green-btn" (click)="placePayment($event)">Place</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,177 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Annuity Calculation";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-main-paymentPlanCalculation")
+}
+<div class="col-sm-12">
+    <div class="row">
+        <div class="col-xs-10 col-sm-offset-1">
+            <div class="row">
+                <div class="col-sm-offset-4 col-xs-2">
+                    <span type="button" class="btn" ng-class="{ 'decision-form-active-btn' : tabName =='general', 'decision-form-inactive-btn' : tabName !='general'}" ng-click="setTab('general', $event)">
+                        General
+                    </span>
+                </div>
+                <div class="col-xs-2">
+                    <span type="button" class="btn" ng-class="{ 'decision-form-active-btn' : tabName =='clientSpecific', 'decision-form-inactive-btn' : tabName !='clientSpecific' }" ng-click="setTab('clientSpecific', $event)">
+                        Client specific
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-show="tabName =='general'">
+        <h1>Payment Plan Estimate</h1>
+        <p>Approximate payment plan based on exactlty 'repayment time months' where 1/12 of the yearly intrest rate is paid each month.</p>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Loan amount</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.loanAmount" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Yearly Interestrate (%)</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.yearlyInterestRateInPercent" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Repayment time (months)</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-disabled="m.annuityAmount || m.fixedMonthlyCapitalAmount" ng-model="m.repaymentTimeInMonths" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Interest model</label>
+                <div class="col-sm-10">
+                    <select ng-model="m.interestModelCode" class="form-control">
+                        <option value="">Client default</option>
+                        <option value="Actual_365_25">Actual/365.25</option>
+                        <option value="Actual_360">Actual/360</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Annuity amount</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-disabled="m.repaymentTimeInMonths || m.fixedMonthlyCapitalAmount" ng-model="m.annuityAmount" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Fixed monthly amortization</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-disabled="m.annuityAmount || m.repaymentTimeInMonths" ng-model="m.fixedMonthlyCapitalAmount" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Monthly fee</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.monthlyFee" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Capitalized initial fee</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.capitalizedInitialFee" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Initial fee drawn from loan amount</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.initialFeeDrawnFromLoanAmount" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Initial fee paid on first notification</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.initialFeePaidOnFirstNotification" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Calculation</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">
+                        <a ng-href="{{getUrl($event)}}" target="_blank">Download excel</a>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row" ng-show="tabName =='clientSpecific'">
+        <h1>Client specific amortization plan</h1>
+        <p>Amortization plan based on client settings with daily interest rate.</p>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Loan amount</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.loanAmount" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Yearly Interestrate (%)</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.yearlyInterestRateInPercent" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Annuity/fixed monthly amount</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.annuityOrFixedMonthlyCapitalAmount" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Monthly fee</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.monthlyFee" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Capitalized initial fee</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.capitalizedInitialFee" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Creation date</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.loanCreationDate" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Due day</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="m.dueDay" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Interest model</label>
+                <div class="col-sm-10">
+                    <select ng-model="m.interestModelCode" class="form-control">
+                        <option value="">Client default</option>
+                        <option value="Actual_365_25">Actual/365.25</option>
+                        <option value="Actual_360">Actual/360</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Calculation</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">
+                        <a ng-href="{{getUrl($event)}}" target="_blank">Download excel</a>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

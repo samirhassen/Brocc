@@ -1,0 +1,89 @@
+<!--mer information yta-->
+<div class="section-separator-top">
+    <div class="container section-separator-bottom">
+        <div class="d-flex flex-row min-heigh-50">
+            <div class="align-self-center flex-grow-1">
+                <h1 class="text-center pt-5" [translate]="'steps.calculator_footer.about_header1'">Brocc privatlånet</h1>
+                <p class="pt-5 text-center" [translate]="'steps.calculator_footer.about_text1'">
+                        Med Brocc lånet kan du låna upp till 30 000 € utan säkerhet. Lånet lämpar sig väl till att t.ex
+                        lösa andra dyrare lån. Du får alltid ett kundspecifikt erbjudande och kan lösa lånet när som helst utan extra kostnad. Efter ansökan får du ett låneavtal med din kundspcieifka 
+                        ränta och avgifter. Ansökan är inte bindande och lånet har en ångerrätt på 14 dagar.
+                </p>
+                
+                <div class="row pt-5 pb-5">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <ul class="list-unstyled custom-bullet">
+                            <li><a [href]="'assets/documents/Yleiset_ehdot' + pdfSuffix.value + '.pdf'" target="_blank" class="download"><span class="glyphicon glyphicon-stop"></span><span>{{'steps.calculator_footer.about_link1' | translate}}</span></a></li>
+                            <li><a [href]="'assets/documents/Vakiomuotoiset_eurooppalaiset_kuluttajaluottotiedot' + pdfSuffix.value + '.pdf'" target="_blank" class="download"><span class="glyphicon glyphicon-stop"></span><span>{{'steps.calculator_footer.about_link2' | translate}}</span></a></li>
+                            <!--number two is shown if the interest cap is on, there is a feature toggle that can be enabled for capping interest-->
+                        </ul>
+                    </div>
+                    <div class="col-sm-4">
+                        <ul class="list-unstyled custom-bullet">
+                            <li><a href="assets/documents/Rekisteriseloste.pdf" target="_blank" class="download"><span class="glyphicon glyphicon-stop"></span>{{'steps.calculator_footer.about_link3' | translate}}</a></li>
+                            <li><a href="assets/documents/Tietosuoja.pdf" target="_blank" class="download"><span class="glyphicon glyphicon-stop"></span>{{'steps.calculator_footer.about_link4' | translate}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-purple section-separator-bottom">
+    <div class="container">
+        <div class="d-flex flex-row min-heigh-50">
+            <div class="align-self-center flex-grow-1">
+                
+                
+                <div class="row pt-5 pb-5">
+                    <div class="col-sm-6">
+                        <h1 [translate]="'steps.calculator_footer.contact_header1'">Kontakta oss</h1>
+                        <p class="pt-3 pb-3" [translate]="'steps.calculator_footer.contact_text1'">
+                            Du är alltid välkommen att kontakta oss om du har frågor om din ansökan eller ditt lån.     
+                        </p>
+                        <p [translate]="'steps.calculator_footer.contact_text2'">
+                            Telefon: 010 524 8410 (ppm)
+                        </p>
+                        <p [translate]="'steps.calculator_footer.contact_text3'">
+                            Epost: lainat@brocc.fi
+                        </p>
+                        <p class="pt-3" [translate]="'steps.calculator_footer.contact_text4'">
+                            Vår kundtjänst är öppen vardagar kl 09:00 - 11:30 och 12:30 - 16:00
+                        </p>
+                    </div>
+                    <div class="col-sm-6 text-center pt-5">
+                        <img src="assets/img/contact-icon.png" alt="contact" style="max-width: 180px;"/>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<div class="bg-black">
+    <div class="container">
+        <div class="d-flex flex-row min-heigh-50">
+            <div class="align-self-center flex-grow-1 text-center pt-5 pb-5">  
+                <h1 [translate]="'steps.calculator_footer.gcc_header1'">Om Brocc</h1>
+                <p class="pt-5 pb-5">
+                    <span [translate]="'steps.calculator_footer.gcc_text1'">
+                            Brocs huvudkontor ligger i Sverige och verksamheten står under Finansinspektionens tillsyn. 
+                            I Finland har Brocc varit verksam sedan år 2016.
+                    </span> 
+                    &nbsp;<a href="https://www.brocc.fi/" class="custom-link nowrap" target="_blank" [translate]="'steps.calculator_footer.gcc_link1'">Läs mer om Balanzia och GCC Capital.</a>
+                </p>
+                <p>
+                    Brocc
+                </p>
+                <p>
+                    PL 359, 00101 Helsinki
+                </p>
+                <p>
+                    Y-tunnus: 2760357-3    
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

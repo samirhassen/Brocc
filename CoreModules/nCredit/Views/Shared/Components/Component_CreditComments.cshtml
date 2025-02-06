@@ -1,0 +1,115 @@
+﻿@{
+    Layout = null;
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/Content/jsexternal/angular-sanitize.js")
+}
+
+<script type="text/ng-template" id="credit-comments.html">
+    <div ng-hide="!$ctrl.initialData">
+        <div class="pb-3 pt-1">
+            <div class="custom-comment">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <form novalidate class="form-inline" name="commentform" id="commentform">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <textarea ng-model="$ctrl.newCommentText" ng-class="{ 'comment-textarea-expanded': $ctrl.isExpanded }" class="comment-textarea-control custom-control expand" ng-focus="$ctrl.onFocusGained()" ng-blur="$ctrl.onFocusLost()" placeholder="Add comment and attachments" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true"></textarea>
+                                </div>
+                                <div class="col-xs-4" ng-show="$ctrl.isExpanded">
+                                    <div class="input-group-addon n-main-btn n-white-btn" style="border-radius: 5px;" ng-disabled="!$ctrl.newCommentText" ng-click="$ctrl.selectCommentFileToAttach($event)">
+                                        Attach <span class="glyphicon glyphicon-paperclip"></span>
+                                    </div>
+                                    <span class="input-group-addon" ng-show="$ctrl.attachedFileName">{{$ctrl.attachedFileName}}</span>
+                                    <div class="n-main-btn n-blue-btn" style="margin-top:20px; padding: 8px 8px 5px 8px;" ng-click="$ctrl.addComment($event)" ng-disabled="!$ctrl.newCommentText">
+                                        Add <span class="glyphicon glyphicon-comment"></span>
+                                    </div>
+                                    <input type="file" id="file" name="file" style="display:none" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-3">Date</th>
+                    <th class="col-xs-7">
+                        Comment
+                    </th>
+                    <th class="col-xs-2 text-right">
+                        <select ng-model="$ctrl.filterMode" ng-change="$ctrl.onFilterModeChanged()" class="form-discreet">
+                            <option value="">All</option>
+                            <option value="user">Manual</option>
+                            <option value="system">System</option>
+                        </select>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="c in $ctrl.getCommentsOnCurrentPage()">
+                    <td>
+                        <span ng-if="c.CustomerSecureMessageId && !c.commentDetails" class="n-unlock mr-1" ng-click="$ctrl.toggleCommentDetails(c, $event)"><a href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a></span>
+                        <span ng-if="!c.CustomerSecureMessageId || !!c.commentDetails" ng-class="{ 'glyphicon glyphicon-chevron-down chevron-bg mr-1' : !!c.commentDetails, 'glyphicon glyphicon-chevron-right chevron-bg mr-1' : !c.commentDetails  }" ng-click="$ctrl.toggleCommentDetails(c, $event)"></span>
+                        {{c.CommentDate | date:'short'}}
+                    </td>
+                    <td colspan="2">{{c.CommentText}}</td>
+                </tr>
+                <tr ng-repeat-end class="opend" ng-show="c.commentDetails">
+                    <td colspan="2">
+                        <div class="col-md-6" ng-if="c.commentDetails.CommentByName">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">By</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{c.commentDetails.CommentByName}}</b></p></div>
+                        </div>
+                        <div class="col-md-6" ng-repeat="url in c.ArchiveLinks track by $index">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">File {{$index + 1}}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <p><a target="_blank" class="n-direct-btn n-purple-btn" ng-href="{{url}}">Document <span class="glyphicon glyphicon-save"></span></a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-9" ng-if="c.commentDetails.CustomerSecureMessageText">
+                            <label class="col-md-2 col-sm-2 col-xs-2 text-right">Message</label>
+                            <div ng-if="c.commentDetails.CustomerSecureMessageTextFormat === 'html'">
+                                <div class="col-md-10 col-sm-10 col-xs-10">
+                                    <p ng-bind-html="c.commentDetails.CustomerSecureMessageText"></p>
+                                </div>
+                            </div>
+                            <div ng-if="c.commentDetails.CustomerSecureMessageTextFormat !== 'html'">
+                                <div class="col-md-10 col-sm-10 col-xs-10"><p><b>{{c.commentDetails.CustomerSecureMessageText}}</b></p></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" ng-if="c.commentDetails.CustomerSecureMessageBy">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">By</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{c.commentDetails.CustomerSecureMessageBy}}</b></p></div>
+                        </div>
+                        <div class="col-md-9" ng-if="c.commentDetails.CustomerSecureMessageArchiveKey">
+                            <label class="col-md-2 col-sm-2 col-xs-2 text-right">Attachment</label>
+                            <div class="col-md-10 col-sm-10 col-xs-10">
+                                <p><a target="_blank" class="n-direct-btn n-purple-btn" ng-href="/Ui/Gateway/nDocument/Archive/Fetch?key={{c.commentDetails.CustomerSecureMessageArchiveKey}}">Document <span class="glyphicon glyphicon-save"></span></a></p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="dataTables_paginate paging_simple_numbers custom-pagination" ng-hide="!$ctrl.commentsPaging || $ctrl.commentsPaging.pages.length <= 1">
+            <ul class="pagination">
+                <li class="paginate_button previous" ng-show="$ctrl.commentsPaging.isPreviousAllowed"><a href="#" ng-click="$ctrl.gotoCommentsPage($ctrl.commentsPaging.previousPageNr, $event)">Previous</a></li>
+                <li class="paginate_button previous disabled" ng-hide="$ctrl.commentsPaging.isPreviousAllowed"><a href="#" ng-click="$event.preventDefault()">Previous</a></li>
+
+                <li ng-repeat="p in $ctrl.commentsPaging.pages" class="paginate_button" ng-class="{ 'active' : p.isCurrentPage, 'disabled' : p.isSeparator }">
+                    <a href="#" ng-click="$ctrl.gotoCommentsPage(p.pageNr, $event)" ng-hide="p.isSeparator">{{p.pageNr+1}}</a>
+                    <a href="#" ng-show="p.isSeparator" ng-click="$event.preventDefault()">...</a>
+                </li>
+
+                <li class="paginate_button next" ng-show="$ctrl.commentsPaging.isNextAllowed"><a href="#" ng-click="$ctrl.gotoCommentsPage($ctrl.commentsPaging.nextPageNr, $event)">Next</a></li>
+                <li class="paginate_button next disabled" ng-hide="$ctrl.commentsPaging.isNextAllowed"><a href="#" ng-click="$event.preventDefault()">Next</a></li>
+            </ul>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,23 @@
+﻿<script type="text/ng-template" id="withdrawalaccounts.html">
+    @Html.Partial("TitleAndBack", TitleAndBackModel.Translated("sao_withdrawalaccounts_h", "backUrl"))
+
+    <p ng-show="!d.savingsAccounts || d.savingsAccounts.length === 0" class="pt-2" translate="sao_withdrawalaccounts_na">
+        Du har inga aktiva sparkonton.
+    </p>
+   
+    <div class="pt-1" ng-hide="!d.savingsAccounts || d.savingsAccounts.length === 0">
+        <div class="list-item" ng-repeat="a in d.savingsAccounts">
+            <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_withdrawalaccounts_t_k">Kontonr</label>
+            <div class="col-md-10 col-sm-8 col-xs-7"><p><b>{{a.SavingsAccountNr}}</b></p></div>
+            <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_withdrawalaccounts_t_m">Mottagarkonto</label>
+            <div class="col-md-10 col-sm-8 col-xs-7"><p><b>{{a.WithdrawalIbanReadable}} ({{a.WithdrawalIbanBankName}})</b></p></div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <span ng-hide="!d.savingsAccounts || d.savingsAccounts.length === 0">
+        <h2 class="pt-3" translate="sao_withdrawalaccounts_change_h">Byta mottagarkonto</h2>
+        <p translate="sao_withdrawalaccounts_change_t1">För att byta mottagarkonto behöver vi en fullmakt från dig. Ladda ner den på länken nedan, skriv ut, fyll i och skicka in till oss. Adressen hittar du i fullmakten</p>
+        <p><a ng-href="{{d.withdrawalAccountChangeDocumentUrl}}" class="n-download-anchor">PDF <span class="glyphicon glyphicon-save"></span></a></p>
+    </span>  
+</script>

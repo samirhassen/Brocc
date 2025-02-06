@@ -1,0 +1,116 @@
+<ng-container *ngIf="m">
+    <credit-decision-editor-tabs [initialData]="m?.tabsInitialData">
+        <ng-container reject-area>
+            <credit-decision-rejection-editor [initialData]="m.rejectionEditorInitialData">
+    
+            </credit-decision-rejection-editor>
+        </ng-container>
+        <ng-container accept-area>
+            <form [formGroup]="m.offerForm.form" class="form-horizontal decision-form">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row pt-3">
+                            <div class="col-sm-5 col-md-5">
+                                <div class="form-group" *ngFor="let c of m.offerFields.column1" [ngClass]="{ 'has-error': m.offerForm.hasError(c.formControlName) }">
+                                    <label class="col-xs-5 col-sm-7 col-md-7 control-label">{{c.labelText}}</label>
+                                    <div class="col-xs-4 col-sm-5 col-md-5"><input type="text" class="form-control" [formControlName]="c.formControlName"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-5 col-sm-7 col-md-7 control-label">Settlement payment</label>
+                                    <div class="col-xs-4 col-sm-5 col-md-5"><p class="form-control-static">{{m.offerFields.loansToSettleAmount > 0 ? (m.offerFields.loansToSettleAmount | number:'1.0-0') : '-'}}</p></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-5 col-sm-7 col-md-7 control-label">Loan amount</label>
+                                    <div class="col-xs-4 col-sm-5 col-md-5"><p class="form-control-static">{{m.offerFields.calculatedLoanAmount | number:'1.0-0'}}{{m.offerFields.calculatedLoanAmount === null ? '-' : ''}}</p></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-7 col-md-7">
+                                <div class="form-group" [ngClass]="{ 'has-error': m.offerForm.hasError('requestedRepaymentTimeInPeriod') }">
+                                    <label class="control-label col-xs-5 col-sm-7 col-md-7">Repayment time</label>               
+                                    <div class="col-xs-4 col-sm-5 col-md-5 input-group">
+                                        <input type="text" class="form-control" autocomplete="turned-off" formControlName="requestedRepaymentTimeInPeriod" />
+                                        <span class="input-group-btn" style="min-width: 100px;">
+                                            <select class="form-control" formControlName="requestedRepaymentTimePeriod">
+                                                <option value="m">Months</option>
+                                                <option value="d">Days</option>
+                                            </select>
+                                        </span>                        
+                                    </div>
+                                </div>
+                                <div class="form-group" *ngFor="let c of m.offerFields.column2" [ngClass]="{ 'has-error': m.offerForm.hasError(c.formControlName) }">
+                                    <label class="col-xs-5 col-sm-7 col-md-7 control-label">{{c.labelText}}</label>
+                                    <div class="col-xs-4 col-sm-5 col-md-5"><input type="text" class="form-control" [formControlName]="c.formControlName"></div>
+                                </div>
+                                <ng-container *ngIf="m.offerFields.firstNotificationCosts.length > 0">
+                                    <div class="form-group">
+                                        <label class="col-xs-5 col-sm-7 col-md-7 control-label">On first notification</label>
+                                        <div class="col-xs-4 col-sm-5 col-md-5">&nbsp;</div>
+                                    </div>
+                                    <div class="form-group" *ngFor="let c of m.offerFields.firstNotificationCosts" [ngClass]="{ 'has-error': m.offerForm.hasError(c.formControlName) }">
+                                        <label class="col-xs-5 col-sm-7 col-md-7 control-label">{{c.labelText}}</label>
+                                        <div class="col-xs-4 col-sm-5 col-md-5"><input type="text" class="form-control" [formControlName]="c.formControlName"></div>
+                                    </div>                                    
+                                </ng-container>
+                                <div class="form-group">
+                                    <label class="col-sm-7 col-md-7 control-label">Reference interest rate</label>
+                                    <div class="col-sm-5 col-md-5"><p class="form-control-static">{{m.offerFields.referenceInterestRatePercent | number:'1.2-2'}} %</p></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-7 col-md-7 control-label">Total interest rate</label>
+                                    <div class="col-sm-5 col-md-5"><p class="form-control-static">{{m.offerFields.calculatedTotalInterestRatePercent | number:'1.2-2'}}{{m.offerFields.calculatedTotalInterestRatePercent === null ? '-' : ' %'}} </p></div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row pt-1" *ngIf="m.offerFields.computedPaymentPlan">
+                            <hr class="hr-section custom-line" />
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group" *ngIf="!isSinglePaymentWithRepaymentTimeInDaysPaymentPlan()">
+                                    <label class="col-sm-7 col-md-7 control-label" *ngIf="m.offerFields.computedPaymentPlan.UsesAnnuities" >Annuity amount</label>
+                                    <label class="col-sm-7 col-md-7 control-label" *ngIf="!m.offerFields.computedPaymentPlan.UsesAnnuities" >Fixed monthly payment</label>
+                                    <div class="col-sm-5 col-md-5"><p class="form-control-static">{{m.offerFields.computedPaymentPlan.MonthlyCostExcludingFeesAmount | number:'1.2-2'}}</p></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-7 col-md-7 control-label">Total paid amount</label>
+                                    <div class="col-sm-5 col-md-5"><p class="form-control-static">{{m.offerFields.computedPaymentPlan.TotalPaidAmount | number:'1.2-2'}}</p></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-7 col-md-7 control-label">Effective interest rate</label>
+                                    <div class="col-sm-5 col-md-5"><p class="form-control-static">{{m.offerFields.computedPaymentPlan.EffectiveInterstRatePercent.value | number:'1.2-4'}} % </p></div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+    
+                <div class="row" *ngIf="m.handlerLimit?.isOverHandlerLimit && m.handlerLimit?.isAllowedToOverrideHandlerLimit">
+                  <hr class="hr-section custom-line" />
+                  <div class="col-xs-offset-3 col-xs-9">
+                      <div class="checkbox form-group">
+                          <label for="overrideCheck" class="col-xs-6 control-label">You lack sufficient limit, proceed anyway?</label>
+                          <div class="col-xs-6" *ngIf="m.handlerLimit">
+                              <div class="checkbox">
+                                  <input type="checkbox" id="overrideCheck" [checked]="m.handlerLimit.overrideHandlerLimit" (click)="overrideHandlerLimit()" />
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="row text-center" *ngIf="m.handlerLimit?.isOverHandlerLimit && !m.handlerLimit?.isAllowedToOverrideHandlerLimit">
+                    <hr class="hr-section custom-line" />
+                    <p>You lack sufficient limit to proceed.</p>
+                </div>
+    
+                <div class="form-group text-center pt-3">
+                    <button type="button" class="n-main-btn n-green-btn"
+                        [disabled]="m.offerForm.invalid() || m.isEditing.value || m.offerFields.calculatedLoanAmount === null || (m.handlerLimit?.isOverHandlerLimit && !m.handlerLimit?.overrideHandlerLimit)"
+                        (click)="accept($event)">Accept <send-email-logo emailSettingName="creditCheckApproveEmailTemplates"></send-email-logo>
+                    </button>
+                </div>
+            </form>
+        </ng-container>
+    </credit-decision-editor-tabs>
+</ng-container>

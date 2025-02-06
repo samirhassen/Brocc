@@ -1,0 +1,415 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit Decision - Application";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-creditcheck-view")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted" ng-class="headerClassFromStatus(isAccepted)">Credit decision <span ng-class="iconClassFromStatus(isAccepted)" style="font-size:20px; margin-left: 5px;"></span></h1>
+</div>
+
+<div class="row pb-3">
+    <div class="col-md-8 col-md-offset-2">
+        <form class="form-horizontal" novalidate ng-if="isAccepted">
+            <div class="row" ng-if="decisionModel.offer">
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">New Loan Amount</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.offer.amount | currency}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Repayment time</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.offer.repaymentTimeInMonths}} months</p></div>
+                    </div>
+                    <div class="form-group" ng-if="decisionModel.offer.notificationFeeAmount">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Notification fee</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.offer.notificationFeeAmount | currency}}</p></div>
+                    </div>
+                    <div class="form-group" ng-if="decisionModel.offer.initialFeeAmount">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Initial fee</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.offer.initialFeeAmount | currency}}</p></div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Margin interest rate</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.offer.marginInterestRatePercent | number:'2'}} %</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Reference interest rate</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.offer.referenceInterestRatePercent | number:'2'}} %</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Total interest rate</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.offer.referenceInterestRatePercent + decisionModel.offer.marginInterestRatePercent | number:'2'}} %</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" ng-if="decisionModel.additionalLoanOffer">
+                <div class="col-sm-5 col-md-5">
+                    <div class="form-group">
+                        <label class="col-xs-5 col-sm-7 col-md-7 control-label">Additional Loan</label>
+                        <div class="col-xs-4 col-sm-5 col-md-5">
+                            <p class="form-control-static">{{decisionModel.additionalLoanOffer.creditNr}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 col-sm-7 col-md-7 control-label">Amount</label>
+                        <div class="col-xs-4 col-sm-5 col-md-5">
+                            <p class="form-control-static">{{decisionModel.additionalLoanOffer.amount | currency}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="decisionModel.additionalLoanOffer.newAnnuityAmount">
+                        <label class="col-xs-5 col-sm-7 col-md-7 control-label">New annuity amount</label>
+                        <div class="col-xs-4 col-sm-5 col-md-5">
+                            <p class="form-control-static">{{decisionModel.additionalLoanOffer.newAnnuityAmount | currency}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="decisionModel.additionalLoanOffer.newMarginInterestRatePercent">
+                        <label class="col-xs-5 col-sm-7 col-md-7 control-label">New margin Interest Rate</label>
+                        <div class="col-xs-4 col-sm-5 col-md-5">
+                            <p class="form-control-static">{{decisionModel.additionalLoanOffer.newMarginInterestRatePercent | number:'2'}} %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form class="form-horizontal" name="rejectform" novalidate ng-show="!isAccepted">
+            <div class="form-group">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rejection reasons</label>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <p class="form-control-static" ng-repeat="r in decisionModel.rejectionReasons">
+                        <b>{{getDisplayRejectionReason(r)}}&nbsp</b>
+                    </p>
+                </div>
+            </div>
+            <div class="row" ng-show="maxPauseItem">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <hr class="hr-section dotted">
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">
+                            Pause
+                        </label>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <p class="form-control-static">
+                                <b>{{maxPauseItem.nrOfDays}} days due to {{getDisplayRejectionReasons(maxPauseItem.rejectionReasonNames).join(', ')}} until {{maxPauseItem.pausedUntilDate | date}}</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h2 class="custom-header">Decision basis</h2>
+<hr class="hr-section" />
+
+<div class="row pb-1">
+    <div class="col-md-8">
+        <div ng-if="decisionModel.recommendation">
+            <form class="form-horizontal novalidate">
+                <div class="row">
+                    <div class="col-sm-7 col-md-7">
+                        <div class="form-group">
+                            <label class="col-xs-6 col-sm-6 col-md-6 control-label">Recommendation <span ng-if="wasPetrusUsed()"> (P)</span></label>
+                            <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.HasOffer ? (decisionModel.recommendation.OfferedAdditionalLoanCreditNr ? ("Additional Loan " + decisionModel.recommendation.OfferedAdditionalLoanCreditNr) : "New Loan") : "Reject"}}</p></div>
+                        </div>
+
+                        <div ng-show="decisionModel.recommendation.HasOffer">
+                            <div class="form-group">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rec max amount</label>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.MaxOfferedAmount | currency}}</p></div>
+                            </div>
+                            <div class="form-group" ng-hide="decisionModel.recommendation.OfferedAdditionalLoanCreditNr">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rec interest rate</label>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.OfferedInterestRatePercent | number:'2'}} %</p></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rec amount</label>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.OfferedAmount | currency}}</p></div>
+                            </div>
+                            <div class="form-group" ng-hide="decisionModel.recommendation.OfferedAdditionalLoanCreditNr">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rec repayment time</label>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.OfferedRepaymentTimeInMonths}} months</p></div>
+                            </div>
+                            <div class="form-group" ng-show="decisionModel.recommendation.OfferedNotificationFeeAmount">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rec notification fee</label>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.OfferedNotificationFeeAmount | currency}}</p></div>
+                            </div>
+                            <div class="form-group" ng-show="decisionModel.recommendation.OfferedInitialFeeAmount">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rec initial fee</label>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.OfferedInitialFeeAmount | currency}}</p></div>
+                            </div>
+                            <div class="form-group" ng-show="decisionModel.recommendation.IsAutoFollowAllowed === false || decisionModel.recommendation.IsAutoFollowAllowed === true">
+                                <span class="col-xs-6 col-sm-6 col-md-6">
+                                    <span ng-show="decisionModel.recommendation.IsAutoFollowAllowed === false" class="glyphicon col-md-3 chevron-bg pull-left" ng-class="{ 'glyphicon-chevron-right' : !showAutoFollowRejectionReasons, 'glyphicon-chevron-down' : showAutoFollowRejectionReasons }" ng-click="showAutoFollowRejectionReasons = !showAutoFollowRejectionReasons"></span>
+                                    <label class="col-md-7 control-label pull-right" style="margin-right:0;padding-right:0">Manual control</label>
+                                </span>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.IsAutoFollowAllowed ? 'No' : 'Yes'}}</p></div>
+                            </div>
+                        </div>
+                        <div ng-show="!decisionModel.recommendation.HasOffer">
+                            <div class="form-group">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Rejection reasons</label>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static"><div ng-repeat="r in getDisplayRejectionReasons(toExternalRejectionReasons(decisionModel.recommendation.Rejections))"><b>{{r}}</b>&nbsp;</div></p></div>
+                            </div>
+                            <div class="form-group">
+                                <span class="col-xs-6 col-sm-6 col-md-6">
+                                    <span class="glyphicon col-md-3 chevron-bg pull-left" ng-class="{ 'glyphicon-chevron-right' : !showAutoFollowRejectionReasons, 'glyphicon-chevron-down' : showAutoFollowRejectionReasons }" ng-click="showAutoFollowRejectionReasons = !showAutoFollowRejectionReasons"></span>
+                                    <label class="col-md-7 control-label pull-right" style="margin-right:0;padding-right:0">Manual control</label>
+                                </span>
+                                <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{decisionModel.recommendation.IsAutoFollowAllowed ? 'No' : 'Yes'}}</p></div>
+                            </div>
+                        </div>
+                        <div ng-show="showAutoFollowRejectionReasons && decisionModel.recommendation.AutoFollowRejectionReasons">
+                            <hr class="hr-section dotted">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-xs-6 col-sm-6 col-md-6 control-label">Manual control reasons</label>
+                                    <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static" ng-repeat="r in decisionModel.recommendation.AutoFollowRejectionReasons">{{getManualControlReasonDisplayText(r)}}</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="hr-section dotted">
+                        <div class="pb-3">
+                            <div class="form-group" ng-hide="isPetrusOnly()">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Company connection</label>
+                                <p class="col-xs-6 col-sm-6 col-md-6 form-control-static" ng-if="!isHasBusinessConnectionLoaded">
+                                    <span class="n-unlock" ng-click="unlockBusinessConnectionText($event)"><a href="#"><span class="glyphicon glyphicon-lock"></span></a></span>
+                                </p>
+                                <p class="col-xs-6 col-sm-6 col-md-6 form-control-static" ng-if="isHasBusinessConnectionLoaded">
+                                    <span ng-if="hasBusinessConnection === true">Yes</span>
+                                    <span ng-if="hasBusinessConnection === false">No</span>
+                                    <span ng-if="!(hasBusinessConnection === true || hasBusinessConnection === false)">Unknown</span>
+                                </p>
+                            </div>
+                            <div class="form-group" ng-hide="isPetrusOnly()">
+                                <label class="col-xs-6 col-sm-6 col-md-6 control-label">Immigration date</label>
+                                <p class="col-xs-6 col-sm-6 col-md-6 form-control-static" ng-if="!isImmigrationDateLoaded">
+                                    <span class="n-unlock" ng-click="unlockImmigrationDateText($event)"><a href="#"><span class="glyphicon glyphicon-lock"></span></a></span>
+                                </p>
+                                <p class="col-xs-6 col-sm-6 col-md-6 form-control-static" ng-if="isImmigrationDateLoaded">
+                                    <span>{{immigrationDateText}}</span>
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label ng-repeat-start="a in otherApplicationsWithSameAddress" class="col-xs-6 col-sm-6 col-md-6 control-label">Applicant {{a.applicantNr}} has same address</label>
+                                <p class="col-xs-6 col-sm-6 col-md-6 form-control-static" ng-repeat-end><a ng-href="{{'/CreditManagement/CreditApplication?applicationNr=' + a.applicationNr }}" target="_blank">{{a.applicationNr}}</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 col-md-5">
+                        <div class="frame">
+                            <div class="row">
+                                <div class="text-right">
+                                    <button type="button" class="n-popup-btn n-turquoise-btn" data-toggle="modal" data-target="#decisionBasisDetails">
+                                        Details <span class="glyphicon glyphicon-resize-full"></span>
+                                    </button>
+                                </div>
+                                <div class="form-horizontal">
+                                    <div class="form-group" ng-hide="isPetrusOnly()">
+                                        <label class="col-xs-4 control-label">Score</label>
+                                        <div class="col-xs-8"><p class="form-control-static">{{decisionModel.recommendation.Score !== null ? decisionModel.recommendation.Score : '-'}}</p></div>
+                                    </div>
+                                    <div class="form-group" ng-hide="isPetrusOnly()">
+                                        <label class="col-xs-4 control-label">Risk group</label>
+                                        <div class="col-xs-8"><p class="form-control-static">{{decisionModel.recommendation.RiskGroup !== null ? decisionModel.recommendation.RiskGroup : '-'}}</p></div>
+                                    </div>
+                                    <div class="form-group" ng-hide="isPetrusOnly()">
+                                        <label class="col-xs-4 control-label">Ltl</label>
+                                        <div class="col-xs-8">
+                                            <p class="form-control-static">
+                                                <span>{{decisionModel.recommendation.LeftToLiveOn !== null ? (decisionModel.recommendation.LeftToLiveOn | number:'2') : '-'}}</span>
+                                                <span ng-show="decisionModel.recommendation.SatLeftToLiveOn !== null">(SAT: {{decisionModel.recommendation.SatLeftToLiveOn | number:'2'}})</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-hide="isPetrusOnly()">
+                                        <label class="col-xs-4  control-label">Dbr</label>
+                                        <div class="col-xs-8">
+                                            <p class="form-control-static">
+                                                <span>{{decisionModel.recommendation.Dbr !== null ? (decisionModel.recommendation.Dbr | number:'4') : '-'}}</span>
+                                                <span ng-show="decisionModel.recommendation.SatDbr !== null">(SAT: {{decisionModel.recommendation.SatDbr | number:'4'}})</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h2 class="text-center custom-header">Decisions</h2>
+        <hr class="hr-section" />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Decision</th>
+                    <th>By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="d in decisions" ng-class="{'active' : d.Id === currentDecisionId}" ng-click="navigateTo(d.ViewUrl)">
+                    <td>{{d.DecisionDate | date:'yyyy-MM-dd'}}</td>
+                    <td>{{d.IsAccepted ? 'Accepted' : 'Rejected'}}</td>
+                    <td>{{d.DecisionByName}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pt-3" ng-if="decisionModel.otherApplications">
+            <h2 class="custom-header text-center">Other applications</h2>
+            <hr class="hr-section" />
+            <h3 ng-if="hasCo()" class="text-center">Applicant 1</h3>
+            <unsecured-credit-check-other-applications other-applications="decisionModel.otherApplications.applicant1"></unsecured-credit-check-other-applications>
+
+            <h3 ng-if="hasCo()" class="text-center pt-2">Applicant 2</h3>
+            <unsecured-credit-check-other-applications ng-if="hasCo()" other-applications="decisionModel.otherApplications.applicant2"></unsecured-credit-check-other-applications>
+        </div>
+        <div class="pt-3" ng-if="decisionModel.credits">
+            <h2 class="custom-header text-center">Credits</h2>
+            <hr class="hr-section" />
+            <h3 ng-if="hasCo()" class="text-center">Applicant 1</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Application</th>
+                        <th>Status</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="decisionModel.credits.applicant1.length === 0">
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr ng-repeat="a in decisionModel.credits.applicant1">
+                        <td><a ng-href="{{getCreditUrl(a.CreditNr)}}" class="n-anchor" target="_blank">{{a.CreditNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                        <td ng-if="a.ApplicationNr"><a ng-href="{{'/CreditManagement/CreditApplication?applicationNr=' + a.ApplicationNr }}" class="n-anchor" target="_blank">{{a.ApplicationNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                        <td ng-if="!a.ApplicationNr">Unknown</td>
+                        <td>{{a.Status}}</td>
+                        <td>{{a.CapitalBalance}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 ng-if="hasCo()" class="text-center pt-2">Applicant 2</h3>
+            <table ng-if="hasCo()" class="table">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Application</th>
+                        <th>Status</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="decisionModel.credits.applicant2.length === 0">
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr ng-repeat="a in decisionModel.credits.applicant2">
+                        <td><a ng-href="{{getCreditUrl(a.CreditNr)}}" class="n-anchor" target="_blank">{{a.CreditNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                        <td ng-if="a.ApplicationNr"><a ng-href="{{'/CreditManagement/CreditApplication?applicationNr=' + a.ApplicationNr }}" class="n-anchor" target="_blank">{{a.ApplicationNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                        <td ng-if="!a.ApplicationNr">Unknown</td>
+                        <td>{{a.Status}}</td>
+                        <td>{{a.CapitalBalance}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pt-3" ng-show="isPetrusOnly()">
+                <h2 class="custom-header text-center">Petrus details</h2>
+                <hr class="hr-section" />
+                <div ng-show="wasPetrusUsed()">
+                    <div style="float:left">Id: {{decisionModel.recommendation.PetrusApplicationId}}</div>
+                    <button style="float:right" type="button" class="n-popup-btn n-turquoise-btn" ng-click="showPetrusLog($event)">
+                        Details <span class="glyphicon glyphicon-resize-full"></span>
+                    </button>
+                </div>
+                <div ng-show="!wasPetrusUsed()">
+                    <div style="float:left">Id: rejected locally</div>
+                </div>
+            </div>
+
+            <div class="pt-3" ng-hide="isPetrusOnly()">
+                <h2 class="custom-header text-center">SAT</h2>
+                <hr class="hr-section" />
+            </div>
+
+            <div ng-show="satUi.applicant1 && satUi.applicant1.report && !isPetrusOnly()">
+                <h3 class="text-center">Applicant 1</h3>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Total number of loans</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant1.report.fields.count}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Total amount of loans</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant1.report.fields.c01}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Over 60 days unpaid loans</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant1.report.fields.c03}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Total monthly payment</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant1.report.fields.c04}}</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="satUi.applicant2 && satUi.applicant2.report && !isPetrusOnly()">
+                <h3 class="text-center pt-2">Applicant 2</h3>
+                <div class="form-horizontal" ng-show="satUi.applicant2.report">
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Total number of loans</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant2.report.fields.count}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Total amount of loans</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant2.report.fields.c01}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Over 60 days unpaid loans</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant2.report.fields.c03}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 col-sm-6 col-md-6 control-label">Total monthly payment</label>
+                        <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{satUi.applicant2.report.fields.c04}}</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-3" ng-hide="isPetrusOnly()">
+                <h2 class="custom-header text-center">Credit reports</h2>
+                <hr class="hr-section" />
+            </div>
+            <list-and-buy-credit-reports-for-customer ng-if="!isPetrusOnly()" initial-data="customerCreditReports[0]"></list-and-buy-credit-reports-for-customer>
+            <list-and-buy-credit-reports-for-customer ng-if="!isPetrusOnly() && customerCreditReports[1]" initial-data="customerCreditReports[1]"></list-and-buy-credit-reports-for-customer>
+        </div>
+    </div>
+    <modal-dialog dialog-id="petrusDialogId" dialog-title="'Petrus log'"><pre class="copyable">{{petrusLogXml}}</pre></modal-dialog>
+</div>
+@Html.Partial("DecisionBasisDetailsPopup")
+@Html.Partial("Components/Component_SimpleTable")
+@Html.Partial("Components/Component_UnsecuredCreditCheckOtherApplications")
+@Html.Partial("Components/Component_ModalDialog")

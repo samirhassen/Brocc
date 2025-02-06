@@ -1,0 +1,37 @@
+.rates-container {
+  display: flex;
+  flex-direction: column;
+  .rates-row {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid grey;
+    align-items: center;
+    justify-self: center;
+    height: 50px;
+    &.rates-row-header {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .rates-time {
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+    .rates-interest {
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+    .rates-remove {
+      flex-basis: 0;
+      min-width: 100px;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+  .change-button-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+  }
+}

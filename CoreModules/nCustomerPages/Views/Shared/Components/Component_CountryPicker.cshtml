@@ -1,0 +1,15 @@
+﻿@{ 
+    Layout = null;
+}
+<script type="text/ng-template" id="country-picker.html">
+    <div class="form-group pb-1" ng-class="{ 'has-error' : $ctrl.showRequiredMessage && $ctrl.selectedCountries().length === 0 }">
+        <label class="control-label">{{$ctrl.label}}</label>
+        <select class="form-control" ng-model="$ctrl.selectedCountryCode" ng-change="$ctrl.onCountrySelected()">
+            <option value="">Välj</option>
+            <option ng-repeat="c in $ctrl.countries" value="{{c.code}}" ng-hide="$ctrl.isSelected(c.code)">{{c.name}}</option>
+        </select>        
+    </div>
+    <div class="form-group pb-1 col-sm-offset-1 col-sm-10 col-xs-12" ng-show="$ctrl.selectedCountries.length > 0">
+        <span style="cursor:pointer; padding: 5px 0px 10px 0px; display:block;" ng-click="$ctrl.removeSelected(c, $event)" ng-repeat="c in $ctrl.selectedCountries">{{c.name}} <span class="glyphicon glyphicon-remove" style="float: right;"></span></span>
+    </div>
+</script>

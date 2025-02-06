@@ -1,0 +1,63 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    Layout = null;
+    ViewBag.Title = "Dashboard";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="~/Content/css/bundle-dashboard">
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+</head>
+<body ng-app="app" ng-controller="ctr" ng-cloak ng-csp="no-unsafe-eval">
+    <div ng-show="isBroken">
+        <h2>Connection lost ... dashboard needs to be reloaded</h2>
+    </div>
+    <div ng-hide="isBroken">
+        <div class="top">
+            <div class="left">
+                <div class="mainText">
+                    <span class="text">{{dailyApprovedApplicationsAmount | number : 0}}</span>
+                    <span>€</span>
+                </div>
+            </div>
+            <div class="right">
+                <div class="circle">
+                    <canvas id="circleChart" style=""></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="chart" ng-show="chosenGraph === 'accumulated-balance'">
+                <canvas id="lineChart"></canvas>
+                <div class="chart-header">Accumulated Balance</div>
+            </div>
+            <div class="chart" ng-show="chosenGraph === 'budget-vs-results'">
+                <canvas id="barChart"></canvas>
+                <div class="chart-header">Budget vs Result</div>
+            </div>
+            <div class="middle-area">
+                <div class="capitaldebt">
+                    <span class="border">{{totalBalance | number:0}}<span class="context right-align">€</span></span>
+                    <span class="border">{{totalNrOfLoans | number:0}} <span class="context right-align">loans</span></span>
+                </div>
+            </div>
+            <div class="right bg-darkblue">
+                <div class="average-rate">
+                    <span class="context">average debt / loan</span><br />
+                    {{avgBalancePerLoan | number:0}} <span class="context">€</span><br /><br />
+                    <span class="context">average interest rate</span><br />
+                    {{avgInterestRatePerLoan | number:1}} <span class="context">%</span>
+                </div>
+            </div>
+            <div class="settings"><a href="/Dashboard/Settings"><img src="~/Content/img/cog.png" style="width:25px; height:25px;" /></a></div>
+            <div class="debug-text" style="position:fixed;bottom:3px;right:3px"><span ng-hide="awaitingRefresh" ng-click="forceRefresh($event)"> Last update: {{lastUpdateMoment.format('YYYY-MM-DD HH:mm')}}</span><span ng-show="awaitingRefresh">Refreshing...</span> </div>
+        </div>
+    </div>
+    @Scripts.Render("~/Content/js/bundle-dashboard")
+</body>
+</html>

@@ -1,0 +1,28 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label" [translate]="'steps.employmentDetails.headerDate'">Hur länge har du haft din nuvarande sysselsättning?</label>
+            <div class="row">
+                <div class="col-xs-6 col-sm-3 col-md-3">
+                    <select class="custom-select" formControlName="employedSinceYear">
+                        <option *ngIf="!form.get('employedSinceYear').value" [ngValue]="null" [translate]="'terms.selectYear'"></option>
+                        <option *ngFor="let y of employedSinceYears" [ngValue]="y.toString()">{{getEmployedSinceYearText(y)}}</option>
+                    </select>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3">
+                    <select class="custom-select" formControlName="employedSinceMonth">
+                        <option *ngIf="!form.get('employedSinceMonth').value" [ngValue]="null" [translate]="'terms.selectMonth'"></option>
+                        <option *ngFor="let m of employedSinceMonths" [ngValue]="m[0]">{{'concept.month.' + m[1] | translate}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="pb-5 movein" *ngIf="usesEmployer()">
+            <label class="custom-label" [translate]="'steps.employmentDetails.headerEmployer'">Vem är din
+                arbetsgivare?</label>
+            <input type="text" class="custom-input"
+                placeholder="{{'steps.employmentDetails.placeHolderEmployer' | translate}}" formControlName="employer">
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

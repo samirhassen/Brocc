@@ -1,0 +1,136 @@
+<ng-container *ngIf="account">
+  <ng-container *ngIf="account.IsValid">
+    <ng-container
+      *ngTemplateOutlet="
+        textGroup;
+        context: {
+          label: getTypeDisplayName(),
+          value: account.ValidAccount.DisplayNr,
+          visible: true
+        }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        textGroup;
+        context: {
+          label: 'Bank',
+          value: account.ValidAccount.BankName,
+          visible: account.ValidAccount.BankName
+        }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        textGroup;
+        context: {
+          label: 'Clearing nr',
+          value: account.ValidAccount.ClearingNr,
+          visible: account.ValidAccount.ClearingNr
+        }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        textGroup;
+        context: {
+          label: 'Account nr',
+          value: account.ValidAccount.AccountNr,
+          visible: account.ValidAccount.AccountNr
+        }
+      "
+    ></ng-container>
+    <ng-container
+      *ngIf="account.ValidAccount.BankAccountNrType === 'BankGiroSe'"
+    >
+      <div class="form-group">
+        <label class="control-label col-xs-6 danger">Bgc</label>
+        <div class="col-xs-6">
+          <p class="form-control-static">
+            <a
+              target="_blank"
+              class="n-anchor"
+              href="https://www.bankgirot.se/sok-bankgironummer/?bgnr={{
+                account.ValidAccount.NormalizedNr
+              }}"
+              >Check account <span class="glyphicon glyphicon-new-window"></span
+            ></a>
+          </p>
+        </div>
+        <div class="col-xs-1"></div>
+      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          textGroup;
+          context: {
+            label: 'Owner name',
+            value: account.ValidAccount.ExternalData?.bankGiroOwnerName,
+            visible: account.ValidAccount.ExternalData?.bankGiroOwnerName
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          textGroup;
+          context: {
+            label: 'Owner orgnr',
+            value: account.ValidAccount.ExternalData?.bankGiroOwnerOrgnr,
+            visible: account.ValidAccount.ExternalData?.bankGiroOwnerOrgnr
+          }
+        "
+      ></ng-container>
+    </ng-container>
+    <ng-container
+      *ngIf="account.ValidAccount.BankAccountNrType === 'PlusGiroSe'"
+    >
+      <div class="form-group">
+        <label class="control-label col-xs-6 danger">Plusgirot</label>
+        <div class="col-xs-6">
+          <p class="form-control-static">
+            <a
+              target="_blank"
+              class="n-anchor"
+              href="https://kontoutdrag.plusgirot.se/ku/html/sokkto.htm"
+              >Check account <span class="glyphicon glyphicon-new-window"></span
+            ></a>
+          </p>
+        </div>
+        <div class="col-xs-1"></div>
+      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          textGroup;
+          context: {
+            label: 'Description',
+            value: account.ValidAccount.ExternalData?.plusGiroDescription,
+            visible: account.ValidAccount.ExternalData?.plusGiroDescription
+          }
+        "
+      ></ng-container>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="!account.IsValid">
+    <div class="form-group">
+      <label class="control-label col-xs-6 danger">Invalid account!</label>
+      <div class="col-xs-6">
+        <p class="form-control-static">{{ account.RawNr }}</p>
+      </div>
+      <div class="col-xs-1"></div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template
+  #textGroup
+  let-label="label"
+  let-value="value"
+  let-visible="visible"
+>
+  <div class="form-group" *ngIf="visible">
+    <label class="control-label col-xs-6">{{ label }}</label>
+    <div class="col-xs-6">
+      <p class="form-control-static">{{ value }}</p>
+    </div>
+    <div class="col-xs-1"></div>
+  </div>
+</ng-template>

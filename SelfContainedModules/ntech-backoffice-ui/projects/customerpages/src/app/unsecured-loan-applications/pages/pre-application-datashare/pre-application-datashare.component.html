@@ -1,0 +1,22 @@
+<customerpages-shell [initialData]="shellData">
+    <div shell-body>
+        <p *ngIf="errorMessage">{{errorMessage}}</p>
+        <div *ngIf="m?.kzData">
+            <kreditz-datashare-iframe [initialData]="m.kzData"></kreditz-datashare-iframe>
+        </div>
+        <div *ngIf="m?.waiting" class="center-waiting-message">
+            <p>Väntar på information från din bank: {{m.waiting.waitSeconds}} s</p>
+            <p>Det brukar kunna ta upp till en minut.</p>
+        </div>
+        <div *ngIf="m?.hasAccountData"  class="center-data-message">
+            <p>Vi har nu fått data från din bank...</p>
+        </div>
+        <div *ngIf="m?.kzMockData">
+            <div class="frame">
+                <h2>Datadelningssimulator</h2>
+                <button class="n-main-btn n-green-btn" (click)="simulateShareSucess($event)">Simulera lyckad datadelning</button>
+                <button class="n-main-btn n-green-btn pull-right" (click)="simulateShareFailed($event)">Simulera misslyckad datadelning</button>
+            </div>
+        </div>
+    </div>
+</customerpages-shell>

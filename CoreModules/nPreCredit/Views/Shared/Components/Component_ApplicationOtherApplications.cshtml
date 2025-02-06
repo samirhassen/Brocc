@@ -1,0 +1,61 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="application-other-applications.html">
+    <div>
+        <h2 class="text-center custom-header">Other applications</h2>
+        <hr class="hr-section" />
+        <h3 class="text-center" ng-repeat-start="a in $ctrl.m.Applicants">Applicant {{a.ApplicantNr}}</h3>
+        <table class="table" ng-repeat-end>
+            <thead>
+                <tr>
+                    <th class="col-xs-3">Application</th>
+                    <th class="col-xs-5">Date</th>
+                    <th class="col-xs-4 text-right">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in a.Applications">
+                    <td><a class="n-anchor" target="_blank" ng-href="{{p.ApplicationUrl}}">{{p.ApplicationNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                    <td>{{p.ApplicationDate | date:'shortDate'}}</td>
+                    <td class="text-right">{{p.IsActive ?'Active' :'Inactive'}}</td>
+                </tr>
+                <tr ng-show="!a.Applications || a.Applications.length == 0">
+                    <td>-</td>
+                    <td></td>
+                    <td class="text-right"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="text-center pt-3 custom-header">Loans</h2>
+        <hr class="hr-section" />
+        <h3 class="text-center" ng-repeat-start="a in $ctrl.m.Applicants">Applicant {{a.ApplicantNr}}</h3>
+        <table class="table" ng-repeat-end>
+            <thead>
+                <tr>
+                    <th class="col-xs-3">Loan</th>
+                    <th class="col-xs-3">Application</th>
+                    <th class="text-right col-xs-3">Status</th>
+                    <th class="text-right col-xs-3">Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="c in a.Credits">
+                    <td><a class="n-anchor" target="_blank" href="{{c.CreditUrl}}">{{c.CreditNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                    <td ng-if="c.ApplicationUrl"><a class="n-anchor" target="_blank" href="{{c.ApplicationUrl}}">{{c.ApplicationNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                    <td ng-if="!c.ApplicationUrl">{{c.ApplicationNr}}</td>
+                    <td class="text-right">{{c.CreditStatus}}</td>
+                    <td class="text-right">{{c.Balance | currency}}</td>
+                </tr>
+                <tr ng-show="!a.Credits || a.Credits.length == 0">
+                    <td>-</td>
+                    <td></td>
+                    <td class="text-right"></td>
+                    <td class="text-right"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>

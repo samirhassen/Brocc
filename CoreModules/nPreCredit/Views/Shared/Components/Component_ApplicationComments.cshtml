@@ -1,0 +1,104 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="application-comments.html">
+    <div>
+        <div class="pb-3 pt-1" ng-show="$ctrl.initialData.applicationInfo.IsActive === true">
+            <div class="custom-comment">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <form novalidate class="form-inline" name="commentform" id="commentform">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <textarea ng-model="$ctrl.newCommentText" ng-class="{ 'comment-textarea-expanded': $ctrl.isExpanded }" class="comment-textarea-control custom-control expand" ng-focus="$ctrl.onFocusGained()" ng-blur="$ctrl.onFocusLost()" placeholder="Add comment and attachments" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true"></textarea>
+                                </div>
+                                <div class="col-xs-4" ng-show="$ctrl.isExpanded">
+                                    <div class="input-group-addon n-main-btn n-white-btn" style="border-radius: 5px;" ng-disabled="!$ctrl.newCommentText || $ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true" ng-click="$ctrl.selectCommentFileToAttach($event)">
+                                        Attach <span class="glyphicon glyphicon-paperclip"></span>
+                                    </div>
+                                    <span class="input-group-addon" ng-show="$ctrl.attachedFileName">{{$ctrl.attachedFileName}}</span>
+                                    <div class="n-main-btn n-blue-btn" style="margin-top:20px; padding: 8px 8px 5px 8px;" ng-click="$ctrl.addComment($event)" ng-disabled="!$ctrl.newCommentText || $ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true">
+                                        Add <span class="glyphicon glyphicon-comment"></span>
+                                    </div>
+                                    <input type="file" id="file" name="file" style="display:none" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-offset-2 col-xs-2 text-center" ng-hide="$ctrl.initialData.hideAdditionalInfoToggle || ($ctrl.initialData.applicationInfo.IsMortgageLoanApplication && !$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation)">
+                        <div>Waiting for additional info</div>
+                        <label class="n-toggle" ng-disabled="!$ctrl.initialData.applicationInfo.IsActive" ng-click="$ctrl.toggleWaitingForInformation($event)">
+                            <input type="checkbox" ng-model="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation" />
+                            <span class="n-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-2">Date</th>
+                    <th ng-class="{ 'col-xs-8' : !$ctrl.initialData.alwaysShowAttachedFiles, 'col-xs-6' : $ctrl.initialData.alwaysShowAttachedFiles }">Comment</th>
+                    <th class="col-xs-2 text-right" ng-if="!$ctrl.initialData.alwaysShowAttachedFiles">
+                        <select ng-model="$ctrl.filterMode" ng-change="$ctrl.onFilterModeChanged()" class="form-discreet">
+                            <option value="">All</option>
+                            <option value="user">Manual</option>
+                            <option value="system">System</option>
+                        </select>
+                    </th>
+                    <th ng-if="$ctrl.initialData.alwaysShowAttachedFiles" class="col-xs-4">Document</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="c in $ctrl.comments">
+                    <td>
+                        <span ng-class="{ 'glyphicon glyphicon-chevron-down chevron-bg mr-1' : !!c.commentDetails, 'glyphicon glyphicon-chevron-right chevron-bg mr-1' : !c.commentDetails  }" ng-click="$ctrl.toggleCommentDetails(c, $event)"></span>
+                        {{c.CommentDate | date:'short'}}
+                    </td>
+                    <td colspan="{{$ctrl.initialData.alwaysShowAttachedFiles ? 1 : 2}}" >{{c.CommentText}}</td>
+                    <td ng-if="$ctrl.initialData.alwaysShowAttachedFiles">
+                        <span ng-if="c.AttachmentUrl"><span class="pull-left" style="display:block;">{{c.AttachmentFilename}}</span> <a target="_blank" class="n-direct-btn n-purple-btn pull-right" ng-href="{{c.AttachmentUrl}}">Document <span class="glyphicon glyphicon-save"></span></a></span>
+                    </td>
+                </tr>
+                <tr ng-repeat-end class="opend" ng-show="c.commentDetails">
+                    <td colspan="2">
+                        <div class="col-md-6">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">By</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{c.commentDetails.CommentByName}}</b></p></div>
+                        </div>
+                        <div class="col-md-6" ng-if="c.commentDetails.BankAccountRawJsonDataArchiveKey">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">Shared bank account - raw data</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><b><a target="_blank" ng-href="{{'/CreditManagement/ArchiveDocument?key=' + c.commentDetails.BankAccountRawJsonDataArchiveKey}}">Show</a></b></p></div>
+                        </div>
+                        <div class="col-md-6" ng-if="c.commentDetails.BankAccountPdfSummaryArchiveKey">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">Shared bank account - pdf summary</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><b><a target="_blank" ng-href="{{'/CreditManagement/ArchiveDocument?key=' + c.commentDetails.BankAccountPdfSummaryArchiveKey}}">Show</a></b></p></div>
+                        </div>
+                        <div class="col-md-6" ng-if="c.commentDetails.AttachmentUrl">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">File</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <p><b>{{c.commentDetails.AttachmentFilename}}</b></p>
+                                <p><a target="_blank" class="n-direct-btn n-purple-btn" ng-href="{{c.commentDetails.AttachmentUrl}}">Document <span class="glyphicon glyphicon-save"></span></a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6" ng-if="c.commentDetails.DirectUrl">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">Link</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><a target="_blank" class="n-anchor" ng-href="{{c.commentDetails.DirectUrl}}">{{c.commentDetails.DirectUrlShortName}}&nbsp;<span class="glyphicon glyphicon-new-window"></span></a></p></div>
+                        </div>
+                        <div class="col-md-6" ng-if="c.commentDetails.RequestIpAddress">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">Ip address</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{c.commentDetails.RequestIpAddress}}</b></p></div>
+                        </div>
+                        <div class="col-md-6" ng-if="$ctrl.affiliateReportingInitialData">
+                            <label class="col-md-6 col-sm-6 col-xs-6 text-right">Provider log</label>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p><affiliate-reporting-log initial-data="$ctrl.affiliateReportingInitialData"></affiliate-reporting-log></p></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>

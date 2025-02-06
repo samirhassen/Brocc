@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="customer-info.html">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-sm-4 pull-right text-right"><a class="n-anchor" ng-href="{{$ctrl.customer.customerCardUrl}}">View details</a></div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Name</label>
+            <div class="col-sm-8 form-control-static copyable"><b>{{$ctrl.formatmissing($ctrl.customer.firstName)}}</b></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Birthdate</label>
+            <div class="col-sm-8 form-control-static copyable"><b>{{$ctrl.customer.birthDate}}</b></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Civic nr</label>
+            <p ng-hide="$ctrl.civicRegNr" class="form-control-static col-sm-6">
+                <span class="n-unlock">
+                    <a href="#" ng-click="$ctrl.unlockCivicRegNr($event)"><span class="glyphicon glyphicon-lock"></span></a>
+                </span>
+            </p>
+            <p ng-show="$ctrl.civicRegNr" class="form-control-static col-sm-6 copyable">{{$ctrl.civicRegNr}}</p>
+        </div>
+        <div class="form-group pt-2">
+            <div class="col-sm-4 control-label">
+                <span ng-hide="$ctrl.contactInfo" class="n-unlock" ng-click="$ctrl.toggleContactInfo($event)"><a href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a></span>
+                <a ng-show="$ctrl.contactInfo && $ctrl.contactInfo.isOpen" href="" ng-click="$ctrl.toggleContactInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-down"></span></a>
+                <a ng-show="$ctrl.contactInfo && !$ctrl.contactInfo.isOpen" href="" ng-click="$ctrl.toggleContactInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-right"></span></a>
+            </div>
+            <p class="form-control-static col-sm-6">Contact information</p>
+        </div>
+        <div ng-if="$ctrl.contactInfo && $ctrl.contactInfo.isOpen">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Fullname</label>
+                <p ng-show="$ctrl.contactInfo.firstName || $ctrl.contactInfo.lastName" class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.firstName}}&nbsp;{{$ctrl.contactInfo.lastName}}</p>
+                <p ng-hide="$ctrl.contactInfo.firstName || $ctrl.contactInfo.lastName" class="form-control-static col-sm-6 copyable"></p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Street</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressStreet}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Zip</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressZipcode}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">City</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressCity}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Country</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressCountry}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Email</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.email}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Phone</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.formatPhoneNr($ctrl.contactInfo.phone)}}</p>
+            </div>
+        </div>
+    </div>   
+</script>

@@ -1,0 +1,49 @@
+<div *ngIf="m">
+  <div>
+    <div class="mb-5">
+      <h2>Active keys</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <ng-container
+        *ngTemplateOutlet="keysTable; context: { keys: m.activeKeys }"
+      ></ng-container>
+      <div style="display: flex; justify-content: center">
+        <a [routerLink]="['/api-keys/generate']" class="n-main-btn n-blue-btn"
+          >Generate new api key</a
+        >
+      </div>
+    </div>
+    <toggle-block [initialData]="{ headerText: 'Expired or revoked keys' }">
+      <ng-container
+        *ngTemplateOutlet="keysTable; context: { keys: m.expiredOrRevokedKeys }"
+      ></ng-container>
+    </toggle-block>
+  </div>
+</div>
+
+<ng-template #keysTable let-keys="keys">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Scope</th>
+        <th>Age</th>
+        <th>Provider</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="keys.length === 0" colspan="4">
+        -
+      </tr>
+      <tr *ngFor="let key of keys">
+        <td>
+          <a [routerLink]="['/api-keys/key', key.id]" class="n-anchor">{{
+            key.description
+          }}</a>
+        </td>
+        <td>{{ key.scope }}</td>
+        <td>{{ key.ageText }}</td>
+        <td>{{ key.providerName }}</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

@@ -1,0 +1,152 @@
+<div class="" *ngIf="m">
+
+    <div class="editblock">
+        <div class="row pt-3">
+            <div class="col-sm-6">
+                <form [formGroup]="m.form.form">            
+                    <div class="form-horizontal">
+                        <div class="form-group" [ngClass]="{ 'has-error': m.form.hasError('ruleSetName') }">
+                            <label class="control-label col-xs-4">Name</label>
+                            <div class="col-xs-6">
+                                <p class="form-control-static copyable bb-1" *ngIf="!m.inEditMode">{{m.current.ruleSetName}}</p>
+                                <input *ngIf="m.inEditMode" type="text" class="form-control" formControlName="ruleSetName" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4">Slot</label>
+                            <div class="col-xs-6">
+                                <p class="form-control-static copyable bb-1">{{getSlotDisplayName(m.currentSlotName)}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="m.inEditMode">
+                            <label class="control-label col-xs-4">Import ruleset</label>
+                            <div class="col-xs-6">
+                                <input type="text" class="form-control" placeholder="S_[...]_S" formControlName="importRulesetString" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <div class="col-xs-12 text-right" *ngIf="m.isEditAllowed && !m.inEditMode">
+                    <button class="n-icon-btn n-blue-btn" [disabled]="false" (click)="beginEdit($event)"><span class="glyphicon glyphicon-pencil"></span></button>
+                </div>
+                <div class="col-xs-12 text-right" *ngIf="m.inEditMode">
+                    <button (click)="onCancel($event)" class="n-icon-btn n-white-btn" style="margin-right:5px;"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button (click)="onSave($event)" [disabled]="invalid()" class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-ok"></span></button>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row pt-3">
+            <ruleset-display-table [ruleSet]="m.current" [inEditMode]="m.inEditMode" (removeRule)="removeRule($event)">
+
+            </ruleset-display-table>
+        </div>
+        <div class="row pt-3" *ngIf="m.inEditMode">
+            <toggle-block [initialData]="{ headerText: 'Add rules', useTransparentBackground: true }">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-3">Rule</th>
+                            <th class="col-sm-8">Description</th>
+                            <th class="col-sm-1">Add</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let rule of m.addableRules">
+                            <td>{{rule.rule.RuleDisplayName}}</td>
+                            <td>{{rule.rule.Description}}</td>
+                            <td><a href="#" class="n-direct-btn n-blue-btn" (click)="addRule(rule, $event)">Add</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </toggle-block>
+        </div>
+    </div>
+</div>
+
+<ng-template #addRuleModalTemplate>
+    <div class="modal-header">
+        <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="addRuleModalRef.hide()">
+            <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span>
+        </button>
+        <h1>Add rule</h1>
+    </div>
+    <div class="modal-body" *ngIf="m?.add">
+        <form [formGroup]="m.add.form.form" class="edit-block">
+            <div class="form-horizontal" style="padding:10px">
+                <div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Rule</label>
+                        <div class="col-xs-6">
+                            <p class="form-control-static copyable bb-1">{{m.add.rule.RuleDisplayName}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Description</label>
+                        <div class="col-xs-6">
+                            <p class="form-control-static copyable bb-1">{{m.add.rule.Description}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Phase</label>
+                        <div class="col-xs-6">
+                            <select class="form-control" formControlName="phaseName">
+                                <option [ngValue]=""></option>
+                                <option *ngFor="let phase of m.allPhases" [ngValue]="phase.Code">{{phase.DisplayName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="m.add.form.getValue('phaseName') !== 'ManualControl'">
+                        <label class="control-label col-xs-6">Rejection reason</label>
+                        <div class="col-xs-6">
+                            <select class="form-control" formControlName="rejectionReasonName">
+                                <option *ngFor="let rejectionReason of m.allRejectionReasons" [ngValue]="rejectionReason.Code">{{rejectionReason.DisplayName}}</option>
+                            </select>
+                        </div>
+                    </div>                    
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">&nbsp;</label>
+                        <div class="col-sm-offset-4 col-sm-2">
+                            <button style="float:right" class="btn n-green-btn" (click)="commitRule($event)" [disabled]="m.add.form.invalid()">Add</button>
+                        </div>
+                    </div>                    
+                </div>
+                <div>
+                    <h2>Static parameters</h2>
+                    <div *ngIf="m?.add?.singleNonListParameter">
+                        <div class="form-group" [ngClass]="{ 'has-error': m.add.form.hasError('singleNonListParameterValue') }">
+                            <label class="control-label col-xs-6">{{m.add.singleNonListParameter.name}}</label>
+                            <div class="col-xs-6">
+                                <input type="text" class="form-control" formControlName="singleNonListParameterValue" />
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="m?.add?.singleListParameter">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">{{m.add.singleListParameter.name}}</label>
+                            <div class="col-xs-6">
+                                <select  class="form-control" formControlName="singleListParameter" #singleListParameterCtrl (change)="m.add.singleListParameter.onAdd()">
+                                    <option class="form-control" [ngValue]="''">--Add--</option>
+                                    <option *ngFor="let option of m.add.singleListParameter.options" [ngValue]="option.Code">{{option.DisplayName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngFor="let option of m.add.singleListParameter.selectedOptions; let i = index" [class.pt-3]="i === 0">
+                            <label class="control-label col-xs-6">&nbsp;</label>
+                            <div class="col-xs-5">
+                                <p class="form-control-static copyable bb-1">{{option.DisplayName}}</p>
+                            </div>
+                            <div class="col-xs-1">
+                                <button type="button" class="btn btn-default" (click)="m.add.singleListParameter.onRemove(option, $event)">
+                                    <span class="glyphicon glyphicon-remove glyphicon-remove-not-red"></span>
+                                  </button>
+                            </div>                            
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </form>        
+    </div>
+  </ng-template>

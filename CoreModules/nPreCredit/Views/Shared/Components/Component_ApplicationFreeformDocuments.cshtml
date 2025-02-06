@@ -1,0 +1,47 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="application-freeform-documents.html">
+    <div>
+        <div class="editblock">
+            <div class="pb-3">
+                <button class="n-main-btn n-white-btn" ng-show="$ctrl.isEditAllowed()" ng-click="$ctrl.attachDocument($event)">
+                    Attach <span class="glyphicon glyphicon-paperclip"></span>
+                </button>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-6">Document</th>
+                        <th class="col-xs-3">Date</th>
+                        <th class="col-xs-3 text-right"></th>
+                    </tr>    
+                </thead>
+                <tbody>
+                    <tr ng-repeat="d in $ctrl.documents">
+                        <td>
+                            <a ng-show="d.serverState" ng-href="{{d.serverState.downloadUrl}}" target="_blank" class="n-direct-btn n-purple-btn">{{d.serverState.filename}} <span class="glyphicon glyphicon-save"></span></a>
+                            <span ng-show="d.localState && !d.serverState">{{d.localState.filename}}</span>
+                        </td>
+                        <td ng-show="!d.localState">{{d.serverState.date | date:'short'}}</td>
+                        <td class="text-right" ng-show="!d.localState">
+                            <button class="n-icon-btn n-red-btn" ng-show="$ctrl.isEditAllowed()" ng-click="$ctrl.removeDocument(d, $event)"><span class="glyphicon glyphicon-remove"></span></button>
+                        </td>
+                        <td colspan="3" ng-show="d.localState">
+                            <span ng-show="d.localState.isAttach">Pending upload...</span>
+                            <span ng-show="!d.localState.isAttach">Pending removal...</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pull-right pb-3">
+                <button class="n-icon-btn n-white-btn" ng-show="$ctrl.hasEdits()" ng-click="$ctrl.cancelEdits($event)"><span class="glyphicon glyphicon-remove"></span></button>
+                <button class="n-icon-btn n-green-btn" ng-show="$ctrl.hasEdits()" ng-click="$ctrl.saveEdits($event)"><span class="glyphicon glyphicon-ok"></span></button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</script>

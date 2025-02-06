@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div>
+        <div class="addressArea">
+            <div class="">
+                <div class="senderlogo">
+                    <img class="balanzia_logo" src="[[[skinning:img/pdf-logo.png|img/logo.png]]]" alt="Lender Logo">
+                </div>
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>PL 359</p>
+                    <p>00101, Helsinki</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="destinationAddress">                
+                <p>{{fullName}}</p>
+                <p>{{streetAddress}}</p>
+                <p>{{areaAndZipcode}}</p>
+            </div>
+        </div>   
+        
+        <div class="right-area">
+            
+            <div class="print-info">
+                <table>
+                    <tr>
+                        <td>Tulostuspäivä</td>
+                        <td>{{reminderDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Lainanumero</td>
+                        <td>{{creditNr}}</td>
+                    </tr>					
+                </table>
+            </div>
+            <div class="summation">
+                <table>
+                    <tr>
+                        <td>IBAN</td>
+                        <td>{{paymentIban}}</td>
+                    </tr>
+                    <tr>
+                        <td>Viitenumero</td>
+                        <td>{{ocrPaymentReference}}</td>
+                    </tr>
+                </table>
+            </div>
+                
+        </div>
+    </div>
+			
+	<div class="row">
+		<div class="conditions">
+			<br />
+			<h1>Maksuhuomautus {{reminderNumber}}</h1>
+			  {{#isReminder1}}
+			  <p>
+				Tietojemme mukaan emme ole vielä vastaanottaneet maksua alla mainitusta erästä. Erääntynyt summa tulee suorittaa välittömästi tilillemme {{paymentIban}}. Jos olet jo maksanut kyseisen erän, on tämä huomautus aiheeton.				
+			  <p>
+			  {{/isReminder1}}
+			  {{^isReminder1}}
+			  <p>
+				Tietojemme mukaan emme ole vielä vastaanottaneet maksua alla mainitusta erästä. Erääntynyt summa tulee suorittaa välittömästi tilillemme {{paymentIban}}. Jos olet jo maksanut kyseisen erän, on tämä huomautus aiheeton.
+			  </p>
+			  <p>
+				Haluamme samalla muistuttaa, että luotonantajalla on oikeus ilmoittaa lainaan liittyvä maksun laiminlyönti luottotietorekisteriin, jos maksu on viivästynyt yli 60 päivää maksuhuomautuksessa mainitusta alkuperäisestä eräpäivästä. 
+			  </p>
+			  {{/isReminder1}}
+			  <br /><br />
+
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th class="border">Laskutuskausi</th>
+                        <th class="border">Eräpäivä</th>
+                        <th class="text-right border">Kuukausierä</th>
+                        <th class="text-right border">Maksamatta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border">{{notificationMonth}}</td>
+                        <td class="border">{{notificationDueDate}}</td>
+                        <td class="text-right border">{{notificationTotalAmount}}</td>
+                        <td class="text-right border">{{notificationCurrentAmount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Erittely</th>
+					</tr>
+				</thead>
+				<tbody>
+                    <tr>
+                        <td class="border">Lasku {{notificationMonth}}<div class="right_table">{{notificationCurrentAmount}}</div></td>
+                    </tr>
+                    <tr>
+                        <td class="border">Huomautuskulu<div class="right_table">{{newNotificationFeeAmount}}</div></td>
+                    </tr>
+				</tbody>
+			</table>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="bold">Maksettava</b></td>
+                        <td class="text-right bold">{{totalCurrentAmount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+					
+		</div>
+	</div>
+    
+    <div class="contact">
+        <h3>Jos sinulla on kysyttävää, voit olla yhteydessä meihin sähköpostitse {{documentClientData_email}} tai puhelimitse <span style="white-space:nowrap;">010 524 8410</span>. Olemme avoinna ma-pe klo 9-11.30 ja 12.30-16. Voit myös tarkistaa lainaasi koskevat ajantasaiset tiedot kirjautumalla asiakassivuillemme osoitteessa {{documentClientData_website}}.</h3>
+    </div>
+
+</body>
+    
+</html>

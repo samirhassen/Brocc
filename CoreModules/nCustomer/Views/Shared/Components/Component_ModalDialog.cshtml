@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="modal-dialog.html">
+    <div id="{{$ctrl.dialogId}}" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="min-width:1200px;{{$ctrl.useFullWidth ? 'width:95%' : 'max-width: 1200px'}}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-sm-offset-4 col-xs-4">
+                            <h1>{{$ctrl.dialogTitle}}</h1>
+                        </div>
+                        <div class="col-xs-3 text-right pt-1">
+                            <div ng-if="$ctrl.onSkip">
+                                <button ng-click="$ctrl.onSkip($event)" type="button" class="n-main-btn n-blue-btn">Skip</button>
+                            </div>
+                        </div>
+                        <div class="col-xs-1 text-right pt-1">
+                            <button type="button" class="n-icon-btn n-white-btn" ng-click="$ctrl.closeDialog($event)">
+                                <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div ng-transclude></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

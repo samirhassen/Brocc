@@ -1,0 +1,65 @@
+﻿<div class="page extra-padding-top">
+
+
+    <div class="area pt-3">
+        <h1 class="pb-1">
+            Borgensförbindelse
+        </h1>
+        {{#LoanDetails}}        
+        <p>Avser Företagslån: {{LoanNr}}</p>
+        {{/LoanDetails}}
+    </div>
+
+    <div class="area">
+        <h2>Borgensmän</h2>
+        <table>
+            <tbody>
+                {{#Collaterals}}
+                <tr>
+                    <td>{{FullName}}, {{CivicRegNr}}</td>
+                    <td></td>
+                </tr>                
+                {{/Collaterals}}
+            </tbody>            
+        </table>
+    </div>
+
+    <div class="area pt-3">
+        <p class="pb-1">
+            <b>Undertecknade borgensmän (”Borgensmännen”) går härmed i solidarisk borgen såsom för egen skuld för Kredittagarens samtliga nuvarande och blivande förpliktelser gentemot GCC Capital AB till dess full betalning har skett.</b>
+        </p>
+        <p class="pb-1">
+            Med samtliga nuvarande och blivande förpliktelser avses även Kredittagarens löpande räntor, avgifter och kostnader. Vid
+            leasing/hyresavtal ingår även ersättning till GCC Capital för skada med anledning av avtalets förtida upphörande i enlighet
+            GCC Capitals Allmänna villkor och det avtalade restvärdet vid avtalets slut.
+        </p>
+        <p class="pb-1">
+            Borgensmännen är införstådda med att Kredittagarens förpliktelser, och därigenom borgensåttagandet, gentemot GCC
+            Capital kan komma att öka enligt ovan.
+        </p>
+        <p class="pb-1">
+            Då Borgensmännen har nära förbindelser med Kredittagaren förutsätts Borgensmännen hålla sig underrättade om kredit-
+            tagarens ekonomiska situation och förändringar i Kredittagarens förpliktelser gentemot GCC Capital.
+        </p>
+        <p class="pb-1">
+            Om Kredittagarens åtagande helt eller delvis är kopplad till lösa saker gäller denna borgensförbindelse oavsett om dessa
+            lösa saker minskats, skadats eller förkommit. Förbindelsen skall också gälla oavsett om GCC Capital AB kan göra gällande
+            en sakrättsligt skyddad äganderätt till sakerna eller inte.
+        </p>
+        <p class="pb-1">
+            Meddelanden som rör detta borgensåtagande och som skickas med rekommenderat brev eller vanligt brev ska anses ha nått
+            Borgensmännen senast den tredje bankdagen efter avsändandet om meddelandet skickats till Borgensmännens
+            respektive folkbokföringsadress eller annan adress som Borgensmännen har uppgett till GCC Capital. Meddelanden som
+            skickas via e-post ska anses ha kommit Borgensmännen omedelbart om inte GCC Capital mottagit information om att
+            respektive folkbokföringsadress eller annan adress som Borgensmännen har uppgett till GCC Capital. Meddelanden som
+            e-postmeddelanden inte nått mottagaren. Om ett e-postmeddelande når Borgensmännen utanför kontorstid ska
+            anses vara mottaget vid början av påföljande bankdag.
+        </p>
+        <p>
+            Borgensmännen äger inte rätt att utöva sin regressrätt gentemot kredittagaren så länge som kredittagaren inte fullgjort
+            samtliga sina förpliktelser gentemot kreditgivaren. Tvist rörande denna förbindelse och dess tillämpning skall
+            avgöras enligt svensk lag och vid Stockholms tingsrätt med överinstanser. Borgensåttagandet gäller även mot den
+            eller de som GCC Capital senare kan komma att överlåta ovan nämnda förpliktelser till.
+        </p>
+    </div>
+</div>

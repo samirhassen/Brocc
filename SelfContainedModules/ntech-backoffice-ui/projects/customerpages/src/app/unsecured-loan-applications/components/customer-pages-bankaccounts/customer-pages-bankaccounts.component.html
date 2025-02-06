@@ -1,0 +1,117 @@
+<div *ngIf="m" class="pt-2">
+    <div class="pb-1">
+        <h2>Ditt mottagarkonto</h2>
+        <hr class="hr-section" />
+
+        <div class="row">
+            <div class="col-sm-10 col-xs-12">
+                <p>Mottagarkontot är det bankkonto som det nya lånet kommer betalas ut till.</p>
+            </div>
+            <div class="col-sm-2 col-xs-12">
+                <div class="text-right">
+                    <div *ngIf="m.isPossibleToEditPaidToCustomerBankAccount && !m.edit?.paidToCustomerForm">
+                        <button class="n-icon-btn n-blue-btn" [disabled]="m.edit" (click)="beginEditNewLoan($event)"><span class="glyphicon glyphicon-pencil"></span></button>
+                    </div>
+                    <div *ngIf="m.edit && m.edit?.paidToCustomerForm">
+                        <button (click)="onCancelNewLoan($event)" class="n-icon-btn n-white-btn" style="margin-right:5px;"><span class="glyphicon glyphicon-remove"></span></button>
+                        <button (click)="onSaveNewLoan($event)" [disabled]="m.edit?.paidToCustomerForm?.invalid()" class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-ok"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pb-3">
+        <div>
+            <div class="row pb-2">
+                <form [formGroup]="m.edit?.paidToCustomerForm?.form || m.dummyViewForm">
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label">Bankkontonummer</label>
+                        </div>
+                        <div class="form-group" *ngIf="!m.edit?.paidToCustomerForm">
+                            <p class="form-control-static copyable bb-1">{{m.view.paidToCustomer.account?.getAccountNrDisplay()}}</p>
+                        </div>
+                        <div class="form-group" *ngIf="m.edit?.paidToCustomerForm" [ngClass]="{ 'has-error': m.edit?.paidToCustomerForm?.hasError('bankAccountNr') }">
+                            <input formControlName="bankAccountNr" type="text" class="form-control"  />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="pb-1" *ngIf="m?.view?.loansToSettle?.length > 0">
+        <h2>Lösen av lån</h2>
+        <hr class="hr-section"/>
+        <div class="row">
+            <div class="col-sm-10 col-xs-12">
+                <p>Ange betalinformation för lånen som ska lösas.</p>
+            </div>
+            <div class="col-sm-2 col-xs-12">
+                <div class="text-right">
+                    <div *ngIf="m.isPossibleToEditLoansToSettleBankAccounts && !m.edit?.loansToSettleForm">
+                        <button class="n-icon-btn n-blue-btn" [disabled]="m.edit" (click)="beginEditLoansToSettle($event)"><span class="glyphicon glyphicon-pencil"></span></button>
+                    </div>
+                    <div *ngIf="m.edit && m.edit?.loansToSettleForm">
+                        <button (click)="onCancelLoansToSettle($event)" class="n-icon-btn n-white-btn" style="margin-right:5px;"><span class="glyphicon glyphicon-remove"></span></button>
+                        <button (click)="onSaveLoansToSettle($event)" [disabled]="m.edit?.loansToSettleForm?.invalid()" class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-ok"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="m?.view?.loansToSettle?.length > 0">
+        <form [formGroup]="m.edit?.loansToSettleForm?.form || m.dummyViewForm">
+            <div *ngIf="m.view.loansToSettle.length === 0">Inga</div>
+            <div *ngFor="let loan of m.view.loansToSettle">
+                <h3>{{getOtherLoanTypeDisplayName(loan.loanType)}}, {{loan.currentDebtAmount | number}} kr</h3>
+                <div class="row pb-2">
+                    <div class="col-xs-12 col-sm-4 pt-1">
+                      <div class="form-group">
+                        <label class="control-label">Kontotyp</label>
+                      </div>
+                      <div class="form-group" *ngIf="!m.edit?.loansToSettleForm">
+                          <p class="form-control-static copyable bb-1">{{loan.account.getAccountTypeDisplay()}}</p>
+                      </div>
+                      <div class="form-group" *ngIf="m.edit?.loansToSettleForm">
+                        <select [formControlName]="'bankAccountNrType'+loan.nr" class="form-control">
+                            <option *ngFor="let t of getPossibleBankAccountNrTypes()" [ngValue]="t.Code">{{t.DisplayName}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 pt-1">
+                        <div class="form-group">
+                            <label class="control-label">BG / PG-nummer</label>
+                        </div>
+                        <div class="form-group" *ngIf="!m.edit?.loansToSettleForm">
+                            <p class="form-control-static copyable bb-1">{{loan.account.getAccountNrDisplay()}}</p>
+                        </div>
+                        <div class="form-group" *ngIf="m.edit?.loansToSettleForm" [ngClass]="{ 'has-error': m.edit?.loansToSettleForm?.hasNamedValidationError('bankAccountInvalid' + loan.nr) || m.edit?.loansToSettleForm.hasError('bankAccountNr' + loan.nr) }">
+                            <input [formControlName]="'bankAccountNr'+loan.nr" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 pt-1">
+                        <div class="form-group" *ngIf="!m.edit?.loansToSettleForm">
+                            <label class="control-label">{{currentSettlementPaymentReferenceType(loan) == 'ref' ? 'OCR' : 'Meddelande'}}</label>
+                        </div>
+                        <div class="form-group" *ngIf="m.edit?.loansToSettleForm">
+                            <label class="control-label">OCR</label>&nbsp;&nbsp;<input [formControlName]="'settlementPaymentReferenceType'+loan.nr" type="radio" value="ref" />
+                            <span class="pull-right"><label class="control-label">Meddelande</label>&nbsp;&nbsp;<input [formControlName]="'settlementPaymentReferenceType'+loan.nr" type="radio" value="msg" /></span>
+                        </div>
+                        <div class="form-group" *ngIf="!m.edit?.loansToSettleForm">
+                            <p class="form-control-static copyable bb-1">{{currentSettlementPaymentReferenceType(loan) == 'ref' ? loan.settlementPaymentReference: loan.settlementPaymentMessage}}</p>
+                        </div>
+                        <div class="form-group" *ngIf="m.edit?.loansToSettleForm" [ngClass]="{ 'has-error': m.edit?.loansToSettleForm?.hasNamedValidationError('settlementPaymentReferenceInvalid' + loan.nr) || m.edit?.loansToSettleForm.hasError('settlementPaymentReference' + loan.nr) }">
+                            <input [formControlName]="'settlementPaymentReference'+loan.nr" type="text" class="form-control"  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="text-center pt-3" *ngIf="!m.isBankAccountsConfirmed">
+      <button type="button" class="n-main-btn n-green-btn" [disabled]="m.edit || !m.isPossibleToConfirm" (click)="approveBankAccounts()">
+          Godkänn
+      </button>
+    </div>
+</div>

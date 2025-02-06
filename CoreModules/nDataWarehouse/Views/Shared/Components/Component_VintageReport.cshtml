@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="vintage-report.html">
+    
+    <div class="reports">
+
+        <div class="pt-3">
+            <div class="row">
+                <div class="col-lg-4 col-sm-3">
+                    <div>
+                        <label>{{$ctrl.m.creationDate | date: 'yyyy-MM-dd HH:mm'}}</label><br />
+                        <div ng-if="$ctrl.m">
+                            <a class="n-direct-btn n-white-btn" ng-href="{{$ctrl.getDownloadDataUrl()}}" target="_blank">Data <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="text-center">
+                        <h1>Vintage {{$ctrl.getHeaderDescription()}}</h1>
+                    </div>
+                    <div class="pt-3 pb-3 row">
+                        <div class="col-sm-6">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-6 control-label">Provider</label>
+                                    <div class="col-sm-6">
+                                        <p class="form-control-static">{{$ctrl.initialData.params.ProviderName ? $ctrl.initialData.params.ProviderName : 'Any'}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6 control-label">Risk group</label>
+                                    <div class="col-sm-6">
+                                        <p class="form-control-static">{{$ctrl.initialData.params.RiskGroup ? $ctrl.initialData.params.RiskGroup : 'Any'}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-6 control-label">Y Period</label>
+                                    <div class="col-sm-6">
+                                        <p class="form-control-static">{{$ctrl.initialData.params.AxisYFrom ? $ctrl.initialData.params.AxisYFrom : 'Any'}} to {{$ctrl.initialData.params.AxisYTo ? $ctrl.initialData.params.AxisYTo : 'Any'}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6 control-label">Color scheme</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control col-sm-6" ng-model="$ctrl.m.colorScheme">
+                                            <option value="">None</option>
+                                            <option value="greenYellowRed">Green/Yellow/Red</option>
+                                            <option value="redYellowGreen">Red/Yellow/Green</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li ng-click="$ctrl.showGraph = false" role="presentation" ng-class="{ 'active' : !$ctrl.showGraph }"><a href="#">Standard</a></li>
+            <li ng-click="$ctrl.showGraph = true" role="presentation" ng-class="{ 'active' : $ctrl.showGraph }"><a href="#">Weighted average graph</a></li>
+        </ul>
+
+        <div class="data-bg" ng-show="!$ctrl.showGraph">
+            <div ng-if="$ctrl.m">
+                <div class="overflow" ng-if="$ctrl.m.rows">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Initial value</th>
+                                <th ng-repeat="c in $ctrl.m.dataColumns">{{c}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="r in $ctrl.m.rows">
+                                <td>{{r.RowId | date: 'yyyy-MM-dd'}}</td>
+                                <td>{{r.InitialValue | number: ($ctrl.m.initialValueFormat !== 'count' ? 2 : 0)}}</td>
+                                <td ng-if="$ctrl.m.cellFormat === 'percent'" ng-repeat="c in $ctrl.m.dataColumns" style="{{$ctrl.getColorStyle(c-1, r)}}">{{$ctrl.getPercentCellValue(r, c-1) | number: 2}}{{$ctrl.getPercentCellValue(r, c-1) !== null ? ' %' : ''}}</td>
+                                <td ng-if="$ctrl.m.cellFormat !== 'percent'" ng-repeat="c in $ctrl.m.dataColumns" style="{{$ctrl.getColorStyle(c-1, r)}}">{{r.ColumnValues[c-1] | number: ($ctrl.m.initialValueFormat !== 'count' ? 2 : 0)}}</td>
+                            </tr>
+                            <tr ng-if="$ctrl.m.cellFormat !== 'percent'">
+                                <td colspan="2"></td>
+                                <td ng-repeat="c in $ctrl.m.dataColumns">{{$ctrl.m.columnSums[c-1] | number: ($ctrl.m.initialValueFormat !== 'count' ? 2: 0)}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td ng-repeat="c in $ctrl.m.dataColumns">{{$ctrl.m.weightedAverages[c-1] | number: 2}} %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-bg" ng-show="$ctrl.showGraph">
+            <div ng-show="$ctrl.m">
+                <div class="chart">
+                    <canvas id="weightedAverageChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</script>

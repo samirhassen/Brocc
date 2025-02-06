@@ -1,0 +1,523 @@
+@use "../../../src/styles.scss" as backoffice;
+
+.header-light {
+  color: backoffice.$header-text-color-light;
+}
+
+.inactive-task-row {
+  color: #b3b3b3;
+}
+
+.active-task-row:hover {
+  background-color: #034480;
+  cursor: pointer;
+  color: #fff;
+}
+
+.open-task-btn {
+  color: #333;
+}
+
+.close-task-icon {
+  color: #333 !important;
+}
+
+body {
+  font-size: 16px;
+}
+
+.body-content {
+  max-width: 1000px;
+}
+
+.navigation {
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgb(2 164 164);
+}
+
+.wide-navigation {
+  /* Intended to let the navigation area cover the entire top always so the logo can stay on the left */
+  .navigation .content-position {
+    max-width: none;
+  }
+}
+
+.navigation-list {
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+h1 {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-bottom: 0px;
+  padding-bottom: 5px;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 23px;
+  letter-spacing: 0.02em;
+}
+
+.n-neutral-btn {
+  color: #000;
+  background-color: transparent;
+  border: 1px solid #000;
+  box-shadow: none;
+}
+
+.n-neutral-btn:hover {
+  background-color: #ccd5e3;
+}
+
+.n-neutral-btn:active {
+  box-shadow: 0px 0px #ccd5e3;
+}
+
+.branding {
+  width: 50px;
+}
+
+.wrapper {
+  min-width: auto;
+}
+
+.lined-table {
+  border-collapse: separate;
+
+  tbody > tr > th,
+  tbody > tr > td {
+    border-bottom: 1px solid #000;
+  }
+
+  thead > tr > th {
+    border-bottom: 1px solid #000;
+  }
+
+  tbody > tr > td {
+    border-color: #000;
+    border-top: 0px;
+  }
+
+  tbody > tr:first-child > td {
+    border-top: 1px solid #000;
+  }
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  padding-top: 20px;
+}
+
+.flex-container.small {
+  min-height: 20vh;
+}
+
+.align-center {
+  align-self: center;
+  flex-grow: 1;
+}
+
+.custom-glyph {
+  margin-right: 5px;
+}
+
+.frame {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+}
+
+.form-control {
+  border: 0.1em solid #000;
+}
+
+a.n-anchor {
+  color: #1d69c2;
+}
+
+a.n-anchor:hover {
+  color: #1d69c2;
+  border-color: #1d69c2;
+}
+
+a.big-button-tabs {
+  background-color: #e0ebfc;
+  padding: 15px 0px;
+  text-align: center;
+  border-radius: 12px;
+  min-width: 220px;
+  display: block;
+  color: #000;
+}
+
+a.big-button-tabs.active {
+  color: #fff;
+  background-color: #023365;
+}
+
+a.big-button-tabs:hover {
+  color: #fff;
+  background-color: #023365;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.n-blue-btn {
+  background-color: #023365;
+}
+
+.n-blue-btn:hover {
+  background-color: #015eb3;
+}
+
+/*progress styles*/
+.progress {
+  background-color: #e0ebfc;
+  border-radius: 0px;
+  margin-bottom: 0px;
+  border-radius: 2px;
+}
+
+.progress-bar {
+  background-color: #00c0c0;
+  box-shadow: none;
+  border-radius: 2px;
+}
+
+.progress-point {
+  background-color: #e0ebfc;
+  color: #000;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  padding: 3px 9px 3px 8px;
+}
+
+.progress-point.active {
+  background-color: #00c0c0;
+  color: #ffffff;
+}
+
+.progress p {
+  font-size: smaller;
+  padding-top: 5px;
+}
+
+/*calculator styles*/
+$calculator-color: #023365;
+
+.calculator {
+  background-color: #e0ebfc;
+  border-radius: 0px;
+  margin-bottom: 0px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.calculator-bar {
+  background-color: $calculator-color;
+  box-shadow: none;
+  border-radius: 2px;
+  height: 100%;
+}
+
+.calculator-point {
+  background-color: $calculator-color;
+  color: #000;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  padding: 3px 9px 3px 8px;
+}
+
+.calculator-slider {
+  .ngx-slider {
+    margin-top: 0px;
+    .ngx-slider-pointer {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      top: -11px;
+    }
+    .ngx-slider-pointer,
+    .ngx-slider-pointer:after,
+    .ngx-slider-pointer:hover:after {
+      background-color: $calculator-color;
+    }
+    .ngx-slider-pointer.ngx-slider-active:after {
+      background-color: $calculator-color;
+    }
+    .ngx-slider-selection {
+      color: $calculator-color;
+      background-color: $calculator-color;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .flex-container {
+    display: inherit;
+  }
+
+  .body-content {
+    padding: 20px;
+  }
+
+  .navigation .content-position {
+    padding: 0px 20px;
+  }
+
+  .progress p {
+    display: none;
+  }
+}
+
+.dropdown-menu {
+  display: block;
+}
+
+.big-link {
+  color: #000;
+  border-bottom: 3px solid #1d69c2;
+  width: auto;
+  display: table;
+}
+
+.big-link:hover {
+  border-bottom-color: #000;
+  color: #000;
+  text-decoration: none;
+}
+
+.big-link:focus {
+  outline: none;
+  color: #000;
+  text-decoration: none;
+}
+
+.remove-bootstrap-gutter {
+  padding-left: 0px !important; //Remove the -15px from col-xs-...
+}
+
+.task-toggle-expanded {
+  background-color: #034480;
+  color: white;
+  padding-top: 10px;
+  cursor: pointer;
+}
+
+.task-toggle-contracted {
+  background-color: transparent;
+  color: black;
+  border-top: solid 1px black;
+  border-bottom: solid 1px black;
+  padding-top: 10px;
+  cursor: pointer;
+}
+
+.task-toggle-list {
+  border-bottom: solid 1px black;
+}
+
+.task-toggle-contracted:hover {
+  background-color: #034480;
+  color: white;
+}
+
+.task-toggle {
+  .task-toggle-content {
+    padding-bottom: 20px;
+    margin-top: 1px;
+  }
+  .task-toggle-header-row {
+    display: flex;
+    flex-direction: row;
+    .task-toggle-icon {
+      flex-basis: content;
+      min-width: 50px;
+      padding-left: 15px;
+    }
+    .task-toggle-header-text {
+      flex-grow: 1;
+    }
+    .task-toggle-openclose {
+      flex-basis: content;
+      padding-right: 15px;
+    }
+  }
+}
+
+.envelope-icon {
+  display: initial;
+  background-color: #e0ebfc;
+  color: #034480;
+  padding: 4px;
+  border-radius: 12px;
+  position: relative;
+  padding: 3px 5px 2px 5px;
+}
+
+.envelope-icon .unread-message {
+  position: absolute;
+  background-color: #ffccd9;
+  padding: 2px 4px 1px 4px;
+  border-radius: 7px;
+  font-size: 12px;
+  line-height: 12px;
+  color: #d4496a;
+  font-weight: bold;
+  top: -3px;
+  right: -7px;
+}
+
+.completed-task-list {
+  border-bottom: solid 1px black;
+  .completed-task {
+    padding-top: 10px;
+    border-top: solid 1px black;
+  }
+}
+
+.alert-icon {
+  display: initial;
+  background-color: #ffccd9;
+  color: #d4496a;
+  padding: 4px;
+  border-radius: 10px;
+  position: relative;
+  padding: 1px 8px;
+  font-weight: bold;
+}
+
+.table tbody > tr > td {
+  border-color: #000;
+  border-top: 0px;
+}
+
+.table tbody > tr:first-child > td {
+  border-top: 1px solid #000;
+}
+
+.navigation {
+  position: relative;
+  z-index: 1001;
+}
+
+.navbar-nav {
+  /* Overrides a media query at 768 that puts in margin 7.5px -15px which causes the menu to push away the content*/
+  margin: auto;
+}
+
+.navbar-nav > li > a {
+  margin-top: 8px;
+}
+
+/*desktop menu styles*/
+
+.desktop-menu {
+  background-color: #fff;
+  height: 100vh;
+  width: 300px;
+  margin-right: 2vw;
+}
+
+.menu-list ul {
+  list-style: none;
+}
+
+.menu-list ul li {
+  padding-bottom: 20px;
+}
+
+.menu-list ul li a {
+  color: #000;
+}
+
+.menu-list ul li a:hover,
+.menu-list ul li a.active {
+  color: #08447f;
+  font-weight: bold;
+}
+
+/*mobil menu styles*/
+
+.mobil-menu {
+  display: none;
+}
+
+.dropdown-menu {
+  font-size: 16px;
+  border-radius: 10px;
+  border: 0px;
+}
+
+.dropdown-menu > li > a {
+  padding: 10px 40px;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: white;
+  background-color: #034480;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: white;
+  background-color: #034480;
+}
+
+/*flex layout*/
+
+.left {
+  flex-grow: 1;
+}
+
+.right {
+  flex-grow: 2;
+}
+
+.flex-content-area {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.content-area {
+  width: 1000px;
+  overflow-x: hidden;
+}
+
+@media screen and (max-width: 860px) {
+  .desktop-menu {
+    display: none;
+  }
+
+  .content-area {
+    padding: 0 20px;
+  }
+
+  .navbar-nav > li {
+    float: left;
+  }
+  .navbar-right .dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+
+  .mobil-menu {
+    display: block;
+  }
+
+  .hide-on-mobile {
+    display: none;
+  }
+}

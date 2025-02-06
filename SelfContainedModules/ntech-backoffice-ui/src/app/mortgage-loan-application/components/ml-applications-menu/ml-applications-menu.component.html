@@ -1,0 +1,25 @@
+<div *ngIf="currentTabName">
+  <div class="row">
+    <div class="col-xs-2">
+      <div class="custom-submenu">
+        <ul class="nav nav-pills nav-stacked">
+          <li
+            [ngClass]="getNavPillsClass('applicationsList')"
+            [routerLink]="['/mortgage-loan-application/applications/']"
+          >
+            <a>Applications</a>
+          </li>
+          <li
+            [ngClass]="getNavPillsClass('applicationsSearch')"
+            [routerLink]="['/mortgage-loan-application/search/']"
+          >
+            <a>Search</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-10">
+      <ng-content select="[tab-content]"></ng-content>
+    </div>
+  </div>
+</div>

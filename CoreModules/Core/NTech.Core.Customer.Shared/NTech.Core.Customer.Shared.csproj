@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Resources\translations-en.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\translations-en.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Inferno" Version="1.6.4" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
+		<PackageReference Include="Phonix" Version="1.0.2" />
+		<PackageReference Include="libphonenumber-csharp" Version="8.12.17" />
+		<PackageReference Include="CommonMark.NET" Version="0.15.1" />
+		<PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\NTech.Banking.Shared\NTech.Banking.Shared.csproj" />
+		<ProjectReference Include="..\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj" />
+	</ItemGroup>
+
+</Project>

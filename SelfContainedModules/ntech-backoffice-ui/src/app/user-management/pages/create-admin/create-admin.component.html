@@ -1,0 +1,102 @@
+<div *ngIf="m">
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <div class="editblock">
+        <form [formGroup]="m.form.form">
+          <div class="form-horizontal">
+            <div
+              class="form-group"
+              [ngClass]="{ 'has-error': m.form.hasError('userId') }"
+            >
+              <label class="control-label col-sm-6" for="selectedUser"
+                >New Admin user</label
+              >
+              <div class="col-sm-4">
+                <select class="form-control" formControlName="userId">
+                  <option value=""></option>
+                  <option
+                    *ngFor="let u of m.candidateUsers"
+                    [value]="u.Id.toString()"
+                  >
+                    {{ u.Name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div
+              class="form-group"
+              [ngClass]="{ 'has-error': m.form.hasError('startDate') }"
+            >
+              <label class="control-label col-sm-6" for="startDate"
+                >Start date</label
+              >
+              <div class="col-sm-4">
+                <input
+                  type="text"
+                  name="startDate"
+                  class="form-control"
+                  formControlName="startDate"
+                  placeholder="YYYY-MM-DD"
+                />
+              </div>
+            </div>
+            <div
+              class="form-group"
+              [ngClass]="{ 'has-error': m.form.hasError('endDate') }"
+            >
+              <label class="control-label col-sm-6" for="endDate"
+                >End date</label
+              >
+              <div class="col-sm-4">
+                <input
+                  type="text"
+                  name="endDate"
+                  class="form-control"
+                  formControlName="endDate"
+                  placeholder="YYYY-MM-DD"
+                />
+              </div>
+            </div>
+            <div
+              class="form-group"
+              [ngClass]="{ 'has-error': m.form.hasError('product') }"
+            >
+              <label class="control-label col-sm-6" for="product"
+                >Product</label
+              >
+              <div class="col-sm-4">
+                <select
+                  class="form-control"
+                  name="product"
+                  formControlName="product"
+                >
+                  <option value=""></option>
+                  <option *ngFor="let p of m.products" [value]="p.v">
+                    {{ p.n }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div
+              class="form-group has-error"
+              *ngIf="m?.form?.form?.errors?.invalidDateCombination"
+            >
+              <label class="control-label col-sm-10"
+                >Start date must be before end date</label
+              >
+            </div>
+          </div>
+          <div class="text-center pt-2">
+            <button
+              class="n-main-btn n-green-btn"
+              [disabled]="m.form.invalid()"
+              (click)="addAdminMembership($event)"
+            >
+              Add admin membership
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

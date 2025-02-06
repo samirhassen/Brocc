@@ -1,0 +1,59 @@
+﻿.comma:not(:first-child):before {
+    content: ", ";
+}
+
+.text-ntech-inactive {
+    color: darkgray;
+}
+
+.text-ntech-inactive .ntech-status-icon  {
+    display: none
+}
+
+/* begin test functions corner popup */
+.frame {
+    background-color: #fff;
+    padding: 20px 30px 30px 30px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.30);
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.30);
+}
+
+.popup-position {
+    position: fixed;
+    bottom: 60px;
+    right: 5%;
+}
+
+.toned-down {
+    border-color: #efefef;
+    color: #efefef;
+}
+/* end test functions corner popup */
+
+.iframe-container {
+    overflow: hidden;
+    /* Calculated from the aspect ration of the content (in case of 16:9 it is 9/16= 0.5625) */
+    padding-top: 56.25%;
+    position: relative;
+}
+
+    .iframe-container iframe {
+        border: 0;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+.the-icon {
+    display: initial;
+    background-color: #e0ebfc;
+    color: #1d69c4;
+    border-radius: 12px;
+    position: relative;
+    padding: 3px 5px 2px 5px;
+    margin-right: 20px;
+}

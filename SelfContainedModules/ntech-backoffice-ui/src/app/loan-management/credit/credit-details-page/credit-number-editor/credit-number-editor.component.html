@@ -1,0 +1,50 @@
+<div *ngIf="m">
+  <div class="form-group" *ngIf="m.isMissingCurrentValue && !m.isEditing">
+    <label class="control-label col-xs-4">{{ initialData.labelText }}</label>
+    <div class="col-xs-8">
+      <a class="n-icon-btn n-blue-btn" (click)="beginEdit($event)"
+        ><span class="glyphicon glyphicon-plus"></span
+      ></a>
+    </div>
+  </div>
+  <form [formGroup]="m.form.form">
+    <div
+      class="form-group"
+      [ngClass]="{ 'has-error': m.form.invalid() && m.form.form.dirty }"
+      *ngIf="m.isEditing"
+    >
+      <label class="control-label col-xs-4">{{ initialData.labelText }}</label>
+      <div class="col-xs-5">
+        <input
+          type="text"
+          autocomplete="off"
+          class="form-control"
+          formControlName="editedValue"
+        />
+      </div>
+      <div class="col-xs-3">
+        <button class="n-icon-btn n-white-btn" (click)="cancelEdit($event)">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <button
+          class="n-icon-btn n-green-btn"
+          (click)="commitEdit($event)"
+          [disabled]="m.form.invalid()"
+        >
+          <span class="glyphicon glyphicon-ok"></span>
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="form-group" *ngIf="!m.isMissingCurrentValue && !m.isEditing">
+    <label class="control-label col-xs-4">{{ initialData.labelText }}</label>
+    <div class="col-xs-5">
+      <p class="form-control-static">{{ m.currentValue | number: "1.0-2" }}</p>
+    </div>
+    <div class="col-xs-3">
+      <button class="n-icon-btn n-blue-btn" (click)="beginEdit($event)">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+    </div>
+  </div>
+</div>

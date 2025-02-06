@@ -1,0 +1,16 @@
+﻿#Simple key-value translations. If you need multiline translations use Translations.xml
+companyLoan.listName.CreditCheck_Initial=Pending creditcheck
+companyLoan.listName.AdditionalQuestions_Initial=Pending additional questions
+companyLoan.listName.CompanyLoanDocumentCheck_Initial=Pending documents
+companyLoan.listName.CompanyLoanCollateralCheck_Initial=Pending collateral
+companyLoan.listName.CompanyLoanAuthorizedSignatoryCheck_Initial=Pending authorized signatory
+companyLoan.listName.CompanyLoanKycCheck_Initial=Pending KYC
+companyLoan.listName.Approval_Initial=Pending approval
+companyLoan.listName.CompanyLoanFraudCheck_Initial=Pending fraud
+companyLoan.listName.CompanyLoanAgreement_Initial=Pending agreement
+companyloan.signatureRole.companyLoanCollateral=Collateral
+companyloan.signatureRole.companyLoanAuthorizedSignatory=Authorized signatory
+enum.bankAccountNumberTypeCode.IBANFi=IBAN
+enum.bankAccountNumberTypeCode.BankAccountSe=Regular bankaccount
+enum.bankAccountNumberTypeCode.BankGiroSe=Bankgiro account
+enum.bankAccountNumberTypeCode.PlusGiroSe=Plusgiro account

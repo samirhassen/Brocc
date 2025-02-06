@@ -1,0 +1,19 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="simple-form.html">
+    <form novalidate name="{{$ctrl.formName}}">
+        <div ng-switch="i.itemType" ng-repeat="i in $ctrl.items()">
+            <div class="form-group" ng-switch-when="input">
+                <label>{{i.labelText}}</label>
+                <input type="text" class="form-control" ng-model="$ctrl.initialData.modelBase[i.modelPropertyName]" ng-required="i.required" autocomplete="off">
+            </div>
+            <div class="form-group" ng-switch-when="textview">
+                <label>{{i.labelText}}</label>
+                <p class="form-control-static copyable">{{$ctrl.initialData.modelBase[i.modelPropertyName]}}</p>
+            </div>
+            <button class="n-main-btn" ng-class="{ 'n-blue-btn' : i.buttonType === 'defaultButton', 'n-green-btn' : i.buttonType === 'acceptButton' }" ng-click="$ctrl.onClick(i)" ng-switch-when="button" ng-disabled="$ctrl.isFormInvalid()">{{i.labelText}}</button>           
+        </div>
+    </form>
+</script>

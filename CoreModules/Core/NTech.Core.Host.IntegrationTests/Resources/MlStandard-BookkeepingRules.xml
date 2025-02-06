@@ -1,0 +1,286 @@
+<BookkeepingRules>
+    <CompanyName>Ml Standard AB</CompanyName>
+    <BusinessEvent>
+        <BusinessEventName>NewMortgageLoan</BusinessEventName>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Bankkonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>InitialFeeDrawnFromLoanAmount</LedgerAccount>
+            <Connections>Credit</Connections>
+            <Accounts>__A_Bankkonto__,__A_Uppläggningsavgifter__</Accounts>
+        </Booking>
+    </BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>NewOutgoingPaymentFile</BusinessEventName>
+        <Booking>
+            <LedgerAccount>ShouldBePaidToCustomer</LedgerAccount>
+            <Connections>Credit,OutgoingPayment</Connections>
+            <Accounts>__A_Bankkonto__,__A_Interimskonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>ShouldBePaidToCustomer</LedgerAccount>
+            <Connections>OutgoingPayment</Connections>
+            <Accounts>__A_Bankkonto__,__A_Interimskonto__</Accounts>
+        </Booking>
+    </BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>NewManualIncomingPaymentBatch</BusinessEventName>
+        <Booking>
+            <LedgerAccount>UnplacedPayment</LedgerAccount>
+            <Connections>IncomingPayment</Connections>
+            <Accounts>__A_Bankkonto__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+    </BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>NewIncomingPaymentFile</BusinessEventName>
+        <Booking>
+            <LedgerAccount>InterestDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Bankkonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>InterestDebt</LedgerAccount>
+            <Connections>Credit,IncomingPayment</Connections>
+            <Accounts>__A_Ränteintäkter__,__A_Bankkonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>SwedishRseDebt</LedgerAccount>
+            <Connections>Credit,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Bankkonto__</Accounts>
+        </Booking>        
+        <Booking>
+            <LedgerAccount>NotificationFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Bankkonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>ReminderFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Bankkonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Bankkonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit,IncomingPayment</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Bankkonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit,Writeoff</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Konstaterade förluster kundforingar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>UnplacedPayment</LedgerAccount>
+            <Connections>IncomingPayment</Connections>
+            <Accounts>__A_Bankkonto__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+		<Booking>
+			<LedgerAccount>NotificationFeeDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Avigavgifter__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>InterestDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Ränteintäkter__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>SwedishRseDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Ränteintäkter RSE__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>ReminderFeeDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Påminnelseavgifter__</Accounts>
+		</Booking>
+	</BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>Repayment</BusinessEventName>
+        <Booking>
+            <LedgerAccount>ShouldBePaidToCustomer</LedgerAccount>
+            <Connections>Credit,OutgoingPayment</Connections>
+            <Accounts>__A_Oplacerade inbetalningar__,__A_Interimskonto__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>ShouldBePaidToCustomer</LedgerAccount>
+            <Connections>OutgoingPayment</Connections>
+            <Accounts>__A_Oplacerade inbetalningar__,__A_Interimskonto__</Accounts>
+        </Booking>
+    </BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>PlacedUnplacedIncomingPayment</BusinessEventName>
+        <Booking>
+            <LedgerAccount>InterestDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>InterestDebt</LedgerAccount>
+            <Connections>Credit,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>SwedishRseDebt</LedgerAccount>
+            <Connections>Credit,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>                
+        <Booking>
+            <LedgerAccount>NotificationFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>ReminderFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit,Notification,IncomingPayment</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit,IncomingPayment</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit,Writeoff</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Konstaterade förluster kundforingar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>UnplacedPayment</LedgerAccount>
+            <Connections>IncomingPayment</Connections>
+            <Accounts>__A_Bankkonto__,__A_Oplacerade inbetalningar__</Accounts>
+        </Booking>
+		<Booking>
+			<LedgerAccount>NotificationFeeDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Avigavgifter__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>InterestDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Ränteintäkter__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>SwedishRseDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Ränteintäkter RSE__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>ReminderFeeDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Påminnelseavgifter__</Accounts>
+		</Booking>		
+    </BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>CreditCorrectAndClose</BusinessEventName>
+        <Booking>
+            <LedgerAccount>CapitalDebt</LedgerAccount>
+            <Connections>Credit,Writeoff</Connections>
+            <Accounts>__A_Bolån fordringar__,__A_Konstaterade förluster kundforingar__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>NotificationFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification,Writeoff</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Avigavgifter__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>InterestDebt</LedgerAccount>
+            <Connections>Credit,Notification,Writeoff</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Ränteintäkter__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>SwedishRseDebt</LedgerAccount>
+            <Connections>Credit,Notification,Writeoff</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Ränteintäkter RSE__</Accounts>
+        </Booking>
+		<Booking>
+			<LedgerAccount>ReminderFeeDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Påminnelseavgifter__</Accounts>
+		</Booking>
+	</BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>NewNotification</BusinessEventName>
+        <Booking>
+            <LedgerAccount>NotificationFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Avigavgifter__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>InterestDebt</LedgerAccount>
+            <Connections>Credit,Notification</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Ränteintäkter__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>SwedishRseDebt</LedgerAccount>
+            <Connections>Credit,Notification</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Ränteintäkter RSE__</Accounts>
+        </Booking>        
+    </BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>NewReminder</BusinessEventName>
+        <Booking>
+            <LedgerAccount>ReminderFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Påminnelseavgifter__</Accounts>
+        </Booking>
+    </BusinessEvent>
+    <BusinessEvent>
+        <BusinessEventName>NotificationWriteOff</BusinessEventName>
+        <Booking>
+            <LedgerAccount>NotificationFeeDebt</LedgerAccount>
+            <Connections>Credit,Notification,Writeoff</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Avigavgifter__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>InterestDebt</LedgerAccount>
+            <Connections>Credit,Notification,Writeoff</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Ränteintäkter__</Accounts>
+        </Booking>
+        <Booking>
+            <LedgerAccount>SwedishRseDebt</LedgerAccount>
+            <Connections>Credit,Notification,Writeoff</Connections>
+            <Accounts>__A_Kundfordringar__,__A_Ränteintäkter RSE__</Accounts>
+        </Booking>
+    </BusinessEvent>
+	<BusinessEvent>
+		<BusinessEventName>CreditDebtCollectionExport</BusinessEventName>
+		<Booking>
+			<LedgerAccount>CapitalDebt</LedgerAccount>
+			<Connections>Credit,Writeoff</Connections>
+			<Accounts>__A_Bolån fordringar__,__A_Konstaterade förluster kundforingar__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>NotificationFeeDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Avigavgifter__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>InterestDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Ränteintäkter__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>SwedishRseDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Ränteintäkter RSE__</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>ReminderFeeDebt</LedgerAccount>
+			<Connections>Credit,Notification,Writeoff</Connections>
+			<Accounts>__A_Kundfordringar__,__A_Påminnelseavgifter__</Accounts>
+		</Booking>
+	</BusinessEvent>
+</BookkeepingRules>

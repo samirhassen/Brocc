@@ -1,0 +1,69 @@
+<div *ngIf="m">
+  <div class="editblock">
+    <div class="col-xs-12">
+      <div class="col-xs-6">
+        <label>New owner</label>
+        <select
+          [(ngModel)]="m.newOwner"
+          class="form-control"
+          (change)="clearPreview($event)"
+        >
+          <option value="[none]"></option>
+          <option
+            *ngFor="let owner of m.availableLoanOwnerOptions"
+            value="{{ owner }}"
+          >
+            {{ owner }}
+          </option>
+        </select>
+      </div>
+      <div class="col-xs-6">
+        <label>Loan nr</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="m.loansString"
+          (input)="clearPreview($event)"
+        />
+      </div>
+    </div>
+
+    <div class="pt-2 text-center">
+      <button
+        class="mt-2 n-direct-btn n-purple-btn"
+        (click)="calculatePreview($event)"
+        [disabled]="isCalculateDisabled()"
+      >
+        Calculate
+      </button>
+    </div>
+  </div>
+  <br />
+  <div class="frame" *ngIf="m.preview">
+    <h2 class="header-light pt-3">Summary</h2>
+    <table class="table lined-table">
+      <tbody>
+        <tr>
+          <td class="col-xs-6">New owner</td>
+          <td class="col-xs-6 text-left">
+            {{ m.preview?.newOwner }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-6">Nr of loans</td>
+          <td class="col-xs-6 text-left">
+            {{ m.preview?.nrOfLoans }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pt-2 text-center">
+      <button
+        class="mt-2 n-direct-btn n-green-btn"
+        (click)="commitUpdate($event)"
+      >
+        Update owner
+      </button>
+    </div>
+  </div>
+</div>

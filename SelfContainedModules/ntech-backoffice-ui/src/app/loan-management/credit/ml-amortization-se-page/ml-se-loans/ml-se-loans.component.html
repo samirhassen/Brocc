@@ -1,0 +1,130 @@
+<div class="row mt-2" *ngIf="m">
+    <div class="frame editblock">
+        <table class="table" *ngIf="!m.edit">
+            <thead>
+                <tr class="action-row" *ngIf="m.isEditAllowed">
+                    <th colspan="4">
+                        <button *ngIf="!m.edit" (click)="beginEditExceptions($event)"
+                            class="n-icon-btn n-blue-btn pull-right">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                    </th>
+                </tr>
+                <ng-container *ngTemplateOutlet="headerRow"></ng-container>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let loan of m.loans">
+                    <tr>
+                        <td>{{loan.creditNr}}</td>
+                        <td class="text-right">{{loan.currentCapitalBalanceAmount | currency}}</td>
+                        <td>{{loan.ruleText}}</td>
+                        <td class="text-right">{{loan.actualFixedMonthlyPayment | currency}}</td>
+                    </tr>
+                    <tr class="exception-row" *ngIf="loan.amortizationException">
+                        <td colspan="2" class="text-right">Undantag till</td>
+                        <td><b>{{loan.amortizationException.untilDate | date: 'shortDate'}}</b></td>
+                        <td></td>
+                    </tr>
+                    <tr class="exception-row" *ngIf="loan.amortizationException">
+                        <td colspan="2" class="text-right">Belopp</td>
+                        <td><b>{{loan.amortizationException.amortizationAmount | currency}}</b></td>
+                        <td></td>
+                    </tr>
+                    <tr class="exception-row" *ngIf="loan.amortizationException">
+                        <td colspan="2" class="text-right">Orsak</td>
+                        <td><b><span *ngFor="let reason of loan.amortizationException.reasons; let isFirst = first">{{(isFirst
+                                    ? '' : ', ') + reason}}</span></b></td>
+                        <td></td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <form *ngIf="m.edit" [formGroup]="m.edit?.form?.form">
+            <table class="table">
+                <thead>
+                    <tr class="action-row">
+                        <th colspan="4">
+                            <button (click)="commitEditExceptions($event)" [disabled]="m.edit.form.invalid()"
+                                class="n-icon-btn n-green-btn pull-right">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </button>
+                            <button (click)="cancelEditExceptions($event)" class="n-icon-btn n-white-btn  pull-right"
+                                style="margin-right: 5px">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </th>
+                    </tr>
+                    <ng-container *ngTemplateOutlet="headerRow"></ng-container>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let loan of m.loans" [formGroupName]="loan.creditNr">
+                        <tr>
+                            <td>{{loan.creditNr}}</td>
+                            <td class="text-right">{{loan.currentCapitalBalanceAmount | currency}}</td>
+                            <td>{{loan.ruleText}}</td>
+                            <td class="text-right">{{loan.actualFixedMonthlyPayment | currency}}</td>
+                        </tr>
+                        <tr *ngIf="!m.edit.form.getFormGroupValue(loan.creditNr, 'hasException')">
+                            <td colspan="4">
+                                <button (click)="addException(loan, $event)" class="n-direct-btn n-green-btn">
+                                    Lägg till undantag <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="exception-row" *ngIf="m.edit.form.getFormGroupValue(loan.creditNr, 'hasException')">
+                            <td colspan="2" class="text-right">Undantag till</td>
+                            <td [class.has-error]="hasError(loan, 'untilDate')"><input type="text" class="form-control"
+                                    formControlName="untilDate" /></td>
+                            <td>
+                                <button (click)="removeException(loan.creditNr, $event)"
+                                    class="n-icon-btn n-red-btn pull-right">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="exception-row" *ngIf="m.edit.form.getFormGroupValue(loan.creditNr, 'hasException')">
+                            <td colspan="2" class="text-right">Belopp</td>
+                            <td [class.has-error]="hasError(loan, 'amortizationAmount')"><input type="text"
+                                    class="form-control" formControlName="amortizationAmount" /></td>
+                            <td></td>
+                        </tr>
+                        <tr class="exception-row" *ngIf="m.edit.form.getFormGroupValue(loan.creditNr, 'hasException')">
+                            <td colspan="2" class="text-right" style="vertical-align: top">Orsak</td>
+                            <td style="vertical-align: top">
+                                <div class="checkbox"
+                                    *ngFor="let reason of m.edit.reasonsPerGroup[loan.creditNr]; let isFirst = first"
+                                    [ngClass]="{ 'has-error': hasError(loan, reason.controlName), 'mt-0': isFirst }">
+                                    <label>
+                                        <input type="checkbox" [formControlName]="reason.controlName" />
+                                        {{reason.reasonName}}
+                                    </label>
+                                </div>
+                                <div class="checkbox" [class.has-error]="hasError(loan, 'isOtherActive')">
+                                    <label>
+                                        <input type="checkbox" formControlName="isOtherActive" />
+                                        Annan orsak
+                                    </label>
+                                </div>
+                                <div *ngIf="m.edit.form.getFormGroupValue(loan.creditNr, 'isOtherActive')"
+                                    style="display: flex">
+                                    <input [class.has-error]="hasError(loan, 'otherText')" type="text"
+                                        class="form-control" formControlName="otherText" style="flex:1" />
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+<ng-template #headerRow>
+    <tr class="header-row">
+        <th class="col-xs-2">Lån</th>
+        <th class="col-xs-3 text-right">Nuvarande skuld</th>
+        <th class="col-xs-5">Regelverk</th>
+        <th class="col-xs-2 text-right">Månadsamortering</th>
+    </tr>
+</ng-template>

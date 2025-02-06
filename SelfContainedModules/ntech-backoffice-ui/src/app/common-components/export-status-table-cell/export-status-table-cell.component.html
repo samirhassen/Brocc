@@ -1,0 +1,29 @@
+<ng-container *ngIf="m">
+  <span
+    class="glyphicon"
+    [ngClass]="{
+      'glyphicon-exclamation-sign': m.status === 'Warning',
+      'glyphicon-ok': m.status === 'Success',
+      'glyphicon-remove': m.status === 'Error'
+    }"
+  ></span>
+  <span *ngIf="m.warnings && m.warnings.length > 0">
+    (<span *ngFor="let w of m.warnings" class="comma">{{ w }}</span
+    >)
+  </span>
+  <span *ngIf="m.errors && m.errors.length > 0">
+    (<span *ngFor="let e of m.errors" class="comma">{{ e }}</span
+    >)
+  </span>
+  <span *ngIf="m.deliveredToProfileName && !m.deliveredToProfileNames">{{
+    m.deliveredToProfileName
+  }}</span>
+  <span
+    *ngIf="m.deliveredToProfileNames && m.deliveredToProfileNames.length > 0"
+  >
+    <span *ngFor="let n of m.deliveredToProfileNames" class="comma">{{
+      n
+    }}</span>
+  </span>
+  <span *ngIf="!m.deliveredToProfileName">Not delivered</span>
+</ng-container>

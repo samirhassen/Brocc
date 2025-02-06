@@ -1,0 +1,73 @@
+﻿<div class="page">
+    <div>            
+        <div class="header">
+            <h1>Villkorsändring - bolån</h1>
+	    <p>{{agreementDate}}</p>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="content">
+        <div class="area">
+            <div class="column1 blackborder">
+                <h3>Kreditgivare</h3>
+                <p>{{documentClientData_name}}</p>
+                <p>Org.nr: {{documentClientData_orgnr}}</p>
+            </div>
+            <div class="column2 greenborder">
+                <h3>Låntagare</h3>
+                {{#customers}}
+                <div class="pb-1">                        
+                    <p>{{FullName}}, {{CivicRegNr}}</p>
+                    <p>{{StreetAddress}}, {{AreaAndZipcode}}</p>                        
+                </div>
+                {{/customers}}
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="area">
+                        
+            <h2 class="pt-3">Ombindning av lån</h2>
+            <table>
+                <tbody>
+		           <tr>
+			            <td>Lån</td>
+			            <td class="text-right">{{loanNumber}}</td>
+		            </tr>
+                    <tr>
+                        <td>Lånebelopp</td>
+                        <td class="text-right">{{loanAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Bindingstid</td>
+                        <td class="text-right">{{interestRebindMonthCount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Ränta</td>
+                        <td class="text-right">{{interestRate}} %</td>
+                    </tr>
+                    <tr>
+                        <td>Räntan bunden till</td>
+                        <td class="text-right">{{interestRateFixedUntil}}</td>
+                    </tr>
+                    <tr>
+                        <td>Amortering</td>
+                        <td class="text-right">{{amortizationAmount}} kr</td>
+                    </tr>                    
+                </tbody>
+            </table>
+
+            <p class="pt-3">
+                Räntan skall ses som indikativ och kan komma att ändras fram till och med villkorsändringsdagen. En eventuell förändring av referensräntan kommer att påverka ränteerbjudandet. 
+                I de fall en höjning eller säkning av referensränta ske kommer erbjudandet höjas/sänkas motsvarande på respektive löptid. Alla räntebindningstider är ungefärliga, referensräntan fastställs först på villkorsändringsdagen.
+            </p>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="footer">
+    <p>Postadress: {{documentClientData_footerAddress}}</p>
+</div>

@@ -1,0 +1,35 @@
+﻿@{
+    var n = (ViewData.Eval("n") ?? "").ToString();
+}
+<div class="text-center pb-5" ng-show="dc.editModel">
+    <p style="font-weight: bold;">{{state.ActiveState.DocumentUploadData.Applicant@(n).FirstName}} ({{state.ActiveState.DocumentUploadData.Applicant@(n).CivicRegNr}})</p>
+    <br />
+    <div class="pb-5">
+        <form novalidate name="fileuploadform@(n)" id="fileuploadform@(n)">
+            <button class="main-btn main-btn-white white-btn" ng-click="dc.chooseFile(@(n), $event)" translate="anskokan_dc_valjfil">Välj fil</button>
+            <span ng-if="c.applicant@(n).attachedFileName" class="input-group-addon">{{c.applicant@(n).attachedFileName}}</span>
+            <input type="file" id="fileupload@(n)" name="fileupload@(n)" style="display:none" />
+        </form>
+    </div>
+
+    <div class="documents" ng-show="dc.editModel">
+        <table class="document">
+            <tr ng-repeat="f in dc.editModel.applicant@(n).files" ng-hide="f.isPendingRemoval">
+                <td>{{f.filename}}</td>
+                <td class="text-right"><button ng-click="dc.removeAttachedFile(f, $event)" class="direct-btn white-btn">X</button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="text-center pb-5" ng-hide="dc.editModel">
+    <p style="font-weight: bold;">{{state.ActiveState.DocumentUploadData.Applicant@(n).FirstName}} ({{state.ActiveState.DocumentUploadData.Applicant@(n).CivicRegNr}})</p>
+    <br />
+    <p ng-show="state.ActiveState.DocumentUploadData.Applicant@(n).AttachedFiles.length == 0" translate="ansokan_dc_bifdok">Det finns inga bifogade dokument.</p>
+    <div class="documents">
+        <table class="document">
+            <tr ng-repeat="f in state.ActiveState.DocumentUploadData.Applicant@(n).AttachedFiles">
+                <td colspan="2">{{f.FileName}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

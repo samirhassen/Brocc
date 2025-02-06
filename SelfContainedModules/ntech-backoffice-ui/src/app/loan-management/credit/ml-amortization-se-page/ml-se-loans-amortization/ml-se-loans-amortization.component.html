@@ -1,0 +1,51 @@
+<div class="row mt-2" *ngIf="m">
+    <div class="editblock">
+        <div class="row">
+            <div class="col-xs-10" [ngClass]="{ 'highlighted': m.isKeepExistingRuleCodeAllowed && (m.keepExistingRuleCode ? m.isKeepExistingRuleCodeChosen : !m.isKeepExistingRuleCodeChosen) }">
+                <h2>{{m.keepExistingRuleCode ? 'Amorteringsunderlag - utan omläggning' : 'Amorteringsunderlag - med omläggning'}}</h2>
+            </div>
+            <div class="col-xs-2 text-right">
+                <button *ngIf="m.isKeepExistingRuleCodeAllowed && (m.keepExistingRuleCode ? !m.isKeepExistingRuleCodeChosen : m.isKeepExistingRuleCodeChosen)" class="n-direct-btn n-green-btn"
+                    (click)="chooseRevaluationBasis(m.keepExistingRuleCode)">Välj</button>
+            </div>
+        </div>
+        <hr class="hr-section" />
+        <form *ngIf="m.edit" [formGroup]="m.edit?.form?.form">
+            <table class="table" >
+                <thead>
+                    <ng-container>
+                        <tr class="header-row">
+                            <th class="col-xs-1">Lån nr</th>
+                            <th class="col-xs-3 text-right">Aktuell kapitalskuld</th>
+                            <th class="col-xs-4">Regel</th>
+                            <th class="col-xs-2">Bindningstid</th>
+                            <th class="col-xs-2 text-right">Amortering</th>
+                        </tr>
+                    </ng-container>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let loan of m.loans" [formGroupName]="loan.creditNr">
+                        <tr [ngClass]="{ 'none': isSettledLoan(loan) }">
+                            <td>{{loan.creditNr}}</td>
+                            <td class="text-right">{{loan.currentCapitalBalanceAmount | currency}}</td>
+                            <td>{{loan.ruleText}}</td>
+                            <td>{{loan.interestBindMonthCount}} mån</td>
+                            <div [class.has-error]="hasError(loan, 'actualFixedMonthlyPayment')" *ngIf="showAmortizationInput(loan.isUsingAlternateRule)">
+                                <input type="text" class="form-control" formControlName="actualFixedMonthlyPayment" (change)="ChangeActualFixedMonthlyPayment()"  />
+                            </div>
+                            <td class="text-right" *ngIf="!showAmortizationInput(loan.isUsingAlternateRule)">{{ loan.actualFixedMonthlyPayment | currency }}</td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </form>
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-4 text-center">
+                <b>Min. total amortering: {{GetMinimumTotalAmortizationAmount(false) | currency}}</b>
+            </div>
+            <div class="col-sm-4 text-right">
+                <b>{{GetMinimumTotalAmortizationAmount(m.keepExistingRuleCode ? m.isKeepExistingRuleCodeChosen : !m.isKeepExistingRuleCodeChosen) | currency}}</b>
+            </div>
+        </div>
+    </div>
+</div>

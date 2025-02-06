@@ -1,0 +1,73 @@
+<div *ngIf="m">
+    <div class="row pb-3">
+        <div class="col-xs-8 col-sm-offset-2">
+            <h2 *ngIf="m.isSweden">Loan {{m.creditNr}}</h2>
+            <div class="frame">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-2 text-right">Capital debt</th>
+                            <th class="col-xs-4 text-right">{{m.annuityAmount !== null ? 'Annuity' : 'Fixed monthly amortization' }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-right">{{m.currentLoanAmount | currency}}</td>
+                            <td class="text-right">{{(m.annuityAmount !== null ? m.annuityAmount : m.currentFixedMonthlyCapitalPayment) | currency}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>      
+    </div>
+    <h2>
+        <span (click)="toggleAmortizationPlan($event)" class="glyphicon chevron-bg" [ngClass]="{ 'glyphicon-chevron-right' : !m.amortPlan,  'glyphicon-chevron-down' : m.amortPlan}"></span>
+        Amortization plan
+    </h2>
+    <hr class="hr-section custom-line mt-0" />
+    <div *ngIf="m.amortPlan">
+        <div class="amortizationhistory">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-1">Date</th>
+                        <th class="col-xs-1">Capital debt</th>
+                        <th class="col-xs-2 text-center"> </th>
+                        <th class="col-xs-2 text-right">Capital</th>
+                        <th class="col-xs-2 text-right">Interest</th>
+                        <th class="col-xs-2 text-right">Total amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let t of getAmortItems(false)">
+                        <td class="col-xs-1"> {{t.eventTransactionDate | date:'shortDate'}}</td>
+                        <td class="col-xs-1">{{t.capitalBefore | number:'1.0-2' }}</td>
+                        <td class="col-xs-2 text-center">{{getAmortizationItemDesc(t)}}</td>
+                        <td class="col-xs-2 text-right">{{t.capitalTransaction | number:'1.0-2'}}</td>
+                        <td class="col-xs-2 text-right">{{t.interestTransaction | number:'1.0-2'}}</td>
+                        <td class="col-xs-2 text-right">{{t.totalTransaction | number:'1.0-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="amortizationfuture">
+            <table class="table">
+                <tbody>
+                    <tr *ngFor="let t of getAmortItems(true)">
+                        <td class="col-xs-1"> {{t.eventTransactionDate | date:'shortDate'}}</td>
+                        <td class="col-xs-1">{{t.capitalBefore | number:'1.0-2' }}</td>
+                        <td class="col-xs-2 text-center">{{getAmortizationItemDesc(t)}} <span *ngIf="t.futureItemDueDate" style="font-size:x-small">({{t.futureItemDueDate | date:'shortDate'}})</span></td>
+                        <td class="col-xs-2 text-right">{{t.capitalTransaction | number:'1.0-2'}}</td>
+                        <td class="col-xs-2 text-right">{{t.interestTransaction | number:'1.0-2'}}</td>
+                        <td class="col-xs-2 text-right">{{t.totalTransaction | number:'1.0-2'}}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="col-xs-6 text-right"></th>
+                        <th class="col-xs-2 text-right">{{m.amortPlan.totalInterestAmount | number:'1.0-2'}}</th>
+                        <th class="col-xs-2 text-right"></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

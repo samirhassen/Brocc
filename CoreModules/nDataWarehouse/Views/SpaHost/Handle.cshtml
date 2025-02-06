@@ -1,0 +1,22 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html ng-app="app" ng-controller="spaHostCtr as c" ng-cloak>
+<head>
+    <meta charset="utf-8">
+    <title>{{c.title}}</title>
+    <link rel="stylesheet" href="~/Content/css/bundle-base">
+    <link rel="stylesheet" href="~/Content/css/bundle-magellan">
+    <link rel="stylesheet" href="~/Content/css/bundle-reports" >
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+</head>
+<body ng-view ng-csp="no-unsafe-eval">
+    @Html.Partial("Components")
+    @Scripts.Render("~/Content/js/bundle-spa-host")
+</body>    
+</html>

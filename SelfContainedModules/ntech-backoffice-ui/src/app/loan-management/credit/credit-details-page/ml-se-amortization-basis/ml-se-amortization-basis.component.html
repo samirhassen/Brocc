@@ -1,0 +1,14 @@
+<div class="frame" *ngIf="m">
+    <h2>Amorteringsgrund per {{m.balanceDate | date:'shortDate'}}</h2>
+    <h3>Objektet: {{m.propertyIdWithLabel}}</h3>
+    <ml-se-amortization-basis-loan [initialData]="m.currentBasis"></ml-se-amortization-basis-loan>
+    <div style="background-color: white;">
+        <toggle-block [initialData]="m.historyInitialData">
+            <ng-container *ngIf="m.historicalBasis">
+                <toggle-block *ngFor="let b of m.historicalBasis" [initialData]="{ headerText: b.transactionDate | date: 'shortDate', useTransparentBackground: true }">
+                    <ml-se-amortization-basis-loan [initialData]="b.basisData"></ml-se-amortization-basis-loan>
+                </toggle-block>
+            </ng-container>
+        </toggle-block>
+    </div>
+</div>

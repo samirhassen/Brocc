@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+
+
+</head>
+<body>
+
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+
+    <div class="page">
+        <div>            
+            <div class="header">
+                <h1>Amorteringsunderlag</h1>
+                <p>Utskriftsdatum {{printDate}}</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="content">
+            <div class="area blackborder pb-2">
+                <h3>Kreditgivare</h3>
+                <p>{{documentClientData_name}}</p>
+                <p>Org.nr: {{documentClientData_orgnr}}</p>
+            </div>
+            <div class="area">
+                <h2 class="pt-2">Kund</h2>
+                <table>
+                    <tbody>
+                        {{#customers}}
+                        <tr>
+                            <td>{{fullName}}</td>
+                            <td></td>
+                        </tr>
+                        {{/customers}}
+                    </tbody>
+                </table>
+                <h2 class="pt-2">Information om objektet</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Objekt</td>
+                            <td>{{objectName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Amorteringsgrundande värde</td>
+                            <td>{{amortizationBasisObjectValue}}</td>
+                        </tr>
+                        <tr>
+                            <td>Datum för amorteringsgrundande värde</td>
+                            <td>{{amortizationBasisDate}}</td>
+                        </tr>
+                        <tr>
+                            <td>Amorteringsgrundande skuld</td>
+                            <td>{{amortizationBasisLoanAmount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="pt-2">Låneinformation om objektet</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>1. Skuld som inte omfattas av amorteringskrav</td>
+                            <td>{{ruleNoneLoanAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>2. Aktuell skuld som omfattas av amorteringskrav</td>
+                            <td>{{ruleR201616LoanAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>3. Aktuell skuld som omfattas av skärpt amorteringskrav</td>
+                            <td>{{ruleR201732LoanAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>4. Varav skuld, enligt punkt 2 och 3 ovan, som omfattas av amorteringskrav enligt alternativregeln</td>
+                            <td>{{ruleAlternateLoanAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>5. Total amortering på objektet</td>
+                            <td>{{totalObjectMonthlyAmortizationAmount}}/mån</td>
+                        </tr>
+                        <tr>
+                            <td>6. Total amorteringskrav på objektet i banken <span class="text-right">- enligt huvudregel&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+                            <td>{{totalStandardObjectBankMonthlyAmortizationAmount}}/mån</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">- enligt alternativregel</td>
+                            <td>{{totalAlternateObjectBankMonthlyAmortizationAmount}}/mån</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="pt-3"><i>Denna blankett erhålls på grund av Finansinspektionens föreskrifter om amorteringskrav (FFFS 2016:16 och 2017:23)</i></p>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_footerAddress}}</p>
+    </div>
+
+    [[[include:definitions.html]]]
+</body>
+</html>

@@ -1,0 +1,43 @@
+﻿<div class="pt-2">
+    <h2>Let some time pass</h2>
+    <div style="max-width:500px">
+        <label>Scenario</label>
+        <select ng-disabled="jobId" ng-model="scenario" class="form-control">
+            <option value="">--Pick--</option>
+            @if (NEnv.IsCompanyLoansEnabled || NEnv.IsMortgageLoansEnabled)
+            {
+                if (!ViewBag.IsPerLoanDueDatesEnabled)
+                {
+                    <option value="OneMonthSimple">One month - with payments</option>
+                }
+                <option value="OneMonthSimpleSans">One month - no payments</option>
+                <option value="OneDaySimpleSans">One day - no payments</option>
+            }
+
+            @if (NEnv.IsUnsecuredLoansEnabled)
+            {
+                <option value="OneDaySimpleSans">Let one day pass - no payments</option>
+                <option value="OneMonthSimple">Let one month pass - with payments</option>
+                <option value="OneMonthSimpleSans">Let one month pass - no payments</option>
+            }
+
+            @if (NEnv.IsSavingsEnabled)
+            {
+                <option value="OneTimeCreateSavingsHistory">Create savings test data (BEWARE: slow and only works if there are no accounts already)</option>
+            }
+        </select>
+        <input type="text" class="form-control" ng-model="stopAtDate" placeholder="stop at date (YYYY-MM-DD)" style="margin-top:5px" />
+    </div>
+    <div ng-hide="scenario == 'AddCustomApplication'" style="margin-top:10px">
+        <button class="btn" ng-click="simulate()" ng-disabled="jobId">Run scenario</button>
+    </div>
+</div>
+<div class="pt-2" ng-show="jobId || simulateOneMonthLogItems">
+    <h2 ng-show="jobId">Working...</h2>
+    <h2 ng-hide="jobId">Done</h2>
+    <table class="table">
+        <tr ng-repeat="r in simulateOneMonthLogItems track by $index">
+            <td>{{r}}</td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,10 @@
+<mypages-shell [initialData]="m?.shellInitialData" *ngIf="m">
+  <div active-tab>
+    <div class="">
+      <h1 class="header-light pt-3">Översikt</h1>
+      <mypages-overview-loans
+        *ngIf="m.isStandardLoansActive"
+      ></mypages-overview-loans>
+    </div>
+  </div>
+</mypages-shell>

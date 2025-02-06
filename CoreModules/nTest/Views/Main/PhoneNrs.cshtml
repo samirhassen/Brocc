@@ -1,0 +1,75 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - PhoneNrs";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-phonenrs")
+    <script @Html.CspScriptNonce()>
+        var app = angular.module('app', []);
+        app
+            .controller('ctr', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+                $scope.countryCode = ntechClientCountry
+                $scope.parse = function (nr, evt) {
+                    if (evt) {
+                        evt.preventDefault()
+                    }
+                    $scope.result = ntech.libphonenumber.parsePhoneNr(nr, $scope.countryCode)
+                    if (!$scope.historicalResults) {
+                        $scope.historicalResults = []
+                    }
+                    $scope.historicalResults.unshift({ result: $scope.result, countryCode: $scope.countryCode })
+                }
+                $scope.showHistorical = function (r, evt) {
+                    if (evt) {
+                        evt.preventDefault()
+                    }
+                    $scope.phoneNrRaw = r.raw
+                    $scope.result = r
+                }
+                window.scope = $scope
+            }])
+    </script>
+}
+<div class="pb-2"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nTest"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+<div>
+    <div>
+        <h1>Phone nrs</h1>
+        <form class="form-horizontal col-sm-6">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Phone nr</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="phoneNrRaw" class="form-control" autocomplete="off" class="copyable" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Country code</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="countryCode" class="form-control" autocomplete="off" class="copyable" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <p class="form-control-static">
+                        <button class="btn btn-default" ng-click="parse(phoneNrRaw, $event)">Parse</button>
+                    </p>
+                </div>
+            </div>
+        </form>
+        <div class="col-sm-6">
+            <div ng-repeat="r in historicalResults" style="cursor:pointer;background-color:rgb(245, 245, 245);margin-bottom:5px;padding:3px" ng-click="showHistorical(r, $event)">
+                {{r.countryCode}} : {{r.result.raw}}
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div ng-show="result">
+        <h2>Raw result</h2>
+        <pre>{{result | json}}</pre>
+    </div>
+</div>

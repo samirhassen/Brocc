@@ -1,0 +1,51 @@
+﻿<!--preview av calulate-->
+<div class="row pb-3" ng-if="c.preview">
+    <div class="col-sm-offset-1 col-xs-10">
+        <div class="frame">
+            <div class="row pb-3">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">New interest</label>
+                            <p class="form-control-static col-xs-6">{{c.preview.newInterestRate | number:'2'}}%</p>
+                        </div>
+                        <div class="form-group" ng-if="!c.preview.isRegularChange">
+                            <label class="control-label col-xs-6">Existing accounts</label>
+                            <p class="form-control-static col-xs-6">{{c.preview.allAccountsDate.toDate() | date}}</p>
+                        </div>
+                        <div class="form-group" ng-if="!c.preview.isRegularChange">
+                            <label class="control-label col-xs-6">New accounts</label>
+                            <p class="form-control-static col-xs-6">{{c.preview.newAccountsDate.toDate() | date}}</p>
+                        </div>
+                        <div class="form-group" ng-if="c.preview.isRegularChange">
+                            <label class="control-label col-xs-6">All accounts</label>
+                            <p class="form-control-static col-xs-6">{{c.preview.allAccountsDate.toDate() | date}}</p>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Initiated date</label>
+                            <p class="form-control-static col-xs-6">{{c.preview.initiatedDate.toDate() | date}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="c.preview.showSplitChangeLoweringTwoMonthWarning || c.preview.showSplitChangeSameDateWarning || c.preview.showRegularChangeLoweringTwoMonthWarning">
+                <div class="col-xs-6 text-center">
+                    <h2 class="text-center">Warnings</h2>
+                    <hr class="hr-section" />
+                    <p ng-if="c.preview.showSplitChangeLoweringTwoMonthWarning">You are lowering the interest rate but the date for existing accounts does not wait the required two months.</p>
+                    <p ng-if="c.preview.showSplitChangeSameDateWarning">You put the same date for new and existing accounts.</p>
+                    <p ng-if="c.preview.showRegularChangeLoweringTwoMonthWarning">You are lowering the interest rate without waiting the required two months.</p>
+                </div>
+            </div>
+            <div class="pt-3 text-center">
+                <button class="n-main-btn n-blue-btn" ng-click="c.initiateChange($event)">Initiate change</button>
+            </div>
+        </div>
+    </div>
+</div>

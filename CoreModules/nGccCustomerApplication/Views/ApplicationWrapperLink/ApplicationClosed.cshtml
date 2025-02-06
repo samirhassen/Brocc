@@ -1,0 +1,17 @@
+﻿@{
+    Layout = "~/Views/Balanzia/LocalResultPageBase.cshtml";
+}
+<div class="bg-result">
+    <div class="success">
+        @if (ViewBag.Language == "sv")
+        {
+            <h1>Ansökan är avslutad</h1>
+            <p>Med vänlig hälsning<br />Balanzia</p>
+        }
+        else
+        {
+            <h1>HAKEMUS ON KÄSITELTY</h1>
+            <p>Ystävällisin terveisin<br />Balanzia</p>
+        }
+    </div>
+</div>

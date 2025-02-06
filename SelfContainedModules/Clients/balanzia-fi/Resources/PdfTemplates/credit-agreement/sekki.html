@@ -1,0 +1,241 @@
+
+ 
+        
+<div class="page extra-padding-top">
+    <div class="area boxed_table">
+        <h1>Vakiomuotoiset eurooppalaiset kuluttajaluottotiedot</h1>
+        <br />
+        <h2>1. Luotonantajan/luotonvälittäjän henkilöllisyys ja yhteystiedot</h2>
+        <table>
+            <tr>
+                <td>
+                    <p>Luotonantaja</p>
+                    <p>Osoite</p>
+                    <p>Puhelinnumero</p>
+                    <p>Sähköpostiosoite</p>
+                    <p>Internet-osoite</p>
+                </td>
+                <td>
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}, {{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                    <p>0105248410</p>
+                    <p>{{documentClientData_email}}</p>
+                    <p>{{documentClientData_website}}</p>
+                </td>
+            </tr>
+            {{#sekkiAffiliate}}
+            <tr>
+                <td>
+                    <p>Luotonvälittäjä </p>
+                    <p>Osoite</p>
+                    <p>Puhelinnumero</p>
+                    <p>Sähköpostiosoite</p>
+                    <p>Internet-osoite</p>
+                </td>
+
+                <td>
+                    <p>{{displayToEnduserName}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{enduserContactPhone}}</p>
+                    <p>{{enduserContactEmail}}</p>
+                    <p>{{websiteAddress}}</p>
+                </td>
+            </tr>
+            {{/sekkiAffiliate}}
+        </table>
+    </div>
+
+    <div class="area boxed_table">
+        <h2>2. Kuvaus luoton pääominaisuuksista</h2>
+        <table>
+            <tr>
+                <td><p>Luottotyyppi</p></td>
+                <td><p>Vakuudeton kuluttajaluotto (kertaluotto)</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Luoton kokonaismäärä</p>
+                    <p class="italic">Tämä tarkoittaa luottorajaa tai luottosopimuksen mukaisesti käyttöön annettavaa kokonaissummaa.</p>
+                </td>
+                <td><p>{{loanAmount}} euroa</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Nostoa koskevat ehdot</p>
+                    <p class="italic">Tämä tarkoittaa, miten ja milloin rahat ovat saatavissa.</p>
+                </td>
+                <td><p>Myönnetty laina maksetaan asiakkaan hakemuksessa ilmoittamalle tilille, kun luotonantaja on vastaanottanut allekirjoitetun luottosopimuksen, pyytämänsä liitteet ja suorittanut lopullisen luottoarvioinnin.</p>
+            </tr>
+            <tr>
+                <td><p>Luottosopimuksen voimassaoloaika</p></td>
+                <td><p>{{repaymentTimeInMonths}} kuukautta</p></td>
+            </tr>
+            <tr>
+                <td><p>Maksuerät</p></td>
+                <td>
+                    <p>Maksettavananne on seuraavaa:</p>
+                    <p>{{nrOfPayments}} kertaa {{monthlyPayment}} euroa</p>
+                    <p>Kuukausierä sisältää lyhennyksen, koron ja mahdolliset kulut. Laina maksetaan takaisin annuiteettina samansuuruisina lyhennyksinä kuukausittain. Eräpäivä on aina kuukauden 28.</p>
+                    <p>Luotonantajalla on oikeus kohdistaa suoritus ensin luotonantajan perimiin kuluihin, korkoihin ja viimeiseksi erääntyneen lainan lyhennyksiin.</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Maksettava kokonaismäärä</p>
+                    <p class="italic">Tarkoittaa lainapääoman määrää sekä korkoja ja mahdollisia luottoonne liittyviä muita kustannuksia.</p>
+                </td>
+                <td>
+                    <p>Luoton kokonaismäärä: {{loanAmount}} euroa</p>
+                    <p>Luottokustannukset: {{totalCostAmount}} euroa</p>
+                    <p>Maksettavaa yhteensä: {{totalPaidAmount}} euroa</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="area boxed_table">
+        <h2>3. Luoton kustannukset</h2>
+        <table>
+            <tr>
+                <td><p>Lainakorko</p></td>
+                <td>
+                    <p>{{totalInterestRate}} %</p>
+                    <p>Lainakorko muodostuu viitekorosta lisättynä asiakaskohtaisella marginaalilla. Viitekorko (3kk euribor (365)) tarkistetaan neljästi vuosittain lainaehtojen mukaisesti.</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Todellinen vuosikorko</p>
+                    <p class="italic">Kokonaiskustannukset ilmaistuina vuosikorkona luoton kokonaismäärälle.</p>
+                    <p class="italic">Todellisen vuosikoron perusteella on helpompi vertailla erilaisia tarjouksia.</p>
+                </td>
+                <td>
+                    <p>{{effectiveInterestRate}} %</p>
+                    <p>Todellinen vuosikorko lasketaan kuluttajansuojalain mukaan ja siihen vaikuttaa valittu lainasumma, laina-aika, korko ja kulut.</p>
+                </td>
+            </tr>
+            <tr class="page extra-padding-top">
+                <td>
+                    <p>Onko luoton saamiseksi yleensä tai markkinoiduin ehdoin otettava</p>
+                    <p>– vakuutus</p>
+                    <p>– tehtävä muu lisäpalvelua koskeva sopimus</p>
+                    <p class="italic">Jos näiden palvelujen kustannukset eivät ole luotonantajan tiedossa, ne eivät sisälly todelliseen vuosikorkoon.</p>
+                </td>
+                <td>
+                    <p>&nbsp;</p>
+                    <p>Ei</p>
+                    <p>Ei</p>
+                </td>
+            </tr>
+            <tr>
+                <td><p>Muut kustannukset</p></td>
+                <td>
+                    <p>Avausmaksu: {{initialFee}} euroa</p>
+                    <p>Tilinhoitomaksu: {{notificationFee}} euroa</p><br />
+                    {{#without_interestceiling}}
+                    <p>Lainan avausmaksu lisätään lainan pääomaan ja tilinhoitomaksu maksetaan kuukausittain kuukausierän yhteydessä.</p>
+                    {{/without_interestceiling}}
+                    {{#with_interestceiling}}
+                    <p>Lainan avausmaksu maksetaan ensimmäisen erän yhteydessä ja tilinhoitomaksu maksetaan kuukausittain kuukausierän yhteydessä.</p>
+                    {{/with_interestceiling}}                    
+                </td>
+            </tr>
+            <tr>
+                <td><p>Edellytykset, joiden mukaisesti edellä mainittuja luottosopimukseen liittyviä kustannuksia voidaan muuttaa.</p></td>
+                <td><p>Luotonantajalla on oikeus muuttaa kuluja, palkkioita ja maksuja yleisen hintatason kohoamisen tai kustannusten lisääntymisen vuoksi tai muusta perustellusta syystä. Luotonantaja ilmoittaa luotonsaajalle palkkioiden muutoksesta ja niiden vaikutuksista maksuerien suuruuteen, lukumäärään tai maksupäivään. Muutos tulee voimaan luotonantajan ilmoittamasta ajankohdasta lukien, kuitenkin aikaisintaan yhden kuukauden kuluttua ilmoituksen lähettämisestä luotonsaajalle ellei luotonsaaja erikseen hyväksy tätä muutosta aiemmin.</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Maksuviivästyksestä aiheutuvat kulut</p>
+                    <p class="italic">Maksujen maksamatta jättämisellä voi olla vakavia seurauksia (esimerkiksi pakkomyynti) ja luoton saaminen voi vaikeutua.</p>
+                </td>
+                <td><p>Kirjallisesta maksuhuomautuksesta peritään 5 euroa. Lisäksi luotonsaaja on velvollinen maksamaan Suomen korkolain mukaista viivästyskorkoa summasta jota ei ole maksettu eräpäivään mennessä. Luotonsaajan on lisäksi korvattava luotonantajalle kaikki kulut ja palkkiot, jotka aiheutuvat luotonantajan perimistoimista luotonsaajaa tai muuta maksuvelvollista kohtaan.</p></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="area boxed_table">
+        <h2>4. Muita tärkeitä oikeudellisia näkökohtia</h2>
+        <table>
+            <tr>
+                <td>
+                    <p>Peruuttamisoikeus</p>
+                    <p class="italic">Teillä on oikeus peruuttaa luottosopimus 14 päivän kuluessa.</p>
+                </td>
+                <td><p>Kyllä</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Ennenaikainen takaisinmaksu:</p>
+                    <p class="italic">Teillä on milloin tahansa oikeus maksaa luotto ennenaikaisesti takaisin kokonaisuudessaan tai osittain.</p>
+                </td>
+                <td><p>Kyllä</td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Haku tietokannasta</p>
+                    <p class="italic">Luotonantajan on annettava Teille maksutta välittömästi tieto luottotietorekisteriin tehdystä hausta, jos luottohakemus on hylätty tämän haun perusteella. Tätä ei sovelleta, jos tällaisten tietojen  ntaminen on Euroopan yhteisön lainsäädännössä kielletty tai se on oikeusjärjestyksen perusteiden tai yleisen turvallisuuden tavoitteiden vastaista.</p>
+                </td>
+                <td>
+                    <p>Luotonantaja käyttää luottoa myöntäessään hakijan henkilöluottotietoja. Luottotiedot hankitaan Suomen Asiakastieto Oy:n tai Soliditet Finlandin luottotietorekisteristä.</p><br />
+                    <p>Mikäli luottohakemus hylätään luottorekisterissä olevien tietojen perusteella, ilmoitetaan tästä asiakkaalle.</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Oikeus saada luottosopimusluonnos</p>
+                    <p class="italic">Teillä on oikeus saada pyynnöstä ja maksutta luottosopimusluonnos. Tätä säännöstä ei sovelleta, jos luotonantaja ei pyynnön esittämishetkellä ole halukas tekemään luottosopimusta teidän kanssanne.</p>
+                </td>
+                <td><p>Kyllä</p></td>
+            </tr>
+        </table>
+    </div>
+</div> 
+
+<div class="page extra-padding-top">
+    <div class="area boxed_table">
+        <h2>5. Rahoituspalvelujen etämyynnin yhteydessä annettavat lisätiedot</h2>
+        <table>
+            <tr>
+                <td><p>a) luotonantajan osalta</p></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><p>Rekisteröinti</p></td>
+                <td><p>Y-tunnus 27603573</p></td>
+            </tr>
+            <tr>
+                <td><p>Valvova viranomainen</p></td>
+                <td><p>Ruotsin Finanssivalvonta</p></td>
+            </tr>
+            <tr>
+                <td><p>b) luottosopimuksen osalta</p></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><p>Peruuttamisoikeuden käyttö</p></td>
+                <td><p>Luotonsaajalla on oikeus peruuttaa luottosopimus ilmoittamalla siitä pysyvällä tavalla (esim. postitse tai sähköpostin välityksellä yllä kohdassa 1. ilmoitettuihin osoitteisiin) luotonantajalle 14 päivän kuluessa sopimuksentekopäivästä, tai sen myöhemmän ajankohdan jälkeen kun luotonsaaja on saanut pysyvällä tavalla ennakkotiedot ja sopimusehdot. Luotonsaajan on viivytyksettä ja viimeistään 30 päivän kuluessa peruuttamisilmoituksen tekemisestä palautettava sopimuksen perusteella saamansa varat korkoineen siltä ajalta kun luotonsaajalla on ollut luotto käytettävissään. Ellei luotonsaaja tämän ajan kuluessa palauta varoja korkoineen, peruuttaminen raukeaa.</p></td>
+            </tr>
+            <tr>
+                <td><p>Laki, jonka nojalla luotonantaja luo asiakassuhteen teihin ennen luottosopimuksen tekoa</p></td>
+                <td><p>Suomen laki</p></td>
+            </tr>
+            <tr>
+                <td><p>Luottosopimukseen soveltuva lainsäädäntö ja/tai toimivaltaista tuomioistuinta koskeva lauseke</p></td>
+                <td><p>Asiakkaalla on oikeus viedä tästä sopimuksesta aiheutuvat erimielisyydet edelleen kuluttaja-riitalautakunnan ratkaistavaksi. Tästä velkasuhteesta aiheutuneet kiistat voidaan ratkaista Suomessa sen paikkakunnan yleisessä alioikeudessa, jonka tuomiopiirissä lainansaajalla on kotipaikkansa.</p></td>
+            </tr>
+            <tr>
+                <td><p>c) oikeussuojan osalta</p></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><p>Tuomioistuimen ulkopuolisten valitus- ja oikeussuojamenettelyjen olemassaolo</p></td>
+                <td>
+                    <p>Jos luotonsaaja on tyytymätön tai haluaa esittää valituksen, voi hän ensi sijassa ottaa yhteyttä luotonantajan asiakaspalveluun. Jos luotonsaaja ei ole tyytyväinen saatuun vastaukseen, voi hän ottaa yhteyttä kirjallisesti luotonantajan valituksista vastaavaan henkilöön (osoitetiedot löytyvät kohdasta 1).</p>
+                    <p>Jos luotonsaaja kokee, että valitus ei johda tyydyttävään luotonantajan tekemään oikaisuun, luotonsaaja voi maksutta valittaa Kuluttajariitalautakuntaan, Hämeentie 3, PL 306, 00531 Helsinki, www.kuluttajariita.fi, puhelin 029 566 5200. Luotonsaaja voi myös kääntyä Suomen vakuutus- ja rahoitusneuvonnan puoleen, lisätietoja www.fine.fi.</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div> 

@@ -1,0 +1,14 @@
+<ml-applications-menu currentTabName="applicationsList">
+  <ng-container tab-content>
+    <toggle-block [initialData]="m.unassignedApplicationsInitialData.toggle">
+      <applications-list
+        [initialData]="m.unassignedApplicationsInitialData.list"
+      ></applications-list>
+    </toggle-block>
+    <toggle-block [initialData]="m.assignedApplicationsInitialData.toggle">
+      <applications-list
+        [initialData]="m.assignedApplicationsInitialData.list"
+      ></applications-list>
+    </toggle-block>
+  </ng-container>
+</ml-applications-menu>

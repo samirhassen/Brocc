@@ -1,0 +1,25 @@
+$header-text-color-light: #034480;
+
+.task-wide {
+  max-width: 1400px;
+  margin: auto;
+}
+
+.task-narrow {
+  max-width: 900px;
+  margin: auto;
+}
+
+.task-toggle-expanded {
+  background-color: $header-text-color-light;
+  color: white;
+  padding-top: 10px;
+}
+
+.task-toggle-contracted {
+  background-color: transparent;
+  color: black;
+  border-bottom: solid 1px black;
+  border-top: solid 1px black;
+  padding-top: 10px;
+}

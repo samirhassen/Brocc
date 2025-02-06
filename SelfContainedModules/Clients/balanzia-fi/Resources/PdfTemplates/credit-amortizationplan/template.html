@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div>
+        <div class="addressArea">
+            <div class="">
+                <div class="senderlogo">
+                    <img class="balanzia_logo" src="[[[skinning:img/pdf-logo.png|img/logo.png]]]" alt="Lender Logo">
+                </div>
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>PL 359 </p>
+                    <p>00101, Helsinki</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>   
+        
+        <div class="right-area">
+            
+            <div class="print-info">
+                <table>
+                    <tr>
+                        <td>Tulostuspäivämäärä</td> <!--Print date-->
+                        <td>{{printDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Lainanumero</td> <!-- Credit number-->
+                        <td>{{creditNr}}</td>
+                    </tr>
+                </table>
+            </div>     
+            <div class="summation">
+                <table>
+                    <tr>
+                        <td>Jäljellä olevien maksujen määrä</td><!--Remaining amount of payments-->
+                        <td>{{nrOfRemainingPayments}}</td>
+                    </tr>
+                    <tr>
+                        <td>Maksutiheys</td><!--Notification frequency-->
+                        <td>kuukausittain</td><!--monthly-->
+                    </tr>
+                    <tr>
+                        <td>Lainanlyhennys</td><!--Annuity-->
+                        <td>{{annuityAmount}}</td>
+                    </tr>
+                </table>
+            </div>      
+            
+        </div>
+        <div class="clear"></div>
+    </div>
+			
+    <div class="conditions">
+        <h1>Lyhennystaulukko</h1> <!--Amortization plan-->
+
+        <br /><br />
+        <div class="amortizationhistory">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Päivämäärä</td><!--Date-->
+                        <td class="text-right">Pääomavelka</td><!--Capital debt-->
+                        <td class="text-center"></td>
+                        <td class="text-right">Pääoma</td><!--Capital-->
+                        <td class="text-right">Korko</td><!--Interest-->
+                        <td class="text-right">Kokonaissumma</td><!--Total amount-->
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#historicTransactions}}
+                    [[[include:transactionItem.html]]]
+                    {{/historicTransactions}}
+                </tbody>
+            </table>
+        </div>
+        <div class="amortizationfuture">
+            <table>
+                {{#futureTransactions}}
+                [[[include:transactionItem.html]]]
+                {{/futureTransactions}}
+            </table>
+        </div>
+
+    </div>
+</body>
+    
+</html>

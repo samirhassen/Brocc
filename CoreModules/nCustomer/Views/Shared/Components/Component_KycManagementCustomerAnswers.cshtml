@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="kyc-management-customer-answers.html">
+    <div>
+        <h2 class="custom-header">Customer</h2>
+        <hr class="hr-section" />
+        <div class="pt-2 pb-2">
+            <div class="clearfix"></div>
+            <div class="pb-3" ng-if="$ctrl.m.q">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Source</label>
+                        <p class="form-control-static col-xs-6">{{$ctrl.m.q.Source}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Date</label>
+                        <p class="form-control-static col-xs-6">{{$ctrl.m.q.AnswerDate | date:'short'}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Questions and answers</label>
+                        <p class="form-control-static col-xs-6">&nbsp;</p>
+                    </div>
+                    <div class="form-group" ng-repeat="i in $ctrl.m.q.Items">
+                        <label class="control-label col-xs-6">{{i.QuestionText}}</label>
+                        <p class="form-control-static col-xs-6">{{i.AnswerText}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="pb-3" ng-if="$ctrl.m && !$ctrl.m.q">
+                <div class="form-horizontal">
+                    <p>No answers provided</p>
+                </div>
+            </div>
+        </div>
+    </div>    
+</script>

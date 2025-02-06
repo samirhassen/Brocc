@@ -1,0 +1,47 @@
+<ScoringRejectionSetup>
+    <RejectionReasons otherPauseDays="30">
+        <RejectionReason name="minimumDemands" displayName="Minimum demands">
+            <RejectionReasonScoringRule>InitialCompanyAgeScoring</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>InitialCompanyYearlyRevenueScoring</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ActivePendingApplication</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ActiveApplication</RejectionReasonScoringRule>          
+            <RejectionReasonScoringRule>ExternalCompanyAgeScoring</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ExternalCreditReportRiskClass</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ExternalCreditReportCompanyType</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ExternalCreditReportCompanyStatus</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ExternalCreditReportCompanyKeyNumbers</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ExternalBoardMembershipAge</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>ExternalKFMRisk</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>CashflowSensitivity</RejectionReasonScoringRule>            
+        </RejectionReason>
+        <RejectionReason name="riskToHigh" displayName="Risk too high">
+            <RejectionReasonScoringRule>PricingModel</RejectionReasonScoringRule>
+        </RejectionReason>
+        <RejectionReason name="additionalLoan" displayName="Additional loan">
+            <RejectionReasonScoringRule>InitialActiveLoan</RejectionReasonScoringRule>
+        </RejectionReason>
+        <RejectionReason name="priorHistory" displayName="Prior history">
+            <RejectionReasonScoringRule>InitialPaymentHistory</RejectionReasonScoringRule>
+            <RejectionReasonScoringRule>InitialHistoricalDebtCollectionCount</RejectionReasonScoringRule>
+        </RejectionReason>
+        <RejectionReason name="paused" displayName="Paused">
+            <RejectionReasonScoringRule>PausedByPriorApplication</RejectionReasonScoringRule>
+        </RejectionReason>
+        <RejectionReason name="alreadyApplied" displayName="Already applied">
+            <RejectionReasonScoringRule>ActivePendingApplicationRule</RejectionReasonScoringRule>
+        </RejectionReason>
+    </RejectionReasons>
+    <RejectionEmails>
+        <!-- They are checked in order. The first where conditions are satisifed is used -->
+        <!--<RejectionEmail templateName="creditrejection-letter1-paymentremark">
+            <RequiredRejectionReason>paymentRemark</RequiredRejectionReason>
+        </RejectionEmail>
+        <RejectionEmail templateName="creditrejection-letter3-otherapplication">
+            <RequiredRejectionReason>alreadyApplied</RequiredRejectionReason>
+        </RejectionEmail>
+        <RejectionEmail templateName="creditrejection-letter4-extraloan">
+            <RequiredRejectionReason>additionalLoan</RequiredRejectionReason>
+        </RejectionEmail>-->
+        <RejectionEmail templateName="creditrejection-general" />
+    </RejectionEmails>
+</ScoringRejectionSetup>

@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "~/Views/Balanzia/LocalResultPageBase.cshtml";
+}
+<div class="bg-result">
+    <div class="success">
+        @if (ViewBag.Language == "sv")
+        {
+            <h1>Tack för din ansökan!</h1>
+            <p>Den behandlas nu av en av våra handläggare som snarast återkommer till dig. Var god uppge <span style="white-space:pre">nummer @ViewBag.ApplicationNr</span> vid frågor.</p>
+            <p>
+                Med vänlig hälsning,<br />
+                Balanzia<br />
+                Kundtjänst<br />
+                Tel. 010 524 8410<br />
+                <a href="mailto:lainat@balanzia.fi" style="color:#000000;">lainat@balanzia.fi</a>
+            </p>
+        }
+        else
+        {
+            <h1>Kiitos hakemuksestasi!</h1>
+            <p>
+                Käsittelemme hakemuksesi mahdollisimman pian ja saat lainapäätöksen sähköpostiisi. Jos sinulla on kysyttävää, ilmoita ystävällisesti meille hakemusnumerosi <span style="white-space:pre"> @ViewBag.ApplicationNr</span>.
+            </p>
+            <p>
+                Ystävällisin terveisin,<br />
+                Balanzia<br />
+                Asiakaspalvelu<br />
+                Puh. 010 524 8410<br />
+                <a href="mailto:lainat@balanzia.fi" style="color:#000000;">lainat@balanzia.fi</a>
+            </p>
+        }
+    </div>
+</div>

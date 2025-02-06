@@ -1,0 +1,67 @@
+<div>
+    <h2 class="text-center">Credit reports</h2>
+    <hr class="hr-section custom-line mt-0">
+    <div *ngFor="let applicant of model?.applicants" class="pb-2">
+          <h3 class="text-center">{{applicant.headerText}}</h3>
+          <div class="text-right">
+              <button (click)="buyNewReport(applicant)" *ngIf="model.isActiveApplication" class="n-direct-btn n-green-btn">Buy new<span class="glyphicon glyphicon-shopping-cart"></span></button>
+          </div>
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Datum</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngIf="!applicant.creditReports || applicant.creditReports.length === 0">
+                      <td>-</td>
+                      <td></td>
+                  </tr>
+                  <tr *ngFor="let creditReport of applicant.creditReports">
+                      <td>{{creditReport.date | date:'short'}}</td>
+                      <td style="text-align: right;">
+                          <button class="n-direct-btn n-turquoise-btn" (click)="showCreditReport(creditReport, $event)">
+                              <span>Show <span class="glyphicon glyphicon-resize-full"></span></span>
+                          </button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+
+  <ng-template #preview>
+      <div class="modal-header">
+          <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="modalRef.hide()">
+              <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span>
+          </button>
+          <h1>{{model?.preview?.title}}</h1>
+      </div>
+      <div class="modal-body">
+          <html-preview *ngIf="model?.preview?.html" [content]="model.preview.html"></html-preview>
+          <pre *ngIf="model?.preview?.pre">{{model?.preview?.pre}}</pre>
+          <table *ngIf="model?.preview?.table" class="table">
+              <thead>
+                  <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of model?.preview?.table">
+                    <ng-container *ngIf="row.headerLevel === 1">
+                        <td style="padding-left:0px;background-color: lightgray;" colspan="2"><b>{{row.title}}</b></td>
+                    </ng-container>
+                    <ng-container *ngIf="row.headerLevel === 2">
+                        <td style="padding-left:4px;" colspan="2"><b>{{row.title}}</b></td>
+                    </ng-container>
+                    <ng-container *ngIf="!row.headerLevel">
+                        <td style="padding-left:8px;">{{row.title}}</td>
+                        <td>{{row.value}}</td>
+                    </ng-container>
+                </tr>
+              </tbody>
+          </table>
+      </div>
+    </ng-template>

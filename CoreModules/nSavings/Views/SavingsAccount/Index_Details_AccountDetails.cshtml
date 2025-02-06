@@ -1,0 +1,62 @@
+﻿<div class="row">
+    <div class="col-xs-6">
+        <label class="col-xs-6 text-right">Transaction date</label>
+        <div class="col-xs-6"><p><b>{{t.transactionDetails.TransactionDate | date}}</b></p></div>
+    </div>
+    <div class="col-xs-6">
+        <label class="col-xs-6 text-right">Bookkeeping date</label>
+        <div class="col-xs-6"><p><b>{{t.transactionDetails.BookKeepingDate | date}}</b></p></div>
+    </div>
+    <div class="col-xs-6">
+        <label class="col-xs-6 text-right">Interest From date</label>
+        <div class="col-xs-6"><p><b>{{t.transactionDetails.InterestFromDate | date}}</b></p></div>
+    </div>
+    <div class="col-xs-6" ng-if="t.transactionDetails.BusinessEventRoleCode">
+        <label class="col-xs-6 text-right">Event role code</label>
+        <div class="col-xs-6"><p><b>{{t.transactionDetails.BusinessEventRoleCode}}</b></p></div>
+    </div>
+
+    <!-- Outgoing payments -->
+    <div ng-repeat="i in t.transactionDetails.OutgoingPaymentDetailsItems" ng-switch="i.Name" ng-if="t.transactionDetails.OutgoingPaymentDetailsItems">        
+        <div ng-switch-when="RequestDate">
+            <div class="col-xs-6">
+                <label class="col-xs-6 text-right">{{i.Name}}</label>
+                <div class="col-xs-6"><p><b>{{i.Value | date:'short'}}</b></p></div>
+            </div>
+        </div>
+        <div ng-switch-when="RequestedByCustomerId">
+            <div class="col-xs-6">
+                <label class="col-xs-6 text-right">Requested by</label>
+                <div class="col-xs-6"><p><b>Customer</b></p></div>
+            </div>
+        </div>
+        <div ng-switch-when="RequestedByHandlerUserName">
+            <div class="col-xs-6">
+                <label class="col-xs-6 text-right">Requested by</label>
+                <div class="col-xs-6"><p><b>Handler: {{i.Value}}</b></p></div>
+            </div>
+        </div>
+        <div ng-switch-default>
+            <div class="col-xs-6">
+                <label class="col-xs-6 text-right">{{i.Name}}</label>
+                <div class="col-xs-6"><p><b>{{i.Value}}</b></p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incoming payments -->
+    <div ng-repeat="i in t.transactionDetails.IncomingPaymentDetailsItems" ng-switch="i.Name" ng-if="t.transactionDetails.IncomingPaymentDetailsItems">
+        <div ng-switch-when="OcrReference">
+            <div class="col-xs-6">
+                <label class="col-xs-6 text-right">Ocr reference</label>
+                <div class="col-xs-6"><p><b>{{i.Value}}</b></p></div>
+            </div>  
+        </div>
+        <div ng-switch-default>
+            <div class="col-xs-6">
+                <label class="col-xs-6 text-right">{{i.Name}}</label>
+                <div class="col-xs-6"><p><b>{{i.Value}}</b></p></div>
+            </div>  
+        </div>
+    </div>
+</div>

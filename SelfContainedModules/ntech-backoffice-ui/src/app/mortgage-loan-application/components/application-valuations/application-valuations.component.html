@@ -1,0 +1,89 @@
+<div>
+  <h2 class="text-center">Property valuation</h2>
+  <hr class="hr-section" />
+  <div class="pb-2">
+    <div class="text-right">
+      <button
+        (click)="buyNew($event)"
+        *ngIf="m.isActiveApplication"
+        class="n-direct-btn n-blue-btn"
+      >
+        Buy new<span class="glyphicon glyphicon-resize-full"></span>
+      </button>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-xs-4">Datum</th>
+          <th class="col-xs-5">Värdering</th>
+          <th class="col-xs-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="!m.valuations || m.valuations.length === 0">
+          <td colspan="3">-</td>
+        </tr>
+        <tr *ngFor="let valuation of m.valuations">
+          <td>{{ valuation.date | date: "short" }}</td>
+          <td>{{ valuation.valuationAmount | number }}</td>
+          <td style="text-align: right">
+            <button
+              class="n-direct-btn n-turquoise-btn"
+              (click)="showValuation(valuation, $event)"
+            >
+              <span
+                >Show <span class="glyphicon glyphicon-resize-full"></span
+              ></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #buyNewModal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="n-icon-btn n-white-btn pull-right"
+      (click)="buyNewModalRef.hide()"
+    >
+      <span class="arrows-close"
+        ><span class="glyphicon glyphicon-arrow-down"></span
+        ><span class="glyphicon glyphicon-arrow-up"></span
+      ></span>
+    </button>
+    <h1>Manual property valuation</h1>
+  </div>
+  <div class="modal-body">
+    <ng-container *ngIf="m.buyNew">
+      <ucbv-valuation-buyer
+        [initialData]="m.buyNew.initialData"
+      ></ucbv-valuation-buyer>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #showPreview>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="n-icon-btn n-white-btn pull-right"
+      (click)="showPreviewModelRef.hide()"
+    >
+      <span class="arrows-close"
+        ><span class="glyphicon glyphicon-arrow-down"></span
+        ><span class="glyphicon glyphicon-arrow-up"></span
+      ></span>
+    </button>
+    <h1>Valuation</h1>
+  </div>
+  <div class="modal-body">
+    <application-valuation-preview
+      *ngIf="m.previewInitialData"
+      [initialData]="m.previewInitialData"
+    >
+    </application-valuation-preview>
+  </div>
+</ng-template>

@@ -1,0 +1,193 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Savings - Reports";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-reports")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Savings: Reports</h1>
+</div>
+
+<div class="pt-1 pb-2" ng-if="!(dwAgeInDays === 0 || dwAgeInDays === 1)">
+    <div style="color:red;">
+        <p ng-if="dwAgeInDays">The jobs that update the datawarehouse last completed {{dwAgeInDays}} days ago.</p>
+        <p ng-if="!dwAgeInDays">The jobs that update the datawarehouse never completed.</p>
+        <p>Reports may not be accurate!</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <select ng-model="reportName" class="form-control">
+                    <option value="" ng-hide="reportName">Select report</option>
+                    <option value="savingsLedger">Savings Ledger</option>
+                    <option value="currentInterestRates">Current interest rates</option>
+                    <option value="interestRatesPerAccount">Per account interest rates</option>
+                    <option value="dailyOutgoingPayments">Daily outgoing payments</option>
+                    <option value="providerFeedback">Provider feedback</option>
+                    <option value="unplacedBalance">Unplaced balance</option>
+                    <option ng-if="reportUrls.amlReportingAidFi" value="amlReportingAidFi">AML reporting aid</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <!-- Share surface for all reports with just a date fields. Make new ones for the others-->
+        <div ng-if="current.modelType === 'none'">
+            <div class="editblock">
+                <form name="noneForm">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'dateOnly'">
+            <div class="editblock">
+                <form name="dateOnlyForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Transaction date</label>
+                            <input ng-model="current.model.date" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateOnlyForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'recentQuarter'">
+            <div class="editblock">
+                <form name="recentQuarterForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Quarter</label>
+                            <select ng-options="item as item.text for item in current.model.quarters" ng-model="current.model.quarter" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="recentQuarterForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'recentMonth'">
+            <div class="editblock">
+                <form name="recentMonthForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Month</label>
+                            <select ng-options="item as item.text for item in current.model.months" ng-model="current.model.month" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="recentQuarterForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'twoDates'">
+            <div class="editblock">
+                <form name="twoDatesForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.name1}}</label>
+                            <input ng-model="current.model.date1" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.name2}}</label>
+                            <input ng-model="current.model.date2" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateOnlyForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'savingsLedger'">
+            <div class="editblock">
+                <form name="dateOnlyForm">
+                    <div class="row pb-1">
+                        <div class="col-sm-3">
+                            <label>Date</label>
+                            <input ng-model="current.model.date" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Date type</label>
+                            <select class="form-control" required ng-model="current.model.useBookKeepingDate">
+                                <option value="no">Transaction</option>
+                                <option value="yes">Bookkeeping</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Include customer details</label>
+                            <select class="form-control" required ng-model="current.model.includeCustomerDetails">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateOnlyForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'dateAndDropdown'">
+            <div class="editblock">
+                <form name="dateAndDropdownForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>{{current.date1LabelText || 'Transaction date'}}</label>
+                            <input ng-model="current.model.date" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-sm-3">
+                            <label>{{current.dropdown1LabelText}}</label>
+                            <select ng-model="current.model.dropdown1" class="form-control">
+                                <option ng-repeat="i in current.dropdown1Options" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateAndDropdownForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

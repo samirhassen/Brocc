@@ -1,0 +1,56 @@
+<div class="row pb-1" *ngIf="m">
+    <div class="col-xs-12 text-right" *ngIf="m.isEditAllowed && !m.inEditMode">
+        <button class="n-icon-btn n-blue-btn" [disabled]="m.isEditing.value" (click)="beginEdit($event)"><span class="glyphicon glyphicon-pencil"></span></button>
+    </div>
+    <div class="col-xs-12 text-right" *ngIf="m.inEditMode">
+        <button (click)="onCancel($event)" class="n-icon-btn n-white-btn" style="margin-right:5px;"><span class="glyphicon glyphicon-remove"></span></button>
+        <button (click)="onSave($event)" [disabled]="m.form.invalid()" class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-ok"></span></button>
+    </div>
+</div>
+
+<div class="row pb-2" *ngIf="m">
+    <form [formGroup]="m.form.form">
+        <div class="col-xs-6"> <!-- left column -->
+            <div class="form-horizontal">
+                <editblock-form-field *ngIf="m.inEditMode || !m.accountNrDisplay" [model]="m.editFields['paidToCustomerBankAccountNr']" ></editblock-form-field>
+                <div class="form-group" *ngIf="!m.inEditMode && m.accountNrDisplay">
+                    <label class="control-label col-xs-6">Customer bank account nr</label>
+                    <div class="col-xs-6">
+                        <p class="form-control-static copyable bb-1">{{m.accountNrDisplay.displayNr}} ({{m.accountNrDisplay.bankName}})</p>
+                    </div>
+                </div>
+                <editblock-form-field [model]="m.editFields['directDebitBankAccountNr']" ></editblock-form-field>
+                <editblock-form-field *ngIf="m.inEditMode || !m.directDebitAccountOwnerDisplayName" [model]="m.editFields['directDebitAccountOwnerApplicantNr']"></editblock-form-field>
+                <div class="form-group" *ngIf="!m.inEditMode && m.directDebitAccountOwnerDisplayName">
+                    <label class="control-label col-xs-6">Direct debit account owner</label>
+                    <div class="col-xs-6">
+                        <p class="form-control-static copyable bb-1">{{m.directDebitAccountOwnerDisplayName}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6"> <!-- right column -->
+            <div class="form-horizontal">
+                <editblock-form-field [model]="m.editFields['requestedLoanAmount']" ></editblock-form-field>
+                <div class="form-group" [ngClass]="{ 'has-error': m.form.hasError('requestedRepaymentTimeInPeriod') }">
+                    <label class="control-label col-xs-6">Requested repayment time</label>
+                    <div class="col-xs-6" *ngIf="!m.inEditMode">
+                        <p class="form-control-static copyable bb-1">{{getRepaymentTimeDisplayText()}}</p>
+                    </div>                    
+                    <div class="col-xs-6 input-group" *ngIf="m.inEditMode">
+                        <input type="text" class="form-control" autocomplete="turned-off" formControlName="requestedRepaymentTimeInPeriod" />
+                        <span class="input-group-btn" style="min-width: 100px;">
+                            <select class="form-control" formControlName="requestedRepaymentTimePeriod">
+                                <option value="m">Months</option>
+                                <option value="d">Days</option>
+                            </select>
+                        </span>                        
+                    </div>
+                </div>
+                <ng-container *ngIf="m.editFields['loanObjective']">
+                    <editblock-form-field [model]="m.editFields['loanObjective']"></editblock-form-field>
+                </ng-container>
+            </div>
+        </div>
+    </form>
+</div>

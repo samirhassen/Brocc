@@ -1,0 +1,55 @@
+<div *ngIf="m">
+    <div class="editblock f-container">
+        <div>
+            <div class="text-right">
+                <button class="n-icon-btn n-blue-btn" *ngIf="!m.edit" (click)="edit($event)" >
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button *ngIf="m.edit" class="n-icon-btn n-white-btn f-cancel-btn" (click)="cancel($event)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button *ngIf="m.edit" [disabled]="m.edit.form.invalid()" (click)="commit($event)" class="n-icon-btn n-green-btn">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </button>                
+            </div>
+        </div>
+        <div>
+            <ng-container *ngIf="!m.edit">
+                <div class="col-sm-12 f-input-container">
+                    <div class="f-header-row">
+                        {{ m.setting.DisplayName }}
+                    </div>
+                    <div class="f-row" *ngFor="let value of m.current.customValues">
+                        <div class="f-readonly-value">{{value.rowInput}}</div>
+                    </div>
+                    <div *ngIf="!m.current.customValues.length">
+                        <div class="f-readonly-value">none</div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="m.edit">
+                <form [formGroup]="m.edit.form.form">
+                    <div class="col-sm-12 f-input-container">
+                        <div class="f-header-row">
+                            {{ m.setting.DisplayName }}
+                        </div>
+                        <div class="f-row" *ngFor="let row of m.edit.customRows" [formGroupName]="row.groupName"
+                            [ngClass]="{ 'has-error': m.edit.form.form.touched && row.group.get('rowInput').errors }">
+                            <div class="f-input-and-button">
+                                <input class="form-control" type="text" formControlName="rowInput" />
+                                <button class="n-icon-btn n-red-btn" (click)="removeRow(row.groupName, $event)">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="f-row">
+                            <button (click)="addRow($event)" class="n-main-btn n-green-btn f-add-button">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </ng-container>            
+        </div>
+    </div>
+</div>

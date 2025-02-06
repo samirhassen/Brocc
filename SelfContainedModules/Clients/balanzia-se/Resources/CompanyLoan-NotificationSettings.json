@@ -1,0 +1,16 @@
+{
+  "reminderFeeAmount": 60,
+  "notificationNotificationDay": 7,
+  "maxAllowedRepaymentTimeInMonths": 10000,
+  "paymentFreeMonthMinNrOfPaidNotifications": 10000,
+  "paymentFreeMonthExcludeNotificationFee": 0,
+  "paymentFreeMonthMaxNrPerYear": 0,
+  "reminderMinDaysBetween": 4,
+  "skipReminderLimitAmount": 0,
+  "notificationOverDueGraceDays": 3,
+  "notificationDueDay": 28,
+  "terminationLetterDueDay":  28,
+  "nrOfFreeFinalReminders": 0,
+  "maxNrOfRemindersWithFees": 1,
+  "maxNrOfReminders": 2
+}

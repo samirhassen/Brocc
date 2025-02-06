@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+    <div class="page">
+
+        <div class="blackborder">
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Avi</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Avimånad</td>
+                                <td class="text-right">{{dueMonth}}</td>
+                            </tr>
+                            <tr>
+                                <td>Lånenummer</td>
+                                <td class="text-right">{{creditNr}}</td>
+                            </tr>
+                            <tr>
+                                <td>Aviseringsdatum</td>
+                                <td class="text-right">{{notificationDate}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column2 greenborder">
+                    <p>{{fullName}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area">
+                <div class="column1">
+                    <p>{{documentClientData_contactText}}</p>
+
+                    <div class="pt-1">
+                        <table class="printinfo">
+                            <tbody>
+                                <tr>
+                                    <td><b>Aktuell</b></td>
+                                    <td class="text-right">&nbsp;</td>
+                                </tr>                                
+                                <tr>
+                                    <td>Kapitalskuld</td>
+                                    <td class="text-right">{{totalUnpaidcreditCapitalAmount}} kr</td>
+                                </tr>
+                                <tr>
+                                    <td>Ränta</td>
+                                    <td class="text-right">{{currentInterestRatePercent}} %</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column2 ">
+                    <table class="summery">
+                        <tbody>
+                            <tr>
+                                <td>Bankgiro</td>
+                                <td class="text-right">{{paymentBankGiroNr}}</td>
+                            </tr>
+                            <tr>
+                                <td>OCR</td>
+                                <td class="text-right">{{ocrPaymentReference}}</td>
+                            </tr>
+                            <tr>
+                                <td class="greenborder" style="padding-top: 20px;">Att betala</td>
+                                <td class="text-right greenborder" style="padding-top: 20px;">{{totalAmountIncludingOtherNotifications}}</td>
+                            </tr>
+                            <tr>
+                                <td class="greenborder">Förfallodatum</td>
+                                <td class="text-right greenborder">{{dueDate}}</td>
+                            </tr>
+                            {{#willUseDirectDebit}}
+                            <tr>
+                                <td colspan="2" style="padding-top: 20px;text-align: center;">Dras med autogiro</td>
+                            </tr>
+                            {{/willUseDirectDebit}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            
+            <div class="area pt-5">
+                <h2>Specifikation</h2>
+                <div class="area">
+                    <h3>Avser {{dueMonth}}</h3>
+                    <table>
+                        <tbody>
+                            {{#currentNotificationAmountsList}}
+                            {{#amount}}
+                            <tr>
+                                <td>[[[include:amountTypes.html]]]</td>
+                                <td class="text-right">{{amount}}</td>
+                            </tr>
+                            {{/amount}}
+                            {{/currentNotificationAmountsList}}
+                        </tbody>
+                    </table>
+                </div>
+
+
+                {{#overdue}}
+                <div class="area">
+                    <h3>Förfallna, betalas omgående</h3>
+                    <table>
+                        <tbody>
+                            {{#overdueNotificationAmountsList}}
+                            {{#amount}}
+                            <tr>
+                                <td>[[[include:amountTypes.html]]]</td>
+                                <td class="text-right">{{amount}}</td>
+                            </tr>
+                            {{/amount}}
+                            {{/overdueNotificationAmountsList}}
+                        </tbody>
+                    </table>
+                </div>
+                {{/overdue}}
+
+                <div class="area">
+                    <table class="total">
+                        <thead>
+                            <tr>
+                                <th>Månad {{dueMonth}}</th>
+                                <th>{{#overdue}}Totalt förfallet{{/overdue}}</th>
+                                <th class="text-right">Totalt att betala</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{totalAmountCurrentNotification}}</td>
+                                <td>{{#overdue}}{{totalOverDueAmount}}{{/overdue}}</td>
+                                <td class="text-right">{{totalAmountIncludingOtherNotifications}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="footer">
+        <p>Postadress: {{documentClientData_footerAddress}}</p>
+    </div>    
+</body>
+</html>

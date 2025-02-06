@@ -1,0 +1,32 @@
+<edit-form *ngIf="m" [initialData]="this.m.editFormInitialData">
+    <ng-container form-area>
+        <div class="row">
+            <form [formGroup]="m.form.form">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <editblock-form-field [model]="m.editFields['isPartOfTheHousehold']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['employment']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['employer']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['employerPhone']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['employedSince']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['employedTo']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['marriage']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['incomePerMonthAmount']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['claimsToHaveKfmDebt']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['hasLegalOrFinancialGuardian']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['claimsToBeGuarantor']"></editblock-form-field>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <editblock-form-field
+                            [model]="m.editFields['hasConsentedToShareBankAccountData']"></editblock-form-field>
+                        <editblock-form-field
+                            [model]="m.editFields['hasConsentedToCreditReport']"></editblock-form-field>
+                        <editblock-form-field [model]="m.editFields['claimsToBePep']"></editblock-form-field>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-container>
+</edit-form>

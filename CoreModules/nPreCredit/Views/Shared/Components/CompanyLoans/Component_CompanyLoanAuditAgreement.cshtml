@@ -1,0 +1,72 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-audit-agreement.html">
+<div ng-if="$ctrl.m">
+    <div ng-if="$ctrl.m.preview" class="frame">
+        <div class="">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Loan amount</label>
+                    <div class="col-xs-6 form-control-static">{{$ctrl.m.preview.loanAmount | currency}}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Preview agreement </label>
+                    <p class="col-xs-6 form-control-static">
+                        <a ng-href="{{$ctrl.m.preview.agreementUrl}}" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center pt-3" ng-if="$ctrl.m.preview.isApprovedAllowd">
+            <button class="n-main-btn n-green-btn" ng-click="$ctrl.approve($event)">
+                Approve
+            </button>
+        </div>
+        <div class="text-center pt-3" ng-if="!$ctrl.m.preview.isApprovedAllowd">
+            <p>Handler limit to low</p>
+        </div>
+    </div>
+     <div ng-if="$ctrl.m.lockedAgreement">
+         <div class="frame">
+             <div class="pb-1 text-right" ng-if="$ctrl.m.lockedAgreement.isCancelAllowed">
+                 <button class="n-main-btn n-white-btn" ng-click="$ctrl.cancel($event)">
+                     Cancel
+                 </button>
+             </div>
+             <div class="row">
+                 <div class="col-xs-6">
+                     <div class="form-horizontal">
+                         <div class="form-group">
+                             <label class="col-xs-6 control-label">Loan amount</label>
+                             <div class="col-xs-6 form-control-static">{{$ctrl.m.lockedAgreement.loanAmount | currency}}</div>
+                         </div>
+                         <div class="form-group">
+                             <label class="col-xs-6 control-label">Unsigned agreement </label>
+                             <p class="col-xs-6 form-control-static">
+                                 <a ng-href="{{$ctrl.m.lockedAgreement.agreementUrl}}" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+                             </p>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="col-xs-6">
+                     <div class="form-horizontal">
+                         <div class="form-group">
+                             <label class="col-xs-6 control-label">Audited by</label>
+                             <div class="col-xs-6 form-control-static">{{$ctrl.getUserDisplayNameByUserId($ctrl.m.lockedAgreement.auditedByUserId)}}</div>
+                         </div>
+                         <div class="form-group">
+                             <label class="col-xs-6 control-label">Audited date</label>
+                             <div class="col-xs-6 form-control-static">{{$ctrl.m.lockedAgreement.auditedDate | date:'short'}}</div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div ng-if="!($ctrl.m.preview || $ctrl.m.lockedAgreement)">
+         <p>Waiting for previous steps</p>
+     </div>  
+</div>
+</script>

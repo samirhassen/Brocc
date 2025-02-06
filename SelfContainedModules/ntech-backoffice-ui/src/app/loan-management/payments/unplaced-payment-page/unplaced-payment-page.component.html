@@ -1,0 +1,174 @@
+<div *ngIf="m">
+    <div class="row pb-2">
+        <div class="col-sm-6 form-horizontal">
+            <div class="form-group" *ngIf="itemExists('NotAutoPlacedReasonMessage')">
+                <label class="col-sm-6 control-label">Reason</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">{{itemValue('NotAutoPlacedReasonMessage')}}</p>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="!itemExists('NotAutoPlacedReasonMessage') && !itemExists('IsManualPayment') && !m.matchedCreditNrsText">
+                <label class="col-sm-6 control-label">Reason</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">No match on reference</p>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="!itemExists('NotAutoPlacedReasonMessage') && itemExists('IsManualPayment')">
+                <label class="col-sm-6 control-label">Reason</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">Manual payment</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label">Payment date</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">{{m.payment.paymentDate | date:'shortDate'}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label">Amount</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">{{m.payment.unplacedAmount | currency}}</p>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="itemExists('OcrReference')">
+                <label class="col-sm-6 control-label">{{itemLabel('OcrReference')}}</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">{{itemValue('OcrReference')}}</p>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="itemExists('NoteText')">
+                <label class="col-sm-6 control-label">{{itemLabel('NoteText')}}</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">{{itemValue('NoteText')}}</p>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="m.matchedCreditNrsText">
+                <label class="col-sm-6 control-label">Matched Credits</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static copyable">{{m.matchedCreditNrsText}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 form-horizontal">
+            <div class="form-group" *ngFor="let i of itemsExcept(['OcrReference', 'NoteText', 'NotAutoPlacedReasonMessage', 'IsManualPayment', 'InitiatedByUserId'])">
+                <label class="col-sm-4 control-label">{{itemLabel(i.name)}}</label>
+                <div class="col-sm-8" *ngIf="!i.isEncrypted">
+                    <p class="form-control-static">{{i.value}}</p>
+                </div>
+                <div class="col-sm-4" *ngIf="i.isEncrypted">
+                    <p class="form-control-static">
+                        <span class="n-unlock" (click)="unlock(i, $event)">
+                            <a href="#"><span class="glyphicon glyphicon-lock"></span></a>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-3">
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-2 ">
+                <span class="btn" [ngClass]="{ 'decision-form-active-btn' : m.isPlaceMode, 'decision-form-inactive-btn' : !m.isPlaceMode}" (click)="m.isPlaceMode=true">
+                    Place
+                </span>
+            </div>
+            <div class="col-sm-offset-1 col-sm-2">
+                <span class="btn" [ngClass]="{ 'decision-form-active-btn' : !m.isPlaceMode, 'decision-form-inactive-btn' : m.isPlaceMode}" (click)="m.isPlaceMode=false">
+                    Repayment
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1 decision-form" *ngIf="!m.isPlaceMode">
+                <form [formGroup]="m.repayForm.form">
+                    <div class="row">
+                        <div class="col-sm-4" [ngClass]="{ 'has-error': m.repayForm.hasError('repaymentIBAN') ||  m.repayForm.hasError('bankAccountNrType') }">
+                            <div class="pb-1" *ngIf="m.bankAccountNrTypes.length > 1">
+                                <label>Account type</label>
+                                <select class="form-control" formControlName="bankAccountNrType">
+                                    <option *ngFor="let b of m.bankAccountNrTypes" [value]="b.code">{{b.text}}</option>
+                                </select>
+                            </div>
+                            <label>
+                                {{getAccountNrFieldLabel()}}
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   formControlName="repaymentIBAN"
+                                   placeholder="{{getAccountNrMask()}}">
+                        </div>
+                        <div class="col-sm-4" [ngClass]="{ 'has-error': m.repayForm.hasError('repaymentAmount') }">
+                            <label>Amount</label>
+                            <input type="text" class="form-control" formControlName="repaymentAmount" placeholder="ex. 199.99">
+                        </div>
+                        <div class="col-sm-4" [ngClass]="{ 'has-error': m.repayForm.hasError('repaymentName') }">
+                            <label>Customer name</label>
+                            <input type="text" class="form-control" formControlName="repaymentName" placeholder="ex. Name Namesson">
+                        </div>
+                    </div>
+
+                    <div class="pt-2 pb-2" *ngIf="m.repaymentFormBankAccountInfo" style="font-size:smaller;color:green;">
+                        {{m.repaymentFormBankAccountInfo.displayValue}}
+                    </div>
+
+                    <div class="pb-2 notice" *ngIf="m.isRepaymentAmountNotWithinBounds">
+                        Amount must be more than 0 but not higher than {{m.payment.unplacedAmount | currency}}.
+                    </div>
+
+                    <div class="pt-2">
+                        <button class="n-direct-btn n-blue-btn" (click)="verifyRepay($event)" [disabled]="m.repayForm.invalid()">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-10 col-sm-offset-1 decision-form" *ngIf="m.isPlaceMode">
+                <form [formGroup]="m.placeForm.form">
+                    <div class="row">
+                        <div class="col-sm-4" [ngClass]="{ 'has-error': m.placeForm.hasError('searchString') }">
+                            <label class="">Reference nr/Credit nr</label>
+                            <input class="form-control" formControlName="searchString" placeholder="ex. 08092016">
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-6">Only notified</label>
+                                    <div class="col-sm-6 form-control-static">
+                                        <label class="n-toggle">
+                                            <input type="checkbox" formControlName="onlyPlaceAgainstNotified"  />
+                                            <span class="n-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-6">Only type</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" formControlName="onlyPlaceAgainstPaymentOrderItemUniqueId">
+                                            <option value=""></option>
+                                            <option *ngFor="let i of m.paymentOrderUiItems" [value]="i.uniqueId">{{i.text}}</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" [ngClass]="{ 'has-error': m.placeForm.hasError('maxPlacedAmount') }">
+                                    <label class="control-label col-sm-6">Max placed</label>
+                                    <div class="col-sm-6"><input class="form-control" placeholder="max placed amount" formControlName="maxPlacedAmount"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <button class="n-direct-btn n-blue-btn" (click)="verifyPlace($event)" [disabled]="m.placeForm.invalid()">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                    </div>
+                    <div class="pt-2" *ngIf="m.placeFailedMessage">
+                        <p>{{m.placeFailedMessage}}</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <repayment [initialData]="m.repayment" ></repayment>
+    <place-credits [initialData]="m.place" ></place-credits>
+</div>

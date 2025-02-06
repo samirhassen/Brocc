@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<questions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <q>
+    <qkey>loan_purpose</qkey>
+    <qtext lang="sv">Vad ska pengarna användas till?</qtext>
+    <qtext lang="fi">Rahojen käyttötarkoitus?</qtext>
+    <a>
+      <akey>consumption</akey>
+      <atext lang="sv">Konsumtion</atext>
+      <atext lang="fi">Kulutus</atext>
+    </a>
+    <a>
+      <akey>investment</akey>
+      <atext lang="sv">Investering</atext>
+      <atext lang="fi">Sijoittaminen</atext>
+    </a>
+    <a>
+      <akey>relative</akey>
+      <atext lang="sv">Till närstående</atext>
+      <atext lang="fi">Lähimmäisille</atext>
+    </a>
+    <a>
+      <akey>other</akey>
+      <atext lang="sv">Annat</atext>
+      <atext lang="fi">Muu</atext>
+    </a>
+  </q>
+  <q>
+    <qkey>loan_whosmoney</qkey>
+    <qtext lang="sv">Vems pengar kommer användas för återbetalning?</qtext>
+    <qtext lang="fi">Kenen varoja tullaan käyttämään takaisinmaksussa?</qtext>
+    <a>
+      <akey>own</akey>
+      <atext lang="sv">Egna pengar</atext>
+      <atext lang="fi">Omia rahoja</atext>
+    </a>
+    <a>
+      <akey>others</akey>
+      <atext lang="sv">Annans pengar</atext>
+      <atext lang="fi">Jonkun muun rahoja</atext>
+    </a>
+    <r>
+      <rkey>others</rkey>
+      <rtext lang="sv">Om annan, vems?</rtext>
+      <rtext lang="fi">Jos jonkun muun, kenen?</rtext>
+    </r>
+  </q>
+  <q>
+    <qkey>loan_paymentfrequency</qkey>
+    <qtext lang="sv">Hur ofta kommer avbetalningarna göras?</qtext>
+    <qtext lang="fi">Kuinka usein lyhennyksiä tehdään?</qtext>
+    <a>
+      <akey>onschedule</akey>
+      <atext lang="sv">Enligt amorteringsplan</atext>
+      <atext lang="fi">Lyhennyssuunnitelman mukaisesti</atext>
+    </a>
+    <a>
+      <akey>withextrapayments</akey>
+      <atext lang="sv">Med extraamorteringar</atext>
+      <atext lang="fi">Ylimääräisiä lyhennyksiä</atext>
+    </a>
+  </q>
+  <q>
+    <qkey>customer_pep</qkey>
+    <qtext lang="sv">Är du, någon i din familj, eller närstående, en person som har eller har haft någon av följande roller?</qtext>
+    <qtext lang="fi">Oletko sinä, tai läheinen perheenjäsenesi, henkilö joka on ollut seuraavassa asemassa?</qtext>
+    <a>
+      <akey>no</akey>
+      <atext lang="sv">Nej, varken jag eller någon i min närhet har eller har haft någon av nedanstående roller.</atext>
+      <atext lang="fi">Minä, tai läheinen perheenjäseni, ei ole eikä ole ollut alla mainituissa asemissa.</atext>
+    </a>
+    <a>
+      <akey>governmentofficial</akey>
+      <atext lang="sv">Stats- eller regeringschef, minister eller vice/biträdande minister.</atext>
+      <atext lang="fi">Valtionpäämies, hallitusten päämies, ministeri tai vara- ja apulaisministeri.</atext>
+    </a>
+    <a>
+      <akey>memberofparliament</akey>
+      <atext lang="sv">Parlamentsledamot.</atext>
+      <atext lang="fi">Kansanedustaja.</atext>
+    </a>
+    <a>
+      <akey>supremecourtjudge</akey>
+      <atext lang="sv">Domare i högsta domstolen, konstitutionell domstol eller liknande befattning.</atext>
+      <atext lang="fi">Korkeimman oikeuden, perustuslakituomioistuimien tai vastaavan jäsen.</atext>
+    </a>
+    <a>
+      <akey>economicofficial</akey>
+      <atext lang="sv">Högre tjänsteman vid revisionsmyndighet eller ledamot i centralbanks styrande organ.</atext>
+      <atext lang="fi">Tilintarkastustuomioistuinten tai keskuspankkien johtokunnan jäsen.</atext>
+    </a>
+    <a>
+      <akey>diplomantordefense</akey>
+      <atext lang="sv">Ambassadör, beskickningschef eller hög officer i försvarsmakten.</atext>
+      <atext lang="fi">Suurlähettiläs, asiainhoitaja tai puolustusvoimien korkea-arvoinen upseeri.</atext>
+    </a>
+    <a>
+      <akey>stateownedcompany</akey>
+      <atext lang="sv">VD eller styrelseledamot i statsägt företag.</atext>
+      <atext lang="fi">Valtion omistamien yritysten hallinto-, johto tai valvontaelimen jäsen.</atext>
+    </a>
+    <a>
+      <akey>internationalagency</akey>
+      <atext lang="sv">Ledande befattning i mellanstatlig organisation eller medlem i dess högsta ledning.</atext>
+      <atext lang="fi">Johtava asema kansainvälisessä järjestössä (esim. YK, NATO) tai se sen johtokunnan jäsen.</atext>
+    </a>
+    <r>
+      <rkey>who</rkey>
+      <rtext lang="sv">Vem eller vilka har i så fall haft rollerna?</rtext>
+      <rtext lang="fi">Kuka tai ketkä ovat olleet mainitussa asemassa?</rtext>
+    </r>
+  </q>
+  <q>
+    <qkey>customer_mainoccupation</qkey>
+    <qtext lang="sv">Vilken är din huvudsakliga sysselsättning?</qtext>
+    <qtext lang="fi">Mikä on pääasiallinen toimenkuvasi?</qtext>
+    <a>
+      <akey>manager</akey>
+      <atext lang="sv">Chefsjobb</atext>
+      <atext lang="fi">Johtaja</atext>
+    </a>
+    <a>
+      <akey>specialist</akey>
+      <atext lang="sv">Specialistjobb</atext>
+      <atext lang="fi">Erityisasiantuntija</atext>
+    </a>	
+    <a>
+      <akey>expert</akey>
+      <atext lang="sv">Expertjobb</atext>
+      <atext lang="fi">Asiantuntija</atext>
+    </a>
+    <a>
+      <akey>administration</akey>
+      <atext lang="sv">Administrativt arbete och kundtjänst</atext>
+      <atext lang="fi">Toimisto- ja asiakaspalvelu</atext>
+    </a>	
+    <a>
+      <akey>sales</akey>
+      <atext lang="sv">Service- och säljarbete</atext>
+      <atext lang="fi">Palvelu- ja myyntityöntekijät</atext>
+    </a>
+	<a>
+      <akey>agriculture</akey>
+      <atext lang="sv">Jord- och skogsbruk etc.</atext>
+      <atext lang="fi">Maanviljelijät, metsätyöntekijät ym.</atext>
+    </a>
+    <a>
+      <akey>construction</akey>
+      <atext lang="sv">Bygg- och produktionsarbete</atext>
+      <atext lang="fi">Rakennus-, korjaus- ja valmistustyöntekijät</atext>
+    </a>
+  	<a>
+      <akey>transport</akey>
+      <atext lang="sv">Process- och transport</atext>
+      <atext lang="fi">Prosessi- ja kuljetustyöntekijät</atext>
+    </a>
+    <a>
+      <akey>military</akey>
+      <atext lang="sv">Militär</atext>
+      <atext lang="fi">Sotilaat</atext>
+    </a>
+    <a>
+      <akey>other</akey>
+      <atext lang="sv">Andra</atext>
+      <atext lang="fi">Muu</atext>
+    </a>
+  </q>  
+  <q>
+    <qkey>savings_purpose</qkey>
+    <qtext lang="sv">Vad är det huvudsakliga syftet med ditt sparande?</qtext>
+    <qtext lang="fi">Mikä on säästämisen pääasiallinen tarkoitus?</qtext>
+    <a>
+      <akey>pension</akey>
+      <atext lang="sv">Pension</atext>
+      <atext lang="fi">Eläke</atext>
+    </a>
+    <a>
+      <akey>relative</akey>
+      <atext lang="sv">Till närstående, till exempel barn</atext>
+      <atext lang="fi">Lähiomaiselle, esimerkiksi lapsille</atext>
+    </a>
+    <a>
+      <akey>currencyexchange</akey>
+      <atext lang="sv">Valutaväxling</atext>
+      <atext lang="fi">Valuutanvaihto</atext>
+    </a>      
+    <a>
+      <akey>longtermsavings</akey>
+      <atext lang="sv">Långsiktigt sparande</atext>
+      <atext lang="fi">Pitkäaikainen säästäminen</atext>
+    </a>      
+    <a>
+      <akey>shorttermsavings</akey>
+      <atext lang="sv">Kortsiktigt sparande</atext>
+      <atext lang="fi">Lyhytaikainen säästäminen</atext>
+    </a>      
+    <a>
+      <akey>trading</akey>
+      <atext lang="sv">Trading</atext>
+      <atext lang="fi">Kaupankäynti</atext>
+    </a>            
+    <a>
+      <akey>transactionaccount</akey>
+      <atext lang="sv">Transaktionskonto</atext>
+      <atext lang="fi">Käyttelytili</atext>
+    </a>
+  </q>
+  <q>
+    <qkey>savings_savingshorizonestimate</qkey>
+    <qtext lang="sv">Hur länge har du tänkt spara?</qtext>
+    <qtext lang="fi">Kuinka pitkä on suunniteltu säästämisaikasi?</qtext>
+    <a>
+      <akey>morethanfiveyears</akey>
+      <atext lang="sv">Långsiktigt (mer än 5 år)</atext>
+      <atext lang="fi">Pitkä (yli 5 vuotta)</atext>
+    </a>
+    <a>
+      <akey>onetofiveyears</akey>
+      <atext lang="sv">Medellångt (1 - 5 år)</atext>
+      <atext lang="fi">Keskipitkä (1-5 vuotta)</atext>
+    </a>
+    <a>
+      <akey>lessthanoneyear</akey>
+      <atext lang="sv">Kort sikt (kortare än 1 år)</atext>
+      <atext lang="fi">Lyhyt (vähemmän kuin 1 vuosi)</atext>
+    </a>  
+  </q>
+  <q>
+    <qkey>savings_sourceoffunds</qkey>
+    <qtext lang="sv">Varifrån kommer de pengar som du sätter in på kontot huvudsakligen ifrån?</qtext>
+    <qtext lang="fi">Mistä tallettamasi rahat pääsääntöisesti tulevat?</qtext>
+    <a>
+      <akey>salaryorpension</akey>
+      <atext lang="sv">Lön eller pension</atext>
+      <atext lang="fi">Palkka tai eläke</atext>
+    </a>
+    <a>
+      <akey>inheritanceorgift</akey>
+      <atext lang="sv">Arv eller gåva</atext>
+      <atext lang="fi">Perintö tai lahja</atext>
+    </a>
+    <a>
+      <akey>othersale</akey>
+      <atext lang="sv">Annan försäljning, exempelvis bil- eller båtförsäljning</atext>
+      <atext lang="fi">Muu myynti, esimerkiksi auto- tai venemyynti</atext>
+    </a>
+    <a>
+      <akey>insurancepayout</akey>
+      <atext lang="sv">Försäkringsutbetalning</atext>
+      <atext lang="fi">Vakuutuskorvaus</atext>
+    </a>
+    <a>
+      <akey>owncompany</akey>
+      <atext lang="sv">Egen rörelse, lön eller utdelning</atext>
+      <atext lang="fi">Oma yritys, palkka tai osinko</atext>
+    </a>
+    <a>
+      <akey>realestatesale</akey>
+      <atext lang="sv">Bostads- eller fastighetsförsäljning</atext>
+      <atext lang="fi">Asunnon tai kiinteistön myynti</atext>
+    </a>
+    <a>
+      <akey>financialinstrumentsale</akey>
+      <atext lang="sv">Vinst från värdepappershandel</atext>
+      <atext lang="fi">Voitto arvopaperikaupasta</atext>
+    </a>        
+    <a>
+      <akey>welfarepayout</akey>
+      <atext lang="sv">Bidrag eller arbetslöshetsersättning</atext>
+      <atext lang="fi">Sosiaalietuus, esim. työttömyysetuus</atext>
+    </a> 
+    <a>
+      <akey>savingsaccount</akey>
+      <atext lang="sv">Sparande</atext>
+      <atext lang="fi">Säästäminen</atext>
+    </a> 
+    <a>
+      <akey>owncompanysale</akey>
+      <atext lang="sv">Företagsförsäljning</atext>
+      <atext lang="fi">Yritysmyynti</atext>
+    </a>     
+    <a>
+      <akey>gambling</akey>
+      <atext lang="sv">Lotteri eller spel</atext>
+      <atext lang="fi">Lotto tai muut pelit</atext>
+    </a>     
+  </q>     
+  <q>
+    <qkey>savings_initialdepositrangeestimate</qkey>
+    <qtext lang="sv">Vilket ungefärligt värde kommer du att överföra i samband med öppnandet?</qtext>
+    <qtext lang="fi">Kuinka paljon arviolta talletat tilin avaamisen yhteydessä?</qtext>
+    <a>
+      <akey>0_100</akey>
+      <atext lang="sv">Mindre än 100 €</atext>
+      <atext lang="fi">Vähemmän kuin 100 €</atext>
+    </a>
+    <a>
+      <akey>100_1000</akey>
+      <atext lang="sv">100 € - 1 000 €</atext>
+      <atext lang="fi">100 € - 1 000 €</atext>
+    </a>
+    <a>
+      <akey>1000_10000</akey>
+      <atext lang="sv">1 000 € - 10 000 €</atext>
+      <atext lang="fi">1 000 € - 10 000 €</atext>
+    </a>
+    <a>
+      <akey>10000_50000</akey>
+      <atext lang="sv">10 000 € - 50 000 €</atext>
+      <atext lang="fi">10 000 € - 50 000 €</atext>
+    </a>
+    <a>
+      <akey>50000_80000</akey>
+      <atext lang="sv">50 000 € - 80 000 €</atext>
+      <atext lang="fi">50 000 € - 80 000 €</atext>
+    </a>
+    <a>
+      <akey>80000_max</akey>
+      <atext lang="sv">Mer än 80 000 €</atext>
+      <atext lang="fi">Enemmän kuin 80 000 €</atext>
+    </a>      
+  </q>  
+  <q>
+    <qkey>savings_nrdepositsperyearrangeestimate</qkey>
+    <qtext lang="sv">Hur ofta kommer insättningar att göras per år?</qtext>
+    <qtext lang="fi">Kuinka usein talletuksia tehdään vuosittain?</qtext>
+    <a>
+      <akey>0_10</akey>
+      <atext lang="sv">Färre än 10 gånger</atext>
+      <atext lang="fi">Vähemmän kuin 10 kertaa</atext>
+    </a>
+    <a>
+      <akey>10_50</akey>
+      <atext lang="sv">10 - 50 gånger</atext>
+      <atext lang="fi">10 - 50 kertaa</atext>
+    </a>
+    <a>
+      <akey>50_100</akey>
+      <atext lang="sv">50 - 100 gånger</atext>
+      <atext lang="fi">50 - 100 kertaa</atext>
+    </a>
+    <a>
+      <akey>100_inf</akey>
+      <atext lang="sv">Fler än 100 gånger</atext>
+      <atext lang="fi">Enemmän kuin 100 kertaa</atext>
+    </a>    
+  </q>
+  <q>
+    <qkey>savings_customerConsent</qkey>
+    <qtext lang="sv">Jag samtycker till att de uppgifter jag anger i denna ansökan används för att identifiera mig som kund i systemet. Jag försäkrar att ovanstående information stämmer.</qtext>
+    <qtext lang="fi">Hyväksyn, että antamiani tietoja käytetään tunnistamisekseni järjestelmässä. Vakuutan, että yllä olevat tiedot pitävät paikkansa.</qtext>
+    <a>
+      <akey>true</akey>
+      <atext lang="sv">Ja</atext>
+      <atext lang="fi">Kyllä</atext>
+    </a>
+    <a>
+      <akey>false</akey>
+      <atext lang="sv">Nej</atext>
+      <atext lang="fi">Ei</atext>
+    </a>    
+  </q>
+  <q>
+    <qkey>customer_hasOtherTaxOrCitizenCountry</qkey>
+    <qtext lang="sv">Är du skattepliktig eller medborgare i något annat land än Finland?</qtext>
+    <qtext lang="fi">Onko sinulla verovelvollisuutta tai kansalaisuutta muussa maassa kuin Suomessa?</qtext>      
+    <a>
+      <akey>true</akey>
+      <atext lang="sv">Ja</atext>
+      <atext lang="fi">Kyllä</atext>
+    </a>
+    <a>
+      <akey>false</akey>
+      <atext lang="sv">Nej</atext>
+      <atext lang="fi">Ei</atext>
+    </a>        
+  </q>
+</questions>

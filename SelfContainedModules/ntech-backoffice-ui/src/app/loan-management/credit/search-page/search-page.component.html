@@ -1,0 +1,7 @@
+<div *ngIf="m">
+  <credit-search></credit-search>
+  <test-functions-popup
+    *ngIf="m.testFunctions"
+    [model]="m?.testFunctions"
+  ></test-functions-popup>
+</div>

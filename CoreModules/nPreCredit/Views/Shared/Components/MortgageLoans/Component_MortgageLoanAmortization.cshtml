@@ -1,0 +1,274 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-loan-amortization.html">
+    <div>
+        <div ng-if="$ctrl.m.showFuturePossibleMessage">
+            <p>Possible after valuation.</p>
+        </div>
+
+        <div ng-if="$ctrl.m.nm">
+            <!--underlag nyckelvärden, alltid synliga-->
+            <div class="row pb-3">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Type of loan</label>
+                            <p class="form-control-static col-xs-6">Move existing loan</p>
+                        </div>
+                        <div class="form-group" ng-if="$ctrl.m.nm.mortgageLoanCustomerAmortizationPlanDownloadUrl">
+                            <label class="control-label col-xs-6">Amortization basis</label>
+                            <p class="form-control-static col-xs-6"><a ng-href="{{$ctrl.m.nm.mortgageLoanCustomerAmortizationPlanDownloadUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Initial offer loan amount</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.nm.initialOfferLoanAmount | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Initial offer amortization</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.nm.initialOfferMonthlyAmortizationAmount | currency}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--calculate-->            
+            <div class="row pt-2 pb-3" ng-if="$ctrl.m.nm && $ctrl.m.nm.c">
+                <div class="col-xs-8 col-sm-offset-2">
+                    <div class="editblock">
+                        <form name="calculateform" novalidate>
+                            <div class="form-horizontal">
+                                <ntech-input label="'Datum för amorteringsgrundande värde'" model="$ctrl.m.nm.c.amortizationBasisDate" t="'date'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                <ntech-input label="'Amorteringsgrundande värde'" model="$ctrl.m.nm.c.amortizationBasisObjectValue" t="'positiveint'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                <ntech-input label="'Amorteringsgrundande skuld'" model="$ctrl.m.nm.c.amortizationBasisLoanAmount" t="'positiveint'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                <div class="form-group pt-1">
+                                    <p class="form-control-static col-xs-6 col-sm-offset-6">Aktuell skuld</p>
+                                </div>
+                                <ntech-input label="'1. Omfattas inte av amorteringskrav'" model="$ctrl.m.nm.c.ruleNoneCurrentAmount" t="'positiveint'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                <ntech-input label="'2. Omfattas av amorteringskrav'" model="$ctrl.m.nm.c.ruleR201616CurrentAmount" t="'positiveint'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                <ntech-input label="'3. Omfattas av skärpt krav'" model="$ctrl.m.nm.c.ruleR201723CurrentAmount" t="'positiveint'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                <ntech-input label="'4. Varav aktuell skuld, enligt punkt 2 och 3 ovan, som omfattas av alternativregelen'" model="$ctrl.m.nm.c.ruleAlternateCurrentAmount" t="'positiveint'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                <div class="form-group pt-1">
+                                    <p class="form-control-static col-xs-6 col-sm-offset-6">Amortering per månad</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">5. Total amortering på objektet</label>
+                                    <div class="col-xs-4"><p class="form-control-static">-</p></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">6. Totalt amorteringskrav - enligt huvudregeln</label>
+                                    <div class="col-xs-4"><p class="form-control-static">-</p></div>
+                                </div>
+                                <ntech-input label="'- enligt alternativregeln'" model="$ctrl.m.nm.c.totalAmortizationAlternateAmount" t="'positiveint'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                            </div>
+                            <div class="text-center pt-3">
+                                <button class="n-direct-btn n-blue-btn" ng-disabled="!calculateform.$valid" ng-click="$ctrl.calculate($event)" >Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview and preview -->
+        <div ng-if="$ctrl.m.om">
+            <div class="pb-3" ng-if="$ctrl.m.om.basis">
+                <div class="frame">
+                    <div class="row pb-3">
+                        <div class="col-xs-6">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <p class="form-control-static text-center" style="text-transform:uppercase;">Amorteringsgrundande</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Date</label>
+                                    <p class="form-control-static col-xs-4">{{$ctrl.asDate($ctrl.m.om.basis.AmortizationBasisDate) | date:'shortDate'}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Värdering</label>
+                                    <p class="form-control-static col-xs-4">{{$ctrl.m.om.basis.AmortizationBasisObjectValue | currency}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Skuld</label>
+                                    <p class="form-control-static col-xs-4">{{$ctrl.m.om.basis.AmortizationBasisLoanAmount | currency}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-horizontal pt-3">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Belåningsgrad</label>
+                                    <p class="form-control-static col-xs-4">{{$ctrl.m.om.loanFractionPercent | number:'1'}} %</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Skuldkvot</label>
+                                    <p ng-mouseenter="$ctrl.m.om.showLoanIncomeRatioDetails=true" ng-mouseleave="$ctrl.m.om.showLoanIncomeRatioDetails=false" class="form-control-static col-xs-4">
+                                        <span ng-show="!$ctrl.m.om.showLoanIncomeRatioDetails">{{$ctrl.m.om.loanIncomeRatio | number:'2'}}</span>
+                                        <span ng-show="$ctrl.m.om.showLoanIncomeRatioDetails" style="font-size:smaller">{{$ctrl.m.om.basis.CurrentCombinedTotalLoanAmount | currency}} / {{$ctrl.m.om.basis.CurrentCombinedYearlyIncomeAmount | currency}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" pt-3">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-xs-2 text-right">Aktuell skuld</th>
+                                    <th class="col-xs-4">Regel</th>
+                                    <th class="col-xs-3 text-right">Amorteringskrav</th>
+                                    <th class="col-xs-3 text-right">Amortering</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-right">{{$ctrl.m.om.basis.CurrentLoanAmount | currency}}</td>
+                                    
+                                    <td ng-switch="$ctrl.m.om.basis.AmortizationRule">
+                                        <span ng-switch-when="r201616">Amorteringskrav</span>
+                                        <span ng-switch-when="r201723">Skärpt amorteringskrav</span>
+                                        <span ng-switch-when="alternate">Alternativregeln</span>
+                                        <span ng-switch-when="none">Inget amorteringskrav</span>
+                                        <span ng-switch-default>{{$ctrl.m.om.basis.AmortizationRule}}</span>
+                                    </td>
+                                    <td class="text-right">{{$ctrl.m.om.basis.RequiredAmortizationAmount | currency}}</td>
+                                    <td class="text-right">{{$ctrl.m.om.basis.ActualAmortizationAmount | currency}}</td>
+                                </tr>
+                                <tr class="opend">
+                                    <td colspan="4">
+
+                                        <div class="form-horizontal">
+                                            <!--undantag-->
+                                            <div ng-if="$ctrl.m.om.basis.AmortizationExceptionUntilDate">
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Undantag</label>
+                                                    <p class="col-xs-9 form-control-static">Ja</p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Undantag tom</label>
+                                                    <p class="col-xs-9 form-control-static">{{$ctrl.asDate($ctrl.m.om.basis.AmortizationExceptionUntilDate) | date:'shortDate'}}</p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Undantag pga</label>
+                                                    <p class="col-xs-9 form-control-static"><span ng-repeat="r in $ctrl.m.om.basis.AmortizationExceptionReasons" class="comma">{{r}}</span></p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Amortering</label>
+                                                    <p class="col-xs-9 form-control-static">{{$ctrl.m.om.basis.ExceptionAmortizationAmount | currency}} tom {{$ctrl.asDate($ctrl.m.om.basis.AmortizationExceptionUntilDate) | date:'shortDate'}} därefter {{$ctrl.m.om.basis.ActualAmortizationAmount | currency}}</p>
+                                                </div>
+                                            </div>
+                                            <!--amorteringsfritt-->
+                                            <div ng-if="$ctrl.m.om.basis.AmortizationFreeUntilDate">
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Amorteringsfritt tom</label>
+                                                    <p class="col-xs-9 form-control-static">{{$ctrl.asDate($ctrl.m.om.basis.AmortizationFreeUntilDate) | date:'shortDate'}}</p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Amortering</label>
+                                                    <p class="col-xs-9 form-control-static">0,00 kr tom {{$ctrl.asDate($ctrl.m.om.basis.AmortizationFreeUntilDate) | date:'shortDate'}} därefter {{$ctrl.m.om.basis.ActualAmortizationAmount | currency}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row pt-3" ng-if="$ctrl.m.om.isSetAndEditAllowed">
+                        <div class="col-sm-offset-4 col-xs-4 text-center"><button ng-click="$ctrl.setBasis($ctrl.m.om.basis, $event)" class="n-main-btn n-green-btn">Set amortization basis</button></div>
+                        <div class="col-xs-4 text-right"><button ng-click="$ctrl.editManually($ctrl.m.om.basis, $event)" class="n-main-btn n-white-btn">Edit manually</button></div>
+                    </div>
+                </div>
+
+                <modal-dialog dialog-title="'Edit amortization basis manually'" dialog-id="$ctrl.editDialogId">
+                    <div class="editblock">
+                        <form novalidate name="editmanuallyform">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-2 text-right">Aktuell skuld</th>
+                                        <th class="col-xs-4">Regel</th>
+                                        <th class="col-xs-3 text-right">Amorteringskrav</th>
+                                        <th class="col-xs-3 text-right">Amortering</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-right">{{$ctrl.m.om.basis.CurrentLoanAmount | currency}}</td>
+                                        <td ng-switch="$ctrl.m.om.basis.AmortizationRule">
+                                            <span ng-switch-when="r201616">Amorteringskrav</span>
+                                            <span ng-switch-when="r201723">Skärpt amorteringskrav</span>
+                                            <span ng-switch-when="alternate">Alternativregeln</span>
+                                            <span ng-switch-when="none">Inget amorteringskrav</span>
+                                            <span ng-switch-default>{{$ctrl.m.om.basis.AmortizationRule}}</span>
+                                        </td>
+                                        <td class="text-right">{{$ctrl.m.om.basis.RequiredAmortizationAmount | currency}}</td>
+                                        <td class="text-right" style="padding: 0px;">
+                                            <ntech-input label="''" model="$ctrl.m.om.e.actualAmortizationAmount" t="'positiveint'" required="true" input-classes="'col-xs-11'" group-style="'margin-top:0'"></ntech-input>
+                                        </td>
+                                    </tr>
+                                    <tr class="">
+                                        <td colspan="4">
+                                            <div class="form-horizontal">
+                                                <!--amorteringsfritt-->                                            
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Amorteringsfritt</label>
+                                                    <div class="col-xs-9">
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="{{$ctrl.u}}hasAmortizationFree" ng-value="true" ng-model="$ctrl.m.om.e.hasAmortizationFree"> Ja
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="{{$ctrl.u}}hasAmortizationFree" ng-value="false" ng-model="$ctrl.m.om.e.hasAmortizationFree"> Nej
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <ntech-input  ng-if="$ctrl.m.om.e.hasAmortizationFree" label="'Amorteringsfritt tom'" model="$ctrl.m.om.e.amortizationFreeUntilDate" t="'date'" required="$ctrl.m.om.e.hasAmortizationFree" label-classes="'col-xs-3'" input-classes="'col-xs-4'"></ntech-input>
+                                                <!--undantag-->
+                                                <div class="form-group">
+                                                    <label class="control-label col-xs-3">Undantag</label>
+                                                    <div class="col-xs-9">
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="{{$ctrl.u}}hasException" ng-value="true" ng-model="$ctrl.m.om.e.hasException"> Ja
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="{{$ctrl.u}}hasException" ng-value="false" ng-model="$ctrl.m.om.e.hasException"> Nej
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <ntech-input ng-if="$ctrl.m.om.e.hasException" label="'Undantag tom'" model="$ctrl.m.om.e.amortizationExceptionUntilDate" t="'date'" required="$ctrl.m.om.e.hasException" label-classes="'col-xs-3'" input-classes="'col-xs-4'"></ntech-input>
+                                                <ntech-input ng-if="$ctrl.m.om.e.hasException" label="'Undantag amortering'" model="$ctrl.m.om.e.exceptionAmortizationAmount" t="'positiveint'" required="$ctrl.m.om.e.hasException" label-classes="'col-xs-3'" input-classes="'col-xs-4'"></ntech-input>                
+                                                <div class="form-group" ng-if="$ctrl.m.om.e.hasException">
+                                                    <label class="control-label col-xs-3">Undantag pga</label>
+                                                    <div class="col-xs-9">
+                                                        <div class="checkbox" ng-repeat="e in $ctrl.m.om.e.amortizationExceptionReasons">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="e.checked" ng-required="!$ctrl.isAtLeastOnceExceptionChecked()">
+                                                                {{e.name}}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row pt-3">
+                                <div class="col-xs-6 text-right"><button class="n-main-btn n-white-btn" ng-click="$ctrl.cancelEdit($event)">Cancel</button></div>
+                                <div class="col-xs-6"><button class="n-main-btn n-blue-btn" ng-disabled="!editmanuallyform.$valid" ng-click="$ctrl.saveEdit($event)">Save</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </modal-dialog>
+            </div>
+            <button class="n-main-btn n-blue-btn" ng-if="$ctrl.m.om.isNewAllowed" ng-click="$ctrl.m.om.onNew($event)">New amortization basis <span class="glyphicon glyphicon-arrow-right"></span></button>
+        </div>   
+    </div>
+</script>

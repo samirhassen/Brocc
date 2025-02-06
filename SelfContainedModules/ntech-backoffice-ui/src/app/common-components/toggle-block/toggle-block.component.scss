@@ -1,0 +1,35 @@
+.block {
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    margin-top: -2px;
+    background-color: #f9f9f9;
+    padding: 11px 0 5px 0;
+}
+
+.block .custom-header .custom-header-text {
+    margin-left: 15px;
+}
+
+.block .block-area {
+    padding-bottom: 70px;
+}
+
+.block-fixed-border {
+    padding-top: 0px;
+    border-top: none;
+    border-bottom: none;
+}
+
+.block-toggle-fixed-border {
+    border-bottom: 1px solid #000000;
+    padding-bottom: 3px;
+}
+
+.block-area-fluid-border {
+    border-top: 1px solid #000000;
+    margin-top: 3px;
+}
+
+.block-transparent {
+    background-color: transparent;
+}

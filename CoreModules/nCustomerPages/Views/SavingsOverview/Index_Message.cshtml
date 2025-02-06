@@ -1,0 +1,20 @@
+﻿<script type="text/ng-template" id="message.html">
+    <!-- Beware: If you remove backdrop static or keyboard false the routing will break when the user doesnt close with the button -->
+    <div class="modal fade in" data-backdrop="static" data-keyboard="false" id="savingsOverviewMessageModal">
+        <div class="modal-dialog" style="width:90%; max-width: 800px;padding-top:90px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="pull-right">
+                        <button type="button" class="n-icon-btn n-grey-btn" ng-click="hide($event)"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>                    
+                    <h1 ng-show="messageTypeCode === 'newaccountgreeting' || messageTypeCode === 'alreadyhaveaccount' || messageTypeCode === 'accountbeingprocessed'" class="modal-header" translate="sao_message_h_oa">Öppna sparkonto</h1>
+                    <div class="pt-3 pb-3 text-center">
+                        <p ng-show="messageTypeCode === 'newaccountgreeting'" translate="sao_message_newaccountgreeting">Tack! Nu är allting klart och ditt konto är aktivt.</p>
+                        <p ng-show="messageTypeCode === 'alreadyhaveaccount'" translate="sao_message_alreadyhaveaccount">Du har redan ett sparkonto hos oss.</p>
+                        <p ng-show="messageTypeCode === 'accountbeingprocessed'" translate="sao_message_accountbeingprocessed">Din ansökan behandlas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

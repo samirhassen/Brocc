@@ -1,0 +1,37 @@
+<div *ngIf="m?.isActive && !m?.isSaving" class="flex-content-area">
+    <div class="content-area pt-5 pb-2">
+        <div>
+            <div *ngIf="m?.allowBackToRedirectUrl">
+                <b><a [href]="m.redirectUrl">{{getStaticTranslation('backLinkText')}}</a></b>
+            </div>            
+            <div class="pt-1 pb-1 text-center">
+                <h1>{{getStaticTranslation('kyc')}}</h1>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div>
+            <div *ngFor="let customer of m.customers;let isLast=last">
+                <kyc-answers-editor [initialData]="customer.kycAnswersInitialData">
+                    <div kyc-answers-header-content>
+                        <h2>{{customer.fullName}}{{(customer.birthDate ? ', ' : '')}}{{customer.birthDate}}</h2>
+                        <hr class="hr-section" />
+                    </div>
+                    <div *ngIf="isLast" kyc-answers-footer-content class="text-center">
+                        <button [disabled]="!isSavePossible()" (click)="submitAnswers($event)" class="n-direct-btn n-green-btn">
+                            {{getStaticTranslation('saveAnswers')}}
+                        </button>
+                    </div>
+                </kyc-answers-editor>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<div *ngIf="m?.isCompleted">
+    <h2>{{getStaticTranslation('sessionCompleteText')}}</h2>
+</div>
+
+<div *ngIf="m?.isRedirecting">
+    <h2>{{getStaticTranslation('sessionCompleteRedirectText')}}</h2>
+    <p><a [href]="m.redirectUrl">{{getStaticTranslation('redirectLinkText')}}</a></p>
+</div>

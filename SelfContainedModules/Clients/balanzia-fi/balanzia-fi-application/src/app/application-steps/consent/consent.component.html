@@ -1,0 +1,51 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein consent-page ">
+            <p [translate]="'steps.consent.commonText'"></p>
+            <a [href]="'steps.consent.linkUri' | translate: application" class="custom-link" target="_blank" rel="nofollow" [innerHTML]="'steps.consent.linkText' | translate: application"></a>
+
+            <label class="custom-label pt-3" [translate]="'steps.consent.header1'"></label>
+            <div>
+                <label class="custom-checkbox" [class.active]="form.value.satConsent1 === true">
+                    <input type="checkbox" formControlName="satConsent1">
+                    <span [translate]="'steps.consent.satConsentHeader'"></span>
+                </label>
+            </div>
+            <div>
+                <label class="custom-checkbox" [class.active]="form.value.customerConsent1 === true">
+                    <input type="checkbox" formControlName="customerConsent1">
+                    <span [translate]="'steps.consent.customerConsentHeader'"></span>
+                </label>
+            </div>
+            <div>
+                <label class="custom-checkbox" [class.active]="form.value.informationConsent1 === true">
+                    <input type="checkbox" formControlName="informationConsent1">
+                    <span [translate]="'steps.consent.informationConsentHeader'"></span>
+                </label>
+            </div>
+
+            <div *ngIf="application.nrOfApplicants.value > 1">
+                <label class="custom-label pt-2" [translate]="'steps.consent.header2'"></label>
+                <div>
+                    <label class="custom-checkbox" [class.active]="form.value.satConsent2 === true">
+                        <input type="checkbox" formControlName="satConsent2">
+                        <span [translate]="'steps.consent.satConsentHeader'"></span>
+                    </label>
+                </div>
+                <div>
+                    <label class="custom-checkbox" [class.active]="form.value.customerConsent2 === true">
+                        <input type="checkbox" formControlName="customerConsent2">
+                        <span [translate]="'steps.consent.customerConsentHeader'"></span>
+                    </label>
+                </div>
+                <div>
+                    <label class="custom-checkbox" [class.active]="form.value.informationConsent2 === true">
+                        <input type="checkbox" formControlName="informationConsent2">
+                        <span [translate]="'steps.consent.informationConsentHeader'"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

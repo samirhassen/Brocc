@@ -1,0 +1,15 @@
+<application-template>
+    <form [formGroup]="form">
+
+        <div class="pb-5 movein">
+            <div class="pb-5">
+                <p>{{application.firstName}} {{application.lastName}}</p>
+                <p>{{application.civicRegNr}}</p>
+            </div>
+            <label class="custom-label">Vad har ditt företag för org.nummer?</label>
+            <input type="text" class="custom-input" placeholder="ex 55XXXX-XXXX" formControlName="orgnr">
+        </div>
+
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

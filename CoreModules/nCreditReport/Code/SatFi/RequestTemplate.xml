@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.asiakastieto.fi/consumer_5_00/" xmlns:sat="http://www.asiakastieto.fi/XMLSchema/SAT_security.xsd" xmlns:sat1="http://www.asiakastieto.fi/XMLSchema/SAT_consumer_loan.xsd">
+  <soapenv:Header>
+    <con:security>
+      <sat:UsernameToken>
+        <sat:Username></sat:Username>
+        <sat:Password></sat:Password>
+      </sat:UsernameToken>
+      <sat:timeStamp></sat:timeStamp>
+      <sat:checkSum></sat:checkSum>
+    </con:security>
+  </soapenv:Header>
+  <soapenv:Body>
+    <con:getConsumerLoanSummary>
+      <con:request>
+        <sat1:endUser></sat1:endUser>
+        <sat1:personId></sat1:personId>
+        <!--Optional:-->
+        <sat1:languageCode>FI</sat1:languageCode>
+        <sat1:target></sat1:target>
+      </con:request>
+    </con:getConsumerLoanSummary>
+  </soapenv:Body>
+</soapenv:Envelope>

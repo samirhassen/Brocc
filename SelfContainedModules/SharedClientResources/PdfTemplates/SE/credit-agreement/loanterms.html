@@ -1,0 +1,183 @@
+﻿<div class="page">
+    <div>
+        <div class="header">
+            <h1>Låneavtal</h1>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="content">
+        <div class="area">
+            <div class="column1 blackborder">
+                <h3>Kreditgivare</h3>
+                <p>{{documentClientData_name}}</p>
+                <p>Org.nr: {{documentClientData_orgnr}}</p>
+            </div>
+            <div class="column2 greenborder">
+                <h3>Låntagare</h3>
+                {{#Applicants}}
+                <div class="pb-1">
+                    <p>{{FullName}}, {{CivicRegNr}}</p>
+                    <p>{{AddressSingleLine}}</p>
+                </div>
+                {{/Applicants}}
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="area">
+            <p>
+                {{documentClientData_name}}, ovan kallat Kreditgivare, lånar härmed nedan angivet lånebelopp till Låntagaren på de villkor som anges i detta avtal. Låneavtalet är bindande för Låntagaren, genom dennes underskrift av låneavtalet.
+                Låntagaren bekräftar genom signering med BankID att denne tagit del av och godkänt detta låneavtal jämte övriga tillämpliga villkor (även kreditgivarens behandling av personuppgifter), samt att alla uppgifter som lämnats i detta låneavtal
+                är korrekta och kompletta. Detta låneavtal jämte ”allmänna kreditvillkor” är inte bindande för kreditgivaren förrän denne genomfört och godkänt låntagaren i slutlig kreditprövning.
+            </p>
+
+            <h2 class="pt-3">Lånedetaljer</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Lånenummer</td>
+                        <td class="text-right">{{CreditNr}}</td>
+                    </tr>
+                    {{#AnnuityAmount}}
+                    <tr>
+                        <td>Lånetyp</td>
+                        <td class="text-right">Annuitet</td>
+                    </tr>
+                    {{/AnnuityAmount}}
+                    {{#SinglePaymentLoanRepaymentTimeInDays}}
+                    <tr>
+                        <td>Lånetyp</td>
+                        <td class="text-right">En återbetalning</td>
+                    </tr>
+                    {{/SinglePaymentLoanRepaymentTimeInDays}}
+                    <tr>
+                        <td>Lånebelopp</td>
+                        <td class="text-right">{{LoanAmount}} kr</td>
+                    </tr>
+                    {{#RepaymentTimeInMonths}}
+                    <tr>
+                        <td>Återbetalningstid</td>
+                        <td class="text-right">{{RepaymentTimeInMonths}} mån</td>
+                    </tr>
+                    {{/RepaymentTimeInMonths}}
+                    {{#SinglePaymentLoanRepaymentTimeInDays}}
+                    <tr>
+                        <td>Återbetalningstid</td>
+                        <td class="text-right">{{SinglePaymentLoanRepaymentTimeInDays}} dagar</td>
+                    </tr>
+                    {{/SinglePaymentLoanRepaymentTimeInDays}}
+                    {{#AnnuityAmount}}
+                    <tr>
+                        <td>Månadsbelopp</td>
+                        <td class="text-right">{{AnnuityAmount}} kr</td>
+                    </tr>
+                    {{/AnnuityAmount}}
+                    <tr>
+                        <td>Totalt belopp att betala</td>
+                        <td class="text-right">{{TotalPaidAmount}} kr</td>
+                    </tr>
+                    <tr>
+                        <td>Nominell ränta</td>
+                        <td class="text-right">{{TotalInterestRatePercent}} %</td>
+                    </tr>
+                    <tr>
+                        <td>Effektivränta</td>
+                        <td class="text-right">{{EffectiveInterestRatePercent}} %</td>
+                    </tr>
+                    <tr>
+                        <td>Aviavgift</td>
+                        <td class="text-right">{{NotificationFeeAmount}} kr</td>
+                    </tr>
+                    {{#InitialFeeWithheldAmount}}
+                    <tr>
+                        <td>Uppläggningsavgift, dras från lånbeloppet vid utbetalning</td>
+                        <td class="text-right">{{InitialFeeWithheldAmount}} kr</td>
+                    </tr>
+                    {{/InitialFeeWithheldAmount}}
+                    {{#InitialFeeCapitalizedAmount}}
+                    <tr>
+                        <td>Uppläggningsavgift, kapitaliserad</td>
+                        <td class="text-right">{{InitialFeeCapitalizedAmount}} kr</td>
+                    </tr>
+                    {{/InitialFeeCapitalizedAmount}}
+                    {{#FirstNotificationCosts}}
+                    <tr>
+                        <td>På första avin - {{CostName}}</td>
+                        <td class="text-right">{{Amount}} kr</td>
+                    </tr>
+                    {{/FirstNotificationCosts}}
+                </tbody>
+            </table>
+
+            <h2 class="pt-3">Mottagarkonto</h2>
+            <p>Enligt överenskommelse kommer utbetalningen fördelas på nedanstående konton.</p>
+            {{#PersonalSettlementAccount}}
+            <div class="pt-1 customer-accounts">
+                <h3>Kundkonto</h3>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>{{AccountTypeName}}</td>
+                            <td>{{BankName}}</td>
+                            <td class="text-right">{{AccountNrFormatted}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {{/PersonalSettlementAccount}}
+            {{#HasLoansToSettle}}
+            <div class="pt-2 settle-accounts">
+                <h3>Lösen</h3>
+                <p>Se nästa sida.</p>
+            </div>
+            {{/HasLoansToSettle}}
+        </div>
+    </div>
+</div>
+
+
+<!--Lista på lån som ska lösas ligger på separat sida-->
+{{#HasLoansToSettle}}
+<div class="page">
+    <div>
+        <div class="header">
+            <h1>Låneavtal</h1>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="content">
+
+        <div class="area">
+            <div class="pt-2 settle-accounts">
+                <h3>Lösen</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kontotyp</td>
+                            <th>BG / PG-nummer</td>
+                            <th class="text-right">Referens</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#LoanToSettle}}
+                        <tr>
+                            <td>{{AccountTypeName}}</td>
+                            <td>{{AccountNrFormatted}}</td>
+                            <td class="text-right">{{PaymentReferenceOrMessage}}</td>
+                        </tr>
+                        {{/LoanToSettle}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{/HasLoansToSettle}}
+
+<!--sida med lån som ska lösas-->
+
+<div id="footer">
+    <p>Postadress: {{documentClientData_footerAddress}}</p>
+</div>

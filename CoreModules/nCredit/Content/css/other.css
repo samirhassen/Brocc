@@ -1,0 +1,38 @@
+.comma:not(:first-child):before {
+    content: ", ";
+}
+
+.testrule {
+    color: green;
+}
+
+/* begin test functions corner popup */
+.frame {
+    background-color: #fff;
+    padding: 20px 30px 30px 30px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.30);
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.30);
+}
+
+.popup-position {
+    position: fixed;
+    bottom: 60px;
+    right: 5%;
+}
+
+.toned-down {
+    border-color: #efefef;
+    color: #efefef;
+}
+/* end test functions corner popup */
+
+.no-padding-left {
+    padding-left: 0px;
+}
+
+.edited-bookkeeping-nr {
+    color: white;
+    background-color: #5bc0de;
+}

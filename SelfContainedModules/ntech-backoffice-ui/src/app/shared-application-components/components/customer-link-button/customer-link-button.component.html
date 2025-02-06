@@ -1,0 +1,40 @@
+<div class="form-horizontal">
+  <div class="form-group">
+    <label class="control-label col-xs-7">Customer link</label>
+    <div class="col-xs-5 form-control-static">
+      <button
+        class="n-direct-btn n-turquoise-btn"
+        (click)="openCustomerLinkDialog(customerLinkDialog, $event)"
+      >
+        Link <span class="glyphicon glyphicon-resize-full"></span>
+      </button>
+    </div>
+  </div>
+  <ng-content></ng-content>
+</div>
+
+<ng-template #customerLinkDialog>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="n-icon-btn n-white-btn pull-right"
+      (click)="customerLinkDialogRef?.hide()"
+    >
+      <span class="arrows-close"
+        ><span class="glyphicon glyphicon-arrow-down"></span
+        ><span class="glyphicon glyphicon-arrow-up"></span
+      ></span>
+    </button>
+    <h1>Customer link</h1>
+  </div>
+  <div class="modal-body">
+    <textarea
+      rows="1"
+      style="width: 100%; resize: none"
+      #customerLinkTextElement
+      (focus)="onCustomerLinkTextFocused(customerLinkTextElement)"
+      readonly="readonly"
+      >{{ application.getCustomerPagesApplicationsUrl() }}</textarea
+    >
+  </div>
+</ng-template>

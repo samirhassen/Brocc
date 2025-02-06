@@ -1,0 +1,47 @@
+<div *ngIf="m">
+  <div class="row">
+    <div class="col-xs-2">
+      <div class="custom-submenu">
+        <ul class="nav nav-pills nav-stacked">
+          <li
+            [ngClass]="getNavPillsClass('applicationsList')"
+            (click)="setCurrentTab('applicationsList', $event)"
+          >
+            <a>Applications</a>
+          </li>
+          <li
+            [ngClass]="getNavPillsClass('applicationsSearch')"
+            (click)="setCurrentTab('applicationsSearch', $event)"
+          >
+            <a>Search</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-10">
+      <div [ngSwitch]="true">
+        <div *ngSwitchCase="m.currentTabName === 'applicationsList'">
+          <toggle-block
+            [initialData]="m.unassignedApplicationsInitialData.toggle"
+          >
+            <applications-list
+              [initialData]="m.unassignedApplicationsInitialData.list"
+            ></applications-list>
+          </toggle-block>
+          <toggle-block
+            [initialData]="m.assignedApplicationsInitialData.toggle"
+          >
+            <applications-list
+              [initialData]="m.assignedApplicationsInitialData.list"
+            ></applications-list>
+          </toggle-block>
+        </div>
+        <div *ngSwitchCase="m.currentTabName === 'applicationsSearch'">
+          <applications-search
+            [initialData]="m.applicationsSearchInitialData"
+          ></applications-search>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

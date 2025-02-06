@@ -1,0 +1,93 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="application-customerinfo.html">
+    <div class="form-horizontal">
+        <div class="row">
+            <div ng-if="$ctrl.initialData.isArchived !== true" class="col-sm-4 pull-right text-right"><a class="n-anchor" ng-href="{{$ctrl.customer.customerCardUrl}}">View details</a></div>
+        </div>
+
+        <div class="form-group pb-3" ng-if="$ctrl.customer.isSanctionRejected">
+            <label class="col-sm-4 control-label"><span>Reject reason</span></label>
+            <div class="col-sm-8 form-control-static"><span><b>Sanctioned</b></span></div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Name</label>
+            <div class="col-sm-8 form-control-static" ng-if="!$ctrl.isCompany()"><b><span class="copyable">{{$ctrl.formatmissing($ctrl.customer.firstName)}}</span>, <span class="copyable">{{$ctrl.customer.birthDate}}</span></b></div>
+            <div class="col-sm-8 form-control-static" ng-if="$ctrl.isCompany()"><b><span class="copyable">{{$ctrl.formatmissing($ctrl.customer.companyName)}}</span></b></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">{{$ctrl.isCompany() ? 'Orgnr' : 'Civic nr'}}</label>
+            <p ng-hide="$ctrl.civicRegNr" class="form-control-static col-sm-6">
+                <span class="n-unlock">
+                    <a href="#" ng-click="$ctrl.unlockCivicRegNr($event)"><span class="glyphicon glyphicon-lock"></span></a>
+                </span>
+            </p>
+            <p ng-show="$ctrl.civicRegNr" class="form-control-static col-sm-6 copyable">{{$ctrl.civicRegNr}}</p>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4 control-label">
+                <span ng-hide="$ctrl.contactInfo" class="n-unlock" ng-click="$ctrl.toggleContactInfo($event)"><a href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a></span>
+                <a ng-show="$ctrl.contactInfo && $ctrl.contactInfo.isOpen" href="" ng-click="$ctrl.toggleContactInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-down"></span></a>
+                <a ng-show="$ctrl.contactInfo && !$ctrl.contactInfo.isOpen" href="" ng-click="$ctrl.toggleContactInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-right"></span></a>
+            </div>
+            <p class="form-control-static col-sm-6">Contact information</p>
+        </div>
+        <div ng-if="$ctrl.contactInfo && $ctrl.contactInfo.isOpen">
+            <div class="form-group" ng-if="!$ctrl.isCompany()">
+                <label class="control-label col-sm-4">Fullname</label>
+                <p ng-show="$ctrl.contactInfo.firstName || $ctrl.contactInfo.lastName" class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.firstName}}&nbsp;{{$ctrl.contactInfo.lastName}}</p>
+                <p ng-hide="$ctrl.contactInfo.firstName || $ctrl.contactInfo.lastName" class="form-control-static col-sm-6 copyable"></p>
+            </div>
+            <div class="form-group" ng-if="$ctrl.isCompany()">
+                <label class="control-label col-sm-4">Name</label>
+                <p ng-show="$ctrl.contactInfo.companyName" class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.companyName}}</p>
+                <p ng-hide="$ctrl.contactInfo.companyName" class="form-control-static col-sm-6 copyable"></p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Street</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressStreet}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Zip</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressZipcode}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">City</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressCity}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Country</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.addressCountry}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Email</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.contactInfo.email}}</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Phone</label>
+                <p class="form-control-static col-sm-6 copyable">{{$ctrl.formatPhoneNr($ctrl.contactInfo.phone)}}</p>
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="$ctrl.initialData.showKycBlock && !$ctrl.isCompany()">
+            <div class="col-sm-4 control-label">
+                <span ng-hide="$ctrl.pepKycInfo" class="n-unlock" ng-click="$ctrl.togglePepKycInfo($event)"><a href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a></span>
+                <a ng-show="$ctrl.pepKycInfo && $ctrl.pepKycInfo.isOpen" href="" ng-click="$ctrl.togglePepKycInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-down"></span></a>
+                <a ng-show="$ctrl.pepKycInfo && !$ctrl.pepKycInfo.isOpen" href="" ng-click="$ctrl.togglePepKycInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-right"></span></a>
+            </div>
+            <p class="form-control-static col-sm-6">Pep/Kyc</p>
+        </div>
+        <div ng-if="$ctrl.pepKycInfo && $ctrl.pepKycInfo.isOpen">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Latest screen</label>
+                <p class="form-control-static col-sm-4 copyable">{{($ctrl.asDate($ctrl.pepKycInfo.latestScreeningDate) | date:'shortDate') || '-'}}</p>
+                <p class="form-control-static col-sm-4">
+                    <button class="n-direct-btn n-green-btn" ng-click="$ctrl.doKycScreen($event)">Screen <span class="glyphicon glyphicon-refresh"></span></button>
+                </p>
+            </div>
+        </div>
+    </div>   
+</script>

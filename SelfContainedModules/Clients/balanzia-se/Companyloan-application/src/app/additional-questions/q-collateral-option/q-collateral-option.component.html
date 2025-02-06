@@ -1,0 +1,21 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <p>För att kunna bevilja ett lån behöver vi en säkerhet i form av borgensman.</p>
+            <label class="custom-label">Ange borgensman</label>    
+            <div>
+                <label class="custom-radio">
+                    <input type="radio" formControlName="collateralOption" value="applicant">
+                    Jag
+                </label>
+            </div>
+            <div>
+                <label class="custom-radio">
+                    <input type="radio" formControlName="collateralOption" value="other">
+                    Annan person
+                </label>
+            </div>    
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

@@ -1,0 +1,214 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-settlement.html">
+    <div>
+        <p ng-if="$ctrl.m && !$ctrl.initialData.applicationInfo.IsFinalDecisionMade && !$ctrl.isSettlementAllowed()">Possible when all other checks are ok.</p>
+        <div ng-if="$ctrl.m && $ctrl.isSettlementAllowed()">
+            <!--nyckel värden, alltid synliga-->
+            <div class="row pb-3">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Type of loan</label>
+                            <p class="form-control-static col-xs-6" ng-switch="$ctrl.m.LoanTypeCode">
+                                <span ng-switch-when="moveExistingLoan">Move existing loan</span>
+                                <span ng-switch-default>{{$ctrl.m.LoanTypeCode}}</span>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Granted loan amount</label>
+                            <p class="form-control-static col-xs-6 copyable">{{$ctrl.getGrantedLoanAmount() | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Binding until</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.FinalOffer.BindingUntilDate}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Current amortization plan</label>
+                            <p class="form-control-static col-xs-6"><a ng-href="{{$ctrl.m.AmortizationPlanDocument.DownloadUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--calculate-->
+            <div class="row" ng-if="$ctrl.m.Edit">
+                <div class="col-xs-10 col-sm-offset-1">
+                    <form name="mortgageloansettlementform" novalidate>
+                        <div class="editblock">
+                            <div class="form-horizontal">
+                                <div ng-repeat="n in $ctrl.m.Edit.CurrentLoans">
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">Actual loan amount</label>
+                                        <div class="col-xs-4"><p class="form-control-static">{{n.BankName}}</p></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">Loan number</label>
+                                        <div class="col-xs-4"><p class="form-control-static">{{n.LoanNr}}</p></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">Applied amount</label>
+                                        <div class="col-xs-4"><p class="form-control-static copyable">{{n.LastKnownCurrentBalance | currency}}</p></div>
+                                    </div>
+                                    <ntech-input label="'Actual loan amount'" model="n.ActualLoanAmount" t="'positivedecimal'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>
+                                    <ntech-input label="'Interest difference'" model="n.InterestDifferenceAmount" t="'positivedecimal'" required="true" label-classes="'col-xs-6'" input-classes="'col-xs-4'"></ntech-input>                                    
+                                    <hr style="border-top: 1px dotted white" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Loan amount</label>
+                                    <div class="col-xs-4">
+                                        <p class="form-control-static">{{$ctrl.getEditActualLoanAmount() | currency}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Interest difference cost</label>
+                                    <div class="col-xs-4">
+                                        <p class="form-control-static">{{$ctrl.getEditInterestDifferenceAmount() | currency}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center pt-3">
+                                <button class="n-direct-btn n-blue-btn" ng-click="$ctrl.calculateSettlementSuggestion($event)" ng-disabled="mortgageloansettlementform.$invalid">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!--preview-->
+            <div class="pt-3" ng-if="$ctrl.m.Preview">
+                <div class="frame">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <div class="form-group" style="border-bottom: 1px solid lightgrey;border-top: 1px solid lightgrey">
+                                    <label class="control-label col-xs-6" style="text-align:left">Granted loan amount</label>
+                                    <p class="form-control-static col-xs-4" style="font-weight:normal">{{$ctrl.m.Preview.grantedLoanAmount | currency}}</p>
+                                </div>
+                                <div class="form-group" style="border-bottom: solid 1px lightgrey">
+                                    <label class="control-label col-xs-6" style="text-align:left">Actual loan amount</label>
+                                    <p class="form-control-static col-xs-4" style="font-weight:normal">{{$ctrl.m.Preview.actualLoanAmount | currency}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6" style="font-weight:bold;text-align:left">Difference</label>
+                                    <p class="form-control-static col-xs-4" style="font-weight:bold">{{$ctrl.m.Preview.actualVsGrantedDifferenceAmount | currency}}</p>
+                                </div>
+                            </div>
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-5">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Outgoing payment</label>
+                                    <p class="form-control-static col-xs-4">{{$ctrl.m.Preview.totalPaidAmount | currency}}</p>
+                                </div>
+                                <hr style="border-top: 1px dotted #eee" />
+                                <div class="form-group pt-2">
+                                    <label class="control-label col-xs-6">Loan amount</label>
+                                    <p class="form-control-static col-xs-4">{{$ctrl.m.Preview.actualLoanAmount | currency}}</p>
+                                </div>                            
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Interest difference cost</label>
+                                    <p class="form-control-static col-xs-4">{{$ctrl.m.Preview.interestDifferenceAmount | currency}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-3">
+                        <button class="n-main-btn n-blue-btn" ng-click="$ctrl.scheduleOutgoingPayment($event)">Handle payment manually</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--avstämning-->
+            <div class="pt-3" ng-if="$ctrl.m.PendingSettlementPayment">
+                <div class="frame">
+                    <div class="text-right pb-1">
+                        <button class="n-main-btn n-white-btn" ng-click="$ctrl.cancelScheduledOutgoingPayment($event)">Cancel</button>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Outgoing payment</label>
+                            <p class="form-control-static col-xs-4">{{($ctrl.m.PendingSettlementPayment.LoanAmount + $ctrl.m.PendingSettlementPayment.InterestDifferenceAmount) | currency}}</p>
+                        </div>
+                        <hr style="border-top: 1px dotted #eee" />
+                        <div class="form-group pt-2">
+                            <label class="control-label col-xs-6">Loan amount</label>
+                            <p class="form-control-static col-xs-4">{{$ctrl.m.PendingSettlementPayment.LoanAmount | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Interest difference cost</label>
+                            <p class="form-control-static col-xs-4">{{$ctrl.m.PendingSettlementPayment.InterestDifferenceAmount | currency}}</p>
+                        </div>
+                        <p class="text-center pt-3">Outgoing payment is delivered and confirmed?</p>
+                        <div class="form-group">
+                            <label class="col-xs-6 text-right">Yes</label>
+                            <div class="col-xs-4"><input ng-model="$ctrl.m.isConfirmChecked" type="checkbox"></div>
+                        </div>
+                    </div>
+                    <div class="text-center pt-3">
+                        <button class="n-main-btn n-green-btn" ng-disabled="!$ctrl.m.isConfirmChecked" ng-click="$ctrl.createNewLoan($event)">Create loan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.m && $ctrl.initialData.applicationInfo.IsFinalDecisionMade">
+            <div class="row pb-3">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Type of loan</label>
+                            <p class="form-control-static col-xs-6" ng-switch="$ctrl.m.LoanTypeCode">
+                                <span ng-switch-when="moveExistingLoan">Move existing loan</span>
+                                <span ng-switch-default>{{$ctrl.m.LoanTypeCode}}</span>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Granted loan amount</label>
+                            <p class="form-control-static col-xs-6 copyable">{{$ctrl.m.AmortizationModel.CurrentLoanAmount | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Binding until</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.FinalOffer.BindingUntilDate}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Current amortization plan</label>
+                            <p class="form-control-static col-xs-6"><a ng-href="{{$ctrl.m.AmortizationPlanDocument.DownloadUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3">
+                <div class="frame">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Outgoing payment</label>
+                            <p class="form-control-static col-xs-4">{{($ctrl.m.PendingSettlementPayment.LoanAmount + $ctrl.m.PendingSettlementPayment.InterestDifferenceAmount) | currency}}</p>
+                        </div>
+                        <hr style="border-top: 1px dotted #eee" />
+                        <div class="form-group pt-2">
+                            <label class="control-label col-xs-6">Loan amount</label>
+                            <p class="form-control-static col-xs-4">{{$ctrl.m.PendingSettlementPayment.LoanAmount | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Interest difference cost</label>
+                            <p class="form-control-static col-xs-4">{{$ctrl.m.PendingSettlementPayment.InterestDifferenceAmount | currency}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</script>

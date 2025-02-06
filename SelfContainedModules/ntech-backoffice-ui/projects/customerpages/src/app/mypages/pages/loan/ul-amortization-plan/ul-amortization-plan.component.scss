@@ -1,0 +1,104 @@
+.future-amortization-item {
+  background-color: rgb(223, 234, 251);
+}
+
+.amort-plan {
+  display: flex;
+  flex-direction: column;
+
+  .amort-header {
+    min-height: 200px;
+    flex-grow: 0;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    .amort-header-form-item {
+      flex-grow: 0;
+      min-height: 30px;
+      display: flex;
+      gap: 10px;
+      .amort-header-form-item-label {
+        width: 50%;
+        min-width: 140px;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .amort-header-form-item-value {
+        display: flex;
+        justify-content: flex-start;
+        font-weight: bold;
+      }
+    }
+    .amort-header-text {
+      padding-top: 10px;
+      flex-grow: 0;
+      min-height: 50px;
+    }
+  }
+
+  .amort-months {
+    padding-top: 20px;
+    min-height: 200px;
+    flex-grow: 1;
+    .amort-months-h {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: solid 2px black;
+      font-weight: bold;
+    }
+    .amort-months-r {
+      display: flex;
+      min-height: 40px;
+      align-items: center;
+      border-bottom: solid 2px black;
+      .amort-months-r-date {
+        flex-grow: 1;
+      }
+      .amort-months-r-toggle {
+        padding-left: 10px;
+      }
+      &:hover {
+        cursor: pointer;
+        background-color: #034480;
+        color: white;
+      }
+    }
+    .amort-months-r-expanded {
+      background-color: #034480;
+      color: white;
+    }
+    .amort-months-details {
+      display: flex;
+      flex-direction: column;
+      min-height: 40px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border-bottom: solid 2px black;
+      div {
+        display: flex;
+        gap: 15px;
+        padding-left: 10%;
+      }
+      .amort-months-details-label {
+        display: flex;
+        min-width: 120px;
+        justify-content: flex-end;
+        width: 20%;
+      }
+      .amort-months-details-value {
+        display: flex;
+        justify-content: flex-start;
+        font-weight: bold;
+        flex-grow: 1;
+      }
+    }
+  }
+
+  .amort-pager {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+    flex-grow: 0;
+  }
+}

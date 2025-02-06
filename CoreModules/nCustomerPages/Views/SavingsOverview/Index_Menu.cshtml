@@ -1,0 +1,14 @@
+﻿<a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'productoverview' }" ng-href="{{productsOverviewUrl}}" translate="sao_minatjanster_m">Mina tjänster</a>
+<a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'withdrawals' }" ng-href="#!/withdrawals" translate="sao_withdrawals_m">Uttag</a>
+<span ng-click="showMenu=!showMenu" class="desktop">
+    <a href="" class="item"><span translate="sao_other_m">Övrigt</span> <span class="glyphicon glyphicon-play"></span></a>
+</span>
+<span class="alt" ng-show="showMenu">
+    <a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'withdrawalaccounts' }" ng-href="#!/withdrawalaccounts" translate="sao_withdrawalaccounts_m">Mottagarkonton</a>
+    <a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'accountdocuments' }" ng-href="#!/accountdocuments" translate="sao_accountdocuments_m">Mina dokument</a>
+    <a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'closures' }" ng-href="#!/closures" translate="sao_closures_m">Avsluta konton</a>
+    <a class="item mobile" href="@Url.Action("Logout", "Common")"><span translate="logout">Logga ut</span></a>
+</span>
+<span class="desktop">
+    <a href="@Url.Action("Logout", "Common")" class="item logout-link"><span translate="logout">Logga ut</span></a>
+</span>

@@ -1,0 +1,36 @@
+<div *ngIf="m">
+    <form class="form-inline" [formGroup]="m.form.form">
+        <div class="form-group">
+            <label for="count-select" style="margin-right:5px">Select Count</label>
+            <select class="form-control" formControlName="count" style="margin-right:5px">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="generateNrs($event)">Generate new loan nrs</button>
+    </form>
+    <br />
+    <table class="table">
+        <tbody>
+            <tr *ngIf="m.sessionCreditNrs.length > 0">
+                <th><b>Generated this session</b></th>
+            </tr>
+            <tr *ngFor="let creditNr of m.sessionCreditNrs">
+                <td clas="copyable">{{creditNr}}</td>
+            </tr>
+            <tr *ngIf="m.recentCreditNrs">
+                <th><b>Generated earlier</b></th>
+            </tr>
+            <tr *ngFor="let n of m.recentCreditNrs">
+                <td *ngIf="n.creditStartDate">
+                    <span style="text-decoration: line-through;margin-right:10px;">{{n.creditNr}}</span>                    
+                    <a class="n-anchor" href="#" [routerLink]="['/credit/details', n.creditNr]" target="_blank">Loan created {{formatDate(n.creditStartDate)}}</a>
+                </td>
+                <td *ngIf="!n.creditStartDate" class="copyable">{{n.creditNr}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

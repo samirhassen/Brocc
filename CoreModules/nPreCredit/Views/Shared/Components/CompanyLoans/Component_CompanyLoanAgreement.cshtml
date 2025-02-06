@@ -1,0 +1,46 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-agreement.html">
+    <div ng-if="$ctrl.m && $ctrl.m.session">
+        <p ng-if="$ctrl.m.haveAllSigned() === false" class="pull-left">
+            Unsigned agreement &nbsp;&nbsp; <a ng-href="{{'/CreditManagement/ArchiveDocument?key=' + $ctrl.m.session.Static.UnsignedDocumentArchiveKey}}" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+        </p>
+        <p ng-if="$ctrl.m.haveAllSigned() === true" class="pull-left">
+            Signed agreement &nbsp;&nbsp; <a ng-href="{{'/CreditManagement/ArchiveDocument?key=' + $ctrl.m.session.State.SignedDocumentArchiveKey}}" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+        </p>
+        <p ng-if="$ctrl.isAttachAllowed()" class="pull-right">
+            <button class="n-direct-btn n-white-btn" ng-click="$ctrl.attachDocument(s, $event)">
+                Attach <span class="glyphicon glyphicon-paperclip"></span>
+            </button>
+        </p>
+        <p ng-if="$ctrl.m.isCancelAllowed" class="pull-right">
+            <button class="n-main-btn n-white-btn" ng-click="$ctrl.cancel($event)">
+                Cancel
+            </button>
+        </p>
+        <table class="table table-striped">
+            <tbody>
+                <tr ng-repeat="s in $ctrl.m.session.Static.Signers">
+                    <td class="col-xs-4" >{{s.FirstName}}, {{s.BirthDate | date:'yyyyMMdd'}}</td>
+                    <td class="col-xs-3"><span ng-repeat="role in s.ListMemberships" class="comma">{{'companyloan.signatureRole.' + role | translate}}</span></td>
+                    <td class="col-xs-3">
+                        <span ng-if="$ctrl.m.getSentButNotSignedDate(s)">Link sent, {{$ctrl.m.getSentButNotSignedDate(s) | date: 'short'}}</span>
+                        <span ng-if="$ctrl.m.getSignedDate(s)">Signed, {{$ctrl.m.getSignedDate(s) | date: 'short'}}</span>                        
+                    </td>
+                    <td class="col-xs-2 text-right">
+                        <span ng-if="$ctrl.isResendAllowed(s)">
+                            <button class="n-direct-btn n-green-btn" ng-click="$ctrl.resend(s, $event)">
+                                Resend <span class="glyphicon glyphicon-envelope"></span>
+                            </button>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="$ctrl.m && $ctrl.m.isWaitingForPreviousStep">
+         <p>Waiting for previous steps</p>
+    </div>
+</script>

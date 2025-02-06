@@ -1,0 +1,92 @@
+<div *ngIf="m">
+  <div>
+    <div class="row pb-2">
+      <div class="col-sm-8 col-xs-12">
+        <div class="form-group">
+          <label class="control-label">Scope</label>
+          <p class="form-control-static">{{ m.scopeDisplayName }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-2" *ngIf="m.providerDisplayName">
+      <div class="col-sm-8 col-xs-12">
+        <div class="form-group">
+          <label class="control-label">Provider</label>
+          <p class="form-control-static">{{ m.providerDisplayName }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-2">
+      <div class="col-sm-8 col-xs-12">
+        <div class="form-group">
+          <label class="control-label">Description</label>
+          <p class="form-control-static">{{ m.key.description }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-2">
+      <div class="col-sm-8 col-xs-12">
+        <div class="form-group">
+          <label class="control-label">Ip address filter</label>
+          <p class="form-control-static">
+            {{ m.key.ipAddressFilter ? m.key.ipAddressFilter : "All allowed" }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-2">
+      <div class="col-sm-8 col-xs-12">
+        <div class="form-group">
+          <label class="control-label">Age and status</label>
+          <p class="form-control-static">{{ m.ageText }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-4">
+      <div class="row col-sm-8 col-xs-12">
+        <h2>Test</h2>
+        <hr class="hr-section" />
+        <p>
+          Enter an api key and an optional calling ip address to test the
+          authentication.
+        </p>
+        <div class="form-group">
+          <label class="control-label">Api key</label>
+          <input type="text" class="form-control" #testApiKey />
+        </div>
+        <div class="form-group">
+          <label class="control-label">Calling ip address</label>
+          <input type="text" class="form-control" #testIpAddress />
+        </div>
+        <br />
+        <button
+          class="btn btn-info"
+          (click)="
+            testAuthentication(testApiKey.value, testIpAddress.value, $event)
+          "
+        >
+          Authenticate
+        </button>
+      </div>
+      <div class="row col-sm-8 col-xs-12 mt-3" *ngIf="m.isKeyActive">
+        <h2>Revocation</h2>
+        <hr class="hr-section" />
+        <p>
+          A revoked key cannot be used for apis call and can not be restored.
+          Instead a new key will need to be created.
+        </p>
+        <p>
+          Allow revoke:
+          <input type="checkbox" (change)="onAllowRevokeChanged($event)" />
+        </p>
+        <button
+          class="btn btn-danger"
+          [disabled]="!m.hasConsentedToRevoke"
+          (click)="revoke($event)"
+        >
+          Revoke key
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

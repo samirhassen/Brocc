@@ -1,0 +1,33 @@
+<div class="block" *ngIf="initialData">
+  <div class="row" [ngClass]="headerClassFromStatus()">
+    <div class="col-xs-1">
+      <status-icon
+        [isAccepted]="isAccepted()"
+        [isRejected]="isRejected()"
+      ></status-icon>
+    </div>
+    <div class="col-xs-9">
+      <h2 class="custom-header">
+        {{ initialData.step.currentStep.DisplayName }}
+      </h2>
+    </div>
+    <div class="col-xs-2 text-right">
+      <span
+        class="glyphicon chevron-bg"
+        [ngClass]="{
+          'glyphicon-chevron-down': isExpanded,
+          'glyphicon-chevron-right': !isExpanded
+        }"
+        (click)="toggleExpanded($event)"
+      ></span>
+    </div>
+  </div>
+  <div
+    style="padding-bottom: 70px; border-top: 1px solid #000000; margin-top: 3px"
+    class="pt-2"
+    *ngIf="isExpanded"
+  >
+    <ng-content></ng-content>
+    <div class="clearfix"></div>
+  </div>
+</div>

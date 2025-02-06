@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "~/Views/Balanzia/LocalResultPageBase.cshtml";
+}
+<div class="bg-result">
+    <div class="failed">
+        @if (ViewBag.Language == "sv")
+        {
+            <h1>Vi ber om ursäkt!</h1>
+            <p>Vi kan tyvärr inte ta emot din svar just nu.</p>
+            <p>Försök igen om en liten stund eller kontakta kundtjänst så hjälper de dig vidare.</p>
+            <p>
+                Med vänlig hälsning,<br />
+                Balanzia<br />
+                Kundtjänst<br />
+                Tel. 010 524 8410<br />
+                <a href="mailto:lainat@balanzia.fi" style="color:#000000;">lainat@balanzia.fi</a>
+            </p>
+        }
+        else
+        {
+            <h1>Pahoittelemme! </h1>
+            <p>Emme juuri nyt pysty vastaanottamaan hakemustasi</p>
+            <p>Yritä hetken kuluttua uudelleen tai ota yhteyttä asiakaspalveluumme niin autamme sinua.</p>
+            <p>
+                Ystävällisin terveisin,<br />
+                Balanzia<br />
+                Asiakaspalvelu<br />
+                Puh. 010 524 8410<br />
+                <a href="mailto:lainat@balanzia.fi" style="color:#000000;">lainat@balanzia.fi</a>
+            </p>
+        }
+    </div>
+</div>

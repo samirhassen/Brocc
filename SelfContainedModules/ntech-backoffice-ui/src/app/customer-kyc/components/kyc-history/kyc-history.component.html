@@ -1,0 +1,10 @@
+<div *ngIf="m" class="view-container mt-2">
+    <toggle-block [initialData]="{ headerText: 'History'}">
+        <div *ngIf="!m.historicalAnswers.length">-</div>
+        <div *ngFor="let x of m.historicalAnswers">
+            <toggle-block [initialData]="{ headerText: x.answerDate | date:'shortDate'  }">
+                <kyc-answers-view [initialData]="getViewData(x.answers)"></kyc-answers-view>
+            </toggle-block>
+        </div>
+    </toggle-block>
+</div>   

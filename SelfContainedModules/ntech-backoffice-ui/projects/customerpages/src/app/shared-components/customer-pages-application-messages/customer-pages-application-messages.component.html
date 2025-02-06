@@ -1,0 +1,40 @@
+<div class="task-toggle" *ngIf="m">
+  <div
+    class="task-toggle-header-row"
+    [ngClass]="{
+      'task-toggle-expanded': m.isExpanded,
+      'task-toggle-contracted': !m.isExpanded
+    }"
+    (click)="toggleExpanded($event)"
+  >
+    <div class="task-toggle-icon">
+      <!--brev + notisen-->
+      <div class="envelope-icon">
+        <span class="glyphicon glyphicon-envelope"></span
+        ><span *ngIf="m.nrOfUnreadMessages > 0" class="unread-message">{{
+          m.nrOfUnreadMessages
+        }}</span>
+      </div>
+    </div>
+    <div class="task-toggle-header-text">
+      <p>Meddelande</p>
+    </div>
+    <div class="text-right task-toggle-openclose">
+      <span
+        class="glyphicon"
+        [ngClass]="{
+          'glyphicon-triangle-bottom': m.isExpanded,
+          'glyphicon-plus': !m.isExpanded
+        }"
+      ></span>
+    </div>
+  </div>
+
+  <div *ngIf="m.isExpanded" class="task-toggle-content">
+    <secure-messages-edit-list
+      [initialData]="m.messageListInitialData"
+      (messagesLoaded)="onMessagesLoaded($event)"
+    >
+    </secure-messages-edit-list>
+  </div>
+</div>

@@ -1,0 +1,355 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-initial-credit-check-recommendation.html">
+    <div>
+
+    <h2 class="custom-header">Decision basis</h2>
+    <hr class="hr-section" />
+
+    <div class="row pt-1">
+        <div class="col-xs-8">
+            <div class="row pb-3">
+                <div class="col-xs-7">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Recommendation</label>
+                            <div class="col-xs-6" ng-hide="$ctrl.m.recommendation.Offer.AdditionalLoanNr">
+                                <p class="form-control-static">{{$ctrl.m.recommendation.Offer ? "Accept" : "Reject"}}</p>
+                            </div>
+                            <div class="col-xs-6" ng-show="$ctrl.m.recommendation.Offer.AdditionalLoanNr">
+                                <p class="form-control-static">Additional loan ({{$ctrl.m.recommendation.Offer.AdditionalLoanNr}})</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="$ctrl.m.recommendation.Offer" class="form-horizontal">
+                        <div class="form-group" ng-hide="$ctrl.m.recommendation.Offer.AdditionalLoanNr">
+                            <label class="col-xs-6 control-label">Rec interest rate</label>
+                            <div class="col-xs-6"><p class="form-control-static">{{$ctrl.m.recommendation.Offer.NominalInterestRatePercent | number:'2'}} %</p></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Rec amount</label>
+                            <div class="col-xs-6"><p class="form-control-static">{{$ctrl.m.recommendation.Offer.LoanAmount | currency}}</p></div>
+                        </div>
+                        <div class="form-group" ng-hide="$ctrl.m.recommendation.Offer.AdditionalLoanNr">
+                            <label class="col-xs-6 control-label">Rec repayment time</label>
+                            <div class="col-xs-6"><p class="form-control-static">{{$ctrl.m.recommendation.Offer.RepaymentTimeInMonths}} months</p></div>
+                        </div>
+                        <div class="form-group" ng-show="$ctrl.m.recommendation.Offer.InitialFeeAmount">
+                            <label class="col-xs-6 control-label">Rec initial fee</label>
+                            <div class="col-xs-6"><p class="form-control-static">{{$ctrl.m.recommendation.Offer.InitialFeeAmount | currency}}</p></div>
+                        </div>
+                        <div class="form-group" ng-show="$ctrl.m.recommendation.Offer.MonthlyFeeAmount">
+                            <label class="col-xs-6 control-label">Rec notification fee</label>
+                            <div class="col-xs-6"><p class="form-control-static">{{$ctrl.m.recommendation.Offer.MonthlyFeeAmount | currency}}</p></div>
+                        </div>
+                        <div class="form-group">
+                            <span class="col-xs-6">
+                                <span ng-show="$ctrl.hasManulControlReasons()" class="glyphicon col-md-3 chevron-bg pull-left" ng-class="{ 'glyphicon-chevron-right' : !$ctrl.m.showAutoFollowRejectionReasons, 'glyphicon-chevron-down' : $ctrl.m.showAutoFollowRejectionReasons }" ng-click="$ctrl.m.showAutoFollowRejectionReasons = !$ctrl.m.showAutoFollowRejectionReasons"></span>
+                                <label class="col-md-7 control-label pull-right" style="margin-right:0;padding-right:0">Manual control</label>
+                            </span>
+                            <div class="col-xs-6 col-sm-6 col-md-6"><p class="form-control-static">{{$ctrl.hasManulControlReasons() ? 'Yes': 'No'}}</p></div>
+                        </div>
+                    </div>
+                    <div ng-hide="$ctrl.m.recommendation.Offer" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Rejection reasons</label>
+                            <div class="col-xs-6"><p class="form-control-static"><div ng-repeat="r in $ctrl.getRecommendationRejectionReasonDisplayNames()"><b>{{r}}&nbsp;</b></div></p></div>
+                        </div>
+                        <div class="form-group">
+                            <span class="col-xs-6">
+                                <span ng-show="$ctrl.hasManulControlReasons()" class="glyphicon col-md-3 chevron-bg pull-left" ng-class="{ 'glyphicon-chevron-right' : !$ctrl.m.showAutoFollowRejectionReasons, 'glyphicon-chevron-down' : $ctrl.m.showAutoFollowRejectionReasons }" ng-click="$ctrl.m.showAutoFollowRejectionReasons = !$ctrl.m.showAutoFollowRejectionReasons"></span>
+                                <label class="col-md-7 control-label pull-right" style="margin-right:0;padding-right:0">Manual control</label>
+                            </span>
+                            <div class="col-xs-6"><p class="form-control-static">{{$ctrl.hasManulControlReasons() ? 'Yes': 'No'}}</p></div>
+                        </div>
+                    </div>
+                    <div ng-show="$ctrl.m.showAutoFollowRejectionReasons && $ctrl.hasManulControlReasons()" class="form-horizontal">
+                        <hr class="hr-section dotted">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Manual control reasons</label>
+                                <div class="col-xs-6"><p class="form-control-static" ng-repeat="r in $ctrl.m.recommendation.ManualAttentionRuleNames">{{r}}</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="$ctrl.getScoringDataStr('companyCreditReportHtmlArchiveKey', '')" class="form-horizontal">
+                        <hr class="hr-section dotted">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Credit report</label>
+                            <div class="col-xs-6">
+                                <p class="form-control-static">
+                                    <a ng-click="$ctrl.showCreditReport($event)" class="n-popup-btn n-turquoise-btn">Show <span class="glyphicon glyphicon-resize-full"></span></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-5">
+                    <div class="frame">
+                        <div class="text-right">
+                            <button type="button" class="n-popup-btn n-turquoise-btn" ng-click="$ctrl.showDetails($event)">
+                                Details<span class="glyphicon glyphicon-resize-full"></span>
+                            </button>
+                        </div>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">PD risk class</label>
+                                <div class="col-xs-6"><p class="form-control-static">{{$ctrl.m.recommendation.RiskClass}}</p></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">UC risk class</label>
+                                <div class="col-xs-6"><p class="form-control-static">{{$ctrl.getScoringDataStr('creditReportRiskklassForetag', '-')}}</p></div>
+                            </div>
+                        </div>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Acc cashflow</label>
+                                <div class="col-xs-6"><p class="form-control-static">{{$ctrl.getScoringDataStr('normalCashFlowEstimateAmount', '-') | number}} kr</p></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label"></label>
+                                <div class="col-xs-6"><p class="form-control-static">{{$ctrl.getScoringDataStr('stressedCashFlowEstimateAmount', '-') | number}} kr</p></div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="editblock">
+                <div class="row pb-3">
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Requested amount</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">{{$ctrl.getScoringDataStr('applicationAmount', '-') | number}} kr</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Requested repayment time</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">{{$ctrl.getScoringDataStr('applicationRepaymentTimeInMonths', '-') | number}} months</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">   
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Company age in months</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">
+                                        <a ng-href="{{$ctrl.getEditApplicationItemUrl('application.companyAgeInMonths')}}" class="n-anchor n-longer">
+                                            {{$ctrl.getCreditApplicationItemDisplayValue('application.companyAgeInMonths', 'int') | number}}
+                                            <span class="pull-right n-star" ng-show="$ctrl.isCreditApplicationItemEdited('application.companyAgeInMonths')">*</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Company yearly revenue</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">
+                                        <a ng-href="{{$ctrl.getEditApplicationItemUrl('application.companyYearlyRevenue')}}" class="n-anchor n-longer">
+                                            {{$ctrl.getCreditApplicationItemDisplayValue('application.companyYearlyRevenue', 'decimal') | number}}
+                                            <span class="pull-right n-star" ng-show="$ctrl.isCreditApplicationItemEdited('application.companyYearlyRevenue')">*</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Company yearly result</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">
+                                        <a ng-href="{{$ctrl.getEditApplicationItemUrl('application.companyYearlyResult')}}" class="n-anchor n-longer">
+                                            {{$ctrl.getCreditApplicationItemDisplayValue('application.companyYearlyResult', 'decimal') | number}}
+                                            <span class="pull-right n-star" ng-show="$ctrl.isCreditApplicationItemEdited('application.companyYearlyResult')">*</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Current debt amount</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">
+                                        <a ng-href="{{$ctrl.getEditApplicationItemUrl('application.companyCurrentDebtAmount')}}" class="n-anchor n-longer">
+                                            {{$ctrl.getCreditApplicationItemDisplayValue('application.companyCurrentDebtAmount', 'decimal') | number}}
+                                            <span class="pull-right n-star" ng-show="$ctrl.isCreditApplicationItemEdited('application.companyCurrentDebtAmount')">*</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Purpose of loan</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">
+                                        <a ng-href="{{$ctrl.getEditApplicationItemUrl('application.loanPurposeCode')}}" class="n-anchor n-longer">
+                                            {{$ctrl.getCreditApplicationItemDisplayValue('application.loanPurposeCode', 'string')}}
+                                            <span class="pull-right n-star" ng-show="$ctrl.isCreditApplicationItemEdited('application.loanPurposeCode')">*</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Force external scoring</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">
+                                        <a ng-href="{{$ctrl.getEditApplicationItemUrl('application.forceExternalScoring')}}" class="n-anchor n-longer">
+                                            {{$ctrl.getCreditApplicationItemDisplayValue('application.forceExternalScoring', 'string')}}
+                                            <span class="pull-right n-star" ng-show="$ctrl.isCreditApplicationItemEdited('application.forceExternalScoring')">*</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <h2 class="custom-header text-center">Other applications</h2>            
+
+            <hr class="hr-section" />
+            <unsecured-credit-check-other-applications other-applications="$ctrl.m.recommendation.HistoricalApplications"></unsecured-credit-check-other-applications>
+
+            <div class=" pt-3">
+                <h2 class="text-center custom-header">Credits</h2>
+                <hr class="hr-section" />
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Application</th>
+                        <th>Status</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="$ctrl.m.recommendation.HistoricalCredits.length === 0">
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr ng-repeat="a in $ctrl.m.recommendation.HistoricalCredits">
+                        <td><a ng-href="{{$ctrl.getCreditUrl(a.CreditNr)}}" target="_blank" class="n-anchor">{{a.CreditNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                        <td ng-if="a.ApplicationNr && a.ApplicationType === 'companyLoan'"><a ng-href="{{'/Ui/CompanyLoan/Application?applicationNr=' + a.ApplicationNr }}" class="n-anchor" target="_blank">{{a.ApplicationNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                        <td ng-if="a.ApplicationNr && a.ApplicationType !== 'companyLoan'">{{a.ApplicationNr}}</td>
+                        <td ng-if="!a.ApplicationNr">-</td>
+                        <td>{{a.Status}}</td>
+                        <td>{{a.CapitalBalance | number: '2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <modal-dialog dialog-title="'Decision details'" dialog-id="$ctrl.decisionDetailsDialogId">
+        <div class="pt-3">
+             <toggle-block header-text="'Rejection rules'" ng-if="!$ctrl.m.recommendation.WasAccepted">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-6">Rule</th>
+                                <th class="col-xs-5">Rejection reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="r in $ctrl.m.recommendation.RejectionRuleNames">
+                                <td>{{r}}</td>
+                                <td>{{$ctrl.getRejectionReasonDisplayNameByRuleName(r)}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </toggle-block>
+
+                <toggle-block header-text="'Rule details'" ng-if="$ctrl.getNonScorePointDebugDataRuleNames().length > 0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-6">Rule</th>
+                                <th class="col-xs-1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat-start="r in $ctrl.getNonScorePointDebugDataRuleNames()">
+                                <td>{{r}}</td>
+                                <td>
+                                    <button type="button" class="n-popup-btn n-turquoise-btn" ng-click="$ctrl.toggleRuleDebugDetails(r, $event)">Details</button>                          
+                                </td>
+                            </tr>
+                            <tr ng-repeat-end ng-if="$ctrl.m.debugDetailsRuleName === r">
+                                <td colspan="3"><pre>{{$ctrl.getRejectionRuleDebugData(r)}}</pre></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </toggle-block>           
+            
+
+            @*<toggle-block header-text="'Manual attention rules'" ng-if="$ctrl.m.recommendation.ManualAttentionRuleNames">
+                
+            </toggle-block>*@
+
+             <toggle-block header-text="'Score point breakdown'" ng-if="$ctrl.m.recommendation.WasAccepted">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Points</th>
+                            <th>Weight</th>
+                            <th>Unweighted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="name in $ctrl.getScorePointRuleNames()">
+                            <td>{{name}}</td>
+                            <td>{{$ctrl.m.recommendation.ScorePointsByRuleName[name] | number}}</td>
+                            <td>{{$ctrl.getScorePointDebugData(name).weight | number}}</td>
+                            <td>{{$ctrl.getScorePointDebugData(name).unweightedPoints | number}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.getScorePointRuleNames().length > 0">
+                            <td colspan="2"></td>
+                            <td>{{$ctrl.getScorePointDebugData($ctrl.getScorePointRuleNames()[0]).totalWeight | number}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </toggle-block>
+
+             <toggle-block header-text="'Score model data'">
+                    <table class="table">
+                        <tbody>
+                            <tr ng-repeat="name in  $ctrl.getScoringDataItemNames()">
+                                <td>{{name}}</td>
+                                <td>{{$ctrl.m.recommendation.ScoringData.ApplicationItems[name]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </toggle-block>
+        </div>
+    </modal-dialog>
+
+    <modal-dialog dialog-title="'Company credit report'" dialog-id="$ctrl.companyCreditReportDialogId" use-full-width="true">
+        <div ng-if="$ctrl.m.loadCreditReportDocument" class="iframe-container">
+            <div ng-bind-html="$ctrl.getCreditReportIFrameHtml()"></div>
+        </div>
+    </modal-dialog>
+
+    </div>
+</script>

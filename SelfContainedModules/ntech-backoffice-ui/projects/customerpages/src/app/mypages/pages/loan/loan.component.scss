@@ -1,0 +1,20 @@
+.ntech-popup-header {
+  display: flex;
+  align-items: flex-end;
+  h2 {
+    display: inline;
+    flex-grow: 1;
+    margin-bottom: 0px;
+    text-align: center;
+  }
+}
+
+.ntech-center-icon {
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    top: 0px !important; //Remove bootstraps wierd top: 1px that throws off the centering
+  }
+}

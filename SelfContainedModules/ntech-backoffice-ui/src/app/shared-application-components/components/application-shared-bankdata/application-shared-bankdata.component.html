@@ -1,0 +1,65 @@
+<div *ngIf="m">
+    <h2 class="text-center">Shared bankdata</h2>
+    <hr class="hr-section custom-line mt-0">
+    <div *ngFor="let applicant of m.applicants" class="pb-2">
+        <h3 class="text-center">{{applicant.headerText}}</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!applicant.dataSets || applicant.dataSets.length === 0">
+                    <td>-</td>
+                    <td></td>
+                </tr>
+                <tr *ngFor="let dataSet of applicant.dataSets">
+                    <td>{{dataSet.date | date:'short'}}</td>
+                    <td style="text-align: right;">
+                        <button class="n-direct-btn n-turquoise-btn" (click)="showDataSet(dataSet, $event)">
+                            <span>Show <span class="glyphicon glyphicon-resize-full"></span></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #preview>
+    <div class="modal-header">
+        <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="modalRef.hide()">
+            <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span
+                    class="glyphicon glyphicon-arrow-up"></span></span>
+        </button>
+        <h1>{{m?.preview?.title}}</h1>
+    </div>
+    <div class="modal-body">
+        <table *ngIf="m?.preview?.table" class="table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of m?.preview?.table">
+                    <td>{{row.title}}</td>
+                    <td>{{row.value}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <ng-container *ngIf="m?.preview?.scoringData">
+            <h2>Scoring data</h2>
+            <pre>{{m.preview.scoringData.data}}</pre>
+        </ng-container>
+        <div *ngIf="m?.preview?.rawData" class="pt-2">
+            <ng-container *ngIf="m.preview.rawData.downloadUrl">
+                <h2>All data <a style="float:right" [href]="m.preview.rawData.downloadUrl" target="_blank">Download</a></h2>
+            </ng-container>
+            <pre>{{m.preview.rawData.data}}</pre>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="modal-dialog.html">
+    <div id="{{$ctrl.dialogId}}" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="min-width:1200px; max-width: 1200px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="n-icon-btn n-white-btn pull-right" ng-click="$ctrl.setIsOpen(false, $event)">
+                        <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span>
+                    </button>
+                    <h1>{{$ctrl.dialogTitle}}</h1>
+                </div>
+                <div class="modal-body">
+                    <div ng-transclude></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,20 @@
+﻿<tr>
+	<td class="">{{date}}</td>
+	<td class="text-right">{{capitalBeforeAmount}}</td>
+    <td class="text-center">
+        {{#isWriteOff}}Kirjaa pois{{/isWriteOff}}<!--Writeoff-->
+        {{^isWriteOff}}
+        {{#isEventNewCredit}}Uusi laina{{/isEventNewCredit}}<!--New loan-->
+        {{#isEventCapitalizedInitialFee}}Pääomitettu avausmaksu{{/isEventCapitalizedInitialFee}}<!--Capitalized initial fee-->
+        {{#isEventNewNotification}}{{/isEventNewNotification}}
+        {{#isEventNewManualIncomingPaymentBatch}}Ylimääräinen maksusuoritus{{/isEventNewManualIncomingPaymentBatch}}<!--Extra amortization-->
+        {{#isEventPlacedUnplacedIncomingPayment}}Ylimääräinen maksusuoritus{{/isEventPlacedUnplacedIncomingPayment}}<!--Extra amortization-->
+        {{#isEventNewIncomingPaymentFile}}Ylimääräinen maksusuoritus{{/isEventNewIncomingPaymentFile}}<!--Extra amortization-->
+        {{#isEventPaymentFreeMonth}}Maksuvapaa kuukausi{{/isEventPaymentFreeMonth}}<!--Payment free month-->
+        {{#isEventNewAdditionalLoan}}Uusi lisälaina{{/isEventNewAdditionalLoan}}<!--New additional loan-->
+        {{/isWriteOff}}
+    </td>
+	<td class="text-right">{{capitalTransactionAmount}}</td>
+	<td class="text-right">{{interestTransactionAmount}}</td>
+	<td class="text-right">{{totalTransactionAmount}}</td>
+</tr>

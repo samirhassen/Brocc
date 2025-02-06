@@ -1,0 +1,302 @@
+﻿<div class="page">
+    <div>
+        <div class="header">
+            <h1>Standardiserad europeisk <br/> konsumentkreditinformation</h1>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="content">
+        <div class="boxed_table pt-3">
+
+            <h2>1. Kreditgivarens/kreditförmedlarens namn och kontaktuppgifter</h2>
+            <table>
+                <tr>
+                    <td>
+                        <p>Kreditgivare</p>
+                        <p>Adress</p>
+                        <p>E-post</p>
+                    </td>
+                    <td>
+                        <p>{{documentClientData_name}}</p>
+                        <p>{{documentClientData_streetAddress}}, {{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                        <p>{{documentClientData_email}}</p>
+                    </td>
+                </tr>
+                {{#ProvidedBy}}
+                <tr>
+                    <td>
+                        <p>Låneförmedlare</p>
+                        <p>Adress</p>
+                        <p>E-post</p>
+                    </td>
+
+                    <td>
+                        <p>{{ProviderName}}</p>
+                        <p>{{Address}}</p>
+                        <p>{{EnduserContactEmail}}</p>
+                    </td>
+                </tr>
+                {{/ProvidedBy}}
+            </table>
+        </div>
+
+        <div class="boxed_table">
+            <h2>2. Beskrivning av huvuddragen i kreditprodukten</h2>
+            <table>
+                <tr>
+                    <td><p>Typ av kredit</p></td>
+                    {{^IsSwedishHighCostCredit}}
+                    <td><p>Lånet utgör en blancokredit.</p></td>
+                    {{/IsSwedishHighCostCredit}}
+                    {{#IsSwedishHighCostCredit}}
+                    <td><p>Lånet utgör en högkostnadskredit.</p></td>
+                    {{/IsSwedishHighCostCredit}}
+                </tr>
+                <tr>
+                    <td>
+                        <p>Det sammanlagda kreditbeloppet</p>
+                        <p class="italic">Detta är den övre kreditgräns eller det totala belopp som ställs till förfogande genom låneavtalet.</p>
+                    </td>
+                    <td><p>{{LoanAmount}} kr</p></td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Villkoren för kreditutnyttjandet</p>
+                        <p class="italic">Här anges när och hur pengarna kan lyftas</p>
+                    </td>
+                    <td>
+                        <p>Lånet utbetalas efter att Din låneansökan blivit godkänd och {{documentClientData_name}} mottagit undertecknat skuldebrev.</p>
+                        <p>Om din låneansökan godkänns kommer utbetalning ske till det konto Låntagaren angivit i samband med låneansökan och sedan bekräftat i samband med undertecknande av skuldbrevet och accept av de Allmänna Kreditvillkoren.</p>
+                    </td>
+                </tr>
+                {{#RepaymentTimeInMonths}}
+                <tr>
+                    <td><p>Kreditavtalets löptid</p></td>
+                    <td><p>{{RepaymentTimeInMonths}} månader</p></td>
+                </tr>
+                {{/RepaymentTimeInMonths}}
+                {{#SinglePaymentLoanRepaymentTimeInDays}}
+                <tr>
+                    <td><p>Kreditavtalets löptid</p></td>
+                    <td><p>{{SinglePaymentLoanRepaymentTimeInDays}} dagar</p></td>
+                </tr>
+                {{/SinglePaymentLoanRepaymentTimeInDays}}
+                <tr>
+                    <td><p>Avbetalningar och, i förekommande fall, i vilken ordning dessa ska fördelas.</p></td>
+                    <td>
+                        <p>Du måste betala följande:</p>
+                        {{#RepaymentTimeInMonths}}
+                        <p>{{RepaymentTimeInMonths}} månader av {{AnnuityAmount}} kr.</p>
+                        <p>Ränta och/eller avgifter ska betalas på följande sätt: Kreditränta beräknas på det vid var tid utestående kreditbeloppet och skall erläggas månatligen. Avgifter läggs på skulden allteftersom de uppstår och skall erläggas i samband med den månatliga betalningen.</p>
+                        {{/RepaymentTimeInMonths}}
+                        {{#SinglePaymentLoanRepaymentTimeInDays}}
+                        <p>{{TotalPaidAmount}} kr om {{SinglePaymentLoanRepaymentTimeInDays}} dagar.</p>
+                        {{/SinglePaymentLoanRepaymentTimeInDays}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Det totala belopp som du ska betala</p>
+                        <p class="italic">Detta är det lånade kapitalet plus ränta och eventuella kostnader i samband med krediten.</p>
+                    </td>
+                    <td>
+                        <p>Kreditbelopp: {{LoanAmount}} kr</p>
+                        <p>Kreditkostnader: {{TotalCostAmount}} kr</p>
+                        <p>Totalt belopp att betala: {{TotalPaidAmount}} kr</p>
+                        <p>Observera att din kreditkostnad kan bli annorlunda om du avviker från överenskommen avbetalningsplan eller vid de fall kreditkostnaden ändras såsom beskrivet nedan.</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div>
+        <div class="header">
+            <h1>Standardiserad europeisk <br/> konsumentkreditinformation</h1>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="content">
+        <div class="boxed_table pt-3">
+            <h2>3. Kreditkostnader</h2>
+            <table>
+                <tr>
+                    <td><p>Kreditränta eller i tillämpliga fall de olika krediträntor som gäller för låneavtalet.</p></td>
+                    <td>
+                        <p>Marginalränta: {{MarginInterestRatePercent}} %</p>
+                        <p>Referensränta: {{ReferenceInterestRatePercent}} %. Rörlig (med referensindex eller referensränta som gäller den ursprungliga krediträntan)</p>
+                        <p>Summa ränta: {{TotalInterestRatePercent}} %<p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Effektivränta</p>
+                        <p class="italic">Detta är totalkostnaden uttryckt som den effektiva räntan av det samlade kreditbeloppet. Den effektiva räntan anges för att hjälpa dig att jämföra olika erbjudanden.</p>
+                    </td>
+                    <td>{{EffectiveInterestRatePercent}} %</td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+                            Är det, för att erhålla krediten eller för att erhålla den enligt villkoren i marknadsföringen, obligatoriskt att ingå avtal om
+                        </p>
+                        <p> — en försäkring som säkrar krediten, eller</p>
+                        <p>— någon annan kompletterande tjänst?</p>
+                    </td>
+                    <td><p>Nej</p></td>
+                </tr>
+                <tr>
+                    <td><p>Andra kostnader i samband med låneavtalet</p></td>
+                    <td>
+                        <p>Aviavgift: {{NotificationFeeAmount}} kr / månad</p>
+                        {{#InitialFeeWithheldAmount}}
+                        <p>Uppläggningsavgift: {{InitialFeeWithheldAmount}} kr</p>
+                        {{/InitialFeeWithheldAmount}}
+                        {{#InitialFeeCapitalizedAmount}}
+                        <p>Uppläggningsavgift: {{InitialFeeCapitalizedAmount}} kr</p>
+                        {{/InitialFeeCapitalizedAmount}}
+                        {{#FirstNotificationCosts}}
+                        <p>På första avin - {{CostName}}: {{Amount}} kr</p>
+                        {{/FirstNotificationCosts}}
+                    </td>
+                </tr>
+                <tr>
+                    <td><p>Villkor för att ändra de ovan nämnda kostnaderna i samband med låneavtalet.</p></td>
+                    <td>
+                        <p>Räntesatsen får ändras i den utsträckning som det motiveras av:</p>
+                        <p>- kreditpolitiska beslut</p>
+                        <p>- ändrade upplåningskostnader för {{documentClientData_name}}, eller</p>
+                        <p>- andra kostnadsförändringar som {{documentClientData_name}} inte skäligen kunde förutse när krediten lämnades.</p>
+                        <p>{{documentClientData_name}} får med omedelbar verkan ändra uppläggnings- och aviavgift om kostnaderna för den åtgärd som avgiften avser har förändrats.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Kostnader i samband med försenade betalningar</p>
+                        <p class="italic">Uteblivna betalningar kan få allvarliga konsekvenser (t.ex. tvångsförsäljning) och försvåra möjligheterna till att erhålla kredit.</p>
+                    </td>
+                    <td><p>Du kommer att debiteras en påminnelseavgift vid försenad betalning om {{ReminderFeeAmount}} kr. Du kommer även, om grund därför föreligger, att debiteras inkassoavgifter, avgifter till kronofogdemyndigheter och domstolar i enlighet med vid var tid gällande lagstiftning för uteblivna betalningar.</p></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="page">
+    <div>
+        <div class="header">
+            <h1>Standardiserad europeisk <br/> konsumentkreditinformation</h1>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="content">
+        <div class="boxed_table pt-3">
+            <h2>4. Andra viktiga rättsliga aspekter</h2>
+            <table>
+                <tr>
+                    <td>
+                        <p>Ångerrätt</p>
+                        <p class="italic">Du har rätt att frånträda låneavtalet inom 14 kalenderdagar.</p>
+                    </td>
+                    <td><p>Ja</p></td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Förtidsbetalning</p>
+                        <p class="italic">Hela eller delar av krediten kan återbetalas i förtid när som helst.</p>
+                    </td>
+                    <td>
+                        <p>Du har rätt att helt eller delvis betala krediten i förtid utan extra kostnad (till undvikande av tvivel löper ränta på krediten till och med den dag då krediten fullt återbetalas).</p>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Sökning i en databas</p>
+                        <p class="italic">Om en kreditansökan avvisas på grundval av en sökning i en databas måste kreditgivaren genast och kostnadsfritt meddela dig resultatet av sökningen. Detta gäller inte om utlämnandet av sådan information är förbjudet enligt gemenskapslagstiftningen eller strider mot allmän ordning och säkerhet.</p>
+                    </td>
+                    <td><p>Du har rätt att utan dröjsmål och utan avgift få information om att en låneansökan avslagits p.g.a. uppgifter i en databas.</p></td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Rätt att få ett utkast till ett låneavtal</p>
+                        <p class="italic">Du har rätt att på begäran kostnadsfritt få en kopia av ett utkast till ett låneavtal. Denna bestämmelse är inte tillämplig om kreditgivaren vid tidpunkten för begäran är ovillig att ingå låneavtalet med dig.</p>
+                    </td>
+                    <td><p>Du har rätt att på begäran, om kreditgivaren är villigt att ingå låneavtal med dig, kostnadsfritt få en kopia av ett utkast till ett låneavtal.</p></td>
+                </tr>
+                <tr>
+                    <td><p>Den tid kreditgivaren är bunden av skyldigheterna som uppkommit innan avtalet ingåtts</p></td>
+                    <td><p>Ej tillämpbar.</p></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div>
+        <div class="header">
+            <h1>Standardiserad europeisk <br/> konsumentkreditinformation</h1>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="content">
+        <div class="boxed_table pt-3">
+            <h2>5. Ytterligare information när det gäller distansförsäljning av finansiella tjänster</h2>
+            <table>
+                <tr>
+                    <td><p>a) Beträffande kreditgivaren</p></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><p>Registrering</p></td>
+                    <td><p>{{documentClientData_name}}, med registreringsnummer {{documentClientData_orgnr}} är registrerat hos Bolagsverket samt hos Skatteverket.</p></td>
+                </tr>
+                <tr>
+                    <td><p>Den berörda tillsynsmyndigheten</p></td>
+                    <td><p>{{documentClientData_name}} står under tillsyn av Finansinspektionen.</p></td>
+                </tr>
+                <tr>
+                    <td><p>b) Beträffande låneavtalet</p></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><p>Utnyttjandet av ångerrätt</p></td>
+                    <td>
+                        <p>
+                            Du har rätt att ångra Ditt lån. Du kan utnyttja ångerrätten genom att meddela kreditgivaren detta inom 14 dagar från det att Du skrivit på skuldebrevet och erhållit skriftlig information om lånevillkoren.
+                            Om Du vill ångra Ditt lån inom 14 dagarsperioden måste Du genast meddela detta till kreditgivaren, via mail till {{documentClientData_email}} eller genom brev via posten till adress: {{documentClientData_streetAddress}}, {{documentClientData_zipCode}} {{documentClientData_postalArea}}
+                        </p>
+                        <p>
+                            Om Du ångrar Ditt lån är du skyldig att betala tillbaka hela lånebeloppet samt upplupen ränta till och med återbetalningsdagen. Uppläggningsavgiften och eventuella aviavgifter kommer att räknas av från återbetalningskravet.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><p>Den lagstiftning som kreditgivaren använt som grundval för att upprätta förbindelser med dig innan låneavtalet ingicks</p></td>
+                    <td><p>Svensk lag gäller för avtalet.</p></td>
+                </tr>
+                <tr>
+                    <td><p>Klausul om tillämplig lagstiftning för låneavtalet och/ eller behörig domstol</p></td>
+                    <td><p>Svensk lag är tillämplig på Kreditavtalet och svensk domstol är behörig att lösa en eventuell tvist mellan dig och Kreditgivaren.</p></td>
+                </tr>
+                <tr>
+                    <td><p>Språkordning</p></td>
+                    <td><p>Information och avtalsvillkor lämnas på svenska.</p></td>
+                </tr>
+                <tr>
+                    <td><p>c) Beträffande prövning</p></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><p>Förekomst av och tillgång till en mekanism för klagomål och prövning utanför domstol.</p></td>
+                    <td>
+                        <p>Låntagaren kan vid missnöje med kreditgivarens hantering också vända sig till Finansinspektionen, telefon 08-787 80 00 och vid tvister till ARN (Allmänna reklamationsnämnden) telefon 08-508 860 00 eller till allmän domstol.</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

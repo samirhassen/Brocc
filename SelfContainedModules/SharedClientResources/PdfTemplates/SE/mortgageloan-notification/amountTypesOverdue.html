@@ -1,0 +1,22 @@
+﻿{{#amount}}
+<tr>
+    <td>
+        {{#isBuiltinInterest}}
+        Ränta
+        {{/isBuiltinInterest}}        
+        {{#isBuiltinCapital}}
+        Kapital
+        {{/isBuiltinCapital}}
+        {{#isBuiltinNotificationFee}}
+        Aviavgift
+        {{/isBuiltinNotificationFee}}
+        {{#isBuiltinReminderFee}}
+        Påminnelseavgift
+        {{/isBuiltinReminderFee}}
+        {{#isCustom}}
+        {{text}}
+        {{/isCustom}}
+    </td>
+    <td class="text-right">{{amount}}</td>
+</tr>
+{{/amount}}

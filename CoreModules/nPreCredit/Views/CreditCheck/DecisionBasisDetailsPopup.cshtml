@@ -1,0 +1,65 @@
+﻿<div id="decisionBasisDetails" class="modal fade" role="dialog" style="margin-right: -15px">
+    <div class="modal-dialog" style="width:90%; max-width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Decision basis details</h1>
+            </div>
+            <div class="modal-body">
+                <toggle-block header-text="'Minimum Demands'" ng-if="decisionDetailsBasis.minimumDemandsItems">
+                    <table class="table"><tbody><tr ng-repeat="i in decisionDetailsBasis.minimumDemandsItems"><td>{{i.value}}</td></tr></tbody></table>
+                </toggle-block>
+
+                <toggle-block header-text="'Left to live on'" ng-if="decisionDetailsBasis.leftToLiveOnItems">
+                    <table class="table"><tbody><tr ng-repeat="i in decisionDetailsBasis.leftToLiveOnItems"><td>{{i.value}}</td></tr></tbody></table>
+                </toggle-block>
+
+                <toggle-block header-text="'SAT - Left to live on'" ng-if="decisionDetailsBasis.satLeftToLiveOnItems">
+                    <table class="table"><tbody><tr ng-repeat="i in decisionDetailsBasis.satLeftToLiveOnItems"><td>{{i.value}}</td></tr></tbody></table>
+                </toggle-block>
+
+                <toggle-block header-text="'Manual control reasons'" ng-if="decisionDetailsBasis.autoFollowRejectionItems">
+                    <table class="table"><tbody><tr ng-repeat="i in decisionDetailsBasis.autoFollowRejectionItems"><td>{{i.value}}</td></tr></tbody></table>
+                </toggle-block>
+
+                <toggle-block header-text="'Score'" ng-if="decisionDetailsBasis.scoreItems">
+                    <table class="table"><tbody><tr ng-repeat="i in decisionDetailsBasis.scoreItems"><td>{{i.value}}</td></tr></tbody></table>
+                </toggle-block>
+
+                <toggle-block header-text="'Score model data'" ng-if="decisionDetailsBasis.scoringDataModelDetailsInitialData">
+                    <simple-table initial-data="decisionDetailsBasis.scoringDataModelDetailsInitialData"></simple-table>
+                </toggle-block>
+
+                <toggle-block header-text="'Risk group'" ng-if="decisionDetailsBasis.riskGroupItems">
+                    <table class="table"><tbody><tr ng-repeat="i in decisionDetailsBasis.riskGroupItems"><td>{{i.value}}</td></tr></tbody></table>
+                </toggle-block>
+
+                <div ng-if="decisionDetailsBasis.creditReportsUsed">
+                    <toggle-block on-expanded="c.onExpanded" is-locked="true" header-text="'Credit Report - ' + c.ProviderName + ' - Applicant ' + c.ApplicantNr" ng-repeat="c in decisionDetailsBasis.creditReportsUsed">
+                        <table class="table" ng-if="c.creditReportItems && c.ProviderName != 'SatFi'">
+                            <tbody>
+                                <tr ng-repeat="i in c.creditReportItems">
+                                    <td></td>
+                                    <td>{{i.Name}}</td>
+                                    <td colspan="3">{{i.Value}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table" ng-if="c.creditReportItems && c.ProviderName == 'SatFi'">
+                            <tbody>
+                                <tr ng-repeat="i in c.creditReportItems">
+                                    <td ng-if="i.ColCount > 1"></td>
+                                    <td ng-if="i.ColCount === 1" colspan="5">&nbsp;</td>
+                                    <td ng-if="i.ColCount > 1">{{i.Col1}}</td>
+                                    <td ng-if="i.ColCount > 1">{{i.Col2}}</td>
+                                    <td ng-if="i.ColCount > 1">{{i.Col3}}</td>
+                                    <td ng-if="i.ColCount > 1">{{i.Col4}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </toggle-block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<application-wizard-shell [initialData]="m?.wizardInitialData">
+    <div wizard-step>
+        <p *ngIf="errorMessage">{{errorMessage}}</p>
+        <div *ngIf="m">
+            <ng-container [ngSwitch]="m.wizardInitialData.activeStepNr">
+                <application-step-object *ngSwitchCase="1" [session]="m.session"></application-step-object>
+                <application-step-applicants *ngSwitchCase="2" [session]="m.session"></application-step-applicants>
+                <application-step-economy *ngSwitchCase="3" [session]="m.session"></application-step-economy>
+                <application-step-consent *ngSwitchCase="4" [session]="m.session"></application-step-consent>
+            </ng-container>
+        </div>
+        <div *ngIf="m?.test">
+            <div class="test-popup-frame test-popup-position" *ngIf="m.test.isPopupVisible">
+                <div class="pt-1">
+                    <ul class="list-unstyled">
+                        <li class="pb-1">
+                            <button target="_blank" class="btn btn-primary" (click)="autoFillInTest($event)">Autofill</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="test-popup-button-position">
+                <button class="btn btn-default" [ngClass]="{ 'test-popup-toned-down' : !m.test.isPopupVisible }" (click)="$event.preventDefault();m.test.isPopupVisible = !m.test.isPopupVisible"><span class="glyphicon glyphicon-sort"></span></button>
+            </div>
+        </div>        
+    </div>
+</application-wizard-shell>

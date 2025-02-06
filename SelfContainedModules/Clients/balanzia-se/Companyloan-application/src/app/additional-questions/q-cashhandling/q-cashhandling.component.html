@@ -1,0 +1,15 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <div class="pb-5">
+                <label class="custom-label">Vad består kontanthantering i?</label>    
+                <input type="text" class="custom-input" placeholder="ex" formControlName="description">
+            </div>     
+            <div>
+                <label class="custom-label">Vad är den förväntade årsvolymen?</label>    
+                <input type="text" class="custom-input" placeholder="ex 1 500 000" formControlName="volume">
+            </div>            
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

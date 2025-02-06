@@ -1,0 +1,191 @@
+<div *ngIf="m">
+  <div class="pb-3 pt-1">
+    <div class="custom-comment">
+      <form novalidate class="form-inline" name="commentform">
+        <div class="row">
+          <div class="col-xs-6">
+            <textarea
+              [(ngModel)]="m.newCommentText"
+              name="newCommentText"
+              [ngClass]="{
+                'comment-textarea-expanded': m.isNewCommentTextAreaExpanded
+              }"
+              class="comment-textarea-control custom-control expand"
+              placeholder="Lägg till kommentar"
+              (focus)="m.isNewCommentTextAreaExpanded = true"
+            ></textarea>
+          </div>
+          <div class="col-xs-4" [hidden]="!m.isNewCommentTextAreaExpanded">
+            <button
+              class="input-group-addon n-main-btn n-white-btn"
+              style="border-radius: 5px; display: block"
+              [disabled]="!m.newCommentText"
+              (click)="selectFileToAttach($event)"
+            >
+              Attach <span class="glyphicon glyphicon-paperclip"></span>
+            </button>
+            <span class="input-group-addon" *ngIf="m?.attachedFile">{{
+              m.attachedFile.name
+            }}</span>
+            <button
+              class="n-main-btn n-blue-btn"
+              style="margin-top: 20px; padding: 8px 8px 5px 8px; display: block"
+              [disabled]="!m.newCommentText"
+              (click)="addComment($event)"
+            >
+              Add <span class="glyphicon glyphicon-comment"></span>
+            </button>
+          </div>
+        </div>
+      </form>
+      <form #fileInputForm name="fileinputform" style="display: none">
+        <input
+          #fileInput
+          type="file"
+          id="file"
+          name="file"
+          style="display: none"
+          (change)="onFileAttached($event)"
+        />
+      </form>
+    </div>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col-xs-3">Date</th>
+        <th class="col-xs-7">Comment</th>
+        <th class="col-xs-2 text-right">
+          <select
+            (change)="onFilterModeChanged(filterModeSelect.value)"
+            #filterModeSelect
+            [value]="m.filterMode"
+            class="form-discreet"
+          >
+            <option value="all">All</option>
+            <option value="user">Manual</option>
+            <option value="system">System</option>
+          </select>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let c of m.currentCommentsPage">
+        <tr>
+          <td>
+            <span
+              *ngIf="!c.data.CustomerSecureMessageId || c.showDetails"
+              [ngClass]="{
+                'glyphicon-chevron-down': c.showDetails,
+                'glyphicon-chevron-right': !c.showDetails
+              }"
+              class="glyphicon chevron-bg mr-1"
+              (click)="toggleCommentDetails(c, $event)"
+            ></span>
+            <span
+              *ngIf="c.data.CustomerSecureMessageId && !c.showDetails"
+              style="margin-right: 10px"
+              class="n-unlock"
+              (click)="toggleCommentDetails(c, $event)"
+              ><a href="#"
+                ><span class="glyphicon glyphicon-chevron-right"></span
+                ><span class="glyphicon glyphicon-lock"></span></a
+            ></span>
+            {{ c.data.CommentDate | date: "short" }}
+          </td>
+          <td colspan="2">{{ c.data.CommentText }}</td>
+        </tr>
+        <tr class="opend" [hidden]="!c.showDetails">
+          <td colspan="2">
+            <ng-container *ngIf="!c.secureMessage">
+              <div class="col-xs-6">
+                <label class="col-xs-6 text-right">By</label>
+                <div class="col-xs-6">
+                  <p>
+                    <b>{{ c.data.DisplayUserName }}</b>
+                  </p>
+                </div>
+              </div>
+              <div
+                class="col-xs-6"
+                *ngFor="let archiveKey of c.data.ArchiveLinkKeys; let i = index"
+              >
+                <label class="col-xs-6 text-right">File {{ i + 1 }}</label>
+                <div class="col-xs-6">
+                  <p>
+                    <a
+                      target="_blank"
+                      class="n-anchor"
+                      [href]="getArchiveDocumentUrl(archiveKey)"
+                      >Document <span class="glyphicon glyphicon-save"></span
+                    ></a>
+                  </p>
+                </div>
+              </div>
+              <div class="col-xs-6" *ngIf="c.data.RequestIpAddress">
+                <label class="col-xs-6 text-right">Ip address</label>
+                <div class="col-xs-6">
+                  <p>
+                    <b>{{ c.data.RequestIpAddress }}</b>
+                  </p>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container
+              *ngTemplateOutlet="
+                secureMessageComment;
+                context: { comment: c.secureMessage }
+              "
+            ></ng-container>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+  <table-pager [initialData]="m.paging"></table-pager>
+</div>
+
+<ng-template #secureMessageComment let-comment="comment">
+  <ng-container *ngIf="comment">
+    <div class="col-xs-9">
+      <label class="col-xs-2 text-right">Message</label>
+      <div class="col-xs-10">
+        <p *ngIf="comment.format !== 'html'">
+          <b>{{ comment.text }}</b>
+        </p>
+        <html-preview
+          *ngIf="comment.format === 'html'"
+          [content]="comment.text"
+        >
+        </html-preview>
+      </div>
+    </div>
+    <div class="col-xs-3">
+      <label class="col-xs-6 text-right">By</label>
+      <div class="col-xs-6">
+        <p>
+          <b>{{ comment.isByCustomer ? "Customer" : "System" }}</b>
+        </p>
+      </div>
+      <label *ngIf="comment.requestIpAddress" class="col-xs-6 text-right"
+        >Ip address</label
+      >
+      <div *ngIf="comment.requestIpAddress" class="col-xs-6">
+        <p>
+          <b>{{ comment.requestIpAddress }}</b>
+        </p>
+      </div>
+      <label *ngIf="comment.attachedDocumentUrl" class="col-xs-6 text-right"
+        >Attachment</label
+      >
+      <div *ngIf="comment.attachedDocumentUrl" class="col-xs-6">
+        <a
+          target="_blank"
+          class="n-anchor"
+          [href]="comment.attachedDocumentUrl"
+          >Document <span class="glyphicon glyphicon-save"></span
+        ></a>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

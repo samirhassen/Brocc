@@ -1,0 +1,48 @@
+<table class="table" *ngIf="notifications">
+  <thead>
+    <tr>
+      <th class="col-xs-2">Due date</th>
+      <th class="col-xs-2 text-right">Initial amount</th>
+      <th class="col-xs-3 text-right">Written off amount</th>
+      <th class="col-xs-3 text-right">Remaining amount</th>
+      <th class="col-xs-2 text-right">Last paid date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let nn of notifications">
+      <td>
+        <a
+          class="n-anchor"
+          href="#"
+          [routerLink]="['/credit/notification', nn.Id.toString()]"
+          >{{ nn.DueDate | date: "shortDate" }}</a
+        >
+        <span
+          *ngIf="
+            !nn.IsPaid && nn.CurrentNrOfPassedDueDatesWithoutFullPayment >= 2
+          "
+          style="color: red; font-weight: bold"
+          [title]="nn.CurrentNrOfPassedDueDatesWithoutFullPayment"
+          >!</span
+        >
+        <span
+          *ngIf="
+            nn.IsPaid && nn.AtPaymentNrOfPassedDueDatesWithoutFullPayment >= 2
+          "
+          style="color: red; font-weight: bold"
+          [title]="nn.AtPaymentNrOfPassedDueDatesWithoutFullPayment"
+          >!</span
+        >
+      </td>
+      <td class="text-right">{{ nn.InitialAmount | currency }}</td>
+      <td class="text-right">{{ nn.WrittenOffAmount | currency }}</td>
+      <td class="text-right">
+        {{ nn.InitialAmount - nn.PaidAmount - nn.WrittenOffAmount | currency }}
+      </td>
+      <td class="text-right">{{ nn.LastPaidDate | date: "shortDate" }}</td>
+    </tr>
+    <tr *ngIf="notifications.length == 0">
+      <td colspan="5">-</td>
+    </tr>
+  </tbody>
+</table>

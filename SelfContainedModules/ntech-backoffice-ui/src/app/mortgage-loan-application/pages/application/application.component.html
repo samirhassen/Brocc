@@ -1,0 +1,120 @@
+<div *ngIf="m">
+  <div *ngIf="m.applicationNr">
+    <application-cancel-buttons
+      [initialData]="m.cancelButtonsInitialData"
+    ></application-cancel-buttons>
+  </div>
+  <div class="row pt-1">
+    <div class="col-xs-8">
+      <ng-container *ngFor="let step of m.steps">
+        <step-status-block [initialData]="step.statusInitialData">
+          <ng-container [ngSwitch]="step.componentName">
+            <ng-container *ngSwitchCase="'InitialCreditCheckStandardComponent'"
+              ><initial-credit-check-standard
+                [initialData]="step.initialData"
+              ></initial-credit-check-standard
+            ></ng-container>
+            <ng-container
+              *ngSwitchCase="'WaitingForAdditionalInfoStandardComponent'"
+              ><waiting-for-info-standard
+                [initialData]="step.initialData"
+              ></waiting-for-info-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'CollateralStandardComponent'"
+              ><collateral-standard
+                [initialData]="step.initialData"
+              ></collateral-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'KycStandardComponent'"
+              ><kyc-standard [initialData]="step.initialData"></kyc-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'FinalCreditCheckStandardComponent'"
+              ><final-credit-check-standard
+                [initialData]="step.initialData"
+              ></final-credit-check-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'AuditAgreementStandardComponent'"
+              ><audit-agreement-standard
+                [initialData]="step.initialData"
+              ></audit-agreement-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'AgreementStandardComponent'"
+              ><agreement-standard
+                [initialData]="step.initialData"
+              ></agreement-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'PaymentStandardComponent'"
+              ><payment-standard
+                [initialData]="step.initialData"
+              ></payment-standard
+            ></ng-container>
+          </ng-container>
+        </step-status-block>
+      </ng-container>
+    </div>
+    <div class="col-xs-4">
+      <div class="pb-1">
+        <customer-info
+          [initialData]="m.applicationCustomerInfo1InitialData"
+        ></customer-info>
+      </div>
+      <hr
+        *ngIf="m.applicationCustomerInfo2InitialData"
+        class="hr-section dotted"
+      />
+      <div *ngIf="m.applicationCustomerInfo2InitialData" class="pb-3">
+        <customer-info
+          [initialData]="m.applicationCustomerInfo2InitialData"
+        ></customer-info>
+      </div>
+      <hr class="hr-section dotted" />
+      <div>
+        <application-assigned-handlers
+          [initialData]="m.assignedHandlersInitialData"
+        ></application-assigned-handlers>
+      </div>
+      <hr class="hr-section dotted" />
+      <div class="application-dual-numberlinks-container">
+        <div class="application-text-link-container">
+          <application-numbered-icon-with-link
+            linkText="Secure messages"
+            [onNavigate]="navigateToApplicationMessages"
+            [iconNumber]="m.unreadCustomerMessagesCount"
+            iconClass="glyphicon-envelope"
+          >
+          </application-numbered-icon-with-link>
+        </div>
+        <div class="application-text-link-container">
+          <application-numbered-icon-with-link
+            linkText="Parties"
+            iconClass="glyphicon-user"
+            [linkRoute]="[
+              '/mortgage-loan-application/parties',
+              this.m.applicationNr
+            ]"
+          >
+          </application-numbered-icon-with-link>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="application-text-link-container mt-1">
+        <application-numbered-icon-with-link
+          linkText="Documents"
+          iconClass="glyphicon-paperclip"
+          [linkRoute]="[
+            '/mortgage-loan-application/documents',
+            this.m.applicationNr
+          ]"
+        >
+        </application-numbered-icon-with-link>
+      </div>
+    </div>
+  </div>
+
+  <div id="comments" style="padding-top: 100px">
+    <application-comments
+      [initialData]="m.commentsInitialData"
+    ></application-comments>
+  </div>
+  <test-functions-popup [model]="m?.testFunctions"></test-functions-popup>
+</div>

@@ -1,0 +1,286 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+    blockquote:before, blockquote:after, q:before, q:after {
+        content: '';
+        content: none;
+    }
+
+ins {
+    text-decoration: none;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+@page {
+    size: A4;
+    margin-top: 15mm;
+    margin-bottom: 15mm;
+    margin-left: 20mm;
+    margin-right: 15mm;
+    
+    /*counters has to be inside a @. All @ is defined to be within the margin of the page.. v51 of weasy.*/
+    @bottom-right {
+        content: counter(page) "("counter(pages)") ";
+        text-align: left;
+        font-family: Arial;
+        font-size: 13px;
+        vertical-align: top;
+    }
+}
+
+.page {
+    page-break-before: always;
+}
+
+/*there is no 'header' in weasy as in repeates on all pages, have to use fixed position*/
+#header {
+   position: fixed;
+   width: 25mm;
+   height: 12.5mm;
+}
+
+    #header img {
+        max-width: 23.5mm;
+        max-height: 12.5mm;
+    }
+
+    #header h1 {
+        font-family: Arial;
+        font-size: 20pt;
+        font-weight: bold;
+    }
+
+
+#footer {
+    position: fixed; 
+    bottom: 0;
+    border-top: 1px solid rgb(27,73,73);
+    padding-top: 15px;
+    width: 100%;
+}
+
+.addressArea {
+    width: 87mm;
+    height: 20mm;
+    position: relative;
+    float: left;
+}
+
+.returnaAdress {
+    padding-left: 25mm;
+}
+
+.header {
+    float: right;
+    text-align: right;
+}
+
+    .header h1 {
+        font-family: Arial;
+        font-size: 14pt;
+        font-weight: bold;
+        padding: 0px;
+        margin: 0px;
+    }
+
+/*since we have to use fixed position for repeatable element we have to have a defined starting point for content*/
+
+.content {
+    position: absolute;
+    top: 15.5mm;
+    width: 175mm;
+    border-top: 1px solid #000;
+}
+
+.row {
+    margin-top: 5mm;
+}
+
+.column1 {
+    float: left;
+    width: 48%;
+    height: 30mm;
+}
+
+.column2 {
+    float: right;
+    width: 48%;
+    margin-left: 4%;
+    height: 30mm;
+}
+
+.greenborder {
+    border-bottom: 1px solid #00c1c1;
+}
+
+.blackborder {
+    border-bottom: 1px solid #000;
+    min-height: 40px;
+}
+
+.area {
+    padding-top: 5mm;
+}
+
+table {
+    width: 100%;
+}
+
+    table thead tr th {
+        font-weight: bold;
+        text-align: left;
+        font-family: Arial;
+        font-size: 13px;
+        padding-bottom: 2px;
+    }
+
+tbody tr {
+    border-bottom: 1px solid #000000;
+}
+
+    tbody tr:first-child {
+        border-top: 1px solid #000;
+    }
+
+
+td {
+    font-family: Arial;
+    font-size: 13px;
+    padding: 5px 0px;
+    width: 50%;
+}
+
+
+.customer-accounts td{
+    width: 33%;
+}
+
+.settle-accounts td{
+    width: 33%;
+}
+
+
+.clear {
+    clear: both;
+}
+/**/
+
+h1 {
+    font-family: Arial;
+    font-size: 20px;
+    margin-bottom: 2mm;
+}
+
+h2 {
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 1mm;
+}
+
+h3 {
+    font-family: Arial;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+
+p {
+    font-family: Arial;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.pt-1 {
+    padding-top: 10px;
+}
+
+.pt-2 {
+    padding-top: 20px;
+}
+
+.pb-1 {
+    padding-bottom: 10px;
+}
+
+.pt-3 {
+    padding-top: 30px;
+}
+
+.pt-5 {
+    padding-top: 50px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.extra-padding-top {
+    padding-top: 25mm;
+}
+
+p.italic{
+    font-style: italic;
+}
+
+
+
+.boxed_table table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+    .boxed_table table tr td {
+        border-bottom: none;
+        border: 0.5px solid #000;
+        background-color: #efefef;
+        padding: 3px 7px 5px 7px;
+    }
+
+    .boxed_table table tr:nth-child(even) td {
+        width: 50%;
+        border-bottom: none;
+        border: 0.5px solid #000;
+        background-color: #fff;
+    }
+
+    .boxed_table table tr td:first-child {
+        width: 40%
+    }
+
+    .boxed_table table tr td:last-child {
+        text-align: left;
+        width: 60%
+    }
+
+    .boxed_table table tr td p{
+        padding-bottom: 5px;
+    }

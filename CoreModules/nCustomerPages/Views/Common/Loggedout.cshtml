@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-angular-translateonly")
+}
+
+<div class="content">
+    <div class="vh-50">
+        <div class="aligned-center">
+            <h2 translate="Loggedout_header">Tack för besöket</h2>
+            <p translate="Loggedout_header2" class="text-center pt-1">Du har nu loggat ut.</p>            
+        </div>
+    </div>
+</div>

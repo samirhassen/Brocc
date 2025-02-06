@@ -1,0 +1,17 @@
+﻿<div ng-if="!state.ActiveState.AgreementsData.HasApplicant1SignedAgreement">
+    <div class="text-center">
+        <p style="padding-bottom:20px;">{{state.ActiveState.AgreementsData.Applicant1.FirstName}} ({{state.ActiveState.AgreementsData.Applicant1.CivicRegNr}})</p>
+        <a class="sign-link" ng-href="{{'/application-wrapper-direct-sign?applicantNr=1&token=' + state.Token}}" translate="ansokan_sg_signbtn">Signera avtal</a>
+    </div>
+</div>
+<div ng-if="hasCo() && state.ActiveState.AgreementsData.HasApplicant1SignedAgreement">
+    <div class="text-center" style="float: left; width: 50%;">
+        <p style="padding-bottom:20px;">{{state.ActiveState.AgreementsData.Applicant1.FirstName}} ({{state.ActiveState.AgreementsData.Applicant1.CivicRegNr}})</p>
+        <p translate="ansokan_sg_alreadysigned">Signerat</p>
+    </div>
+    <div class="text-center" style="float: left; width: 50%;">
+        <p style="padding-bottom:20px;">{{state.ActiveState.AgreementsData.Applicant2.FirstName}} ({{state.ActiveState.AgreementsData.Applicant2.CivicRegNr}})</p>
+        <a class="sign-link" ng-href="{{'/application-wrapper-direct-sign?applicantNr=2&token=' + state.Token}}" translate="ansokan_sg_signbtn">Signera avtal</a>
+    </div>
+    <div class="clear"></div>
+</div>

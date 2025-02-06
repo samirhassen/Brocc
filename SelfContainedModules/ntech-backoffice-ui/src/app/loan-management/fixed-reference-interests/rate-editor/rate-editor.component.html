@@ -1,0 +1,84 @@
+<ng-container *ngIf="m">
+  <div class="editblock">
+    <div class="form-horizontal">
+      <form [formGroup]="m.addForm.form">
+        <div
+          class="form-group"
+          [ngClass]="{ 'has-error': m.addForm.hasError('years') }"
+        >
+          <label class="control-label col-sm-6">Fixed time (years)</label>
+          <div class="col-sm-4">
+            <select class="form-control" formControlName="years">
+              <ng-container *ngFor="let years of m.addRateYearOptions">
+                <option
+                  *ngIf="!isEditedRate(12 * years, m)"
+                  [ngValue]="years.toString()"
+                >
+                  {{ years }}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+        <div
+          class="form-group"
+          [ngClass]="{ 'has-error': m.addForm.hasError('rate') }"
+        >
+          <label class="control-label col-sm-6">Rate (%)</label>
+          <div class="col-sm-4">
+            <input class="form-control" type="text" formControlName="rate" />
+          </div>
+        </div>
+        <div class="row pt-2 text-center">
+          <button
+            [disabled]="m.addForm.invalid()"
+            (click)="addRate($event)"
+            class="n-main-btn n-blue-btn"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <form [formGroup]="m.editForm.form">
+    <div class="frame mt-4 rates-container">
+      <div class="rates-row rates-row-header">
+        <div class="rates-time">Fixed time</div>
+        <div class="rates-interest">Rate (%)</div>
+        <div class="rates-remove"></div>
+      </div>
+      <div class="rates-row" *ngFor="let rate of m.editedRates">
+        <div class="rates-time">
+          {{ parseMonthCount(rate.monthCount).nrOfMonthsOrYears }}
+          {{ parseMonthCount(rate.monthCount).localizedUnitName }}
+        </div>
+        <div class="rates-interest">
+          <input
+            type="text"
+            class="form-control"
+            [formControlName]="rate.formControlName"
+          />
+        </div>
+        <div class="rates-remove">
+          <button
+            *ngIf="rate.isRemoveAllowed"
+            (click)="removeRate(rate.monthCount, $event)"
+            class="n-icon-btn n-red-btn"
+          >
+            <span class="glyphicon glyphicon-minus"></span>
+          </button>
+        </div>
+      </div>
+      <div class="change-button-row">
+        <button
+          [disabled]="m.editForm.invalid()"
+          (click)="initiateChange($event)"
+          class="n-main-btn n-blue-btn"
+        >
+          Initiate change
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-container>

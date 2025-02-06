@@ -1,0 +1,280 @@
+<credit-menu activeMenuItemCode="mortgageLoanStandardChangeTerms" [creditNr]="m?.creditNr" *ngIf="m">
+  <div current-item-content>
+    <div *ngIf="m.creditStatus != 'Normal'">
+      <p>Credit is not active</p>
+    </div>
+    <div *ngIf="m.creditStatus == 'Normal'">
+      <div class="row">
+        <div class="col-xs-10 col-sm-offset-1">
+          <div class="row pb-3">
+            <div class="col-xs-5">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-xs-6">Fixed time</label>
+                  <p class="form-control-static col-xs-6">
+                    {{displayAsYearsText(m.currentTerms.interestRebindMonthCount)}}
+                  </p>
+                  <label class="control-label col-xs-6">Interest bound until</label>
+                  <p class="form-control-static col-xs-6">
+                    {{ m.currentTerms.interestBoundUntil.toString() | date:'shortDate' }}
+                  </p>
+                  <label class="control-label col-xs-6">Days left</label>
+                    <p class="form-control-static col-xs-6">
+                      {{ m.currentTerms.daysLeft | number }} days
+                    </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-5">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-xs-6">Reference interest</label>
+                    <p class="form-control-static col-xs-6">
+                      {{ m.currentTerms.referenceInterest | number: '1.2-2' }} %
+                    </p>
+                  <label class="control-label col-xs-6">Margin interest</label>
+                    <p class="form-control-static col-xs-6">
+                      {{ m.currentTerms.marginInterest | number: '1.2-2' }} %
+                    </p>
+                  <label class="control-label col-xs-6">Customer total interest</label>
+                    <p class="form-control-static col-xs-6">
+                      {{ m.currentTerms.customerTotalInterest | number: '1.2-2' }} %
+                    </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--Change fields-->
+          <div class="editblock" *ngIf="!m.pendingTerms">
+            <form name="calcform" [formGroup]="m.calculateForm.form">
+              <div class="form-horizontal">
+                <div class="form-group" [ngClass]="{ 'has-error': m.calculateForm.hasError('calcFixedTime') }">
+                  <label class="control-label col-xs-6">Fixed time</label>
+                  <div class="col-xs-4">
+                    <select class="form-control" formControlName="calcFixedTime">
+                      <option value=""></option>
+                      <option [value]="opt.MonthCount" *ngFor="let opt of m.currentRates">
+                        {{ displayAsYearsText(opt.MonthCount) }} ({{opt.RatePercent}}%)
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" [ngClass]="{ 'has-error': 
+                        m.calculateForm.hasError('calcMarginInterestRatePercent') || m.calculateForm.hasNamedValidationError('timeInterestCombination')}">
+                  <label class="control-label col-xs-6">Margin interest rate</label>
+                  <div class="col-xs-4">
+                    <input formControlName="calcMarginInterestRatePercent" type="text" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group" [ngClass]="{ 'has-error': m.calculateForm.hasError('calcFromDate')}">
+                  <label class="control-label col-xs-6">From date</label>
+                  <div class="col-xs-4">
+                    <input formControlName="calcFromDate" type="text" class="form-control" />
+                  </div>
+                  <div class="col-xs-2">
+                    <button class="n-icon-btn n-blue-btn" (click)="setDateToTomorrow($event)">+1</button>
+                  </div>
+                </div>
+                <div class="pt-2 text-center">
+                  <button class="n-direct-btn n-blue-btn" (click)="computeNewTerms($event)" [disabled]="m.calculateForm.invalid()">
+                    Calculate <span class="glyphicon glyphicon-refresh"></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!--Pending terms-->
+          <div class="pt-3" *ngIf="m.pendingTerms">                    
+            <div class="frame">
+              <h2 class="text-center">New terms: Waiting for signed agreement</h2>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Fixed time</th>
+                    <th class="text-right">{{ displayAsYearsText(m.pendingTerms.NewInterestRebindMonthCount) }} </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Customers new total interest</td>
+                      <td class="text-right">{{ m.pendingTerms.CustomersNewTotalInterest | number: '1.2-2' }} %</td>
+                    </tr>
+                    <tr>
+                      <td>Reference interest</td>
+                      <td class="text-right">{{ m.pendingTerms.ReferenceInterest | number: '1.2-2' }} %</td>
+                    </tr>
+                    <tr>
+                      <td>Margin interest</td>
+                      <td class="text-right">{{ m.pendingTerms.MarginInterest | number: '1.2-2' }} %</td>
+                    </tr>
+                    <tr>
+                      <td>Interest bound from</td>
+                      <td class="text-right">{{ m.pendingTerms.InterestBoundFrom.toString() | date:'shortDate' }}</td>
+                    </tr>
+                    <tr>
+                      <td>Interest bound to</td>
+                      <td class="text-right">{{ m.pendingTerms.InterestBoundTo.toString() | date:'shortDate' }}</td>
+                    </tr>
+                    <tr>
+                      <td>Loan amount</td>
+                      <td class="text-right">{{ m.pendingTerms.CurrentCapitalBalance | number }} kr</td>
+                    </tr>
+                    <tr>
+                      <td>Amortization amount</td>
+                      <td class="text-right">{{ m.pendingTerms.AmortizationAmount | number }} kr</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    <p class="pt-1">
+                      Räntan skall ses som indikativ och kan komma att ändras fram till och med villkorsändringsdagen. En eventuell förändring av referensräntan kommer att påverka ränteerbjudandet. I de fall en höjning eller
+                      säkning av referensränta ske kommer erbjudandet höjas/sänkas motsvarande på respektive löptid. Alla räntebindningstider är ungefärliga, slutförfallodagen fastställs först på villkorsändringsdagen.
+                    </p>
+
+                    <div class="pt-2">
+                      <h2>Signing</h2>
+                      <hr class="hr-section">
+
+                      <!--Signed agreement-->
+                      <div *ngIf="m">
+                        <div *ngIf="!m.agreementDocument?.attachedFile">
+                            <ng-container *ngIf="m.unsignedAgreement">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="col-xs-3">Unsigned agreement</td>
+                                            <td class="col-xs-9 text-right"><a [href]="getDocumentUrl(m.unsignedAgreement.DocumentArchiveKey)"
+                                                target="_blank" class="n-anchor">
+                                                Change terms agreement <span class="glyphicon glyphicon-save"></span></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table" *ngIf="m.unsignedAgreement.signatureCustomers">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let customer of m.unsignedAgreement.signatureCustomers">
+                                            <td class="col-xs-6">{{customer.fullName}}</td>
+                                            <td class="col-xs-2">
+                                                <span [ngClass]="getIconClass(customer.hasSigned, false)" class="ntech-status-icon"></span>                                                
+                                            </td>
+                                            <td class="col-xs-4">
+                                                <button class="n-direct-btn n-white-btn" *ngIf="customer.signatureUrl" (click)="copyToClipboard(customer.signatureUrl, $event)">
+                                                    Copy signature link <span class="glyphicon glyphicon-plus"></span>
+                                                </button>                                                
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <toggle-block [initialData]="{ headerText: 'Attach manually signed agreement', useTransparentBackground: true }">
+                                    <table class="table">
+                                        <tr>
+                                          <td class="col-xs-3">Signed agreement</td>
+                                          <td class="col-xs-9"><button class="n-direct-btn n-white-btn" (click)="selectFileToAttach($event)">
+                                            Attach <span class="glyphicon glyphicon-paperclip"></span>
+                                          </button>
+                                          </td> 
+                                        </tr>
+                                      </table>
+                                </toggle-block>
+                            </ng-container>
+                        </div>  
+                        <div *ngIf="m.agreementDocument">
+                            <table class="table">
+                              <tr>
+                                <td class="col-xs-3">Signed agreement</td>
+                                <td class="col-xs-9"><a [href]="getDocumentUrl(m.agreementDocument.signedAgreement.DocumentArchiveKey)"
+                                    *ngIf="(m.agreementDocument.signedAgreement || m.agreementDocument?.attachedFile) && !m.agreementDocument.isPendingRemoval"
+                                    target="_blank" class="n-direct-btn n-purple-btn">
+                                    {{ m.agreementDocument?.attachedFile.name }} <span class="glyphicon glyphicon-save"></span></a>
+                                </td>
+                                <td class="col-xs-3"><button class="n-icon-btn n-red-btn"
+                                    *ngIf="m.agreementDocument.signedAgreement && !m.agreementDocument.isPendingRemoval && !m.pendingTerms?.ScheduledDate"
+                                    (click)="removeEditDocument($event)"><span class="glyphicon glyphicon-remove"></span></button></td>
+                              </tr>
+                            </table>
+                        </div>    
+                        <form #fileInputForm novalidate class="form-inline" name="secureform" id="secureform" style="display: none">
+                          <input #fileInput type="file" id="file" name="file" style="display: none" (change)="onFileAttached($event)" />
+                        </form>
+                      </div>
+                    </div>         
+                    <div class="row pt-3">
+                      <div class="col-xs-4">
+                        <button class="n-main-btn n-white-btn" (click)="cancelPendingTermsChange($event)">Cancel</button>
+                      </div>
+                      <div class="col-xs-4 text-center" *ngIf="m.pendingTerms?.ScheduledDate">
+                        <p>Upcoming schedulation.</p>
+                      </div>
+                      <div class="col-xs-4 text-center" *ngIf="!m.pendingTerms?.ScheduledDate">
+                        <button class="n-main-btn n-green-btn" [disabled]="!isAcceptPendingChangeAllowed()"
+                        (click)="schedulePendingTermsChange($event)">Schedule new terms</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="pt-3" *ngIf="m.computedNewTerms">
+        <div class="frame">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Fixed time</th>
+                <th class="text-right">
+                  {{displayAsYearsText(m.computedNewTerms.NewInterestRebindMonthCount)}}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Customers new total interest</td>
+                <td class="text-right">{{ m.computedNewTerms.CustomersNewTotalInterest | number: '1.2-2' }} %</td>
+              </tr>
+              <tr>
+                <td>Reference interest</td>
+                <td class="text-right">{{ m.computedNewTerms.ReferenceInterest | number: '1.2-2' }} %</td>
+              </tr>
+              <tr>
+                <td>Margin interest</td>
+                <td class="text-right">{{ m.computedNewTerms.MarginInterest | number: '1.2-2' }} %</td>
+              </tr>
+              <tr>
+                <td>Interest bound from</td>
+                <td class="text-right">{{ m.computedNewTerms.InterestBoundFrom.toString() | date:'shortDate' }}</td>
+              </tr>
+              <tr>
+                <td>Interest bound to</td>
+                <td class="text-right">{{ m.computedNewTerms.InterestBoundTo.toString() | date:'shortDate' }}</td>
+              </tr>
+              <tr>
+                <td>Loan amount</td>
+                <td class="text-right">{{ m.computedNewTerms.CurrentCapitalBalance | number }} kr</td>
+              </tr>
+              <tr>
+                <td>Amortization amount</td>
+                <td class="text-right">{{m.computedNewTerms.AmortizationAmount | number}} kr</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pt-1">
+            Räntan skall ses som indikativ och kan komma att ändras fram till och med villkorsändringsdagen. En eventuell
+            förändring av referensräntan kommer att påverka ränteerbjudandet. I de fall en höjning eller
+            säkning av referensränta ske kommer erbjudandet höjas/sänkas motsvarande på respektive löptid. Alla
+            räntebindningstider är ungefärliga, slutförfallodagen fastställs först på villkorsändringsdagen.
+          </p>
+          <div class="pt-2 text-center">
+            <button class="n-main-btn n-blue-btn" (click)="startCreditTermsChange($event)">Continue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</credit-menu>

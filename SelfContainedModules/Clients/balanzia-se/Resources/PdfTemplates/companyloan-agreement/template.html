@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">	
+</head>
+<body>
+
+    <div id="header">
+        <img class="balanzia_logo" src="img/balanzia_logo.png" alt="Balanzia Logo">
+    </div>
+    <div class="page">
+
+        <div class="addressArea">
+            <div class="returnaAdress">
+                <p>Balanzia</p>
+                <p>Box 7790</p>
+                <p>SE-103 96 Stockholm</p>
+            </div>
+        </div>
+        <div class="header">
+            <h1>Låneavtal</h1>
+            <p>Utskriftsdatum {{PrintDate}}</p>
+        </div>
+        <hr />
+        <div class="content">
+            <div class="parties">
+                <div class="column1">
+                    <h2>Långivare</h2>
+                    <p>GCC Capital AB / Balanzia</p>
+                    <p>Org.nr 556058-8740</p>
+                </div>
+                <div class="column2">
+                    <h2>Låntagare</h2>
+                    {{#CompanyCustomer}}
+                    <p>{{Name}}</p>
+                    <p>Org.nr {{Orgnr}}</p>
+                    <p>{{StreetAddress}}</p>
+                    <p>{{ZipcodeAndCityAddress}}</p>                    
+                    {{/CompanyCustomer}}
+                    <hr class="green" />
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area pt-3">
+                <p class="pb-1">
+                    Balanzia, bifirma till GCC Capital AB, ovan kallat Långivaren, lånar härmed nedan angivet lånebelopp till Låntagaren på de villkor som anges i detta avtal. Låneavtalet är bindande för Låntagaren genom dennes underskrift av låneavtalet. Låntagaren bekräftar genom signering med BankID att denne tagit del av och godkänt detta låneavtal jämte övriga tillämpliga villkor (även så Balanzias behandling av personuppgifter), samt att alla uppgifter som lämnats i detta låneavtal är korrekta och kompletta.
+                </p>
+            </div>
+
+            <div class="area">
+                <h2>Lånedetaljer</h2>
+                {{#LoanDetails}}
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Lånenummer</td>
+                            <td class="text-right">{{LoanNr}}</td>
+                        </tr>
+                        <tr>
+                            <td>Lånetyp</td>
+                            <td class="text-right">Annuitetslån</td>
+                        </tr>
+                        <tr>
+                            <td>Lånebelopp</td>
+                            <td class="text-right">{{LoanAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Återbetalningstid</td>
+                            <td class="text-right">{{RepaymentTimeInMonths}} månader</td>
+                        </tr>
+                        <tr>
+                            <td>Månadsbelopp</td>
+                            <td class="text-right">{{AnnuityAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Marginalränta</td>
+                            <td class="text-right">{{MarginInterestRatePercentPerMonth}}</td>
+                        </tr>
+                        <tr>
+                            <td>Referensränta</td>
+                            <td class="text-right">{{ReferenceInterestRatePercentPerMonth}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Total ränta</b></td>
+                            <td class="text-right"><b>{{TotalInterestRatePercentPerMonth}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Aviavgift</td>
+                            <td class="text-right">{{MonthlyFeeAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Uppläggningsavgift, dras från lånebeloppet vid utbetalning</td>
+                            <td class="text-right">{{InitialFeeAmount}}</td>
+                        </tr>
+                    </tbody>                    
+                </table>                
+                {{/LoanDetails}}
+            </div>
+
+            {{#HasCollaterals}}
+            <div class="area">
+                <h2>Säkerhet</h2>
+                <p></p>
+                <table>
+                    <tbody>
+                        {{#Collaterals}}
+                        <tr>
+                            <td colspan="2">Solidarisk personlig borgen från {{FullName}}, {{CivicRegNr}}</td>
+                        </tr>                        
+                        {{/Collaterals}}
+                    </tbody>                    
+                </table>
+            </div>
+            {{/HasCollaterals}}
+
+            <div class="area">
+                <h2>Mottagarkonto</h2>
+                <p></p>
+                {{#BankAccount}}
+                <table>
+                    <tbody>
+                        <tr>
+                            {{#AccountTypeFlags}}
+                            {{#BankAccountSe}}
+                            <td>Utbetalas till konto</td>
+                            {{/BankAccountSe}}
+                            {{#BankGiroSe}}
+                            <td>Utbetalas till bankgiro</td>
+                            {{/BankGiroSe}}
+                            {{#PlusGiroSe}}
+                            <td>Utbetalas till bankgiro</td>
+                            {{/PlusGiroSe}}
+                            {{/AccountTypeFlags}}                            
+                            <td class="text-right">{{DisplayNr}}</td>
+                        </tr>
+                    </tbody>                    
+                </table>                
+                {{/BankAccount}}
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p>Postadress: Box 7790, 103 96 Stockholm | Telefonnummer: 08-557 665 00 | Org.nr: 556058-8740 <span class="counter"></span></p>
+
+        
+    </div>
+    {{#HasCollaterals}}
+    [[[include:guarantor.html]]]
+    {{/HasCollaterals}}
+    [[[include:questions.html]]]
+    [[[include:allmannavillkor.html]]]
+</body>
+</html>

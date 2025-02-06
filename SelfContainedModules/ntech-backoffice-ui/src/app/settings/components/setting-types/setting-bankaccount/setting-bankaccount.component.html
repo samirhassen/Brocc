@@ -1,0 +1,156 @@
+<ng-container *ngIf="m">
+  <div class="editblock" *ngIf="!m.edit && !m.pendingCommit">
+    <div class="form-horizontal">
+      <div class="text-right pb-1">
+        <button class="n-icon-btn n-blue-btn" (click)="beginEdit($event)">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          textGroup;
+          context: {
+            label: 'Enabled',
+            value: m.isEnabled ? 'Yes' : 'No',
+            visible: m.canEditIsEnabled
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          textGroup;
+          context: {
+            label: 'Current account',
+            value: '-',
+            visible: !m.currentAccount
+          }
+        "
+      ></ng-container>
+      <bank-account-nr-view [account]="m.currentAccount">
+      </bank-account-nr-view>
+    </div>
+  </div>
+  <div class="editblock" *ngIf="m.edit && !m.pendingCommit">
+    <div class="form-horizontal">
+      <form [formGroup]="m.edit.form.form">
+        <div class="form-group pb-1">
+          <div class="col-xs-9"></div>
+          <div class="col-xs-3">
+            <button
+              class="n-main-btn n-white-btn pull-right"
+              (click)="onCancelEdit($event)"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.edit.form.form.errors?.cannotBeEnabled }"
+          *ngIf="m.canEditIsEnabled"
+        >
+          <label class="control-label col-xs-6">Enabled</label>
+          <div class="col-xs-6">
+            <select class="form-control" formControlName="isEnabled">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div class="col-xs-1"></div>
+        </div>
+        <div class="form-group pb-1">
+          <label class="control-label col-xs-6">Account type</label>
+          <div class="col-xs-6">
+            <select
+              class="form-control"
+              formControlName="bankAccountNrTypeCode"
+            >
+              <option
+                *ngFor="let code of m.allowedBankAccountNrTypeCodes"
+                [value]="code"
+              >
+                {{ getAccountTypeDisplayName(code) }}
+              </option>
+            </select>
+          </div>
+          <div class="col-xs-1"></div>
+        </div>
+        <div
+          class="form-group pb-1"
+          *ngIf="m.edit.form.getValue('bankAccountNrTypeCode') !== 'none'"
+          [ngClass]="{
+            'has-error':
+              m.edit.form.form.errors?.invalidBankAccountNr ||
+              m.edit.form.form.errors?.missingRequiredBankAccountNr
+          }"
+        >
+          <label class="control-label col-xs-6">Account nr</label>
+          <div class="col-xs-6">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="bankAccountNr"
+            />
+          </div>
+          <div class="col-xs-1"></div>
+        </div>
+        <div class="text-center pt-2">
+          <button
+            (click)="onSetEditAsPending($event)"
+            [disabled]="m.edit.form.invalid()"
+            class="n-main-btn n-blue-btn"
+          >
+            Preview
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="editblock" *ngIf="m.pendingCommit">
+    <div class="form-horizontal">
+      <div class="form-group pb-1">
+        <div class="col-xs-9"></div>
+        <div class="col-xs-3">
+          <button
+            class="n-main-btn n-white-btn pull-right"
+            (click)="onCancelPending($event)"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          textGroup;
+          context: {
+            label: 'Enabled',
+            value: m.pendingCommit.isEnabled ? 'Yes' : 'No',
+            visible: m.canEditIsEnabled
+          }
+        "
+      ></ng-container>
+      <bank-account-nr-view [account]="m.pendingCommit.newAccount">
+      </bank-account-nr-view>
+      <div class="text-center pt-2">
+        <button (click)="commit($event)" class="n-main-btn n-green-btn">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template
+  #textGroup
+  let-label="label"
+  let-value="value"
+  let-visible="visible"
+>
+  <div class="form-group" *ngIf="visible">
+    <label class="control-label col-xs-6">{{ label }}</label>
+    <div class="col-xs-6">
+      <p class="form-control-static">{{ value }}</p>
+    </div>
+    <div class="col-xs-1"></div>
+  </div>
+</ng-template>

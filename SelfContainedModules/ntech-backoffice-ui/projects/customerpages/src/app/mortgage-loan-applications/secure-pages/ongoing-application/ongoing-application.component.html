@@ -1,0 +1,69 @@
+<ml-shell>
+  <div shell-body>
+    <div class="ml-app-container" *ngIf="m">
+      <div class="app-header">
+        <a
+          class="n-anchor"
+          href="#"
+          [routerLink]="['/mortgage-loan-applications/secure/overview']"
+          >Ansökningar</a
+        >
+      </div>
+      <div class="app-summary">
+        <div *ngIf="m.objectSummary">
+          <img src="assets/img/house.png" />
+        </div>
+        <div *ngIf="m.objectSummary" class="mt-1">
+          {{ m.objectSummary.addressText }}
+        </div>
+        <div *ngIf="m.decisionSummary" class="mt-2">Godkänt belopp</div>
+        <div *ngIf="m.decisionSummary">
+          <b>{{ m.decisionSummary.loanAmount | number }}</b>
+        </div>
+      </div>
+      <div
+        class="tasks-container mb-8 mt-6"
+        *ngIf="m.informationTasks.length > 0"
+      >
+        <h2 class="header-light text-center mb-2">
+          Vi behöver mer information
+        </h2>
+        <div
+          class="task-toggle"
+          *ngFor="let task of m.informationTasks; first as isFirst"
+        >
+          <div
+            class="task-toggle-contracted"
+            [class.non-first-task]="isFirst ? null : 'non-first-task'"
+            (click)="onTaskClicked(task, $event)"
+          >
+            <div class="col-sm-1 col-xs-2">
+              <span
+                [ngClass]="
+                  getIconClass(
+                    task.isTaskAccepted === true,
+                    task.isTaskAccepted === false
+                  )
+                "
+                class="custom-glyph ntech-status-icon"
+              ></span>
+            </div>
+            <div class="col-sm-9 col-xs-8">
+              <p>{{ task.headerText }}</p>
+            </div>
+            <div class="col-xs-2 text-right">
+              <span class="glyphicon glyphicon-play"></span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-messages mt-1" *ngIf="m">
+        <customer-pages-application-messages
+          [initialData]="m.messagesInitialData"
+        >
+        </customer-pages-application-messages>
+      </div>
+    </div>
+  </div>
+</ml-shell>

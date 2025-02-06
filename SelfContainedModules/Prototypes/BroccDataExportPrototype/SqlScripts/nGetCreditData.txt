@@ -1,0 +1,198 @@
+---Gets CreditData
+---Date parameters filters on Credit StartDate
+---Execute query in [DB-nCredit] (nCredit database)
+---Find and replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+---Query:
+---
+---exec nGetCreditData @DateFrom ='2008-06-03', @ReferenceDateTime = '2021-06-05'
+
+CREATE OR ALTER PROCEDURE nGetCreditData 
+@DateFrom DateTime, 
+@ReferenceDateTime DateTime
+
+AS
+
+with NotificationStateExt
+as
+(
+    select  s.*,
+			case 
+				when s.ClosedDate is null then @ReferenceDateTime 
+				when s.ClosedDate > @ReferenceDateTime then @ReferenceDateTime
+				else s.ClosedDate
+			end as ToDate,
+			case 
+				when s.ClosedDate is null then 1 
+				when s.ClosedDate <= @ReferenceDateTime then 0
+				else 1
+			end as IsOpenOnForDate,
+            day(s.DueDate) as DueDay
+    from    [BalanziaFiDev-nDatawarehouse].dbo.Fact_CreditNotificationState s
+),
+Latest_Fact_CreditNotificationBalanceSnapshot
+as
+(
+    select  cnl.NotificationId, cnl.CreditNr, max(cnl.TransactionDate) as LatestDate
+	--
+	--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+	--
+    from    [BalanziaFiDev-nDatawarehouse].dbo.Fact_CreditNotificationBalanceSnapshot cnl
+	join	NotificationStateExt e on e.NotificationId = cnl.NotificationId
+    where   cnl.TransactionDate <= @ReferenceDateTime
+	and		e.IsOpenOnForDate = 1
+    group by cnl.NotificationId, cnl.CreditNr
+),
+LowBalanceNotificationIds
+as
+(
+	select	s.NotificationId
+	from	Latest_Fact_CreditNotificationBalanceSnapshot a
+	--
+	--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+	--
+	join	[BalanziaFiDev-nDatawarehouse].dbo.Fact_CreditNotificationState s on a.NotificationId = s.NotificationId
+    join	[BalanziaFiDev-nDatawarehouse].dbo.Fact_CreditNotificationBalanceSnapshot n on n.NotificationId = a.NotificationId and n.TransactionDate = a.LatestDate
+	where   s.DueDate <= @ReferenceDateTime
+	and     (s.ClosedDate is null or s.ClosedDate > @ReferenceDateTime)
+	and		n.TotalBalance <= 10
+),
+OpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @ReferenceDateTime
+    and     (s.ClosedDate is null or s.ClosedDate > @ReferenceDateTime)
+),
+OldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    OpenNotification s
+    where   s.RankNr = 1
+),
+ReservationOpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @ReferenceDateTime
+    and     (s.ClosedDate is null or s.ClosedDate > @ReferenceDateTime)
+	and		s.NotificationId not in(select x.NotificationId from LowBalanceNotificationIds x)
+),
+ReservationOldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    ReservationOpenNotification s
+    where   s.RankNr = 1
+),
+NotifiedUnpaidBalancePerCredit
+as
+(
+    select  cn.CreditNr,
+            sum(cn.TotalBalance) as TotalBalance
+    from    Latest_Fact_CreditNotificationBalanceSnapshot cnl
+	--
+	--Replace '[BalanziaFiDev-nDatawarehouse]' with nDatawarehouse-database name 
+	--
+    join    [BalanziaFiDev-nDatawarehouse].dbo.Fact_CreditNotificationBalanceSnapshot cn on cn.NotificationId = cnl.NotificationId and cn.TransactionDate = cnl.LatestDate
+    group by cn.CreditNr
+)
+
+
+SELECT 
+GETDATE() as ReferenceDateTime, 
+h.CreditNr, 
+h.StartDate,
+
+--ClosedDate
+(select top 1 case 
+				when 
+				((select top 1 c.[Value] from DatedCreditString c where c.[Name] = 'CreditStatus' and c.CreditNr = h.CreditNr and  c.TransactionDate <= @ReferenceDateTime order by c.BusinessEventId desc))
+				<> 'Normal' and 
+				((select top 1 c.TransactionDate from DatedCreditString c where c.[Name] = 'CreditStatus' and c.CreditNr = h.CreditNr and c.TransactionDate <= @ReferenceDateTime order by c.BusinessEventId desc))
+				<= @ReferenceDateTime then 
+				((select top 1 c.TransactionDate from DatedCreditString c where c.[Name] = 'CreditStatus' and c.CreditNr = h.CreditNr and c.TransactionDate <= @ReferenceDateTime order by c.BusinessEventId desc))
+				else null
+			end 
+) AS ClosedDate,
+
+
+--InitialCapitalDebt (OriginalLoanSize)
+hextended.InitialCapitalDebt AS OriginalLoanSize,
+
+
+--InitialRepaymentTimeInMonths (OriginalLoanTerm)
+CEILING(Log10((0-hextended.InitialAnnuityAmount)
+			/ (-hextended.InitialAnnuityAmount + (hextended.InitialInterestRate/100/12) * hextended.InitialCapitalDebt))
+			/ Log10(1 + (hextended.InitialInterestRate/100/12))) as OriginalLoanTerm, 
+
+--CurrentMaturityDate (calculated from CurrentRepaymentTimeInMonths)
+CASE WHEN annuityCalculations.annuityCalc > 0 --Handling credits without maturity dates  
+	THEN
+	(select DATEADD(m, (CEILING(Log10(annuityCalculations.annuityCalc) / Log10(annuityCalculations.interestCalc)) ), getdate()))
+    ELSE NULL
+END AS CurrentMaturityDate,
+
+ --CurrentCapitalDebt (TotalOutstandingLoanLiability)
+hextended.CurrentCapitalDebt AS TotalOutstandingLoanLiability,
+
+--CurrentCapitalDebtBook (BookkeepingTotalOutstandingLoanLiability)
+hextended.CurrentCapitalDebtBook AS BookkeepingTotalOutstandingLoanLiability,
+
+--Status
+(select top 1 d.[Value] from DatedCreditString d where d.[Name] = 'CreditStatus' and d.CreditNr = h.CreditNr and d.TransactionDate <= @ReferenceDateTime order by d.Id desc) as [Status],
+
+---BACS values 
+isnull(mm.NrOfPassedDueDatesUntilFullPaymentOrNow, 0) as OverDueCount, 
+isnull(mm.NrOfDaysOverdue, 0) as NrOfDaysOverdue,
+isnull(nn.NrOfPassedDueDatesUntilFullPaymentOrNow, 0) as ActualOverDueCount, 
+isnull(nn.NrOfDaysOverdue, 0) as ActualNrOfDaysOverdue
+
+
+from CreditHeader h
+OUTER APPLY (
+	select	
+			(select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'AnnuityAmount' and d.CreditNr = h.CreditNr and d.TransactionDate <= @ReferenceDateTime order by d.Id desc) as CurrentAnnuityAmount,
+			(select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'ReferenceInterestRate' and d.CreditNr = h.CreditNr and d.TransactionDate <= @ReferenceDateTime order by d.Id desc) as CurrentReferenceInterestRate,
+			(select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'MarginInterestRate' and d.CreditNr = h.CreditNr and d.TransactionDate <= @ReferenceDateTime order by d.Id desc) as CurrentMarginInterestRate,
+			(select sum(a.Amount) from AccountTransaction a where a.AccountCode = 'CapitalDebt' and a.CreditNr = h.CreditNr and a.TransactionDate <= @ReferenceDateTime) as CurrentCapitalDebt,
+			(select sum(a.Amount) from AccountTransaction a where a.AccountCode = 'CapitalDebt' and a.CreditNr = h.CreditNr and a.BookKeepingDate <= @ReferenceDateTime) as CurrentCapitalDebtBook,
+			((select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'MarginInterestRate' and d.BusinessEventId = h.CreatedByBusinessEventId)
+			+ (select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'ReferenceInterestRate' and d.BusinessEventId = h.CreatedByBusinessEventId))  as InitialInterestRate,
+			(select top 1 d.[Value] from DatedCreditValue d where d.[Name] = 'AnnuityAmount' and d.BusinessEventId = h.CreatedByBusinessEventId) as InitialAnnuityAmount,
+			(select sum(a.Amount) from AccountTransaction a join BusinessEvent b on b.Id = a.BusinessEventId  where a.AccountCode = 'CapitalDebt' and a.CreditNr = h.CreditNr and b.EventType in('NewCredit', 'CapitalizedInitialFee')) as InitialCapitalDebt
+	from	BusinessEvent b
+	where b.Id = h.CreatedByBusinessEventId
+	and	b.TransactionDate BETWEEN @DateFrom AND @ReferenceDateTime
+) hextended 
+
+OUTER APPLY (
+	select (-hextended.CurrentAnnuityAmount
+			/ (-hextended.CurrentAnnuityAmount + (
+			(hextended.CurrentReferenceInterestRate + hextended.CurrentMarginInterestRate)
+			/100/12) * hextended.CurrentCapitalDebt)) as annuityCalc, 
+			(1 + ((hextended.CurrentReferenceInterestRate + hextended.CurrentMarginInterestRate)/100/12)) as interestCalc
+) annuityCalculations
+
+left outer join OldestOpenNotification nn on nn.CreditNr = h.CreditNr
+left outer join ReservationOldestOpenNotification mm on mm.CreditNr = h.CreditNr
+left outer join NotifiedUnpaidBalancePerCredit cb on cb.CreditNr = h.CreditNr
+
+WHERE h.StartDate BETWEEN @DateFrom AND @ReferenceDateTime
+ORDER BY h.StartDate DESC
+
+GO

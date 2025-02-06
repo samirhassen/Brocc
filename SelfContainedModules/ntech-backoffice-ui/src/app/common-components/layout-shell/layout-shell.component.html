@@ -1,0 +1,81 @@
+<div class="wrapper gutter-narrow">
+  <div class="navigation">
+    <div class="content-position">
+      <div class="branding">
+        <!-- TODO: How to use the skinning logo here and get the backoffice url into href -->
+        <a class="navbar-brand" [href]="config.config()?.BackOfficeUrl">
+          <img
+            *ngIf="!config.config()?.Skinning"
+            src="assets/img/menu-header-logo.png"
+          />
+          <img
+            *ngIf="!!config.config()?.Skinning"
+            [src]="config.config()?.Skinning?.LogoUrl"
+          />
+        </a>
+      </div>
+      <div class="navigation-right">
+        <ul class="navigation-list" *ngIf="config.isAuthenticated()">
+          <li>{{ config.userDisplayName() }}</li>
+          <li>{{ currentDate() | date: "yyyy-MM-dd" }}</li>
+          <li>
+            <a (click)="logOut($event)" href="#" class="logout-link">Log out</a>
+          </li>
+        </ul>
+        <ul class="navigation-list" *ngIf="!config.isAuthenticated()">
+          <li>
+            <a [href]="config.config()?.BackOfficeUrl" class="logout-link"
+              >Log in</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="search-field" *ngIf="isCustomerSearchActive">
+        <form (submit)="searchCustomer($event)">
+          <input
+            class="search-placeholder-icon"
+            type="text"
+            placeholder="customer search"
+            autocomplete="nope"
+            (change)="onSearchQueryChanged($event)"
+            [value]="searchQuery.value"
+          />
+        </form>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div
+    [ngClass]="{
+      'container-fluid': useFluidLayoutShell.value,
+      container: !useFluidLayoutShell.value
+    }"
+    class="body-content"
+  >
+    <div class="pt-1 pb-2" *ngIf="headerBlock.value">
+      <div class="pull-left">
+        <a
+          class="n-back"
+          *ngIf="!headerBlock.value.backRouterLink"
+          href="#"
+          (click)="onBack($event)"
+          ><span class="glyphicon glyphicon-arrow-left"></span
+        ></a>
+        <a
+          class="n-back"
+          *ngIf="headerBlock.value.backRouterLink"
+          [routerLink]="headerBlock.value.backRouterLink"
+          ><span class="glyphicon glyphicon-arrow-left"></span
+        ></a>
+      </div>
+      <h1 class="adjusted" [innerHtml]="headerBlock.value.title"></h1>
+    </div>
+    <ng-content select="[shell-body]"></ng-content>
+    <div class="loading" *ngIf="isLoading.value">Loading&#8230;</div>
+  </div>
+  <ai-search-popup></ai-search-popup>
+  <footer>
+    <p class="releaseNumber">{{ config.config()?.ReleaseNumber }}</p>
+    <p><img src="assets/img/menu-header-logo.png" alt="Näktergal AB" /></p>
+  </footer>
+</div>

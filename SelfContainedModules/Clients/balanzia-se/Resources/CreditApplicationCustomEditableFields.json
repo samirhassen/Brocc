@@ -1,0 +1,44 @@
+{
+    "CustomFields": [
+        {
+            "DataSourceName": "CreditApplicationItem",
+            "ItemName": "application.loanPurposeCode",
+            "EditorType": "dropdownRaw",
+            "LabelText": "Purpose of loan",
+            "DropdownRawOptions": ["Anställa personal", "Finansiera skuld", "Förvärv", 
+                "Generell likviditet/kassaflöde", "Hemsida/marknadsföring", 
+                "Inköp av lager", "Oväntade utgifter", "Renovering", 
+                "Säsongsinvestering", "Annat"]
+        },{
+            "DataSourceName": "CreditApplicationItem",
+            "ItemName": "application.forceExternalScoring",
+            "EditorType": "dropdownRaw",
+            "LabelText": "Force external scoring",
+            "DropdownRawOptions": ["Yes", "No"]
+        },
+        {
+            "DataSourceName": "CreditApplicationItem",
+            "LabelText": "Company age in months",
+            "ItemName": "application.companyAgeInMonths",
+            "DataType": "positiveInt"
+        },
+        {
+            "DataSourceName": "CreditApplicationItem",
+            "LabelText": "Company yearly revenue",
+            "ItemName": "application.companyYearlyRevenue",
+            "DataType": "positiveDecimal"
+        },
+        {
+            "DataSourceName": "CreditApplicationItem",
+            "LabelText": "Company yearly result",
+            "ItemName": "application.companyYearlyResult",
+            "DataType": "positiveDecimal"
+        },
+        {
+            "DataSourceName": "CreditApplicationItem",
+            "LabelText": "Company current debt",
+            "ItemName": "application.companyCurrentDebtAmount",
+            "DataType": "positiveDecimal"
+        }
+    ]
+}

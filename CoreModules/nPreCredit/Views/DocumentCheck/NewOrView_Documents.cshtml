@@ -1,0 +1,33 @@
+﻿@{
+    var applicantNr = (ViewData.Eval("applicantNr") ?? "").ToString();
+}
+
+<h3 class="text-center pt-1 pb-1">Applicant @(applicantNr)</h3>
+<div class="pb-2 row" ng-hide="c.isViewMode">
+    <form novalidate name="fileuploadform@(applicantNr)" id="fileuploadform@(applicantNr)">
+        <div class="col-xs-8">
+            <div ng-if="!c.applicant(@(applicantNr)).attachedFileName" ng-click="c.chooseFile(@(applicantNr), $event)" class="n-main-btn n-white-btn" style="width: 100px; border-radius: 5px; border-right: 1px solid #000;">
+                Attach <span class="glyphicon glyphicon-paperclip"></span>
+            </div>
+            <span ng-if="c.applicant(@(applicantNr)).attachedFileName" class="input-group-addon">{{c.applicant(@(applicantNr)).attachedFileName}}</span>
+            <input type="file" id="fileupload@(applicantNr)" name="fileupload@(applicantNr)" style="display:none" />
+        </div>
+        <div ng-if="c.applicant(@(applicantNr)).attachedFileName" class="col-xs-4 text-right">
+            <button class="n-direct-btn n-blue-btn" ng-click="c.saveChoosenFile(@(applicantNr), $event)">Add</button>
+        </div>        
+    </form>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="col-xs-8">Document</th>
+            <th class="text-right col-xs-4"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="d in c.applicant(@(applicantNr)).documents track by d.Id">
+            <td>{{d.DocumentFileName}}</td>
+            <td><a ng-href="{{d.DocumentUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></td>
+        </tr>
+    </tbody>
+</table>

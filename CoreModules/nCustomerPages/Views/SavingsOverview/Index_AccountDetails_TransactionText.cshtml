@@ -1,0 +1,13 @@
+﻿<span ng-switch="(!!t.BusinessEventRoleCode) ? t.BusinessEventType + '_' + t.BusinessEventRoleCode : t.BusinessEventType">
+    <span ng-switch-when="IncomingPaymentFileImport" translate="sao_details_tt_deposit">Insättning</span>
+    <span ng-switch-when="PlacementOfUnplacedPayment" translate="sao_details_tt_deposit">Insättning</span>
+    <span ng-switch-when="Withdrawal" translate="sao_details_tt_withdrawal">Uttag</span>
+    <span ng-switch-when="YearlyInterestCapitalization_CapitalizedInterest" translate="sao_details_tt_ycap">Kapitaliserad ränta (årsränta)</span>
+    <span ng-switch-when="YearlyInterestCapitalization_WithheldTax" translate="sao_details_tt_ytax">Innehållen skatt (årsränta)</span>
+    <span ng-switch-when="AccountClosure_CapitalizedInterest" translate="sao_details_tt_ccap">Kapitaliserad ränta (avslut)</span>
+    <span ng-switch-when="AccountClosure_WithheldTax" translate="sao_details_tt_ctax">Innehållen skatt (avslut)</span>
+    <span ng-switch-when="AccountClosure_Withdrawal" translate="sao_details_tt_cwithdrawal">Uttag (avslut)</span>
+    <span ng-switch-default>
+        {{t.BusinessEventType}} <span ng-show="t.BusinessEventRoleCode">({{t.BusinessEventRoleCode}})</span>
+    </span>
+</span>

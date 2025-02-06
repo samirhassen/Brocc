@@ -1,0 +1,27 @@
+﻿{{#amount}}
+{{#isBuiltinInterest}}
+<tr>
+    <td>Ränta {{currentInterestFromDate}} - {{currentInterestToDate}}</td>
+    <td class="text-right">{{amount}}</td>
+</tr>
+{{/isBuiltinInterest}}
+{{^isBuiltinInterest}}
+<tr>
+    <td>
+        {{#isBuiltinCapital}}
+        Kapital
+        {{/isBuiltinCapital}}
+        {{#isBuiltinNotificationFee}}
+        Aviavgift
+        {{/isBuiltinNotificationFee}}
+        {{#isBuiltinReminderFee}}
+        Påminnelseavgift
+        {{/isBuiltinReminderFee}}
+        {{#isCustom}}
+        {{text}}
+        {{/isCustom}}
+    </td>
+    <td class="text-right">{{amount}}</td>
+</tr>
+{{/isBuiltinInterest}}
+{{/amount}}

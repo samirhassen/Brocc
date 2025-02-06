@@ -1,0 +1,617 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Administer User";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+}
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bundle-basewithangular")
+    <script src="~/Content/js/pwstrength-bootstrap.js"></script>
+
+    <script @Html.CspScriptNonce()>
+        $('#password1').pwstrength({
+            ui: {
+                container: '#addLoginMethodDialog',
+                viewports: { verdict: '#password1Strength' },
+                showVerdictsInsideProgressBar: false,
+                showProgressBar: false,
+                useVerdictCssClass: true,
+                colorClasses: ["text-danger", "text-danger", "text-danger", "text-warning", "text-warning", "text-success"]
+            }
+        })
+
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+
+        var isOnlyMortgageLoanEnabled = initialData.isMortgageLoansEnabled && !initialData.isUnsecuredLoansEnabled;
+
+        var app = angular.module('app', ['ntech.forms']);
+        app.controller("ctr",
+            [
+                '$scope', '$http', '$window', function($scope, $http, $window) {
+                    function isNullOrWhitespace(input) {
+                        if (typeof input === 'undefined' || input == null) return true;
+
+                        if ($.type(input) === 'string') {
+                            return $.trim(input).length < 1;
+                        } else {
+                            return false
+                        }
+                    }
+
+                    $scope.groupMemberships = initialData.groupMemberships
+                    $scope.expiredGroupMemberships = initialData.expiredGroupMemberships
+                    $scope.user = initialData.user
+                    $scope.loginMethods = initialData.loginMethods
+                    $scope.isProvider = !isNullOrWhitespace(initialData.user.ProviderName)
+                    $scope.isSystemUser = initialData.user.IsSystemUser
+                    $scope.isRegularUser = !$scope.isProvider && !$scope.isSystemUser
+
+                    var am = []
+                    angular.forEach(initialData.activeLoginMethods,
+                        function(value) {
+                            if ($scope.isProvider && value.IsAllowedForProvider === true) {
+                                am.push(value)
+                            } else if ($scope.isSystemUser && value.IsAllowedForSystemUser === true) {
+                                am.push(value)
+                            } else if ($scope.isRegularUser && value.IsAllowedForRegularUser === true) {
+                                am.push(value)
+                            }
+                        })
+                    $scope.activeLoginMethods = am
+
+                    $scope.isFederatitionUsingADUsernameMethod = function() {
+                        if (!$scope.addLoginMethodData)
+                            return
+                        if (!$scope.addLoginMethodData.loginMethod)
+                            return
+                        var m = $scope.addLoginMethodData.loginMethod
+                        return m.UserIdentityAndCredentialsType == 'FederatitionUsingADUsername'
+                    }
+
+                    $scope.isFederationUsingEmailMethod = function() {
+                        if (!$scope.addLoginMethodData)
+                            return
+                        if (!$scope.addLoginMethodData.loginMethod)
+                            return
+                        var m = $scope.addLoginMethodData.loginMethod
+                        return m.UserIdentityAndCredentialsType == 'FederationUsingEmail'
+                    }
+
+                    $scope.isLocalUserNameAndPasswordMethod = function() {
+                        if (!$scope.addLoginMethodData)
+                            return
+                        if (!$scope.addLoginMethodData.loginMethod)
+                            return
+                        var m = $scope.addLoginMethodData.loginMethod
+                        return m.UserIdentityAndCredentialsType == 'LocalUserNameAndPassword'
+                    }
+
+                    $scope.isEditingSelf = initialData.loggedInUserId == initialData.user.UserId
+                    $scope.isDeactivated = initialData.user.DeletionDate !== null
+
+                    $scope.products = [{ n: isOnlyMortgageLoanEnabled ? 'Mortgage loan' : 'Consumer Credit', v: 'ConsumerCredit' }]
+                    $scope.groups = [{ n: 'Admin', v: 'Admin' }, { n: 'Economy', v: 'Economy' }, { n: 'High', v: 'High' }, { n: 'Middle', v: 'Middle' }, { n: 'Low', v: 'Low' }]
+
+                    $scope.minDate1 = moment().startOf('day').format('YYYY-MM-DD')
+                    $scope.maxDate1 = moment().startOf('day').add(90, 'days').format('YYYY-MM-DD')
+                    $scope.minDate2 = moment().startOf('day').add(1, 'days').format('YYYY-MM-DD')
+                    $scope.maxDate2 = moment().startOf('day').add(10, 'years').format('YYYY-MM-DD')
+
+                    $scope.showAddGroupMembership = function() {
+                        $scope.addGroupData = {
+                            startDate: moment().format('YYYY-MM-DD')
+                        }
+                    }
+
+                    $scope.addGroupMembership = function() {
+                        if (!$scope.addGroupForm.$valid) {
+                            $scope.addGroupForm.$setSubmitted()
+                            return
+                        }
+                        var d = angular.copy($scope.addGroupData)
+                        d.UserId = initialData.user.UserId
+                        d.product = d.product.v
+                        d.group = d.group.v
+                        $http({
+                            method: 'POST',
+                            url: '@Url.Action("CreateGroupmembership", "Admin")',
+                            data: d
+                        }).then(function successCallback(response) {
+                                $scope.groupMemberships.push(response.data.newGroup);
+                            },
+                            function errorCallback(response) {
+                                toastr.error(response.data.message, "Error");
+                            })
+                    }
+
+                    $scope.membershipToCancelIfConfirmed = null;
+                    $scope.cancelGroupMembership = function(g) {
+                        $scope.membershipToCancelIfConfirmed = g
+                    }
+                    $scope.beginGroupmembershipCancellation = function() {
+                        $http({
+                            method: 'POST',
+                            url: '@Url.Action("BeginGroupmembershipCancellation", "Admin")',
+                            data: { groupMembershipId: $scope.membershipToCancelIfConfirmed.Id }
+                        }).then(function successCallback(response) {
+                                $scope.membershipToCancelIfConfirmed.PendingCancellation = { isPending: true }
+                                $scope.membershipToCancelIfConfirmed = null
+                            },
+                            function errorCallback(response) {
+                                toastr.error(response.data.message, "Error");
+                            });
+                    }
+                    $scope.rejectCancellation = function(id) {
+                        $scope.membershipToCancelIfConfirmed = null
+                    }
+
+                    $scope.isValidDate = function(value) {
+                        if (isNullOrWhitespace(value))
+                            return true
+                        return moment(value, 'YYYY-MM-DD', true).isValid()
+                    }
+
+                    $scope.isEndDateValid = function(value) {
+                        if (isNullOrWhitespace(value))
+                            return true
+                        if (!$scope.addGroupData)
+                            return true
+                        var start = moment($scope.addGroupData.startDate, 'YYYY-MM-DD', true)
+                        var end = moment(value, 'YYYY-MM-DD', true)
+                        if (!start.isValid() || !end.isValid())
+                            return false
+                        if (end.isBefore(start))
+                            return false
+                        if (end.isAfter(moment().add(10, 'years')))
+                            return false;
+                        return true
+                    }
+
+                    $scope.isValidPassword2 = function(value) {
+                        if (isNullOrWhitespace(value) || !$scope.addLoginMethodData || isNullOrWhitespace($scope.addLoginMethodData.upwPassword1))
+                            return true
+
+                        return $scope.addLoginMethodData.upwPassword1 === value
+                    }
+
+                    $scope.showAddLoginMethod = function() {
+                        $scope.addLoginMethodData = {}
+                        $scope.addLoginMethodForm.$submitted = false
+                        $scope.addLoginMethodForm.$setPristine()
+                    }
+
+                    $scope.addLoginMethod = function(event) {
+                        event.preventDefault()
+                        if ($scope.addLoginMethodForm.$invalid) {
+                            $scope.addLoginMethodForm.$setSubmitted()
+                            return
+                        }
+                        var d = angular.copy($scope.addLoginMethodData)
+                        d.UserId = initialData.user.UserId
+                        d.AuthenticationType = d.loginMethod.AuthenticationType
+                        d.ProviderName = d.loginMethod.ProviderName
+                        d.UserIdentityAndCredentialsType = d.loginMethod.UserIdentityAndCredentialsType
+                        d.upwPassword = d.upwPassword1
+                        delete d['upwPassword1']
+                        delete d['upwPassword2']
+                        delete d['loginMethod']
+
+                        $http({
+                            method: 'POST',
+                            url: '@Url.Action("CreateLoginMethod", "Admin")',
+                            data: d
+                        }).then(function successCallback(response) {
+                                if (response.data.errorMessage) {
+                                    toastr.error(response.data.errorMessage, "Error");
+                                } else if (response.data.addedLoginMethod) {
+                                    $scope.loginMethods.push(response.data.addedLoginMethod)
+                                } else {
+                                    toastr.error("An error occured", "Error");
+                                }
+
+                                $('#addLoginMethodDialogClose').click()
+                            },
+                            function errorCallback(response) {
+                                if (response.data.message) {
+                                    toastr.error(response.data.message, "Error");
+                                } else {
+                                    toastr.error("An error occured", "Error");
+                                }
+                            })
+                    }
+
+                    $scope.removeLoginMethod = function(event, m) {
+                        event.preventDefault()
+                        if (!$scope.user.IsRemoveAuthenticationMechanismAllowed) {
+                            //Also blocked serverside so just for allowing a more helpful message
+                            toastr.error('Authentication mechanism cannot be removed for users that have logged in using them. Create a new user instead.')
+                            return;
+                        }
+                        $http({
+                            method: 'POST',
+                            url: '@Url.Action("RemoveLoginMethod", "Admin")',
+                            data: { id: m.Id }
+                        }).then(function successCallback(response) {
+                                if (response.data.errorMessage) {
+                                    toastr.error(response.data.errorMessage, "Error");
+                                } else {
+                                    m.isRemoved = true
+                                }
+                            },
+                            function errorCallback(response) {
+                                if (response.data.message) {
+                                    toastr.error(response.data.message, "Error");
+                                } else {
+                                    toastr.error("An error occured", "Error");
+                                }
+                            })
+                    }
+
+                    $scope.deactivateUser = function(event) {
+                        $http({
+                            method: 'POST',
+                            url: '@Url.Action("DeactivateUser", "Admin")',
+                            data: { userId: initialData.user.UserId }
+                        }).then(function successCallback(response) {
+                            $scope.isDeactivated = true;
+                            $scope.groupMemberships = [];
+                            $scope.expiredGroupMemberships = [];
+                            if (response.data.errorMessage) {
+                                toastr.error(response.data.errorMessage, "Error");
+                            } else {
+                                toastr.success("User has been deactivated", "Deactivated");
+                            }
+                        },
+                        function errorCallback(response) {
+                            if (response.data.message) {
+                                toastr.error(response.data.message, "Error");
+                            } else {
+                                toastr.error("An error occured", "Error");
+                            }
+                        })
+                    }
+
+                    $scope.reactivateUser = function () {
+                        $http({
+                            method: 'POST',
+                            url: '@Url.Action("ReactivateUser", "Admin")',
+                            data: { userId: initialData.user.UserId }
+                        }).then(function successCallback(response) {
+                                $scope.isDeactivated = false;
+                                if (response.data.errorMessage) {
+                                    toastr.error(response.data.errorMessage, "Error");
+                                } else {
+                                    toastr.success("User has been reactivated. ", "Reactivated");
+                                }
+                            },
+                            function errorCallback(response) {
+                                if (response.data.message) {
+                                    toastr.error(response.data.message, "Error");
+                                } else {
+                                    toastr.error("An error occured", "Error");
+                                }
+                            })
+                    }
+
+
+                    window.scope = $scope
+                }
+            ]);
+    </script>
+}
+<div class="pb-2 pt-1">
+    <div class="pull-left"><a class="n-back" href="@Url.Action("AdministerUsers","Admin")"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Administer user: {{user.DisplayName}}</h1>
+</div>
+
+<p ng-show="isEditingSelf">You are editing your own user. Some functions will be unavailable.</p>
+<p ng-show="isDeactivated"><span class="glyphicon glyphicon-remove"></span> This user has been deactivated<span ng-show="user.DeletedBy"> by user {{user.DeletedBy}} on {{user.DeletionDate | date:'yyyy-MM-dd'}}</span>.</p>
+
+
+<div ng-show="isRegularUser">
+
+    <h2 class="custom-header">Groups</h2>
+    <hr class="hr-section" />
+    <div class="row pb-3">
+        <div class="col-sm-3">
+            <div class="text-center">
+                <p>Add new group</p>
+                <button type="button" class="n-main-btn n-blue-btn" ng-disabled="isEditingSelf || isDeactivated" data-toggle="modal" data-target="#addGroupMembershipDialog" ng-click="showAddGroupMembership()">
+                    Add <span class="glyphicon glyphicon-resize-full"></span>
+                </button>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-sm-2">Start date</th>
+                        <th class="col-sm-2">End date</th>
+                        <th class="col-sm-2">Group name</th>
+                        <th class="col-sm-2">Approved</th>
+                        <th class="col-sm-4 text-right"></th>
+                    </tr>
+                </thead>
+                <tr ng-repeat="x in groupMemberships">
+                    <td>{{ x.StartDate | date: 'yyyy-MM-dd' }}</td>
+                    <td>{{ x.EndDate | date: 'yyyy-MM-dd' }}</td>
+                    <td>{{ x.GroupName }}</td>
+                    <td>{{ x.IsApproved }}</td>
+                    <td class="text-right">
+                        <button type="button" class="n-direct-btn n-red-btn" ng-if="!x.PendingCancellation && !isEditingSelf" data-toggle="modal" data-target="#cancelGroupMembershipDialog" ng-click="cancelGroupMembership(x)">
+                            Remove <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        <span ng-if="x.PendingCancellation">(Pending) Needs approval from a user in group 'High'</span>
+                        <span ng-if="!x.PendingCancellation && isEditingSelf">You cannot cancel your own groups</span>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="pt-3">
+                <h2 class="custom-header">Expired groups</h2>
+                <hr class="hr-section" />
+                <table class="table" ng-show="expiredGroupMemberships">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-2">Start date</th>
+                            <th class="col-sm-2">End date</th>
+                            <th class="col-sm-8">Group name</th>
+                        </tr>
+                    </thead>
+                    <tr ng-repeat="x in expiredGroupMemberships">
+                        <td>{{ x.StartDate | date: 'yyyy-MM-dd' }}</td>
+                        <td>{{ x.EndedOrCancelledDate | date: 'yyyy-MM-dd' }}</td>
+                        <td>{{ x.GroupName }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="custom-header">Login methods</h2>
+<hr class="hr-section" />
+<div class="row pb-3">
+    <div class="col-sm-3">
+        <div class="text-center">
+            <p>Add new login method</p>
+            <button type="button" class="n-main-btn n-blue-btn" data-toggle="modal" data-target="#addLoginMethodDialog" ng-click="showAddLoginMethod()" ng-disabled="isDeactivated">
+                Add <span class="glyphicon glyphicon-resize-full"></span>
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-5">User identity</th>
+                    <th class="col-sm-3">Provider</th>
+                    <th class="col-sm-3">Type</th>
+                    <th class="col-sm-1 text-right"></th>
+                </tr>
+            </thead>
+            <tr ng-repeat="x in loginMethods" ng-hide="x.isRemoved">
+                <td>{{ x.UserIdentity }}</td>
+                <td>{{ x.AuthenticationProvider }}</td>
+                <td>{{ x.AuthenticationType }}</td>
+                <td class="text-right">
+                    <button type="button" id="deactivateUserButton" class="n-direct-btn n-red-btn" ng-click="removeLoginMethod($event, x)" ng-disabled="isDeactivated">
+                        Remove <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<h2 class="custom-header">Deactivate user</h2>
+<hr class="hr-section" />
+<div class="row pb-3">
+    <div class="col-sm-12">
+        <button type="button" class="n-main-btn n-red-btn" data-toggle="modal" data-target="#deactivateUserDialog" ng-disabled="isDeactivated" ng-hide="isEditingSelf">
+            Deactivate user '{{user.DisplayName}}' <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <p ng-show="isEditingSelf">You cannot deactivate yourself. </p>
+        <button type="button" class="n-main-btn n-blue-btn" style="margin-left: 20px;" data-toggle="modal" data-target="#reactivateUserDialog" ng-show="isDeactivated">
+            Reactivate user '{{user.DisplayName}}' <span class="glyphicon glyphicon-remove"></span>
+        </button>
+
+    </div>
+</div>
+
+<div id="deactivateUserDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Are you sure?</h1>
+            </div>
+
+            <div class="modal-body">
+                <div class="pt-2">
+                    <div class="text-center pb-2">This will remove the groups of the user, but leave the login methods. </div>
+                    <div class="editblock">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" class="n-main-btn n-white-btn" data-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="col-sm-9">
+                                <form role="form" novalidate>
+                                    <div class="text-center">
+                                        <button type="button" class="n-main-btn n-red-btn pull-right" data-dismiss="modal" ng-click="deactivateUser(event)">
+                                            Yes, deactivate user <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="reactivateUserDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Are you sure?</h1>
+            </div>
+
+            <div class="modal-body">
+                <div class="pt-2">
+                    <div class="editblock">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" class="n-main-btn n-white-btn" data-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="col-sm-9">
+                                <form role="form" novalidate>
+                                    <div class="text-center">
+                                        <button type="button" class="n-main-btn n-blue-btn pull-right" data-dismiss="modal" ng-click="reactivateUser(event)">
+                                            Yes, reactivate user '{{user.DisplayName}}'
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cancelGroupMembershipDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Are you sure?</h1>
+            </div>
+
+            <div class="modal-body">
+                <div class="pt-2">
+                    <div class="editblock">
+                        <form role="form" novalidate>
+                            <div class="text-center">
+                                <button type="button" class="n-main-btn n-blue-btn" data-dismiss="modal" ng-click="beginGroupmembershipCancellation()">
+                                    Initate cancel group membership
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addGroupMembershipDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Add group</h1>
+            </div>
+            <div class="modal-body">
+                <div class="pt-2">
+                    <div class="editblock">
+                        <form name="addGroupForm" role="form" bootstrap-validation novalidate>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>Start date</label>
+                                    <input type="text" class="form-control" ng-model="addGroupData.startDate" placeholder="YYYY-MM-DD" custom-validate="isValidDate" required />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>End date</label>
+                                    <input type="text" class="form-control" ng-model="addGroupData.endDate" placeholder="YYYY-MM-DD" custom-validate="isEndDateValid" required />
+                                </div>
+                            </div>
+                            <div class="form-group pt-1">
+                                <label>Product</label>
+                                <select class="form-control" ng-model="addGroupData.product" ng-options="p.n for p in products" required></select>
+                            </div>
+                            <div class="form-group pt-1">
+                                <label>Group</label>
+                                <select class="form-control" ng-model="addGroupData.group" ng-options="g.n for g in groups" required></select>
+                            </div>
+                            <div class="form-group text-center pt-2">
+                                <button type="button" class="n-main-btn n-blue-btn" data-dismiss="modal" ng-click="addGroupMembership()"> Initate add group membership</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addLoginMethodDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="addLoginMethodDialogClose" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Add login method</h1>
+            </div>
+
+            <div class="modal-body">
+                <div class="pt-2">
+                    <div class="editblock">
+                        <form name="addLoginMethodForm" role="form" class="form-horizontal" bootstrap-validation novalidate>
+                            <div class="form-group">
+                                <label>Login method</label>
+                                <select class="form-control" ng-model="addLoginMethodData.loginMethod" ng-options="m.DisplayName for m in activeLoginMethods" required></select>
+                            </div>
+                            <div class="form-group" ng-show="isFederatitionUsingADUsernameMethod()">
+                                <label>Active directory username</label>
+                                <input type="text" class="form-control" ng-model="addLoginMethodData.adUsername"
+                                       placeholder="DOMAIN\username" ng-required="isFederatitionUsingADUsernameMethod()" />
+                            </div>
+
+                            <div class="form-group" ng-show="isFederationUsingEmailMethod()">
+                                <label>Email on {{addLoginMethodData.loginMethod.DisplayName}}-account</label>
+                                <input type="text" class="form-control" ng-model="addLoginMethodData.providerEmail"
+                                       placeholder="your.name@provider.com" ng-required="isFederationUsingEmailMethod()" />
+                            </div>
+
+                            <div class="form-group" ng-show="isLocalUserNameAndPasswordMethod()">
+                                <label>Username</label>
+                                <input type="text" class="form-control" ng-model="addLoginMethodData.upwUsername"
+                                       autocomplete="off"
+                                       placeholder="username" ng-required="isLocalUserNameAndPasswordMethod()" />
+                            </div>
+                            <div class="form-group" ng-show="isLocalUserNameAndPasswordMethod()">
+                                <label>Password</label>
+                                <input type="password" class="form-control"
+                                       placeholder="password"
+                                       autocomplete="off"
+                                       id="password1"
+                                       ng-model="addLoginMethodData.upwPassword1"
+                                       ng-required="isLocalUserNameAndPasswordMethod()" />
+                            </div>
+                            <div class="form-group" ng-show="isLocalUserNameAndPasswordMethod()">
+                                <label>Password (retype)</label>
+                                <input type="password" class="form-control" custom-validate="isValidPassword2"
+                                       autocomplete="off"
+                                       placeholder="retype password"
+                                       ng-model="addLoginMethodData.upwPassword2"
+                                       ng-required="isLocalUserNameAndPasswordMethod()" />
+                            </div>
+                            <div class="form-group" ng-show="isLocalUserNameAndPasswordMethod() && addLoginMethodData.upwPassword1 && addLoginMethodData.upwPassword1.length > 1">
+                                <label>Password strength</label>
+                                <div id="password1Strength">
+                                </div>
+                            </div>
+                            <div class="form-group text-center pt-2">
+                                <button type="button" class="n-main-btn n-blue-btn" ng-click="addLoginMethod($event)"> Add login method </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

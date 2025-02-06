@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"savingsAccountApplicationCtr\" ng-cloak translate-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-savings-standardapplication-index")
+}
+<div class="col-sm-12">
+    <div class="row" ng-if="mode === 'rejectedminor'">
+        @Html.Partial("Index_RejectedMinor")
+    </div>
+    <div class="row" ng-if="mode === 'beingprocessed'">
+        @Html.Partial("Index_BeingProcessed")
+    </div>
+    <div class="row" ng-if="mode === 'application'">
+        @Html.Partial("Index_Application")
+    </div>
+    <div class="row" ng-if="mode === 'hasactiveaccount'">
+        @Html.Partial("Index_HasActiveAccount")
+    </div>
+</div>

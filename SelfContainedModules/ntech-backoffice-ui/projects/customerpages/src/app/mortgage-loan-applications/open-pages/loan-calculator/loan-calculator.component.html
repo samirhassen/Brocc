@@ -1,0 +1,90 @@
+<ml-shell>
+    <div shell-body>
+        <div class="row" *ngIf="m?.currentTabName">
+            <div class="col-xs-12">
+                <div class="flex-container">
+                    <div class="align-center frame">
+
+                        <h1 class="header-light text-center pb-3">Våra bolån</h1>
+                        <p class="text-center pb-2">Vad vill du göra?</p>
+
+                        <div class="row pb-2">
+                            <div *ngIf="m?.settings?.IsMoveTabActive" class="col-sm-4 pb-1">
+                                <a href="#" class="big-button-tabs" [class.active]="m.currentTabName === 'move'" (click)="setActiveTab('move', $event)"><span class="font-weight-bold">Flytta ditt bolån</span> till oss</a>
+                            </div>
+                            <div *ngIf="m?.settings?.IsPurchaseTabActive" class="col-sm-4 text-center pb-1">
+                                <a href="#" class="big-button-tabs" [class.active]="m.currentTabName === 'purchase'" (click)="setActiveTab('purchase', $event)">Bolån för att <span class="font-weight-bold">köpa bostad</span></a>
+                            </div>
+                            <div *ngIf="m?.settings?.IsAdditionalLoanTabActive" class="col-sm-4 text-right pb-1">
+                                <a href="#" class="big-button-tabs" [class.active]="m.currentTabName === 'additionalloan'" (click)="setActiveTab('additionalloan', $event)"><span class="font-weight-bold">Belåna</span> din bostad</a>
+                            </div>
+                        </div>
+
+                        <ng-container [ngSwitch]="m.currentTabName">
+                            <calculator-tab-move *ngSwitchCase="'move'" (moveDataChanged)="onCalculatorMoveDataChanged($event)" [settings]="m.settings"></calculator-tab-move>
+                            <calculator-tab-purchase *ngSwitchCase="'purchase'" (purchaseDataChanged)="onPurchaseDataChanged($event)" [settings]="m.settings"></calculator-tab-purchase>
+                            <calculator-tab-additionalloan *ngSwitchCase="'additionalloan'" (additionalLoanDataChanged)="onCalculatorAdditionalLoanDataChanged($event)" [settings]="m.settings"></calculator-tab-additionalloan>
+                        </ng-container>
+
+                        <div class="pt-5" id="summary">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <div class="form-group pb-1">
+                                        <label class="col-xs-12">Du önskar låna</label>
+                                        <p class="col-xs-12">{{m?.summary?.wishToBorrowAmount | number:'1.0-2'}} kr</p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-3">
+                                    <div class="form-group pb-1">
+                                        <label class="col-xs-12">Månadskostnad</label>
+                                        <p class="col-xs-12">{{m?.summary?.monthlyCostAmount | number:'1.0-0'}} kr</p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-3">
+                                    <div class="form-group pb-1">
+                                        <label class="col-xs-12">Exempelränta</label>
+                                        <p class="col-xs-12">{{m?.summary?.exampleInterestRate | number:'1.0-4'}}%</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <div class="form-group pb-1">
+                                        <label class="col-xs-12">Belåningsgraden blir</label>
+                                        <p class="col-xs-12">{{m?.summary?.loanToValueAmount | number:'1.0-0'}}%</p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-3">
+                                    <div class="form-group pb-1">
+                                        <label class="col-xs-12">Amorteringstakt</label>
+                                        <p class="col-xs-12">{{m?.summary?.amortizationRatePercent | number:'1.0-2'}}%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-3">
+
+                        </div>
+                        <div class="text-right notice pt-1" *ngIf="!m?.isValid().loanToValueAmountIsValod">
+                            Maximal belåningsgrad är {{m?.settings.MaxLoanToValuePercent | number:'1.0-2'}}%.
+                        </div>
+                        <div class="text-right pt-2">
+                            <button class="n-main-btn n-green-btn" [disabled]="!m.isValid().valid" (click)="apply($event)">Gå vidare</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="m && !m?.currentTabName">
+            <div class="col-xs-12">
+                <div class="flex-container">
+                    <div class="align-center frame">
+                        <h1 class="header-light text-center pb-3">Våra bolån</h1>
+                        <p>För tillfälligt har vi inga aktiva produkter.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</ml-shell>

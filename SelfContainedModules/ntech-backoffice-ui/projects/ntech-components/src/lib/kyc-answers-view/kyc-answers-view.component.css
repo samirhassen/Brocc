@@ -1,0 +1,33 @@
+.answers-container {
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.question-text {
+    margin-bottom: 5px;
+}
+
+.answer-text {
+    font-weight: bold;
+    border-bottom: 2px solid rgb(60,60,60);
+    padding-bottom: 2px;
+}
+
+.view-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.relation-header {
+    display:block;
+    width:auto;    
+}
+
+.relation-header h3 {
+    width:fit-content;
+    margin-top: 0px;
+    border-bottom: 2px solid rgb(60,60,60);
+}
+

@@ -1,0 +1,96 @@
+﻿<script type="text/ng-template" id="closures.html">
+    @Html.Partial("TitleAndBack", TitleAndBackModel.Translated("sao_closures_h", "backUrl"))
+
+    <div ng-hide="areWithdrawalsSuspended">
+        <div class="pb-3 pt-1" ng-if="mode=='select'">
+            <div class="list-item" ng-repeat="a in activeAccounts">
+                <div>
+                    <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_closures_t_nr">Kontonummer</label>
+                    <div class="col-md-10 col-sm-8 col-xs-7"><p><b>{{a.SavingsAccountNr}}</b></p></div>
+                </div>
+                <div>
+                    <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_closures_t_ba">Balans</label>
+                    <div class="col-md-10 col-sm-8 col-xs-7"><p><b>{{a.CapitalBalanceAmount | currency}}</b></p></div>
+                </div>
+                <div>
+                    <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_closures_t_r">Ränta</label>
+                    <div class="col-md-10 col-sm-8 col-xs-7"><p><b>{{a.CurrentInterestRatePercent | number:'2'}} %</b></p></div>
+                </div>
+                <div class="text-center col-md-4 col-sm-8 col-xs-11">
+                    <a href="" class="n-anchor turqoise " translate="sao_closures_t_ak" ng-click="beginCloseAccount(a.SavingsAccountNr, $event)">Avsluta konto</a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <!--bekräfta avslut -->
+        <div class="row pt-2" ng-if="mode=='preview'">
+            <div class="col-md-offset-1 col-md-10">
+                <div class="editblock">
+                    <div class="row">
+                        <div class="pull-right"><button class="n-main-btn n-white-btn" ng-click="cancelCloseAccount($event)">Avbryt</button></div>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="row pb-2">
+                            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 text-center">
+                                <h2><span translate="sao_closures_t_ak">Avsluta konto</span> {{preview.SavingsAccountNr}}</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-6" translate="sao_closures_t_ba">Balans</label>
+                                    <p class="form-control-static col-md-6 ng-binding">{{preview.CapitalBalanceAmount | currency}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-6" translate="sao_closures_t_ur">Upplupen ränta</label>
+                                    <p class="form-control-static col-md-6 ng-binding">{{preview.AccumulatedInterestAmount | currency}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-6" translate="sao_closures_t_sk">Skatt</label>
+                                    <p class="form-control-static col-md-6 ng-binding">-{{preview.TaxAmount | currency}}</p>
+                                </div>
+                                <hr class="summery-line" />
+                                <div class="form-group pb-3">
+                                    <label class="control-label col-md-6" translate="sao_closures_t_ub">Att utbetala</label>
+                                    <p class="form-control-static col-md-6 ng-binding">{{preview.PaidOutAmount | currency}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" translate="sao_closures_t_ib">IBAN</label>
+                                    <p class="form-control-static col-md-8 ng-binding">{{preview.WithdrawalIbanFormatted}}</p>
+                                </div>
+                                <div class="form-group pb-3">
+                                    <label class="control-label col-md-4" translate="sao_closures_t_bb">Bank</label>
+                                    <p class="form-control-static col-md-8 ng-binding">{{preview.WithdrawalIbanBankName}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button class="n-main-btn n-green-btn" ng-click="commitCloseAccount($event)" translate="sao_closures_t_av">Avsluta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end avslut-->
+        <!--done-->
+        <div class="row pt-2" ng-if="mode=='done'">
+            <div class="col-md-offset-1 col-md-10">
+                <div class="editblock">
+                    <p class="pt-3 pbt-3 text-center" translate="sao_closures_t_txt">Kontot är avslutat och utbetalningen kommer att ske nästkommande bankdag.</p>
+                </div>
+            </div>
+        </div>
+        <!--end done-->
+    </div>
+
+    <div class="row pt-2" ng-if="areWithdrawalsSuspended">
+        <div class="col-md-offset-1 col-md-10">
+            <div class="frame">
+                <p class="pt-3 pbt-3 text-center" translate="sao_withdrawals_suspended">Withdrawals suspended.</p>
+            </div>
+        </div>
+    </div>
+</script>

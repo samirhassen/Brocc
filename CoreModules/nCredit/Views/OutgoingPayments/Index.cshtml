@@ -1,0 +1,91 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit - Outgoing Payments";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+          var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-outgoingpayments-index")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Outgoing payments</h1>
+</div>
+
+<div class="row pb-2">
+    <div class="col-xs-8 col-sm-offset-2">
+        <div class="frame">
+            <div class="row">
+                <div class="col-xs-4">
+                    <p>&nbsp;</p>
+                    <p>New Credits</p>
+                    <p>Repayments</p>
+                    <p>Additional loans</p>
+                    <p><b>Total</b></p>
+                </div>
+                <div class="col-xs-4 text-center">
+                    <p><b>Number of payments</b></p>
+                    <p>{{pending.NewCreditCount}}</p>
+                    <p>{{pending.RepaymentCount}}</p>
+                    <p>{{pending.NewAdditionalLoanCount}}</p>
+                    <p><b>{{pending.TotalCount}}</b></p>
+                </div>
+                <div class="col-xs-3 text-right">
+                    <p><b>Amount</b></p>
+                    <p>{{pending.NewCreditAmount | currency}}</p>
+                    <p>{{pending.RepaymentAmount | currency}}</p>
+                    <p>{{pending.NewAdditionalLoanAmount | currency}}</p>
+                    <p><b>{{pending.TotalAmount | currency}}</b></p>
+                </div>
+            </div>
+            <div class="text-center pt-3">
+                <button class="n-main-btn n-green-btn" ng-disabled="pending.TotalCount <= 0" ng-click="createFile($event)">Create payment file</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pt-3 no-hits text-center" ng-show="files && files.TotalNrOfPages == 0"><p>There are no outgoing payment files yet.</p></div>
+<div class="pt-3" ng-show="files && files.TotalNrOfPages > 0">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-xs-2">Date</th>
+                <th class="text-center col-xs-3">Number of payments</th>
+                <th class="text-right col-xs-2">Total amount</th>
+                <th class="text-right col-xs-2">Download file</th>
+                <th class="text-right col-xs-3">By</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="f in files.Page">
+                <td>{{f.TransactionDate | date:'shortDate'}}</td>
+                <td class="text-center">{{f.PaymentsCount}}</td>
+                <td class="text-right">{{f.PaymentsAmount | currency}}</td>
+                <td class="text-right"><a class="n-direct-btn n-purple-btn" target="_blank" ng-href="{{f.ArchiveDocumentUrl}}">File <span class="glyphicon glyphicon-save"></span></a></td>
+                <td class="text-right">{{f.UserDisplayName}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div ng-show="files && files.TotalNrOfPages > 1">
+    <div class="dataTables_paginate paging_simple_numbers custom-pagination">
+        <ul class="pagination">
+            <li class="paginate_button previous" ng-show="filesPaging.isPreviousAllowed"><a href="#" ng-click="gotoPage(filesPaging.previousPageNr, $event)">Previous</a></li>
+            <li class="paginate_button previous disabled" ng-hide="filesPaging.isPreviousAllowed"><a href="#" ng-click="$event.preventDefault()">Previous</a></li>
+
+            <li ng-repeat="p in filesPaging.pages" class="paginate_button" ng-class="{ 'active' : p.isCurrentPage, 'disabled' : p.isSeparator }">
+                <a href="#" ng-click="gotoPage(p.pageNr, $event)" ng-hide="p.isSeparator">{{p.pageNr+1}}</a>
+                <a href="#" ng-show="p.isSeparator" ng-click="$event.preventDefault()">...</a>
+            </li>
+
+            <li class="paginate_button next" ng-show="filesPaging.isNextAllowed"><a href="#" ng-click="gotoPage(filesPaging.nextPageNr, $event)">Next</a></li>
+            <li class="paginate_button next disabled" ng-hide="filesPaging.isNextAllowed"><a href="#" ng-click="$event.preventDefault()">Next</a></li>
+        </ul>
+    </div>
+</div>
+<div class="clearfix"></div>

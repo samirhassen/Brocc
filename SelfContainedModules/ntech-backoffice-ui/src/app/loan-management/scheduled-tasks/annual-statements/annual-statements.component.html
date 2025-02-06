@@ -1,0 +1,71 @@
+<scheduled-tasks-menu [currentTaskName]="'CreditAnnualStatements'">
+  <ng-container task-area *ngIf="m">
+    <toggle-block
+      *ngIf="m.isExportAllowed"
+      [initialData]="{
+        headerText: 'Trigger job manually',
+        useFixedBorder: true
+      }"
+    >
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="frame">
+          <div class="text-center pt-3">
+            <button
+              class="n-main-btn n-green-btn"
+              (click)="startExport($event)"
+            >
+              Create annual statements
+            </button>
+          </div>
+        </div>
+      </div>
+    </toggle-block>
+
+    <div
+      class="pt-3 no-hits text-center"
+      *ngIf="m?.files?.TotalNrOfPages === 0"
+    >
+      <p>There are no statements yet.</p>
+    </div>
+    <div class="pt-3" *ngIf="m?.files?.TotalNrOfPages > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-xs-1">Date</th>
+            <th class="text-right col-xs-1">Year</th>
+            <th class="text-right col-xs-2">Statements</th>
+            <th class="text-right col-xs-2">Download file</th>
+            <th class="text-right col-xs-3">Delivered to</th>
+            <th class="text-right col-xs-3">By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of m.files.Page">
+            <td class="">{{ f.TransactionDate | date: "shortDate" }}</td>
+            <td class="text-right">{{ f.ForYear }}</td>
+            <td class="text-right">{{ f.StatementCount }}</td>
+            <td class="text-right">
+              <a
+                class="n-anchor"
+                target="_blank"
+                [href]="getDocumentUrl(f.FileArchiveKey)"
+                >Data <span class="glyphicon glyphicon-save"></span
+              ></a>
+            </td>
+            <td class="text-right">
+              <export-status-table-cell
+                [statusModelJson]="f.ExportResultStatus"
+              ></export-status-table-cell>
+            </td>
+            <td class="text-right">{{ f.UserDisplayName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <table-pager
+      *ngIf="m.filesPagingData"
+      [initialData]="m.filesPagingData"
+    ></table-pager>
+  </ng-container>
+</scheduled-tasks-menu>

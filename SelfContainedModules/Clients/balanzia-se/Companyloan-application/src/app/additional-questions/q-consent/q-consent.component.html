@@ -1,0 +1,22 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <div *ngIf="isApplicantCollateral.value">
+                <label class="custom-label">Ditt medgivande</label>        
+                <div>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" formControlName="applicantConsent">
+                        Jag godkänner att kreditgivaren tar en kreditupplysning på mig för att kunna behandla min ansökan som borgensman.
+                    </label>
+                </div>
+            </div>
+            <div>
+                <label class="custom-checkbox">
+                    <input type="checkbox" formControlName="othersConsent">
+                    Jag försäkrar att informationen given i denna ansökan stämmer samt att kreditgivaren tar kontakt med angivna personer för att kunna behandla ansökan.
+                </label>
+            </div>
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

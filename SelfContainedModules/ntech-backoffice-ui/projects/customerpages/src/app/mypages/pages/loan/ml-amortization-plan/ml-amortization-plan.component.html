@@ -1,0 +1,47 @@
+<div class="amort-plan" *ngIf="m">
+    <div class="amort-months">
+        <div class="amort-months-h">
+            <span>Förfallodag</span>
+            <span>Kapital och ränta</span>
+        </div>
+        <ng-container *ngFor="let t of getVisibleTransactions()">
+            <div class="amort-months-r" (click)="toggleTransactionDetails(t, $event)"
+                [ngClass]="{ 'amort-months-r-expanded': t.isExpanded }">
+                <span class="amort-months-r-date">{{
+                    t.FutureItemDueDate | date: "yyyy-MM-dd"
+                    }}</span>
+                <span>{{ t.capitalAndInterestTransaction | currency }}</span>
+                <span class="amort-months-r-toggle">
+                    <span class="glyphicon" [ngClass]="{
+              'glyphicon-chevron-down': t.isExpanded,
+              'glyphicon-plus': !t.isExpanded
+            }"></span>
+                </span>
+            </div>
+            <div class="amort-months-details" *ngIf="t.isExpanded">
+                <div>
+                    <span class="amort-months-details-label">Ränta</span>
+                    <span class="amort-months-details-value">{{
+                        t.InterestTransaction | currency
+                        }}</span>
+                </div>
+                <div>
+                    <span class="amort-months-details-label">Kapital</span>
+                    <span class="amort-months-details-value">{{
+                        t.CapitalTransaction | currency
+                        }}</span>
+                </div>
+                <div>
+                    <span class="amort-months-details-label">Kapitalskuld</span>
+                    <span class="amort-months-details-value">{{
+                        t.CapitalBefore | currency
+                        }}</span>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="amort-pager">
+        <a *ngIf="hasMoreTransactions()" href="" class="n-anchor" (click)="showMoreTransactions(m, $event)">Visa
+            fler</a>
+    </div>
+</div>

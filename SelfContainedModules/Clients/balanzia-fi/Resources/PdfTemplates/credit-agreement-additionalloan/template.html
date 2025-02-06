@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+	
+	
+</head>
+<body>
+
+    <div id="header">
+        <img class="balanzia_logo" src="[[[skinning:img/pdf-logo.png|img/logo.png]]]" alt="Lender Logo">
+    </div>
+    <div class="page">
+        <!--
+        <div class="addressArea">
+            <div class="returnaAdress">
+
+            </div>
+            <div class="destinationAddress">
+
+            </div>
+        </div>
+            -->
+        <div class="header">
+            <h1>Lainasopimus</h1>
+            <p>{{agreementDate}}</p>
+        </div>
+        <div class="clear"></div>
+
+        <div class="content">
+            <br /><br />
+            <div class="parties">
+                <p>Sopimus koskee alla mainittuja osapuolia:</p>
+                <br />
+                <div>
+                    <h3>Luotonantaja</h3>
+                    <p>Brocc Finance AB, filial i Finland</p>
+                    <p>Y-tunnus: 2760357-3</p>
+
+                </div>
+                <div class="column">
+                    {{#applicant1}}
+                    <h3>Luotonsaaja</h3>
+                    <p>{{fullName}}</p>
+                    <p>{{civicRegNr}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                    <br />
+                    <p>{{phone}}</p>
+                    <p>{{email}}</p>
+                    {{/applicant1}}
+                </div>
+                <div class="column">
+                    {{#applicant2}}
+                    <h3>Luotonsaaja</h3>
+                    <p>{{fullName}}</p>
+                    <p>{{civicRegNr}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                    <br />
+                    <p>{{phone}}</p>
+                    <p>{{email}}</p>
+                    {{/applicant2}}
+                </div>
+            </div>
+            <br /><br />
+            <div class="area">
+                <h2>Lainan tiedot</h2>
+                <table>
+                    <tr>
+                        <td>Lainanumero</td>
+                        <td>{{loanNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>Summa</td>
+                        <td>{{totalLoanAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Takaisinmaksuaika (kk)</td>
+                        <td>{{repaymentTimeInMonths}}</td>
+                    </tr>
+                    <tr>
+                        <td>Kuukausierä</td>
+                        <td>{{monthlyPayment}}</td>
+                    </tr>
+                    <tr>
+                        <td>Korkomarginaali</td>
+                        <td>{{marginInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tämänhetkinen viitekorko (3 kk euribor)</td>
+                        <td>{{referenceInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vuotuinen nimelliskorko</td>
+                        <td>{{totalInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Todellinen vuosikorko</td>
+                        <td>{{effectiveInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tilinhoitomaksu</td>
+                        <td>{{notificationFee}}</td>
+                    </tr>
+                    <tr>
+                        <td>Maksettavaa yhteensä</td>
+                        <td>{{totalPaidAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Eräpäivä</td>
+                        <td>Joka kuukauden 28. päivä</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="area">
+                <p>Tämänhetkinen viitekorko ja todellinen vuosikorko laskettuna lainan myöntämishetkellä. Korot voivat muuttua lainan takaisinmaksuaikana yleisten ehtojen mukaisesti. Nimelliskorko on aina korkeintaan 20,00 %. Jos lainaa maksetaan maksuohjelmaa nopeammassa tahdissa, pienenee maksettava kokonaissumma.</p>
+                {{#affiliate}}<p>Lainahakemuksen on välittänyt {{displayToEnduserName}}.</p>{{/affiliate}}
+            </div>
+            <div class="area">
+                <h2>Lainan maksu</h2>
+                <table>
+                    <tr>
+                        <td>Tilinumero</td>
+                        <td>{{iban}}</td>
+                    </tr>
+                    <tr>
+                        <td>Maksettava summa</td>
+                        <td>{{withdrawalAmount}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="area">
+                <h2>Tarkista, että kaikki tiedot ovat oikein ennen kuin allekirjoitat sopimuksen.</h2>
+                <p>Vahvistan, että lainasopimuksen tiedot ovat oikein ja että olen tutustunut yleisiin ehtoihin ja vakiomuotoiset eurooppalaiset kuluttajaluottotiedot lomakkeeseen. Noudatan yleisiä ehtoja ja maksan lainan pääoman, koron ja muut kulut Brocc Finance AB, filial i Finlandille lainasopimuksen ehtojen mukaisesti. Annan suostumukseni sille, että henkilötietojani käsitellään yleisten ehtojen kohdan 9 mukaisesti.</p>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_name}}, PL 359, 00101 Helsinki | Puh: 010 524 8410 | Sähköposti: {{documentClientData_email}} <span class="counter"></span></p>
+    </div>
+
+
+    {{#applicant1}}
+    [[[include:questions.html]]]
+    {{/applicant1}}
+
+    {{#applicant2}}
+    [[[include:questions.html]]]
+    {{/applicant2}}
+
+    {{#sekki}}
+    [[[include:sekki.html]]]
+    {{/sekki}}
+
+    [[[include:distansvillkor.html]]]
+    [[[include:allmannavillkor.html]]]
+</body>
+</html>

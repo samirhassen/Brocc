@@ -1,0 +1,33 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label">Ange fysiska personer som direkt eller indirekt (via bolag) äger 25 % eller mer av företaget.</label>    
+            <div class="pb-5 pt-1">
+                <button class="add" (click)="addOwnerControl(getOwnerControls(), null, $event)"><span class="glypicon glyphicon-plus"></span></button>
+                <span style="color: #fff; opacity: 0.6; margin-left: 20px; font-family: 'Archivo Narrow', sans-serif; font-size:1.2em; letter-spacing: 0.04em;">Lägg till verklig huvudman</span>
+            </div>
+            <div>
+                <div class="row pb-5" *ngFor="let owner of getOwnerControls().controls; let i = index" formArrayName="owners">
+                    <div class="col-xs-10" [formGroupName]="i">
+                        <div class="pb-3">             
+                            <input type="text" class="custom-input" placeholder="Personnummer" formControlName="civicNr">   
+                        </div>
+                        <div  class="pb-3">              
+                            <input type="text" class="custom-input" placeholder="Förnamn" formControlName="firstName">   
+                        </div>
+                        <div  class="pb-3">          
+                            <input type="text" class="custom-input" placeholder="Efternamn" formControlName="lastName">
+                        </div>
+                        <div  class="pb-3">            
+                            <input type="text" class="custom-input" placeholder="Ägarandel (%)" formControlName="ownershipPercent">
+                        </div>
+                    </div>
+                    <div class="col-xs-2 text-right">
+                        <button class="add" (click)="removeOwnerControl(owner, i, $event)"><span class="glypicon glyphicon-minus"></span></button>
+                    </div>            
+                </div>
+            </div>   
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

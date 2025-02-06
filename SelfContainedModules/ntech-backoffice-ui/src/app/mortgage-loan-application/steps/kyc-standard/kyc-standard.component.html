@@ -1,0 +1,21 @@
+<div *ngIf="m">
+  <kyc-step-applicant-statuses [initialData]="m.kycStatusesInitialData">
+  </kyc-step-applicant-statuses>
+
+  <div *ngIf="m.isPossibleToApprove">
+    <div class="pt-3">
+      <label class="pr-2">Not approved</label>
+      <ntech-toggle (requestToggle)="approve()"></ntech-toggle>
+    </div>
+  </div>
+
+  <div *ngIf="m.isPossibleToRevert">
+    <div class="pt-3">
+      <label class="pr-2">Approved</label>
+      <ntech-toggle
+        [isToggled]="true"
+        (requestToggle)="revert()"
+      ></ntech-toggle>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,174 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Savings - Manual Payments";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr as c\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"c.isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-manualpayment-index")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Savings - Manual payment registration</h1>
+</div>
+<div ng-if="c.p && !c.pendingPayments">
+    <div class="row pb-3">
+        <div class="col-sm-offset-2 col-sm-8">
+            <div class="editblock">
+                <form name="c.f" novalidate>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>Book keeping Date</label>
+                                <input class="form-control" custom-validate="c.isValidDate" required ng-model="c.p.bookKeepingDate" placeholder="YYYY-MM-DD" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input class="form-control" custom-validate="c.isValidPositiveDecimal" id="amount" required ng-model="c.p.amount" placeholder="ex. 2000,00" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>Note</label>
+                                <input class="form-control" ng-model="c.p.noteText" required placeholder="ex. direct payment L-43234" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <button class="n-main-btn n-blue-btn" ng-click="c.addPayment($event)" ng-disabled="c.f.$invalid">Add payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-3" ng-if="c.payments && c.payments.length > 0">
+        <div class="row pt-1">
+            <div class="col-sm-offset-1 col-xs-10">
+                <div class="frame">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Count</label>
+                            <div class="col-xs-6">
+                                <p class="form-control-static">{{c.payments.length}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Total amount</label>
+                            <div class="col-xs-6">
+                                <p class="form-control-static ng-binding">{{c.paymentSum(c.payments) | currency}}</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 pt-2">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-3">Date</th>
+                                        <th class="col-xs-3">Amount</th>
+                                        <th class="col-xs-3">Note</th>
+                                        <th class="col-xs-3 text-right"> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="p in c.payments">
+                                        <td class="col-xs-3">{{p.bookKeepingDate}}</td>
+                                        <td class="col-xs-3">{{p.amount | currency}}</td>
+                                        <td class="col-xs-3">{{p.noteText}}</td>
+                                        <td class="col-xs-3 text-right"><button class="n-direct-btn n-red-btn" ng-click="c.removePayment($index, $event)">Remove</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pt-3 text-center">
+                            <button class="n-main-btn n-blue-btn" ng-click="c.beginRegisterPayments($event)" ng-disabled="!c.payments || c.payments.length === 0">Initiate payment registration</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-if="c.pendingPayments">
+    <div class="row">
+        <div class="col-sm-offset-1 col-xs-10">
+            <div class="frame">
+                <div class="text-right pb-1">
+                    <button class="n-main-btn n-white-btn" ng-click="c.cancelPendingPayments($event)">Cancel</button>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Count</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">{{c.pendingPayments.payments.length}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Total amount</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static ng-binding">{{c.paymentSum(c.pendingPayments.payments) | currency}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Initiated by</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">{{c.pendingPayments.initiatedByUserName}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Initiated date</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">{{c.pendingPayments.initiatedDate}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-3">Date</th>
+                                <th class="col-xs-3">Amount</th>
+                                <th class="col-xs-3">Note</th>
+                                <th class="col-xs-3 text-right"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="p in c.pendingPayments.payments">
+                                <td class="col-xs-3">{{p.bookKeepingDate}}</td>
+                                <td class="col-xs-3">{{p.amount | currency}}</td>
+                                <td class="col-xs-3">{{p.noteText}}</td>
+                                <td class="col-xs-3 text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pt-3 text-center">
+                    <button class="n-main-btn n-green-btn" ng-click="c.registerPayments($event)" ng-show="c.isApproveAllowed()">Register payments</button>
+                    <div ng-show="!c.isApproveAllowed()">
+                        <span class="clearfix"></span>
+                        <span style="font-weight:bold;font-style:italic">Waiting for approval</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ntech-test-functions ng-if="c.testFunctions" test-functions="c.testFunctions"></ntech-test-functions>

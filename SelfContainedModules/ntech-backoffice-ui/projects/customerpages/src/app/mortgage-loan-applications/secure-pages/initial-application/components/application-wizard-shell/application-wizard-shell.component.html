@@ -1,0 +1,59 @@
+<ml-shell>
+  <div shell-body>
+    <div class="align-center frame" *ngIf="m">
+      <h1 class="header-light text-center pb-3" *ngIf="m.isMoveLoan()">
+        Ansökan - flytt av lån
+      </h1>
+      <h1 class="header-light text-center pb-3" *ngIf="m.isPurchase()">
+        Ansökan - lån för bostadsköp
+      </h1>
+      <h1 class="header-light text-center pb-3" *ngIf="m.isAdditionalLoan()">
+        Ansökan - tilläggslån
+      </h1>
+      <p class="text-center pb-2">Du förbinder dig inte till något.</p>
+
+      <div class="row pb-5">
+        <div class="col-xs-12 pt-2">
+          <div class="progress" style="height: 4px">
+            <div
+              class="progress-bar"
+              [style.width]="(33 * (m.stepNr - 1)).toString() + '%'"
+            ></div>
+            <div class="row" style="position: absolute; width: 100%; top: 10px">
+              <div class="col-xs-2">
+                <span
+                  class="progress-point active"
+                  [class.active]="m.stepNr >= 1"
+                  >1</span
+                >
+                <p>Bostaden</p>
+              </div>
+              <div class="col-xs-4 text-center">
+                <span class="progress-point" [class.active]="m.stepNr >= 2"
+                  >2</span
+                >
+                <p>Låntagare</p>
+              </div>
+              <div class="col-xs-4 text-center">
+                <span class="progress-point" [class.active]="m.stepNr >= 3"
+                  >3</span
+                >
+                <p>Ekonomi</p>
+              </div>
+              <div class="col-xs-2 text-right">
+                <span class="progress-point" [class.active]="m.stepNr >= 4"
+                  >4</span
+                >
+                <p>Medgivande</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3">
+        <ng-content select="[wizard-step]"></ng-content>
+      </div>
+    </div>
+  </div>
+</ml-shell>

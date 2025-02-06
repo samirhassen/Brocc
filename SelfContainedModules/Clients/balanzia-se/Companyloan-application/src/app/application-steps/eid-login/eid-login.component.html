@@ -1,0 +1,32 @@
+<application-template>
+    <div independent-body>
+        <form [formGroup]="form" *ngIf="!loginPending.value">
+            <div class="text-center pb-5"><img src="assets/img/balanzia-green.png" style="height:100px;" /></div>
+            <p class="text-center lead pb-5">Ansök om företagslån!</p>
+
+            <div class="pb-5">
+                <label class="custom-label">Vad har du för personnummer</label>
+                <input type="text" class="custom-input" placeholder="ÅÅÅÅMMDD-XXXX" formControlName="ssn">
+            </div>
+            
+            <div class="text-center pt-5 pb-5">
+                <button type="submit" class="continue" [disabled]="!isLoginAllowed.value" (click)="login($event)">
+                    <span><img src="assets/img/bankid-icon_32x32.png" style="height:20px; padding-right: 10px; margin-left:-10px;" /></span>
+                    Ansök med BankID <span class="glyphicon glyphicon-play"></span>
+                </button>
+            </div>            
+
+            <div class="text-center pt-5">
+                <small>
+                    För att bli kund loggar du in med BankID som används för att kunna identifiera dig och din koppling
+                    mot bolaget som önskar lånet.<br />
+                    Du signerar inget, ingår inget bindande avtal och kreditupplysning tas endast på bolaget om inget
+                    annat efterfrågas av dig.
+                </small>
+            </div>
+        </form>
+        <p *ngIf="loginPending.value">
+            Du skickas strax vidare till inloggning med bankid...
+        </p>
+    </div>
+</application-template>

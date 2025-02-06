@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+	
+	
+</head>
+<body>
+   
+    <div id="header">
+        <img class="balanzia_logo" src="[[[skinning:img/pdf-logo.png|img/logo.png]]]" alt="Lender Logo">
+    </div>
+    <div class="page"> 
+        <div class="header">
+            <h1>Lisäsopimus</h1>
+            <p>{{agreementDate}}</p>
+        </div>
+        <div class="clear"></div>
+
+        <div class="content">
+            <br /><br />
+            <div class="parties">
+                <p>Sopimus koskee alla mainittuja osapuolia:</p>
+                <br />
+                <div>
+                    <h3>Luotonantaja</h3>
+                    <p>{{documentClientData_name}}</p>
+                    <p>Y-tunnus: 2760357-3</p>
+
+                </div>
+                <div class="column">
+                    {{#applicant1}}
+                    <h3>Luotonsaaja</h3>
+                    <p>{{fullName}}</p>
+                    <p>{{civicRegNr}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                    <br />
+                    <p>{{phone}}</p>
+                    <p>{{email}}</p>
+                    {{/applicant1}}
+                </div>
+                <div class="column">
+                    {{#applicant2}}
+                    <h3>Luotonsaaja</h3>
+                    <p>{{fullName}}</p>
+                    <p>{{civicRegNr}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                    <br />
+                    <p>{{phone}}</p>
+                    <p>{{email}}</p>
+                    {{/applicant2}}
+                </div>
+            </div>
+            <br /><br />
+            <div class="area">
+                <h2>Muuttuneet tiedot</h2>
+                <table>
+                    <tr>
+                        <td>Lainanumero</td>
+                        <td>{{loanNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>Nykyinen takaisinmaksuaika (kk)</td>
+                        <td>{{beforeChangeRepaymentTimeInMonths}}</td>
+                    </tr>
+                    <tr>
+                        <td>Uusi takaisinmaksuaika (kk)</td>
+                        <td>{{repaymentTimeInMonths}}</td>
+                    </tr>
+                    {{#ismarginInterestRateChanged}}
+                    <tr>
+                        <td>Nykyinen korkomarginaali</td>
+                        <td>{{beforeChangeMarginInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Uusi korkomarginaali</td>
+                        <td>{{marginInterestRate}}</td>
+                    </tr>
+                    {{/ismarginInterestRateChanged}}
+                    <tr>
+                        <td>Nykyinen kuukausierä</td>
+                        <td>{{beforeChangeMonthlyPayment}}</td>
+                    </tr>
+                    <tr>
+                        <td>Uusi kuukausierä</td>
+                        <td>{{monthlyPayment}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tämänhetkinen viitekorko (3 kk euribor)</td>
+                        <td>{{referenceInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Korko</td>
+                        <td>{{totalInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Todellinen vuosikorko</td>
+                        <td>{{effectiveInterestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Maksettavaa yhteensä</td>
+                        <td>{{totalPaidAmount}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="area">
+                <p>Tämänhetkinen viitekorko ja todellinen vuosikorko laskettuna lisäsopimuksen päiväyksen mukaan. Korot voivat muuttua lainan takaisinmaksuaikana yleisten ehtojen mukaisesti. Nimelliskorko on aina korkeintaan 20,00 %.</p>
+            </div>
+            
+            <div class="area">
+                <h2>Tarkista, että kaikki tiedot ovat oikein ennen kuin allekirjoitat sopimuksen.</h2>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_name}}, PL 359, 00101 Helsinki | Puh: 010 524 8410 | Sähköposti: {{documentClientData_email}} <span class="counter"></span></p>
+    </div>
+</body>
+</html>

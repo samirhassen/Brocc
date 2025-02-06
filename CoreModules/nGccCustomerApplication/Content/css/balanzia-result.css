@@ -1,0 +1,255 @@
+[ng\:cloak], [ng-cloak], .ng-cloak, .translate-cloak {
+  display: none !important;
+}
+
+body {
+    background-image: url(../img/body-bg.png);
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+    color:#323232;
+}
+
+
+h1 {
+    font-size:2em;
+    line-height:1.3em;
+    color: #fff;
+    font-weight: normal;
+    padding-top: 50px;
+    padding-left:100px;
+    padding-right: 100px;
+    text-transform: uppercase;
+}
+
+h2 {
+    font-size: 1.7em;
+    margin: 0 0 0.67em 0;
+    color: #66A84F;
+    font-weight: bold;
+}
+
+h3 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    color: #3e4347;
+    font-weight: normal;
+    padding:20px;
+    margin: 2.5em auto 0 auto;
+    text-transform: uppercase;
+    text-align: center;
+    border:2px solid #7c878e;
+    width:75%;
+}
+
+h4 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.35em;
+    margin: 1.3em 0 0.3em 0;
+    color: #3e4347;
+    text-transform: uppercase;
+}
+
+p {
+    margin: 30px 100px 30px 100px;  
+    line-height:1.2em; 
+}
+
+input, select {
+    padding: 0.3em;
+    font-size: 0.8em;    
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.header {
+    background-image: url('../img/hoppande.jpg');
+    background-size: cover;
+    height: 400px;
+    width:75%;
+    max-width: 1500px;
+    min-width:900px;
+    margin: 10px auto 0 auto;
+}
+
+.header .logo_area {
+    float:left;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.logo_area img {
+    width: 150px;
+    height: 150px;
+}
+
+.header .menu_area {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    right: 20px;
+    font-weight: bold;
+    color: #213963;
+}
+
+.row-btn {
+    width:100%;
+    text-align: center;
+}
+
+.white {
+    background-color: #fff;
+    text-transform: uppercase;
+    font-size: 1em;
+    color:#66a84f;
+    padding:1em 2em;
+    border:none;
+    margin: 30px 0;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    -webkit-box-shadow: 1px 1px 4px 0px #666;
+    -moz-box-shadow: 1px 1px 4px 0px #666;
+    box-shadow: 1px 1px 4px 0px #666;
+}
+
+form {margin: 0 auto;}
+
+.bg-result {
+    color: #fff;
+    width: 60%;
+    max-width: 700px;
+    margin: 75px auto;
+    border-radius: 0;
+    -webkit-box-shadow: 1px 1px 4px 0px #000;
+    -moz-box-shadow: 1px 1px 4px 0px #000;
+    box-shadow: 1px 1px 4px 0px #000;
+}
+
+.success {
+    background-color: #66A84F; 
+    padding-bottom: 20px;
+}
+
+.failed {
+    background-color: #e2a250;
+    padding-bottom: 20px;
+}
+
+.nft_button {
+    color: #ffffff;
+    font-weight: bold;
+    width: 158px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.calculator .ansok_button, .loan_info_1 .ansok_button {
+    background-color: #66A84F;
+    border-radius:7px;
+    border:none;
+    -webkit-box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+    -moz-box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+    box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+}
+
+.button_area { 
+    margin-top: 50px;
+    position: relative;
+    text-align: center;
+}
+
+.quit_button {
+    background-color: #fff;
+    border: 1px solid #7c878e;
+    margin-right: 30px;
+    color: #7c878e;
+    -webkit-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    -moz-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+}
+
+
+
+@media screen and (max-width: 780px){
+    
+    .header {
+        width:90%;
+        height:250px;
+        margin-top:20px;
+    }
+
+    .logo {
+        margin:10px 0;
+    }
+
+    .logo img {
+        width:150px;
+        height:150px;
+    }
+
+
+    h1 {
+       padding-left: 50px;
+    }
+
+    p {
+       margin: 30px 50px;    
+    }
+     
+    .green {
+       width: 70%;
+    } 
+    
+}
+
+
+@media screen and (max-width: 580px){
+
+    .header {
+        width:90%;
+        height:100px;
+        margin-top:20px;
+    }
+
+    .logo {
+        margin:10px 0;
+    }
+
+    .logo img {
+        width:75px;
+        height:75px;
+    }
+
+    .white {
+        padding:.7em;
+
+    }
+
+
+    h1 {
+       padding-left: 30px;
+       padding-top:20px;
+    }
+
+    p {
+       margin: 30px;    
+    }
+     
+    .green {
+       width: 90%;
+       margin-top: 30px;
+    } 
+    
+}
+
+@media screen and (max-width: 320px){
+
+    h1 {
+    font-size: 1.7em;
+    }
+
+}
+

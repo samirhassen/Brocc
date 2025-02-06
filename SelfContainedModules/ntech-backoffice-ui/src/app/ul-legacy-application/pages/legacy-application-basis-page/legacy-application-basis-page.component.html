@@ -1,0 +1,70 @@
+<div class="editblock" *ngIf="m">
+    <form class="form-horizontal">
+        <div class="row">
+            <div class="col-sm-6 col-md-6">
+                <legacy-app-new-field group="application" name="loansToSettleAmount" labelText="Loan to settle amount" [data]="m.data" ></legacy-app-new-field>
+                <legacy-app-new-field group="application" name="amount" labelText="Applied amount" [data]="m.data" ></legacy-app-new-field>
+                <legacy-app-new-field group="application" name="repaymentTimeInYears" labelText="Applied repayment time (years)" [data]="m.data"></legacy-app-new-field>
+                <div class="form-group">
+                    <label class="col-xs-6 col-sm-6 col-md-6 control-label">Applied repayment time (months)</label>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <p class="form-control-static">{{appliedForRepaymentTimeInMonths()}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6">
+                <legacy-app-new-field group="application" name="forceExternalScoring" labelText="Force external scoring" type="enum" [data]="m.data" ></legacy-app-new-field>
+                <legacy-app-new-field group="application" name="campaignCode" labelText="Campaign code" [data]="m.data" ></legacy-app-new-field>
+                <div class="form-group">
+                    <label class="col-xs-6 col-sm-6 col-md-6 control-label">Scoring version</label>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <p class="form-control-static">{{applicationData().scoringVersion}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-6 pt-3">
+                <div class="text-center">
+                    <h2>{{m.hasCoApplicant ? 'Applicant 1' : 'Applicant' }}</h2>
+                    <hr class="hr-section">
+                </div>
+                <ng-container *ngTemplateOutlet="applicantFields;context: {applicantGroup: 'applicant1' }"></ng-container>
+            </div>
+            <div class="col-sm-6 col-md-6 pt-3">
+                <div class="text-center" *ngIf="m.hasCoApplicant">
+                    <h2>Applicant 2</h2>
+                    <hr class="hr-section">
+                </div>
+                <div *ngIf="m.hasCoApplicant">
+                    <ng-container *ngTemplateOutlet="applicantFields;context: {applicantGroup: 'applicant2' }"></ng-container>
+                </div>                
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<ng-template #applicantFields let-applicantGroup="applicantGroup">
+    <legacy-app-new-field [group]="applicantGroup" name="approvedSat" labelText="SAT Consent" type="enum" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="education" labelText="Education" type="enum" extraClasses="pt-2" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="housing" labelText="Housing" type="enum" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="housingCostPerMonthAmount" labelText="Housing cost per month" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="employment" labelText="Employment" type="enum" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="employedSinceMonth" labelText="Employed since" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="employer" labelText="Employer" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="employerPhone" labelText="Employer phone" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="incomePerMonthAmount" labelText="Income per month" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="marriage" labelText="Marital status" type="enum" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="nrOfChildren" labelText="Nr of children" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="mortgageLoanAmount" labelText="Mortgage loan amount" extraClasses="pt-2" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="mortgageLoanCostPerMonthAmount" labelText="Mortgage loan monthly cost" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="carOrBoatLoanAmount" labelText="Car/boat loan amount" extraClasses="pt-2" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="carOrBoatLoanCostPerMonthAmount" labelText="Car/boat loan monthly cost" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="studentLoanAmount" labelText="Student loan amount" extraClasses="pt-2" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="studentLoanCostPerMonthAmount" labelText="Student loan monthly cost" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="otherLoanAmount" labelText="Other loans amount" extraClasses="pt-2"  [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="otherLoanCostPerMonthAmount" labelText="Other loans monthly cost" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="creditCardAmount" labelText="Creditcard amount" extraClasses="pt-2" [data]="m.data"></legacy-app-new-field>
+    <legacy-app-new-field [group]="applicantGroup" name="creditCardCostPerMonthAmount" labelText="Creditcard monthly cost" [data]="m.data"></legacy-app-new-field>
+</ng-template>

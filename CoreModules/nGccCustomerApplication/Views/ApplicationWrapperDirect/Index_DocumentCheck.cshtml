@@ -1,0 +1,46 @@
+﻿<div ng-if="!dc.isForcedBankAccountDataSharing">
+    <p class="text-center">
+        <span translate="ansokan_payslip_text_1">Vi behöver en kopia på din senaste lönespecifikation, högst 2 månader gammal, eller annat bevis på nuvarande inkomst.</span><br />
+        <span translate="ansokan_payslip_text_2">Om du har en papperkopia, ta ett kort med telefonen och ladda upp nedan.</span>
+    </p>
+</div>
+
+<div class="bg-gray">
+    <div class="fields_area centered_section">
+        <div class="text-center pt-5" ng-if="dc.isForcedBankAccountDataSharing" ng-show="dc.gaveUpWaitingForSharedAccountDataCallback" translate="forcedaccountshare_ansokan_payslip_text_4">
+            Något gick fel vid delning av kontoinformation och vi behöver istället en kopia på din senaste lönespecifikation, högst 2 månader gammal, eller annat bevis på nuvarande inkomst. Om du har en papperskopia, ta ett kort med telefonen och ladda upp den nedan.
+        </div>
+        <div class="editbox">
+            <div ng-hide="dc.isLoading">
+                @Html.Partial("Index_DocumentCheck_Applicant", new { n = "1" })
+            </div>
+
+            <div ng-show="state.NrOfApplicants > 1 && !dc.isLoading">
+                @Html.Partial("Index_DocumentCheck_Applicant", new { n = "2" })
+            </div>
+            <div class="text-center" ng-if="!dc.isForcedBankAccountDataSharing || (dc.isForcedBankAccountDataSharing && dc.gaveUpWaitingForSharedAccountDataCallback)" ng-hide="dc.isLoading">
+                <button class="small-btn small-btn-white white-btn" ng-hide="dc.editModel" ng-click="dc.startUploadSession($event)" translate="ansokan_dc_laddaupp">Ladda upp dokument</button>
+                <button class="small-btn small-btn-white white-btn mr-1" ng-show="dc.editModel" ng-click="dc.cancelUploadSession($event)" translate="ansokan_dc_avbryt">Avbryt</button>
+                <button class="small-btn small-btn-green green-btn" ng-show="dc.editModel" ng-click="dc.commitUploadSession($event)" translate="ansokan_dc_spara">Spara</button>
+            </div>
+        </div>
+        <div class="text-center pt-5" ng-hide="dc.editModel || dc.isLoading">
+            <p class="small text-center" translate="ansokan_dc_klar" ng-if="!dc.isForcedBankAccountDataSharing">Jag är klar.</p>
+            <button class="main-btn green-btn" ng-click="dc.commitDocumentCheckDocuments($event)" ng-disabled="!dc.isAllowedToSubmitDocuments()" translate="ansokan_dc_skickaindok">Skicka in dokument</button>
+        </div>
+        <div class="text-center pt-2" ng-show="dc.isLoading && !dc.isWaitingForSharedAccountDataCallback" translate="ansokan_dc_loading">
+            Laddar...
+        </div>
+        <div class="text-center pt-2" ng-show="dc.isLoading && dc.isWaitingForSharedAccountDataCallback" translate="ansokan_payslip_text_5">
+            Väntar på kontodelningsdata ...
+        </div>
+        <div ng-if="!dc.isForcedBankAccountDataSharing">
+            <div class="text-center pt-5" ng-show="dc.gaveUpWaitingForSharedAccountDataCallback" translate="ansokan_payslip_text_4">
+                Kontodelningsdata verkar inte dyka upp. Du kan ladda upp en lönespec för hand eller vänta en stund och testa att ladda om sidan.
+            </div>
+            <p class="text-center small pt-4" translate="ansokan_payslip_text_3">
+                Du kan även skicka in lönespecifikationen till oss per post utan frimärke till Balanzia, Kuluttajaluotot, Tunnus: 5021420, 00003 VASTAUSLÄHETYS. Du kan även maila bilagorna till lainat@balanzia.fi. OBS! Vi returnerar inte bilagor.
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="">
+            <p>Ange vilket konto lånet ska utbetalas till.</p>
+
+            <div class="pb-5 movein">
+                <label class="custom-label">Kontotyp</label>    
+                <div>
+                    <label class="custom-radio">
+                        <input type="radio" formControlName="bankAccountNrType" value="BankAccountSe">
+                        Bankkonto
+                    </label>
+                    <label class="custom-radio">
+                        <input type="radio" formControlName="bankAccountNrType" value="BankGiroSe">
+                        Bankgiro
+                    </label>
+                    <label class="custom-radio">
+                        <input type="radio" formControlName="bankAccountNrType" value="PlusGiroSe">
+                        Plusgiro
+                    </label>
+                </div>
+            </div>
+
+            <div class="pb-5 movein" *ngIf="form.value.bankAccountNrType === 'BankAccountSe'">
+                <label class="custom-label">Bankkonto - kontonummer</label>
+                <input type="text" class="custom-input" placeholder="" formControlName="bankAccountNr">
+            </div>
+
+            <div class="pb-5 movein" *ngIf="form.value.bankAccountNrType === 'BankGiroSe'">
+                <label class="custom-label">Bankgiro - kontonummer</label>
+                <input type="text" class="custom-input" placeholder="" formControlName="bankAccountNr">
+            </div>
+
+            <div class="pb-5 movein" *ngIf="form.value.bankAccountNrType === 'PlusGiroSe'">
+                <label class="custom-label">Plusgiro - kontonummer</label>
+                <input type="text" class="custom-input" placeholder="" formControlName="bankAccountNr">
+            </div>
+        </div>
+
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

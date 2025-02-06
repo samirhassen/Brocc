@@ -1,0 +1,29 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Customer Card";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/libphonenumber")
+    @Scripts.Render("~/Content/js/bundle-customercard-view")
+}
+@section TestFunctions {
+    <ul class="list-unstyled" ng-show="testFunctions">
+        <li class="pb-1" ng-repeat="i in testFunctions.items track by $index">
+            <a ng-if="i.isLink" ng-href="{{i.linkUrl}}" target="_blank" class="btn btn-primary">{{i.text}}</a>
+            <button ng-if="i.isFunctionCall" target="_blank" class="btn btn-primary" ng-click="i.functionCall($event)">{{i.text}}</button>
+        </li>
+    </ul>
+}
+<div ng-if="showLegacyUi">
+    <legacy-customer-card initial-data="legacyCustomerCardInitialData"></legacy-customer-card>
+</div>
+<div ng-if="showNewUi">
+    <customer-contact-info ng-if="!editCustomerContactInfoValueInitialData" initial-data="customerContactInfoInitialData"></customer-contact-info>
+</div>
+@Html.Partial("Components")

@@ -1,0 +1,53 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Update Datawarehouse - CreditReport";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-basewithangular")
+    <script @Html.CspScriptNonce()>
+        var app = angular.module('app', ['ntech.forms']);
+        app
+            .controller('ctr', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+                $scope.p = {}
+
+                $scope.updateDatawarehouse = function (evt) {
+                    if (evt) {
+                        evt.preventDefault()
+                    }
+                    $scope.isLoading = true
+                    $http({
+                        method: 'POST',
+                        url: initialData.updateUrl,
+                        data: {}
+                    }).then(function successCallback(response) {
+                        $scope.isLoading = false
+                        toastr.info('Ok')
+                    }, function errorCallback(response) {
+                        $scope.isLoading = false
+                        toastr.error(response.statusText, 'Error')
+                    })
+                }
+
+                window.scope = $scope
+            }])
+    </script>
+}
+
+<div class="pb-2"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+<h1 class="panel-title">Update datawarehouse - creditreport</h1>
+
+<div class="row pt-3" ng-hide="result">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div class="frame">
+            <div class="text-center pt-3">
+                <button class="n-main-btn n-blue-btn" ng-click="updateDatawarehouse($event)">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

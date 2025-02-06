@@ -1,0 +1,1736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:response="http://www.soliditet.fi/frg/SoliditetHenkiloLuottoTiedot/Response" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.soliditet.fi/SoliditetHenkiloLuottoTiedot" xmlns:request="http://www.soliditet.fi/frg/SoliditetHenkiloLuottoTiedot/Request" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="SoliditetHenkiloLuottoTiedot" targetNamespace="http://www.soliditet.fi/SoliditetHenkiloLuottoTiedot" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns:tns="http://www.soliditet.fi/frg/SoliditetHenkiloLuottoTiedot/Request" targetNamespace="http://www.soliditet.fi/frg/SoliditetHenkiloLuottoTiedot/Request">
+      <xsd:complexType name="SoliditetHenkiloLuottoTiedotRequest">
+        <xsd:sequence>
+          <xsd:element name="KayttajaTiedot" type="tns:KayttajaTiedot" />
+          <xsd:element name="KohdeTiedot" type="tns:KohdeTiedot" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Request" type="tns:SoliditetHenkiloLuottoTiedotRequest" />
+      <xsd:complexType name="KayttajaTiedot">
+        <xsd:sequence>
+          <xsd:element name="KayttajaTunnus" type="xsd:string" />
+          <xsd:element name="AsiakasTunnus" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="LoppuAsiakas_Koodi">
+            <xsd:annotation>
+              <xsd:documentation>
+								End user, code or ID
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="LoppuAsiakas_Nimi">
+            <xsd:annotation>
+              <xsd:documentation>
+								End user, name
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="90" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="LoppuAsiakas_HenkiloNimi">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="90" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AsiakkaanViite">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" default="1" name="Versio">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:enumeration value="1" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="KohdeTiedot">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="HenkiloTunnus" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="SyyKoodi">
+            <xsd:simpleType>
+              <xsd:annotation>
+                <xsd:documentation>
+									1 = luoton myöntäminen 2 =
+									luotonvalvonta 3 = perinnän
+									suunnittelu 5 = vastuuhenkilöasema
+									(yrityksen tai vastuuhenkilön
+									arviointi) 6 = henkilön omalla
+									suostumuksella 7 =
+									huoneenvuokrasopimus 8 = työnhakijan
+									tai työntekijän arviointi 9 =
+									viranomaisen lakiin perustuva
+									tiedonsaantioikeus tai
+									viranomaistuen myöntäminen A,a =
+									takaus tai pantin anto B,b =
+									sopimusehtojen määrittely jos
+									sopimuksen tekemisestä ei voi
+									kieltäytyä C,c = todistus
+									velvoitteiden hoitokyvystä ja
+									rahanpesun ehkäiseminen
+								</xsd:documentation>
+              </xsd:annotation>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+                <xsd:enumeration value="5" />
+                <xsd:enumeration value="6" />
+                <xsd:enumeration value="7" />
+                <xsd:enumeration value="8" />
+                <xsd:enumeration value="9" />
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="a" />
+                <xsd:enumeration value="B" />
+                <xsd:enumeration value="b" />
+                <xsd:enumeration value="C" />
+                <xsd:enumeration value="c" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="HenkiloTiedot" type="tns:HenkiloTietoType" />
+          <xsd:element minOccurs="0" name="LuottoTietoMerkinnat">
+            <xsd:simpleType>
+              <xsd:annotation>
+                <xsd:documentation>
+									S = henkilön luottotietomerkinnät
+									Soliditet Finlandin rekisteristä
+									E = ei kysytä luottotietomerkintöjä
+								</xsd:documentation>
+              </xsd:annotation>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="S" />
+                <xsd:enumeration value="s" />
+                <xsd:enumeration value="e" />
+                <xsd:enumeration value="E" />
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="a" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="YritysYhteydet" type="tns:KyllaEiType" />
+          <xsd:element minOccurs="0" name="ScoreJaLuottoSuositus" type="tns:KyllaEiType" />
+          <xsd:element minOccurs="0" name="ScoreOmatParametrit">
+            <xsd:complexType>
+              <xsd:sequence minOccurs="1" maxOccurs="1">
+                <xsd:element name="ScoreParam1" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam2" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam3" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam4" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam5" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam6" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam7" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam8" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam9" type="xsd:string" />
+                <xsd:element minOccurs="0" name="ScoreParam10" type="xsd:string" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="HenkiloTietoType">
+        <xsd:annotation>
+          <xsd:documentation>K,k=name, address, etc; E,e=Nothing; X,x=with BRIC; Y=with predicted profile; Z=ALL</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="K" />
+          <xsd:enumeration value="k" />
+          <xsd:enumeration value="E" />
+          <xsd:enumeration value="e" />
+          <xsd:enumeration value="X" />
+          <xsd:enumeration value="x" />
+          <xsd:enumeration value="Y" />
+          <xsd:enumeration value="y" />
+          <xsd:enumeration value="Z" />
+          <xsd:enumeration value="z" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="KyllaEiType">
+        <xsd:annotation>
+          <xsd:documentation>K,k=Yes; E,e=No; X,x=Extra</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="K" />
+          <xsd:enumeration value="k" />
+          <xsd:enumeration value="E" />
+          <xsd:enumeration value="e" />
+          <xsd:enumeration value="X" />
+          <xsd:enumeration value="x" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.soliditet.fi/frg/SoliditetHenkiloLuottoTiedot/Response" targetNamespace="http://www.soliditet.fi/frg/SoliditetHenkiloLuottoTiedot/Response">
+      <xsd:complexType name="SoliditetHenkiloLuottoTiedotResponse">
+        <xsd:sequence>
+          <xsd:element name="KayttajaTiedot" type="tns:KayttajaTiedot" />
+          <xsd:element name="VastausLoki" type="tns:VastausLoki" />
+          <xsd:element minOccurs="0" name="HenkiloTiedotResponse">
+            <xsd:complexType>
+              <xsd:choice minOccurs="1" maxOccurs="1">
+                <xsd:element name="HenkiloTiedot" type="tns:HenkiloTiedot">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Identity data
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Virhe" type="tns:Virhe" />
+              </xsd:choice>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LuottoTietoMerkinnatResponse">
+            <xsd:complexType>
+              <xsd:choice minOccurs="1" maxOccurs="1">
+                <xsd:element name="LuottoTietoMerkinnat" type="tns:LuottoTietoMerkinnat">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Official payment remark
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Virhe" type="tns:Virhe" />
+              </xsd:choice>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="YritysYhteydetResponse">
+            <xsd:complexType>
+              <xsd:choice minOccurs="1" maxOccurs="1">
+                <xsd:element name="YritysYhteysTiedot" type="tns:YritysYhteysTiedot">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Principal and proprietor
+											details in companies
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Virhe" type="tns:Virhe" />
+              </xsd:choice>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ScoreJaLuottoSuositusResponse">
+            <xsd:complexType>
+              <xsd:choice minOccurs="1" maxOccurs="1">
+                <xsd:element name="ScoreJaLuottoSuositus" type="tns:ScoreJaLuottoSuositus">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Score and credit
+											recommendation
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Virhe" type="tns:Virhe" />
+              </xsd:choice>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Response" type="tns:SoliditetHenkiloLuottoTiedotResponse" />
+      <xsd:complexType name="KayttajaTiedot">
+        <xsd:sequence>
+          <xsd:element name="KayttajaTunnus" type="xsd:string" />
+          <xsd:element name="AsiakasTunnus" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="LoppuAsiakas_Koodi">
+            <xsd:annotation>
+              <xsd:documentation>End user, code or ID</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="LoppuAsiakas_Nimi">
+            <xsd:annotation>
+              <xsd:documentation>End user, name</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="90" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AsiakkaanViite">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element default="1" name="Versio">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:enumeration value="1" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="VastausLoki">
+        <xsd:sequence minOccurs="1" maxOccurs="1">
+          <xsd:element minOccurs="1" maxOccurs="1" name="KysyttyHenkiloTunnus" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="SyyKoodi" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="PaluuKoodi">
+            <xsd:complexType>
+              <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                  <xsd:attribute name="Koodi">
+                    <xsd:simpleType>
+                      <xsd:annotation>
+                        <xsd:documentation>
+													1=Onnistui;
+													-1=Tapahtui virhe;
+												</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:restriction base="xsd:integer">
+                        <xsd:enumeration value="1" />
+                        <xsd:enumeration value="-1" />
+                      </xsd:restriction>
+                    </xsd:simpleType>
+                  </xsd:attribute>
+                </xsd:extension>
+              </xsd:simpleContent>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="VirheSelite" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Henkilo">
+        <xsd:sequence>
+          <xsd:element name="NykyinenSukunimi" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Current last name
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="NykyisetEtunimet" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Current first names
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Entisetnimet">
+            <xsd:annotation>
+              <xsd:documentation>
+								Former names
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="unbounded" name="EntinenNimi">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Former name
+										</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="Nimi" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Name
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="Nimilajikoodi" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Code of name
+														type: 05=Entinen
+														sukunimi; Former
+														last name
+														06=Entiset
+														etunimet; Former
+														first names
+														07=Viimeksi
+														naimattomana
+														ollessa ollut
+														sukunimi; Last
+														name when
+														unmarried for
+														the previous
+														time 08=Entinen
+														välinimi; Former
+														middle name
+														09=Entinen
+														kutsumanimi;
+														Former calling
+														name 10=Korjattu
+														sukunimi;
+														Corrected last
+														name 11=Korjatut
+														etunimet;
+														Corrected first
+														names
+														12=Korjattu
+														välinimi;
+														Corrected middle
+														name 13=Korjattu
+														kutsumanimi;
+														Corrected
+														calling name
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Kuolinpvm" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Deceased date
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Kuolleeksijulistamispvm" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Date of death pronouncement
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="VakinainenOsoite">
+            <xsd:annotation>
+              <xsd:documentation>
+								Current address
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence minOccurs="1" maxOccurs="1">
+                <xsd:element minOccurs="0" name="LahiosoiteS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Address in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="LahiosoiteR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Address in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="Postinumero" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Zip code
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="PostitoimipaikkaS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											City in finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="PostitoimipaikkaR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											City in swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="Valtiokoodi" type="xsd:int">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Country code (ISO 3-digit)
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="AsuminenAlkupvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Start date for current
+											address
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="AsuminenLoppupvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											End date for address
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EntisetKotimaisetOsoitteet">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="unbounded" name="EntinenVakinainenKotimainenLahiosoite">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element maxOccurs="1" name="LahiosoiteS" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="LahiosoiteR" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="Postinumero" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="PostitoimipaikkaS" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="PostitoimipaikkaR" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="AsuminenAlkupvm" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="AsuminenLoppupvm" type="xsd:string" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EntisetUlkomaisetOsoitteet">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="unbounded" name="EntinenVakinainenUlkomainenLahiosoite">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element maxOccurs="1" name="UlkomainenLahiosoite" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="UlkomainenPaikkakuntaJaValtioS" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="UlkomainenPaikkakuntaJaValtioR" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="UlkomainenPaikkakuntaJaValtioSelvakielinen" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="Valtiokoodi3" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="AsuminenAlkupvm" type="xsd:string" />
+                      <xsd:element maxOccurs="1" name="AsuminenLoppupvm" type="xsd:string" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="TilapainenOsoite">
+            <xsd:annotation>
+              <xsd:documentation>
+								Temporary address
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" name="LahiosoiteS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Temporary address in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="LahiosoiteR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Temporary address in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="Postinumero" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Temporary Zip code
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="PostitoimipaikkaS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Temporary city in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="PostitoimipaikkaR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Temporary city in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="Valtiokoodi" type="xsd:int">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Country code for temporary
+											address (ISO 3-digit)
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="AsuminenAlkupvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Start date for temporary
+											address
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="AsuminenLoppupvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											End date for temporary
+											address
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PostiOsoite" type="tns:PostiOsoiteType" />
+          <xsd:element name="Kotikunta">
+            <xsd:annotation>
+              <xsd:documentation>
+								Domicile
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence minOccurs="1" maxOccurs="1">
+                <xsd:element name="Kuntanumero" type="xsd:int">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Domicile code
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KuntaS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Domicile in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KuntaR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Domicile in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KuntasuhdeAlkupvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Start date for domicile
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="SuomeenMuuttopvm" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								date, when moved to Finland
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Edunvalvonta" type="tns:KyllaEiType">
+            <xsd:annotation>
+              <xsd:documentation>
+								Legal incapacity: Yes(K)/No(E)
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="EdunvalvontaTiedot">
+            <xsd:annotation>
+              <xsd:documentation>
+								Legal incapacity details
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Tehtavienjakokoodi" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											1=on annettu edunvalvojan
+											maarays tehtavien jaosta
+											edunvalvojien kesken 1=an
+											order on task sharing
+											between trustees has been
+											issued
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Rajoituskoodi" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											1=toimintakelpoisuutta ei
+											rajoitettu; competence
+											before the law not
+											restricted
+											2=toimintakelpoisuus
+											osittain rajoitettu;
+											competence before the law
+											partially restricted
+											3=julistettu
+											vajaavaltaiseksi; declared
+											legally incapasitated
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Alkupvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Start date
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Paattymispvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											End date
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="HenkiloEdunvalvoja">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Person as Trustee
+										</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element minOccurs="0" name="Henkilotunnus" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Person ID
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" name="Syntymaaika" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														date of birth
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="NykyinenSukunimi" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Present last
+														name
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="NykyisetEtunimet" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Present first
+														names
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaAlkupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task Start date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaLoppupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task End date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="YritysJaYhteisoEdunvalvoja">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Company/Society as Trustee
+										</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="Ytunnus" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Finnish company
+														registration
+														number
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="Nimi" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Name
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaAlkupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task Start date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaLoppupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task End date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="KuntaEdunvalvoja">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Municipality as Trustee
+										</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="Kuntanumero" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Municipality
+														code (number)
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="KuntaS" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Municipality in
+														Finnish
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="KuntaR" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Municipality in
+														Swedish
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaAlkupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task Start date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaLoppupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task end date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="OikeusaputoimistoEdunvalvoja">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Legal Aid Office as Trustee
+										</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="Viranomaiskoodi" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Authority code
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="ViranomainenS" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Authority name
+														in Finnish
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="ViranomainenR" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Authority name
+														in Swedish
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaAlkupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task Start date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="TehtavaLoppupvm" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:documentation>
+														Task end date
+													</xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EdunvalvontaValtuutus" type="tns:EdunvalvontaValtuutusType" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Aidinkieli">
+            <xsd:annotation>
+              <xsd:documentation>
+								mother tongue
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence minOccurs="1" maxOccurs="1">
+                <xsd:element name="Kielikoodi" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Language code (ISO)
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KieliS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Language in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KieliR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Language in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="KieliSelvakielinen" type="xsd:string" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Kansalaisuus">
+            <xsd:annotation>
+              <xsd:documentation>
+								Nationality
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence minOccurs="1" maxOccurs="1">
+                <xsd:element name="Kansalaisuuskoodi3" type="xsd:int">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Nationality code (ISO
+											3-digit)
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KansalaisuusS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Nationality in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KansalaisuusR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Nationality in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KansalaisuusSelvakielinen" type="xsd:string" />
+                <xsd:element name="Saamispvm" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Date when nationality
+											granted
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="USAnKansalaisuus" type="tns:KyllaEiType" />
+          <xsd:element minOccurs="0" name="Ammatti" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								OBSOLETE - Not Used (Profession)
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Siviilisaaty">
+            <xsd:annotation>
+              <xsd:documentation>
+								Marital status
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence minOccurs="1" maxOccurs="1">
+                <xsd:element name="Siviilisaatykoodi" type="xsd:int">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											blanc = puuttuu N/A 0 = ei
+											tietoa UNKNOWN 1 = naimaton
+											NOT MARRIED 2 = avioliitossa
+											MARRIED 3 = asumuserossa
+											MARRIED NOT LIVING TOGETHER
+											4 = eronnut DIVORCED 5 =
+											leski WIDOW/WIDOWER 6 =
+											rekisteröidyssä
+											parisuhteessa REGISTERED
+											PARTNERSHIP 7 = eronnut
+											rekisteröidystä
+											parisuhteesta DIVORCED FROM
+											REGISTERED PARTNERSHIP 8 =
+											leski rekisteröidyn
+											parisuhteen jälkeen
+											WIDOW/WIDOWER AFTER
+											REGISTERED PARTNERSHIP
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="SiviilisaatyS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Marital status in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="SiviilisaatyR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Marital status in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LapsiLkm" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+								OBSOLETE - Not Used (Number of
+								children)! Use HuollettavaLkm instead
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="HuollettavaLkm" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+								Number of dependents
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AsuinPintaAla" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+								Living area (m2)
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AsukasLkm" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+								Number of inhabitants
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="KiinteistoyksikkoOmistus" type="tns:KyllaEiType">
+            <xsd:annotation>
+              <xsd:documentation>
+								Real estate owner: Yes(K)/No(E)
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="RakennusOmistus" type="tns:KyllaEiType">
+            <xsd:annotation>
+              <xsd:documentation>
+								House owner: Yes(K)/No(E)
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Syntymakotikunta">
+            <xsd:annotation>
+              <xsd:documentation>
+								Place of birth in Finland
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Kuntanumero" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Municipality code (number)
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KuntaS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Municipality in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="KuntaR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Municipality in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UlkomainenSyntymapaikka">
+            <xsd:annotation>
+              <xsd:documentation>
+								Place of birth outside Finland
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Valtiokoodi" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Country code (ISO 3-digit)
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="ValtioS" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Country in Finnish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="ValtioR" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Country in Swedish
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="ValtioSelvakielinen" type="xsd:string" />
+                <xsd:element name="Syntymapaikka" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Place of birth
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="SyntymavaltioUSA" type="tns:SyntymavaltioUSAType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="HenkiloTiedot">
+        <xsd:sequence>
+          <xsd:element name="HenkiloTunnus" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Person Id
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Hakutiedot">
+            <xsd:annotation>
+              <xsd:documentation>
+								metadata
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence minOccurs="1" maxOccurs="1">
+                <xsd:element name="Sanomatunnus" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Message code
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="1" maxOccurs="1" name="OnnistuikoHaku">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											0000=OK
+										</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:simpleContent>
+                      <xsd:extension base="xsd:string">
+                        <xsd:attribute name="Koodi" type="xsd:string" />
+                      </xsd:extension>
+                    </xsd:simpleContent>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="NykyinenHenkiloTunnus" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Current PersonID, if changed
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Henkilo" type="tns:Henkilo">
+            <xsd:annotation>
+              <xsd:documentation>
+								Person
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="BRIC">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="1" name="OstoVoima" type="xsd:integer">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Purchasing power:
+											1=Lowest class;
+											2=Lower medium class;
+											3=Higher medium class;
+											4=Highest class
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="KoulutusTaso" type="xsd:integer">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Education level:
+											1=Basic education;
+											2=Intermediate grade;
+											3=Higher education
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="ElamanVaihe" type="xsd:integer">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Life stage:
+											1=Young adults without children aged 18-35;
+											2=Family with children;
+											3=Adults without children aged 35-64;
+											4=Seniors over 65 years;
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="AsuinAlueTyyppi" type="xsd:integer">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Type of residential area:
+											1=Rural;
+											2=Densely populated areas;
+											3=Towns;
+											4=Big cities (Turku, Tampere, Oulu, Kuopio, Lahti);
+											5=Metropolitan area (Helsinki, Espoo, Vantaa, Kauniainen);
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="AsunnonOmistusSuhde" type="xsd:integer">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Ownership of housing:
+											1=Own;
+											2=Rented;
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="AsuntoTyyppi" type="xsd:integer">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Housing type:
+											1=One-family house;
+											2=Block house or apartment building;
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="MaksuHairioRiski" type="xsd:integer">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Risk for payment remarks:
+											0=Small (less than 0,15 %);
+											1=Minor (less than 5 %);
+											2=Normal (5 – 10 %);
+											3=High (greater than 10 %);
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="PoikkeusIlmoitus" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											Error msg in case of exception or error.
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+              <xsd:attribute name="Koodi" type="xsd:integer">
+                <xsd:annotation>
+                  <xsd:documentation>
+										-1=Not Found/Not Classified;
+										1=succeeded
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+              <xsd:attribute name="Selite" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="KuluttajaEnnuste">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="1" name="TuloTaso" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="TaloudenTuloTaso" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="TaloudenTulotYhteensa" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="Koulutus" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="TaloudenKoulutus" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="PaaomaTulot" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="TaloudenPaaomaTulot" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="Velat" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="TaloudenVelat" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="VuokraAsuminen" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="LapsiPerhe" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="Alle10vLapsiPerhe" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="TeiniLapsiPerhe" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="AutonHallinta" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											00-10
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+              <xsd:attribute name="Koodi" type="xsd:integer">
+                <xsd:annotation>
+                  <xsd:documentation>
+										-1=Not Found/Not Classified;
+										1=succeeded
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+              <xsd:attribute name="Selite" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Virhe">
+        <xsd:sequence>
+          <xsd:element name="Tyyppi" type="xsd:string" />
+          <xsd:element name="Kuvaus" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LuottoTietoMerkinta">
+        <xsd:sequence>
+          <xsd:element name="MerkintaKoodi" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Remark code
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="MerkintaSelite" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Definition for a remark in Finnish
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Summa" type="xsd:decimal">
+            <xsd:annotation>
+              <xsd:documentation>
+								Amount of debt
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Ref" type="xsd:string" />
+          <xsd:element name="MerkintaPvm" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Date of a remark
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="PoistoPvm" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Date when remark will be deleted
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Velkoja" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Creditor
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Lahde" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Source
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LuottoTietoMerkinnat">
+        <xsd:sequence>
+          <xsd:element name="HenkiloTunnus" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Person Id
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Nimi" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Name</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="LuottoLuokka" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								1=Negative remarks other than remarks of
+								payment; 2=One remark of payment, which
+								is not remarkable; 3=Remarkable negative
+								remark or several remarks of payments;
+								4=Significant negative remarks;
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="MerkintojenLkm" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+								Number of remarks
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="TuoreinMerkintaPvm" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Date of latest remark
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LuottoTietoMerkinta" type="tns:LuottoTietoMerkinta">
+            <xsd:annotation>
+              <xsd:documentation>
+								Payment remark
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="Rekisteri">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="Soliditet" />
+              <xsd:enumeration value="Suomen Asiakastieto" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:complexType>
+      <xsd:complexType name="VastuuHenkiloTieto">
+        <xsd:sequence>
+          <xsd:element name="YritysNimi" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Company name
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Aktiivisuus" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Activity
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="YhtioMuoto" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Legal form
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Rating" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Rating (AAA-C)
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="LimiittiSuositus" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+								Credit recommendation
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="MaksuTapa" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Payment behaviour
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="TuoreinJulkinenMerkinta">
+            <xsd:annotation>
+              <xsd:documentation>Company's latest payment remark. MerkintaKoodi=Type of remark; Summa=Amount;MerkintaPvm=Date of latest remark</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:attribute name="MerkintaKoodi" type="xsd:string" />
+              <xsd:attribute name="Summa" type="xsd:int" />
+              <xsd:attribute name="MerkintaPvm" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="YTunnus" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								VAT number
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Duns" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								D&amp;B DUNS number
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Rooli" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Role in the company
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="YritysYhteysTiedot">
+        <xsd:sequence>
+          <xsd:element name="HenkiloTunnus" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Person Id
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Nimi" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Name</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="OnVastuuHenkilo" type="tns:KyllaEiType">
+            <xsd:annotation>
+              <xsd:documentation>
+								Business owner/director/board member
+								Yes(K)/No(E)
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="VastuuHenkiloTieto" type="tns:VastuuHenkiloTieto" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScoreJaLuottoSuositus">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Score" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+								Scoring points
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LuottoSuositus">
+            <xsd:annotation>
+              <xsd:documentation>
+								Credit recommendation
+							</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="LuottoSuositusKoodi" type="xsd:int">
+                  <xsd:annotation>
+                    <xsd:documentation>
+											-1 = rejected
+											0 = no decision
+											1 = approved
+										</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="LuottoSuositusSelite" type="xsd:string" />
+                <xsd:element name="LuottoSuositusPeruste" type="xsd:string" />
+                <xsd:element minOccurs="0" name="LuottoLimiitti" type="xsd:int" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="KyllaEiType">
+        <xsd:annotation>
+          <xsd:documentation>K,k=Yes; E,e=No; X,x=Extra</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="K" />
+          <xsd:enumeration value="k" />
+          <xsd:enumeration value="E" />
+          <xsd:enumeration value="e" />
+          <xsd:enumeration value="X" />
+          <xsd:enumeration value="x" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="EdunvalvontaValtuutusType">
+        <xsd:sequence>
+          <xsd:element name="Tehtavienjakokoodi" type="xsd:string" />
+          <xsd:element name="Alkupvm" type="xsd:string" />
+          <xsd:element name="Paattymispvm" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="HenkiloEdunvalvontaValtuutettu" type="tns:HenkiloEdunvalvontavaltuutettuType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="HenkiloEdunvalvontavaltuutettuType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Henkilotunnus" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Syntymaaika" type="xsd:string" />
+          <xsd:element name="NykyinenSukunimi" type="xsd:string" />
+          <xsd:element name="NykyisetEtunimet" type="xsd:string" />
+          <xsd:element name="ValtuutusAlkupvm" type="xsd:string" />
+          <xsd:element name="ValtuutusLoppupvm" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SyntymavaltioUSAType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="SyntymavaltioUSATietokoodi" type="tns:KyllaEiType" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Syntymapaikka" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PostiOsoiteType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="PostiosoiteS" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="PostiosoiteR" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Postinumero" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="PostitoimipaikkaS" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="PostitoimipaikkaR" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Valtiokoodi" type="xsd:int" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="PostiosoiteAlkupvm" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="PostiosoiteLoppupvm" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="SoliditetHenkiloLuottoTiedot_in">
+    <wsdl:part name="Request" element="request:Request" />
+  </wsdl:message>
+  <wsdl:message name="SoliditetHenkiloLuottoTiedot_out">
+    <wsdl:part name="Response" element="response:Response" />
+  </wsdl:message>
+  <wsdl:portType name="SoliditetHenkiloLuottoTiedotPortType">
+    <wsdl:operation name="SoliditetHenkiloLuottoTiedot">
+      <wsdl:input name="SoliditetHenkiloLuottoTiedot_Request" message="tns:SoliditetHenkiloLuottoTiedot_in" />
+      <wsdl:output name="SoliditetHenkiloLuottoTiedot_Response" message="tns:SoliditetHenkiloLuottoTiedot_out" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SoliditetHenkiloLuottoTiedotSoapBinding" type="tns:SoliditetHenkiloLuottoTiedotPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SoliditetHenkiloLuottoTiedot">
+      <soap:operation soapAction="SoliditetHenkiloLuottoTiedot" />
+      <wsdl:input name="SoliditetHenkiloLuottoTiedot_Request">
+        <soap:body use="literal" parts="Request" />
+      </wsdl:input>
+      <wsdl:output name="SoliditetHenkiloLuottoTiedot_Response">
+        <soap:body use="literal" parts="Response" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="serviceSoliditetHenkiloLuottoTiedot">
+    <wsdl:port name="SoliditetHenkiloLuottoTiedotSoapPort" binding="tns:SoliditetHenkiloLuottoTiedotSoapBinding">
+      <soap:address location="http://test.soliditet.fi/frg/services/SoliditetHenkiloLuottoTiedot" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

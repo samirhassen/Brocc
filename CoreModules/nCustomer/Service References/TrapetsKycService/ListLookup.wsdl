@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="DoQuery">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="serviceName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attr" type="tns:ArrayOfQueryAttributes" />
+            <s:element minOccurs="1" maxOccurs="1" name="matchAllNames" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="useSoundEx" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfQueryAttributes">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QueryAttributes" nillable="true" type="tns:QueryAttributes" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="QueryAttributes">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AttributeId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Keywords" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Countries" type="tns:ArrayOfCountry" />
+          <s:element minOccurs="0" maxOccurs="1" name="BirthDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ssn" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsSoundEx" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCountry">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Country" nillable="true" type="tns:Country" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Country">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AttributeId" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TwoLetter" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ThreeLetter" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DoQueryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DoQueryResult" type="tns:ArrayOfQueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfQueryResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QueryResult" nillable="true" type="tns:QueryResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="QueryResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AttributeId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Individuals" type="tns:ArrayOfIndividual" />
+          <s:element minOccurs="0" maxOccurs="1" name="Entities" type="tns:ArrayOfEntity" />
+          <s:element minOccurs="0" maxOccurs="1" name="Countries" type="tns:ArrayOfCountry" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfIndividual">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Individual" nillable="true" type="tns:Individual" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Individual">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ListItem">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="IsMale" nillable="true" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="FunctionDescription" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="BirthDate" nillable="true" type="s:dateTime" />
+              <s:element minOccurs="0" maxOccurs="1" name="OriginalBirthDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Ssn" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ListItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="AttributeId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExternalId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PostDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="LastUpdate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="SourceName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ListType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Url" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Xml" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Aliases" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Addresses" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExternalUrls" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Entity">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ListItem" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntity">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Entity" nillable="true" type="tns:Entity" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetIndividualByExternalId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="serviceName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="externalId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIndividualByExternalIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetIndividualByExternalIdResult" type="tns:Individual" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityByExternalId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="serviceName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="externalId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityByExternalIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEntityByExternalIdResult" type="tns:Entity" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DoQuerySoapIn">
+    <wsdl:part name="parameters" element="tns:DoQuery" />
+  </wsdl:message>
+  <wsdl:message name="DoQuerySoapOut">
+    <wsdl:part name="parameters" element="tns:DoQueryResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIndividualByExternalIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetIndividualByExternalId" />
+  </wsdl:message>
+  <wsdl:message name="GetIndividualByExternalIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIndividualByExternalIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityByExternalIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEntityByExternalId" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityByExternalIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEntityByExternalIdResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ListLookupSoap">
+    <wsdl:operation name="DoQuery">
+      <wsdl:input message="tns:DoQuerySoapIn" />
+      <wsdl:output message="tns:DoQuerySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIndividualByExternalId">
+      <wsdl:input message="tns:GetIndividualByExternalIdSoapIn" />
+      <wsdl:output message="tns:GetIndividualByExternalIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityByExternalId">
+      <wsdl:input message="tns:GetEntityByExternalIdSoapIn" />
+      <wsdl:output message="tns:GetEntityByExternalIdSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ListLookupSoap" type="tns:ListLookupSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DoQuery">
+      <soap:operation soapAction="http://tempuri.org/DoQuery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIndividualByExternalId">
+      <soap:operation soapAction="http://tempuri.org/GetIndividualByExternalId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityByExternalId">
+      <soap:operation soapAction="http://tempuri.org/GetEntityByExternalId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ListLookupSoap12" type="tns:ListLookupSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DoQuery">
+      <soap12:operation soapAction="http://tempuri.org/DoQuery" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIndividualByExternalId">
+      <soap12:operation soapAction="http://tempuri.org/GetIndividualByExternalId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityByExternalId">
+      <soap12:operation soapAction="http://tempuri.org/GetEntityByExternalId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ListLookup">
+    <wsdl:port name="ListLookupSoap" binding="tns:ListLookupSoap">
+      <soap:address location="https://kyctest.instantwatch.net/services/ListLookup.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ListLookupSoap12" binding="tns:ListLookupSoap12">
+      <soap12:address location="https://kyctest.instantwatch.net/services/ListLookup.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

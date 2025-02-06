@@ -1,0 +1,25 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>    
+    @Scripts.Render("~/Content/js/bundle-component-host")
+}
+
+@section TestFunctions {
+    <ul class="list-unstyled" ng-show="testFunctions">
+        <li class="pb-1" ng-repeat="i in testFunctions.items track by $index">
+            <a ng-if="i.isLink" ng-href="{{i.linkUrl}}" target="_blank" class="btn btn-primary">{{i.text}}</a>
+            <button ng-if="i.isFunctionCall" target="_blank" class="btn btn-primary" ng-click="i.functionCall($event)">{{i.text}}</button>
+        </li>
+    </ul>  
+}
+
+@Html.Raw("<" + ViewBag.ComponentName + " initial-data=\"componentInitialData\"></" + ViewBag.ComponentName + ">")
+
+@Html.Partial("Components")

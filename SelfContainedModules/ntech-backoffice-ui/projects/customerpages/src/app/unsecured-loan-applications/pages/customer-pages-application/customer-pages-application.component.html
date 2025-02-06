@@ -1,0 +1,58 @@
+<np-shell>
+  <div shell-body>
+    <div *ngIf="m && !m.openTask">
+      <div class="flex-container" [ngClass]="{ small: !m.isActive }">
+        <div class="align-center">
+          <div *ngIf="m.isActive">
+            <customer-pages-application-offer *ngIf="m.offerInitialData" [initialData]="m.offerInitialData">
+              <ng-container focus-block>
+                <div class="pb-5">
+                  <div *ngFor="let taskGroup of getFilteredTaskGroups(focusedState)" style="margin-top: 30px">
+                    <customer-pages-application-tasks [displayState]="taskGroup.displayState" [title]="taskGroup.title"
+                      [tasks]="taskGroup.tasks" [support]="this">
+                      <p *ngFor="let text of taskGroup.texts" [ngClass]="{ 'text-center': taskGroup.displayState === 'focused' }" task-explanation>
+                        {{ text }}
+                      </p>
+                    </customer-pages-application-tasks>
+                  </div>
+                </div>
+              </ng-container>
+            </customer-pages-application-offer>
+            <p *ngIf="m.isWaitingForOffer">
+              <b>Din ansökan behandlas, vi återkopplar till dig när något
+                förändras i ditt ärende.</b>
+            </p>
+            <div class="clearfix"></div>
+          </div>
+
+          <div *ngFor="let taskGroup of getFilteredTaskGroups(normalState)" style="margin-top: 30px">
+            <customer-pages-application-tasks [displayState]="taskGroup.displayState" [title]="taskGroup.title"
+              [tasks]="taskGroup.tasks" [support]="this">
+              <p *ngFor="let text of taskGroup.texts" [ngClass]="{ 'text-center': taskGroup.displayState === 'focused' }" task-explanation>
+                {{ text }}
+              </p>
+            </customer-pages-application-tasks>
+          </div>
+
+          <div *ngIf="!m.isActive">
+            <p>Ärendet är avslutat.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="m && m.openTask">
+      <task-page [headerText]="m.openTask.model.headerText" (onClose)="closeTask()">
+        <customer-pages-agreement *ngIf="m.openTask.model.agreementInitialData"
+          [initialData]="m.openTask.model.agreementInitialData"></customer-pages-agreement>
+        <customer-pages-bankaccounts *ngIf="m.openTask.model.bankAccountsInitialData"
+          [initialData]="m.openTask.model.bankAccountsInitialData"></customer-pages-bankaccounts>
+        <customer-pages-direct-debit *ngIf="m.openTask.model.directDebitInitialData"
+          [initialData]="m.openTask.model.directDebitInitialData"></customer-pages-direct-debit>
+      </task-page>
+    </div>
+    <div [ngClass]="{ 'mt-8': m.isActive, 'mt-2': m.isActive }" *ngIf="m">
+      <customer-pages-application-messages [initialData]="m.messagesInitialData">
+      </customer-pages-application-messages>
+    </div>
+  </div>
+</np-shell>

@@ -1,0 +1,50 @@
+<mypages-shell [initialData]="m?.shellInitialData" *ngIf="m">
+    <div active-tab>
+        <h1 class="header-light pt-2">Dokument</h1>
+        <table class="lined-table table">
+            <thead>
+                <tr>
+                    <th class="col-xs-4">Utskriftsdatum</th>
+                    <th class="col-xs-4">Produkt</th>
+                    <th class="col-xs-4">Dokument</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let document of m.documents">
+                    <td>{{ document.Date | date }}</td>
+                    <td>
+                        <ng-container *ngTemplateOutlet="productDisplayName;context: { product: document.Product }"></ng-container>
+                        {{ document.ProductId }}
+                    </td>
+                    <td>
+                        <a target="_blank" [href]="document.Url" class="n-anchor">
+                            <ng-container *ngTemplateOutlet="documentDisplayName;context: 
+                                {product: document.Product,
+                                    code: document.TypeCode,
+                                    context: document.Context
+                                }">
+                            </ng-container>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</mypages-shell>
+
+<ng-template #productDisplayName let-product="product">
+    <ng-container [ngSwitch]="product">
+        <ng-container *ngSwitchCase="'Loan'">Lån</ng-container>
+        <ng-container *ngSwitchDefault>{{ product }}</ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #documentDisplayName let-product="product" let-code="code" let-context="context">
+    <ng-container [ngSwitch]="product + '_' + code">        
+        <ng-container *ngSwitchCase="'Loan_Other_AnnualStatement'">Årsbesked {{ context }}</ng-container>
+        <ng-container *ngSwitchCase="'Loan_DirectDebitConsent'">Autogiromedgivande</ng-container>
+        <ng-container *ngSwitchCase="'Loan_InitialAgreement'">Låneavtal</ng-container>
+        <ng-container *ngSwitchCase="'Loan_MortgageLoanChangeTermsAgreement'">Villkorsändring</ng-container>
+        <ng-container *ngSwitchDefault>{{ code }} {{ context }}</ng-container>
+    </ng-container>
+</ng-template>

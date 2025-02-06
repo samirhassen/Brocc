@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="unsecured-application-customer-check.html">
+    <div>
+        <table class="table" ng-if="$ctrl.m" ng-repeat="a in $ctrl.m.Applicants">
+            <thead>
+                <tr>
+                    <th class="col-xs-5">Applicant {{a.ApplicantNr}}</th>
+                    <th class="col-xs-1"></th>
+                    <th class="col-xs-3"></th>
+                    <th class="col-xs-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="a.PepKyc">
+                    <td>Pep/Kyc Screening</td>
+                    <td><span class="{{$ctrl.iconClass(a.PepKyc.LatestScreeningDate, false)}}"></span></td>
+                    <td ng-if="a.PepKyc.LatestScreeningDate">Last screened {{$ctrl.asDate(a.PepKyc.LatestScreeningDate) | date:'shortDate'}}</td>
+                    <td ng-if="!a.PepKyc.LatestScreeningDate">Never screened</td>
+                    <td class="text-right">
+                        <button class="n-direct-btn n-green-btn" ng-disabled="!$ctrl.m.IsKycScreenAllowed" ng-click="$ctrl.kycScreenNow(a, $event)">Screen now<span class="glyphicon glyphicon-refresh"></span></button>
+                    </td>
+                </tr>
+                <tr ng-if="a.PepSanctionState">
+                    <td>Pep &amp; Sanction</td>
+                    <td colspan="2"><span class="{{$ctrl.iconClass(a.PepSanctionState.IsAccepted, a.PepSanctionState.IsRejected)}}"></span></td>
+                    <td class="text-right"><a ng-href="{{a.PepSanctionState.PepKycCustomerUrl}}" class="n-anchor">View details</a></td>
+                </tr>
+                <tr ng-if="a.Fatca">
+                    <td>Tax and citizenship management</td>
+                    <td colspan="2"><span class="{{$ctrl.iconClass(a.Fatca.IncludeInFatcaExport === true || a.Fatca.IncludeInFatcaExport === false, false)}}"></span></td>
+                    <td class="text-right"><a ng-href="{{a.Fatca.CustomerFatcaCrsUrl}}" class="n-anchor">View details</a></td>
+                </tr>
+                <tr ng-if="a.Address || a.Email || a.Name">
+                    <td>Email, address, name</td>
+                    <td colspan="2"><span class="{{$ctrl.iconClassEmailAddressName(a)}}"></span></td>
+                    <td class="text-right"><a ng-href="{{a.Name.CustomerCardUrl}}" class="n-anchor">View details</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>

@@ -1,0 +1,48 @@
+<div *ngIf="m">
+  <div>
+    <div class="pt-3">
+      <h2>Errors</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <div *ngIf="m.fullText" style="border: solid 2px black">
+        <button (click)="closeFullText($event)">Close</button><br />
+        {{ m.fullText }}
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="col-xs-2">Event Date</th>
+              <th class="col-xs-1">Service Name</th>
+              <th class="col-xs-2">Url</th>
+              <th class="col-xs-1">Remote Ip</th>
+              <th class="col-xs-3">Message</th>
+              <th class="col-xs-3">Exception Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let error of m.errors">
+              <td>{{ error.eventDate | date: "yyyy-MM-dd HH:mm" }}</td>
+              <td>{{ error.serviceName }}</td>
+              <td>{{ error.requestUri }}</td>
+              <td>{{ error.remoteIp }}</td>
+              <td>
+                <span (click)="showFullText(error.message, $event)">{{
+                  error.message | slice: 0:50
+                }}</span>
+              </td>
+              <td>
+                <span (click)="showFullText(error.exceptionMessage, $event)">{{
+                  error.exceptionMessage | slice: 0:50
+                }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button (click)="fetchErrors($event)" class="n-direct-btn n-green-btn">
+        Fetch more <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+    </div>
+  </div>
+</div>

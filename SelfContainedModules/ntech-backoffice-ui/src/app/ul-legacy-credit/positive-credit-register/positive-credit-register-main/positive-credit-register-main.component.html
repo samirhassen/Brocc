@@ -1,0 +1,124 @@
+<scheduled-tasks-menu [currentTaskName]="'PositiveCreditRegister'">
+    <ng-container task-area *ngIf="m">
+        <div>
+            <!--Batch export-->
+            <div class="row">
+                <h2>Batch export</h2>
+                <form [formGroup]="m.exportBatchModel.batchDatesForm.form" name="batchDatesForm" novalidate role="form">
+                    <div class="col-xs-4">
+                        <div class="relative">
+                            <input type="text" formControlName="fromDate" class="form-control" placeholder="From Date">
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="relative">
+                            <input type="text" formControlName="toDate" class="form-control" placeholder="To Date">
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="relative">
+                            <label>
+                                <input type="checkbox" formControlName="isFirstTimeExport"> Is First Export
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <button class="n-icon-btn n-white-btn mr-1" (click)="resetBatchExportFields($event)"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                        <button class="n-main-btn n-blue-btn" [disabled]="m.exportBatchModel.batchDatesForm.invalid()"
+                            (click)="onExportBatch($event)">Export Batch</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div *ngIf="m.exportRawResponse" class="row pt-4">
+                    <br />
+                    <div class="editblock">{{ m.exportRawResponse }}</div>
+                </div>
+            </div>
+
+            <!--Get loan data-->
+            <div class="row pt-4">
+                <h2>Get loan data</h2>
+                <form [formGroup]="m.fetchGetLoanModel.searchForm.form" name="searchform" novalidate role="form">
+                    <div class="col-xs-4">
+                        <div class="relative">
+                            <span class="glyphicon glyphicon-search"></span>
+                            <input autocomplete="none" onEnter (onEnterClick)="onSearch()" formControlName="searchText"
+                                class="search form-control" name="searchText" type="text" placeholder="Get for CreditNr">
+                        </div>
+                    </div>
+                    <div class="col-xs-8" *ngIf="m.fetchGetLoanModel.searchForm.getValue('searchText')">
+                        <button class="n-icon-btn n-white-btn" (click)="resetGetLoanSearch($event)"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                        <button class="n-main-btn n-blue-btn" (click)="onSearch($event)"
+                            [disabled]="m.fetchGetLoanModel.searchForm.invalid()" style="margin-left:5px">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div *ngIf="m.fetchGetLoanModel.getLoanRawResponse" class="row pt-4">
+                <br />
+                <pre>{{ m.fetchGetLoanModel.getLoanRawResponse | json }}</pre>
+            </div>
+
+            <!--Batch status logs-->
+            <div class="row">
+                <div *ngIf="m.batchStatusLogs && m.batchStatusLogs.length > 0" class="row pt-4">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Batch status logs (last {{nrOfLogsToFetch}})</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let log of m.batchStatusLogs">
+                                <td>{{ log }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="m.batchStatusLogs && m.batchStatusLogs.length === 0" class="row pt-4">
+                    <p>No batch status logs available.</p>
+                </div>
+            </div>
+
+            <!--Batch export logs-->
+            <div class="row">
+                <div *ngIf="m.batchExportLogs && m.batchExportLogs.length > 0" class="row pt-4">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Batch export logs (last {{nrOfLogsToFetch}})</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let logItem of m.batchExportLogs">
+                                <tr>
+                                    <td class="col-xs-1">
+                                        <span (click)="toggleExportLogItemDetails(logItem, $event)">
+                                            <span class="glyphicon chevron-bg" [ngClass]="{'glyphicon-chevron-down': logItem.isExpanded,'glyphicon-chevron-right': !logItem.isExpanded }"></span>
+                                        </span>
+                                    </td>
+                                    <td class="col-xs-11">
+                                        {{logItem.batchReference}}
+                                    </td>
+                                </tr>
+                                <ng-container *ngIf="logItem.isExpanded && logItem.details">
+                                    <tr><td></td><td><b>Log files</b></td></tr>
+                                    <tr *ngFor="let logFile of logItem.details.logFiles">
+                                        <td></td>
+                                        <td><b>{{logFile.logDate | date: 'short'}}: </b> <a (click)="downloadLogFile(logItem, logFile.logFilename, $event)" href="#" target="_blank">{{logFile.logFilename}}</a></td>
+                                    </tr>
+                                    <tr *ngIf="logItem.details.logFiles.length === 0"><td></td><td>No batch logs found</td></tr>
+                                </ng-container>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="m.batchExportLogs && m.batchExportLogs.length === 0" class="row pt-4">
+                    <p>No batch export logs available.</p>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</scheduled-tasks-menu>

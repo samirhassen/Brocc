@@ -1,0 +1,27 @@
+<div class="row" *ngIf="m">
+  <div class="col-xs-2">
+    <div class="custom-submenu">
+      <ul class="nav nav-pills nav-stacked">
+        <li
+          [class.active]="m.activeSetting?.code === s.code"
+          *ngFor="let s of m.settings"
+          (click)="pickSetting(s, $event)"
+        >
+          <a href="#">{{ s.displayName }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-xs-10">
+    <ng-container *ngIf="m.activeSetting">
+      <ng-container *ngIf="!m.activeSetting.isGroup">
+        <setting-single [initialData]="m.activeSetting.singleInitialData">
+        </setting-single>
+      </ng-container>
+      <ng-container *ngIf="m.activeSetting.isGroup">
+        <setting-group [initialData]="m.activeSetting.groupInitialData">
+        </setting-group>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

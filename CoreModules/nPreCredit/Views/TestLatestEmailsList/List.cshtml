@@ -1,0 +1,39 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "PreCredit - Latest test emails";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+            initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+     @Scripts.Render("~/Content/js/bundle-testlatestemailslist")
+    <script @Html.CspScriptNonce()>
+        var app = angular.module('app', ['ngSanitize'])
+
+        app.controller('ctr', ['$scope', '$http', '$sce', function ($scope, $http, $sce) {
+            $scope.emails = initialData.emails
+
+            angular.forEach($scope.emails, function (v) {
+                v.trustedHtml = $sce.trustAsHtml(v.HtmlBody)
+            })
+
+            window.scope = $scope
+        }])
+    </script>
+}
+
+<div class="row">
+    <h1>Latest test emails</h1>
+    <p>In memory list of test emails. Stores the last 200 mails</p>
+    <div ng-repeat="e in emails" style="border:solid 1px black; margin-bottom:3px">
+        <div><label>Date: </label>{{e.Date | date:'short'}}</div>
+        <div><label>Subject: </label>{{e.Subject}}</div>
+        <div><label>Recipient: </label>{{e.RecipientEmail}}</div>
+        <div ng-bind-html="e.trustedHtml" style="padding:3px;border-top: 1px dashed black">
+            
+        </div>
+    </div>
+</div>

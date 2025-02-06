@@ -1,0 +1,72 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-search.html">
+    <div>
+        <div class="row pb-3">
+            <div class="col-xs-4">
+                <div class="relative">
+                    <span class="glyphicon glyphicon-search"></span>
+                    <input type="text" class="form-control search" placeholder="CivicRegNr/Email/Name/Phone/ApplicationNr" ng-keyup="$event.keyCode == 13 && $ctrl.search($event)" ng-model="$ctrl.omniSearchValue">
+                </div>
+            </div>
+            <div class="col-xs-8">
+                <button class="n-icon-btn n-white-btn" ng-click="$ctrl.reset($event)" ng-hide="!$ctrl.omniSearchValue"><span class="glyphicon glyphicon-remove"></span></button>
+                <button class="n-main-btn n-blue-btn" ng-click="$ctrl.search($event)" ng-hide="!$ctrl.omniSearchValue">Search</button>
+            </div>
+        </div>
+                
+        <div class="pt-3" ng-if="$ctrl.searchResult && $ctrl.searchResult.applications.length > 0">
+            <h2>Applications</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2">Number</th>
+                        <th class="col-xs-2">Date</th>
+                        <th class="col-xs-4">System comment</th>
+                        <th class="col-xs-2 text-right">Current loan amount</th>
+                        <th class="col-xs-2 text-right">Provider</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="i in $ctrl.searchResult.applications">
+                        <td><a href="#" class="n-anchor" ng-class="{ 'inactive' : !i.IsActive }" ng-click="$ctrl.gotoApplication(i,$event)">{{i.ApplicationNr}}</a></td>
+                        <td>{{i.ApplicationDate | date:'yyyy-MM-dd'}}</td>
+                        <td>{{i.LatestSystemCommentText}}</td>
+                        <td class="text-right">{{i.CurrentLoanAmount | currency}}</td>
+                        <td class="text-right">{{i.ProviderDisplayName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pt-3" ng-if="$ctrl.searchResult && $ctrl.searchResult.leads.length > 0">
+            <h2>Leads</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2">Number</th>
+                        <th class="col-xs-2">Date</th>
+                        <th class="col-xs-4">System comment</th>
+                        <th class="col-xs-2 text-right">Current loan amount</th>
+                        <th class="col-xs-2 text-right">Provider</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="i in $ctrl.searchResult.leads">
+                        <td><a href="#" class="n-anchor" ng-class="{ 'inactive' : !i.IsActive }" ng-click="$ctrl.gotoApplication(i,$event)">{{i.ApplicationNr}}</a></td>
+                        <td>{{i.ApplicationDate | date:'yyyy-MM-dd'}}</td>
+                        <td>{{i.LatestSystemCommentText}}</td>
+                        <td class="text-right">{{i.CurrentLoanAmount | currency}}</td>
+                        <td class="text-right">{{i.ProviderDisplayName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="no-hits" ng-if="$ctrl.searchResult && $ctrl.searchResult.totalCount === 0">
+            <p>No hit</p>
+        </div>
+    </div>
+</script>

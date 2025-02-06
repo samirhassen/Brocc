@@ -1,0 +1,8 @@
+<OnetimeSqlScript>
+    <Id>Add_December2020_AbTestExperiment_c4e556b1-d58b-4d05-a7b5-880b5f0e07d7</Id>
+    <TargetModuleName>nPreCredit</TargetModuleName>
+    <Script><![CDATA[insert into AbTestingExperiment
+(ExperimentName, VariationPercent, VariationName, IsActive, CreatedById, CreatedDate, ChangedById, ChangedDate, InformationMetaData)
+values
+('December 2020 - Alternate Interest', 50, 'AlternateInterestDec2020', 1, 0, getdate(), 0, getdate(), '{"providerUserId":0,"providerAuthenticationLevel":"UsernamePassword","isSigned":false}')]]></Script>
+</OnetimeSqlScript>

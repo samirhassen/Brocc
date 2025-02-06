@@ -1,0 +1,171 @@
+<mypages-shell [initialData]="m?.shellInitialData" *ngIf="m">
+    <div active-tab>
+        <ng-container *ngIf="!m.errorMessage">
+            <div class="pb-1 pt-2">
+                <a [routerLink]="['/my/loans']" class="n-anchor">Mina lån</a>
+            </div>
+            <h1 class="header-light">Lån {{ m.credit.CreditNr }}</h1>
+
+            <div class="row pt-3 pb-3">
+                <div class="col-sm-4 pb-2">
+                    <label>Aktuell skuld</label>
+                    <a href="#" (click)="showCapitalTransactionsPopup(popup, $event)" class="big-link">
+                        <h1>{{ m.credit.CapitalBalance | currency }}</h1>
+                    </a>
+                </div>
+                <div class="col-sm-4 pb-2">
+                    <label>Ränta</label>
+                    <a href="#" (click)="showInterestHistoryPopup(popup, $event)" class="big-link">
+                        <h1>
+                            {{ m.credit.CurrentInterestRatePercent | number: "1.0-4" }} %
+                        </h1>
+                    </a>
+                </div>
+                <div class="col-sm-4 pb-2" *ngIf="m.credit.UnsecuredLoan && m.credit.SinglePaymentLoanRepaymentDays && m.credit.Notifications.length === 0">
+                    <label>&nbsp;</label>
+                    <a href="#" (click)="showAmortizationPlanPopup(popup, $event)" class="big-link">
+                        <h1>Amorteringsplan</h1>
+                    </a>
+                </div>
+                <div class="col-sm-4 pb-2" *ngIf="m.credit.UnsecuredLoan && !m.credit.SinglePaymentLoanRepaymentDays">
+                    <label>Månadsbelopp</label>
+                    <a href="#" (click)="showAmortizationPlanPopup(popup, $event)" class="big-link">
+                        <h1>
+                            {{ m.credit.UnsecuredLoan.MonthlyPaymentExcludingFee | currency }}
+                        </h1>
+                    </a>
+                </div>
+                <div class="col-sm-4 pb-2" *ngIf="m.credit.MortgageLoan">
+                    <label>Amortering</label>
+                    <a href="#" (click)="showAmortizationPlanPopup(popup, $event)" class="big-link">
+                        <h1>{{getMonthlyPayment() | currency}}</h1>
+                    </a>
+                </div>
+            </div>
+
+            <h2 class="header-light pt-3">Detaljer</h2>
+            <table class="table lined-table">
+                <tbody>
+                    <tr>
+                        <td class="col-xs-6">
+                            {{ m.credit.UnsecuredLoan ? "Utbetalningsdag" : "Startdatum" }}
+                        </td>
+                        <td class="col-xs-6 text-right">
+                            {{ m.credit.StartDate | date: "yyyy-MM-dd" }}
+                        </td>
+                    </tr>
+                    <tr *ngIf="!m.credit.SinglePaymentLoanRepaymentDays">
+                        <td class="col-xs-6">Kvarvarande återbetalningstid</td>
+                        <td class="col-xs-6 text-right">
+                            {{ m.amortizationPlan.NrOfRemainingPayments }} månader
+                        </td>
+                    </tr>
+                    <tr *ngIf="m.credit.SinglePaymentLoanRepaymentDays && m.credit.Notifications.length === 0">
+                        <td class="col-xs-6">Återbetalningstid</td>
+                        <td class="col-xs-6 text-right">
+                            {{m.credit.SinglePaymentLoanRepaymentDays}} dagar
+                        </td>
+                    </tr>
+                    <tr *ngIf="m.credit.MortgageLoan">
+                        <td class="col-xs-6">Räntebindningstid</td>
+                        <td class="col-xs-6 text-right">
+                            {{
+                            formatFixedInterestMonths(
+                            m.credit.MortgageLoan.MortgageLoanInterestRebindMonthCount
+                            )
+                            }}
+                        </td>
+                    </tr>
+                    <tr *ngIf="m.credit.MortgageLoan">
+                        <td class="col-xs-6">Nästa ombindningsdatum</td>
+                        <td class="col-xs-6 text-right">
+                            {{
+                            m.credit.MortgageLoan.MortgageLoanNextInterestRebindDate
+                            | date: "yyyy-MM-dd"
+                            }}
+                        </td>
+                    </tr>
+                    <tr *ngIf="m.credit.MortgageLoan">
+                        <td class="col-xs-6">Fastighet</td>
+                        <td class="col-xs-6 text-right">{{ getMlPropertyId() }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 class="header-light pt-3">Låntagare</h2>
+            <table class="table lined-table">
+                <tbody>
+                    <tr *ngFor="let a of m.credit.ApplicantsPersonalData">
+                        <td class="col-xs-8">{{ a.FirstName }} {{ a.LastName }}</td>
+                        <td class="col-xs-4"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 class="header-light pt-3">Avier</h2>
+            <p>Obetalda</p>
+            <unpaid-notifications [initialData]="m.unpaidNotificationsInitialData"></unpaid-notifications>
+            <p *ngIf="!hasUnpaidNotifications() && getNextFutureNotificationAmount() && m.credit.SinglePaymentLoanRepaymentDays">
+                Att betala nästa avi: {{getNextFutureNotificationAmount() | currency}}
+            </p>
+            <p class="pt-3">Betalda</p>
+            <p *ngIf="m.paidNotifications.length == 0">-</p>
+            <div class="completed-task-list" *ngIf="m.paidNotifications.length > 0">
+                <ng-container *ngFor="let n of m.paidNotifications">
+                    <div *ngIf="n.isVisible" class="completed-task">
+                        <div>
+                            <div class="col-xs-7 remove-bootstrap-gutter">
+                                <div class="pull-left pr-2">
+                                    <p>Betald {{ n.paidDate | date: "yyyy-MM-dd" }}</p>
+                                </div>
+                                <div class="pull-left">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <p>{{ n.initialAmount | currency }}</p>
+                            </div>
+                            <div class="col-xs-1 text-right"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="text-center pt-3" *ngIf="m.paidNotifications.length > 0">
+                <a *ngIf="m.hasMorePaidNotifications()" (click)="m.showMorePaidNotifications($event)" href=""
+                    class="n-anchor">Visa fler</a>
+            </div>
+            <div *ngIf="m.credit.MortgageLoan">
+                <h2 class="header-light pt-3">Om du bestämt dig för att byta bank</h2>
+                <p>Nedan laddar du ned den blankett som behövs när du nu byter bank.</p>
+                <p class="form-control-static">
+                    <a [href]="m.amortizationBasisPdfUrl" target="_blank" class="n-direct-btn n-green-btn">Ladda ned</a>
+                </p>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="m.errorMessage">
+            <p>{{ m.errorMessage }}</p>
+        </ng-container>
+    </div>
+</mypages-shell>
+
+<ng-template #popup>
+    <div class="modal-header ntech-popup-header">
+        <h2 class="header-light">{{ m?.popup?.title }}</h2>
+        <button type="button" class="n-icon-btn n-white-btn ntech-center-icon" (click)="modalRef.hide()">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="pt-2">
+            <interest-history *ngIf="m.popup?.interestHistory"
+                [interestHistory]="m.popup?.interestHistory"></interest-history>
+            <capital-transaction-history *ngIf="m.popup?.capitalTransactionHistory"
+                [capitalTransactionHistory]="m.popup?.capitalTransactionHistory"></capital-transaction-history>
+            <ul-amortization-plan *ngIf="m.popup?.ulAmortizationPlan"
+                [amortizationPlan]="m.popup?.ulAmortizationPlan"></ul-amortization-plan>
+            <ml-amortization-plan *ngIf="m.popup?.mlAmortizationPlanData"
+                [initialData]="m.popup?.mlAmortizationPlanData"></ml-amortization-plan>
+        </div>
+    </div>
+</ng-template>

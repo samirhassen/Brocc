@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
+}
+
+@section Scripts {
+    <script>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-angular-translateonly")
+}
+
+<div class="col-sm-12">    
+    <div class="row">
+        <h2 translate="LoginWithCreditToken_header">Login with token</h2>
+        <p translate="LoginWithCreditToken_text1">After logging in the token will be used up and you will need a new one to login again.</p>
+        <form name="fc" novalidate method="post" action="@Url.Action("ApplyLoginWithCreditToken", "CreditTokenAuthentication")" >
+            <input type="hidden" name="token" value="@ViewBag.Token" />
+            <input class="btn btn-info" type="submit" value="{{'LoginWithCreditToken_loginbutton' | translate}} >>" />
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>

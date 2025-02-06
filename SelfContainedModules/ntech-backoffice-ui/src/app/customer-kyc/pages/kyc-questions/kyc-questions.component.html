@@ -1,0 +1,28 @@
+<div *ngIf="m" class="flex-content-area">
+    <div class="content-area pt-5 pb-2">
+        <div class="row" *ngIf="languages.length > 0">
+            <div class="col-sm-2 pull-right">
+                <div class="pb-3">
+                    <ng-container>
+                        <div class="form-group">
+                            <select class="form-control" (change)="onLanguageChanged($event)">
+                                <option *ngFor="let lang of languages" [value]="lang.code"
+                                    [selected]="language.value === lang.code">{{lang.name}}</option>
+                            </select>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let productType of m.productTypes; let first = first" [ngClass]="{ 'pt-2': !first }">
+            <h2 class="pb-1 text-center">{{productType.title}}</h2>
+            <hr class="hr-section" />
+            <div *ngFor="let relation of productType.relations; let first = first" [ngClass]="{ 'pt-2': !first }">
+                <kyc-answers-view *ngIf="!relation.edit" [initialData]="relation.answersViewData"></kyc-answers-view>
+                <kyc-answers-editor *ngIf="relation.edit" [initialData]="relation?.edit?.data"></kyc-answers-editor>
+                <kyc-history [initialData]="relation?.historicalAnswers"></kyc-history>
+            </div>
+        </div>
+    </div>
+    <test-functions-popup *ngIf="m.testFunctions" [model]="m?.testFunctions"></test-functions-popup>
+</div>

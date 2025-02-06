@@ -1,0 +1,128 @@
+<div *ngIf="m">
+  <div>
+    <h2 class="custom-header">Pending group memberships to approve</h2>
+    <hr class="hr-section custom-line mt-0" />
+    <div>
+      <table class="table" *ngIf="m?.groupMembershipsToApprove?.length > 0">
+        <thead>
+          <tr>
+            <th class="col-sm-1">Id</th>
+            <th class="col-sm-1">Creation date</th>
+            <th class="col-sm-2">Product</th>
+            <th class="col-sm-2">Name</th>
+            <th class="col-sm-1">Group</th>
+            <th class="col-sm-1">Start date</th>
+            <th class="col-sm-1">End date</th>
+            <th class="col-sm-3 text-right"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of m.groupMembershipsToApprove">
+            <td>{{ x.Id }}</td>
+            <td>{{ x.CreationDate | date: "yyyy-MM-dd" }}</td>
+            <td>{{ x.ForProduct }}</td>
+            <td>{{ x.DisplayName }}</td>
+            <td>{{ x.GroupName }}</td>
+            <td>{{ x.StartDate | date: "yyyy-MM-dd" }}</td>
+            <td>{{ x.EndDate | date: "yyyy-MM-dd" }}</td>
+            <td class="text-right">
+              <button
+                class="n-direct-btn n-green-btn"
+                *ngIf="!x.IsApproved && !x.IsCanceled"
+                href="#"
+                (click)="handle(x, true, $event)"
+              >
+                Approve</button
+              ><span *ngIf="x.IsApproved">Approved</span>
+              <button
+                class="n-direct-btn n-red-btn"
+                *ngIf="!x.IsApproved && !x.IsCanceled"
+                href="#"
+                (click)="handle(x, false, $event)"
+              >
+                Cancel</button
+              ><span *ngIf="x.IsCanceled">Canceled</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <span *ngIf="m?.groupMembershipsToApprove?.length === 0"
+        >Nothing pending.</span
+      >
+    </div>
+    <div class="pt-3">
+      <h2 class="custom-header">Pending group membership cancellations</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <div>
+        <table
+          class="table"
+          *ngIf="m?.groupMembershipCancellationsToCommit?.length > 0"
+        >
+          <thead>
+            <tr>
+              <th class="col-sm-1">ID</th>
+              <th class="col-sm-1">Creation date</th>
+              <th class="col-sm-2">Product</th>
+              <th class="col-sm-2">Name</th>
+              <th class="col-sm-1">Group</th>
+              <th class="col-sm-1">Start date</th>
+              <th class="col-sm-1">End date</th>
+              <th class="col-sm-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of m.groupMembershipCancellationsToCommit">
+              <td>{{ x.Id }}</td>
+              <td>{{ x.CreationDate | date: "yyyy-MM-dd" }}</td>
+              <td>{{ x.ForProduct }}</td>
+              <td>{{ x.DisplayName }}</td>
+              <td>{{ x.GroupName }}</td>
+              <td>{{ x.StartDate | date: "yyyy-MM-dd" }}</td>
+              <td>{{ x.EndDate | date: "yyyy-MM-dd" }}</td>
+              <td class="text-right">
+                <button
+                  *ngIf="!x.IsUndone && !x.IsCanceled"
+                  (click)="cancelGroupMembership(x, $event)"
+                  class="n-direct-btn n-green-btn"
+                >
+                  Approve
+                </button>
+                <span *ngIf="x.IsCanceled">Cancellation approved</span>
+
+                <button
+                  *ngIf="!x.IsUndone && !x.IsCanceled"
+                  (click)="undoGroupmembershipCancellation(x, $event)"
+                  class="n-direct-btn n-red-btn"
+                >
+                  Cancel
+                </button>
+                <span *ngIf="x.IsUndone">Cancellation canceled</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <span *ngIf="m?.groupMembershipCancellationsToCommit?.length === 0"
+          >Nothing pending.</span
+        >
+        <div class="row">
+          <div *ngIf="m.membershipToCancelIfConfirmed">
+            Really commit cancellation of group membership?
+            <button (click)="commitGroupmembershipCancellation($event)">
+              Yes
+            </button>
+            <button (click)="rejectCancellation($event)">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pt-3">
+      <h2 class="custom-header">Group membership expiration notification</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <div *ngFor="let g of m.expiredGroups">
+        The membership in {{ g.GroupName }} expires for user
+        {{ g.DisplayName }} at {{ g.EndDate | date: "yyyy-MM-dd" }}
+      </div>
+      <span *ngIf="m?.expiredGroups?.length === 0">Nothing pending.</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,1502 @@
+<DataWarehouse>
+  <Dimensions>
+    <Dimension>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Dimension_Credit'))
+      BEGIN
+      CREATE TABLE [dbo].[Dimension_Credit](
+      [CreditNr] [nvarchar](128) NOT NULL primary key,
+      [ProviderName] [nvarchar](100) NOT NULL,
+      [NrOfApplicants] [int] NOT NULL,
+      [StartDate] [date] NOT NULL,
+      [Timestamp] [timestamp] NOT NULL)
+      END
+    </Dimension>
+    <Dimension featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Dimension_CreditApplication'))
+      BEGIN
+      CREATE TABLE [dbo].[Dimension_CreditApplication](
+      [ApplicationNr] [nvarchar](128) NOT NULL primary key,
+      [ProviderName] [nvarchar](100) NULL,
+      [NrOfApplicants] [int] NULL,
+      [Applicant1CustomerId] [int] NULL,
+      [Applicant2CustomerId] [int] NULL,
+      [Applicant1IsMale] [bit] NULL,
+      [Applicant2IsMale] [bit] NULL,
+      [Applicant1Age] [int] NULL,
+      [Applicant2Age] [int] NULL,
+      [ApplicationDate] [date] NULL,
+      [ApplicationDateWithTime] [datetime] NULL,
+      [Timestamp] [timestamp] NOT NULL)
+      END
+    </Dimension>
+    <Dimension>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Dimension_Date'))
+      BEGIN
+      CREATE TABLE [dbo].[Dimension_Date](
+      [Date] [date] NOT NULL primary key,
+      [Timestamp] [timestamp] NOT NULL)
+      END
+    </Dimension>
+    <Dimension>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Dimension_Quarter'))
+      BEGIN
+      CREATE TABLE [dbo].[Dimension_Quarter](
+      [FromDate] [date] NOT NULL,
+      [ToDate] [date] NOT NULL,
+      [InYearOrdinalNr] [int] NULL,
+      [Name] [nvarchar](128) NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([FromDate], [ToDate]))
+      END
+    </Dimension>
+    <Dimension>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Dimension_Month'))
+      BEGIN
+      CREATE TABLE [dbo].[Dimension_Month](
+      [FromDate] [date] NOT NULL,
+      [ToDate] [date] NOT NULL,
+      [Name] [nvarchar](128) NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([FromDate]))
+      END
+    </Dimension>
+    <Dimension>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Dimension_CreditReportItem'))
+      BEGIN
+      CREATE TABLE [dbo].[Dimension_CreditReportItem]
+      (
+      [Id] [int] NOT NULL,
+      [CreditReportHeaderId] [int] NOT NULL,
+      [CreditReportProviderName] [nvarchar](100) NOT NULL,
+      [RequestDate] [date] NOT NULL,
+      [CustomerId] [int] NULL,
+      [Name] [nvarchar](100) NOT NULL,
+      [Value] [nvarchar](max) NOT NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([Id])
+      )
+      create index Dimension_CreditReportItemQueryIdx1 on Dimension_CreditReportItem(CreditReportProviderName, CreditReportHeaderId, Name) include (Value)
+      END
+    </Dimension>
+    <Dimension featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+          FROM INFORMATION_SCHEMA.TABLES
+          WHERE TABLE_SCHEMA = 'dbo'
+          AND  TABLE_NAME = 'Dimension_CreditApplicationArchival'))
+      BEGIN
+          CREATE TABLE [dbo].[Dimension_CreditApplicationArchival](
+          [ApplicationNr] [nvarchar](128) NOT NULL,
+          [ArchivedDate] [date] NOT NULL,
+          [ArchivedLevel] [int] NOT NULL,
+          [Timestamp] [timestamp] NOT NULL,
+          primary key([ApplicationNr]))
+      END
+    </Dimension>       
+  </Dimensions>
+  <Facts>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Fact_CreditApplicationSnapshot'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CreditApplicationSnapshot](
+      [Date] [date] NOT NULL,
+      [ApplicationNr] [nvarchar](128) NOT NULL,
+      [CreditNr] [nvarchar](128) NULL,
+      [RequestedAmount] [money] NULL,
+      [OfferedAmount] [money] NULL,
+      [LoansToSettleAmount] [money] NULL,
+      [RequestedRepaymentTimeInMonths] [int] NULL,
+      [OfferedRepaymentTimeInMonths] [int] NULL,
+      [OfferedMarginInterestRatePercent] [money] NULL,
+      [OfferedAdditionalLoanNewMarginInterestRatePercent] [money] NULL,
+      [OfferedAdditionalLoanNewAnnuityAmount] [money] NULL,
+      [OfferedAdditionalLoanCreditNr] [nvarchar](128) NULL,
+      [Score] [int] NULL,
+      [ScoreGroup]  [nvarchar](128) NULL,
+      [LeftToLiveOn] [money] NULL,
+      [CampaignCode] [nvarchar](128) NULL,
+      [DecisionStatus] [nvarchar](128) NULL,
+      [DecisionDate] [datetime] NULL,
+      [RejectionReasons] [nvarchar] (1024) NULL,
+      [ApplicantsHaveSameAddress] [bit] NULL,
+      [Applicant1Housing] [nvarchar](128) NULL,
+      [Applicant2Housing] [nvarchar](128) NULL,
+      [Applicant1Education] [nvarchar](128) NULL,
+      [Applicant2Education] [nvarchar](128) NULL,
+      [Applicant1Employment] [nvarchar](128) NULL,
+      [Applicant2Employment] [nvarchar](128) NULL,
+      [Applicant1EmployedSince] [date] NULL,
+      [Applicant2EmployedSince] [date] NULL,
+      [Applicant1HousingCostPerMonth] [money] NULL,
+      [Applicant2HousingCostPerMonth] [money] NULL,
+      [Applicant1IncomePerMonth] [money] NULL,
+      [Applicant2IncomePerMonth] [money] NULL,
+      [Applicant1Marriage] [nvarchar](128) NULL,
+      [Applicant2Marriage] [nvarchar](128) NULL,
+      [Applicant1NrOfChildren] [int] NULL,
+      [Applicant2NrOfChildren] [int] NULL,
+      [Applicant1MortgageLoanAmount] [money] NULL,
+      [Applicant2MortgageLoanAmount] [money] NULL,
+      [Applicant1MortgageLoanCostPerMonth] [money] NULL,
+      [Applicant2MortgageLoanCostPerMonth] [money] NULL,
+      [Applicant1CarOrBoatLoanAmount] [money] NULL,
+      [Applicant2CarOrBoatLoanAmount] [money] NULL,
+      [Applicant1CarOrBoatLoanCostPerMonth] [money] NULL,
+      [Applicant2CarOrBoatLoanCostPerMonth] [money] NULL,
+      [Applicant1StudentLoanAmount] [money] NULL,
+      [Applicant2StudentLoanAmount] [money] NULL,
+      [Applicant1StudentLoanCostPerMonth] [money] NULL,
+      [Applicant2StudentLoanCostPerMonth] [money] NULL,
+      [Applicant1OtherLoanAmount] [money] NULL,
+      [Applicant2OtherLoanAmount] [money] NULL,
+      [Applicant1OtherLoanCostPerMonth] [money] NULL,
+      [Applicant2OtherLoanCostPerMonth] [money] NULL,
+      [Applicant1CreditCardAmount] [money] NULL,
+      [Applicant2CreditCardAmount] [money] NULL,
+      [Applicant1CreditCardCostPerMonth] [money] NULL,
+      [Applicant2CreditCardCostPerMonth] [money] NULL,
+      [Applicant1HasNegativeBusinessConnection] [bit] NULL,
+      [Applicant2HasNegativeBusinessConnection] [bit] NULL,
+      [Applicant1HasPositiveBusinessConnection] [bit] NULL,
+      [Applicant2HasPositiveBusinessConnection] [bit] NULL,
+      [Applicant1BricRiskOfPaymentRemark] [nvarchar](128) NULL,
+      [Applicant2BricRiskOfPaymentRemark] [nvarchar](128) NULL,
+      [Applicant1DomesticAddressSinceDate] [date] NULL,
+      [Applicant2DomesticAddressSinceDate] [date] NULL,
+      [Applicant1HasPaymentRemark] [bit] NULL,
+      [Applicant2HasPaymentRemark] [bit] NULL,
+      [PartiallyApprovedDate] [date] NULL,
+      [Applicant1CreditDecisionSatCreditReportId] [int] NULL,
+      [Applicant2CreditDecisionSatCreditReportId] [int] NULL,
+      [Applicant1CreditDecisionCreditReportId] [int] NULL,
+      [Applicant2CreditDecisionCreditReportId] [int] NULL,
+      [Applicant1SatConsentStatus] [nvarchar](128) NULL,
+      [Applicant2SatConsentStatus] [nvarchar](128) NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      primary key([Date], [ApplicationNr]))
+      END
+      else
+      begin
+      IF (NOT EXISTS (select * from INFORMATION_SCHEMA.COLUMNS c where c.TABLE_SCHEMA = 'dbo' AND c.TABLE_NAME = 'Fact_CreditApplicationSnapshot' AND c.COLUMN_NAME = 'PartiallyApprovedDate'))
+      begin
+      ALTER TABLE dbo.Fact_CreditApplicationSnapshot ADD PartiallyApprovedDate date NULL
+      end
+      IF (NOT EXISTS (select * from INFORMATION_SCHEMA.COLUMNS c where c.TABLE_SCHEMA = 'dbo' AND c.TABLE_NAME = 'Fact_CreditApplicationSnapshot' AND c.COLUMN_NAME = 'Applicant1CreditDecisionSatCreditReportId'))
+      begin
+      ALTER TABLE dbo.Fact_CreditApplicationSnapshot ADD Applicant1CreditDecisionSatCreditReportId int NULL, Applicant2CreditDecisionSatCreditReportId int NULL
+      end
+      IF (NOT EXISTS (select * from INFORMATION_SCHEMA.COLUMNS c where c.TABLE_SCHEMA = 'dbo' AND c.TABLE_NAME = 'Fact_CreditApplicationSnapshot' AND c.COLUMN_NAME = 'Applicant1SatConsentStatus'))
+      begin
+      ALTER TABLE dbo.Fact_CreditApplicationSnapshot ADD Applicant1SatConsentStatus [nvarchar](128) NULL, Applicant2SatConsentStatus [nvarchar](128) NULL
+      end
+      IF (NOT EXISTS (select * from INFORMATION_SCHEMA.COLUMNS c where c.TABLE_SCHEMA = 'dbo' AND c.TABLE_NAME = 'Fact_CreditApplicationSnapshot' AND c.COLUMN_NAME = 'OfferedAdditionalLoanCreditNr'))
+      begin
+      ALTER TABLE dbo.Fact_CreditApplicationSnapshot ADD [OfferedAdditionalLoanNewMarginInterestRatePercent] [money] NULL, [OfferedAdditionalLoanNewAnnuityAmount] [money] NULL, [OfferedAdditionalLoanCreditNr] [nvarchar](128) NULL
+      end
+      IF (NOT EXISTS (select * from INFORMATION_SCHEMA.COLUMNS c where c.TABLE_SCHEMA = 'dbo' AND c.TABLE_NAME = 'Fact_CreditApplicationSnapshot' AND c.COLUMN_NAME = 'Applicant1CreditDecisionCreditReportId'))
+      begin
+      ALTER TABLE dbo.Fact_CreditApplicationSnapshot ADD Applicant1CreditDecisionCreditReportId int NULL, Applicant2CreditDecisionCreditReportId int NULL
+      end
+
+      declare @c1 nvarchar(128)
+      select  @c1 = r.CONSTRAINT_NAME
+      from    INFORMATION_SCHEMA.TABLE_CONSTRAINTS r
+      where   r.CONSTRAINT_TYPE = 'FOREIGN KEY'
+      and     r.TABLE_NAME = 'Fact_CreditApplicationSnapshot'
+      and     exists(select * from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE c where c.CONSTRAINT_NAME = r.CONSTRAINT_NAME and c.TABLE_NAME = r.TABLE_NAME and c.COLUMN_NAME = 'Date')
+      if not @c1 is null
+      begin
+      execute ('ALTER TABLE dbo.Fact_CreditApplicationSnapshot DROP CONSTRAINT ' +  @c1)
+      end
+
+      declare @c2 nvarchar(128)
+      select  @c2 =r.CONSTRAINT_NAME
+      from    INFORMATION_SCHEMA.TABLE_CONSTRAINTS r
+      where   r.CONSTRAINT_TYPE = 'FOREIGN KEY'
+      and     r.TABLE_NAME = 'Fact_CreditApplicationSnapshot'
+      and     exists(select * from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE c where c.CONSTRAINT_NAME = r.CONSTRAINT_NAME and c.TABLE_NAME = r.TABLE_NAME and c.COLUMN_NAME = 'ApplicationNr')
+      if not @c2 is null
+      begin
+      execute ('ALTER TABLE dbo.Fact_CreditApplicationSnapshot DROP CONSTRAINT ' +  @c2)
+      end
+      end
+      
+      if (IndexProperty(Object_Id('Fact_CreditApplicationSnapshot'), 'AppNrIdx', 'IndexId') Is Null)
+      begin
+	      create INDEX AppNrIdx ON [dbo].[Fact_CreditApplicationSnapshot] ([ApplicationNr]) INCLUDE ([Date])
+      end      
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_CreditSnapshot'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CreditSnapshot](
+      [Date] [date] NOT NULL,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [Status] [nvarchar](128) NOT NULL,
+      [StatusDate] [Date] NULL,
+      [CapitalBalance] [money] NULL,
+      [MarginInterestRate] [money] NULL,
+      [TotalInterestRate] [money] NULL,
+      [NotificationFee] [money] NULL,
+      [AnnuityAmount] [money] NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      primary key([Date], [CreditNr]))
+      END
+      else
+
+      begin
+      declare @c1 nvarchar(128)
+      select  @c1 = r.CONSTRAINT_NAME
+      from    INFORMATION_SCHEMA.TABLE_CONSTRAINTS r
+      where   r.CONSTRAINT_TYPE = 'FOREIGN KEY'
+      and     r.TABLE_NAME = 'Fact_CreditSnapshot'
+      and     exists(select * from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE c where c.CONSTRAINT_NAME = r.CONSTRAINT_NAME and c.TABLE_NAME = r.TABLE_NAME and c.COLUMN_NAME = 'Date')
+      if not @c1 is null
+      begin
+      execute ('ALTER TABLE dbo.Fact_CreditSnapshot DROP CONSTRAINT ' +  @c1)
+      end
+
+      declare @c2 nvarchar(128)
+      select  @c2 =r.CONSTRAINT_NAME
+      from    INFORMATION_SCHEMA.TABLE_CONSTRAINTS r
+      where   r.CONSTRAINT_TYPE = 'FOREIGN KEY'
+      and     r.TABLE_NAME = 'Fact_CreditSnapshot'
+      and     exists(select * from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE c where c.CONSTRAINT_NAME = r.CONSTRAINT_NAME and c.TABLE_NAME = r.TABLE_NAME and c.COLUMN_NAME = 'CreditNr')
+      if not @c2 is null
+      begin
+      execute ('ALTER TABLE dbo.Fact_CreditSnapshot DROP CONSTRAINT ' +  @c2)
+      end
+
+      end
+    </Fact>
+    <Fact>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_CreditCapitalBalanceEvent'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CreditCapitalBalanceEvent](
+      [TransactionId] bigint not null primary key,
+      [TransactionDate] [date] NOT NULL,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [EventType] [nvarchar](128) NOT NULL,
+      [Amount] [money] NOT NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      foreign key ([TransactionDate]) references [Dimension_Date] ([Date]),
+      foreign key ([CreditNr]) references [Dimension_Credit] ([CreditNr]))
+      END
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_QuarterlyCreditRATIData'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_QuarterlyCreditRATIData](
+      [QuarterFromDate] [date] NOT NULL,
+      [QuarterToDate] [date] NOT NULL,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [StartDate] [date] NULL,
+      [InitialRuntimeInMonths] int NULL,
+      [CurrentRuntimeInMonths] int NULL,
+      [InitialCapitalDebt] money NULL,
+      [CurrentCapitalDebt] money NULL,
+      [InitialInterestRate] money NULL,
+      [CurrentInterestRate] money NULL,
+      [InitialEffectiveInterest] money NULL,
+      [DebtCollectionDate] date NULL,
+      [DebtCollectionInterestDebt] money NULL,
+      [DebtCollectionCapitalDebt] money NULL,
+      [CurrentInterestDebt] money NULL,
+      [OverdueDays] int NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([QuarterFromDate], [QuarterToDate],[CreditNr]),
+      foreign key ([CreditNr]) references [Dimension_Credit] ([CreditNr]),
+      foreign key (QuarterFromDate, QuarterToDate) references [Dimension_Quarter] (FromDate, ToDate))
+      END
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_LiquidityExposureItem'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_LiquidityExposureItem](
+      [MonthFromDate] [date] NOT NULL,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [NrOfRemainingMonths] [int] NOT NULL,
+      [CurrentCapitalDebt] [money] NOT NULL,
+      [CurrentNotNotifiedCapitalDebt] [money] NOT NULL,
+      [CapitalAmount_1_3] [money] NOT NULL,
+      [InterestAmount_1_3] [money] NOT NULL,
+      [CapitalAmount_4_12] [money] NOT NULL,
+      [InterestAmount_4_12] [money] NOT NULL,
+      [CapitalAmount_13_60] [money] NOT NULL,
+      [InterestAmount_13_60] [money] NOT NULL,
+      [CapitalAmount_61_end] [money] NOT NULL,
+      [InterestAmount_61_end] [money] NOT NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      foreign key ([MonthFromDate]) references [Dimension_Month] ([FromDate]),
+      foreign key ([CreditNr]) references [Dimension_Credit] ([CreditNr]),
+      primary key([MonthFromDate], [CreditNr]))
+      END
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_CreditApplicationCancellation'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CreditApplicationCancellation](
+      [Date] [date] NOT NULL,
+      [ApplicationNr] [nvarchar](128) NOT NULL,
+      [CancelledDate] [date] NOT NULL,
+      [CancelledBy] [int] NULL,
+      [CancelledState] [nvarchar](100) NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      primary key([Date], [ApplicationNr]))
+      END
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_QuarterlyCreditRATIBusinessEventData'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_QuarterlyCreditRATIBusinessEventData](
+      [QuarterFromDate] [date] NOT NULL,
+      [QuarterToDate] [date] NOT NULL,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [EventId] int NOT NULL,
+      [EventType] [nvarchar](100) NOT NULL,
+      [TransactionDate] [date] NOT NULL,
+      [AfterEventRuntimeInMonths] [int] NULL,
+      [AfterEventCapitalDebt] [money] NULL,
+      [AfterEventInterestRate] [money] NULL,
+      [AfterEventEffectiveInterest] [money] NULL,
+      [ByEventAddedCapitalDebt] [money] NULL,
+      [CurrentInterstDebtFraction] [money] NULL,
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY CLUSTERED
+      (
+      [QuarterFromDate] ASC,
+      [QuarterToDate] ASC,
+      [CreditNr] ASC,
+      [EventId] ASC
+      ))
+      END
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_CreditOutgoingPayment'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CreditOutgoingPayment](
+      [PaymentId] [int] NOT NULL primary key,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [SourceBusinessEventType] [nvarchar](100) NOT NULL,
+      [SourceBusinessEventId] [int] NOT NULL,
+      [SourceTransactionDate] [date] NOT NULL,
+      [PaymentFileBusinessEventId] [int] NOT NULL,
+      [PaymentFileTransactionDate] [date] NOT NULL,
+      [PaymentAmount] [money] NOT NULL,
+      [Timestamp] [timestamp] NOT NULL)
+      create index Fact_CreditOutgoingPaymentIdx1 on Fact_CreditOutgoingPayment(CreditNr, SourceBusinessEventType) include (PaymentFileTransactionDate, PaymentAmount, SourceBusinessEventId)
+      END
+    </Fact>
+    <Fact>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_CreditNotificationState'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CreditNotificationState](
+      [NotificationId] [int] NOT NULL,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [DueMonth] [date] NOT NULL,
+      [DueDate] [date] NOT NULL,
+      [IsOpen] [bit] NOT NULL,
+      [ClosedDate] [date] NULL,
+      [DwUpdatedDate] [datetime] NOT NULL default(getdate()),
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([NotificationId]))
+      END
+    </Fact>
+    <Fact >
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_InitialEffectiveInterestRate'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_InitialEffectiveInterestRate](
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [InitialEffectiveInterestRatePercent] [money] NULL,
+      [DwUpdatedDate] [datetime] NOT NULL default(getdate()),
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([CreditNr]))
+      END
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_CurrentCreditDecisionEffectiveInterestRate'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CurrentCreditDecisionEffectiveInterestRate](
+      [ApplicationNr] [nvarchar](128) NOT NULL,
+      [EffectiveInterestRate] [money] NULL,
+      [DecisionDate] [datetime] NULL,
+      [DecisionId] [int] NULL,
+      [DwUpdatedDate] [datetime] NOT NULL default(getdate()),
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([ApplicationNr]))
+      END
+    </Fact>
+    <Fact>
+      IF (NOT EXISTS (SELECT *
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = 'dbo'
+      AND  TABLE_NAME = 'Fact_CreditNotificationBalanceSnapshot'))
+      BEGIN
+      CREATE TABLE [dbo].[Fact_CreditNotificationBalanceSnapshot](
+      [NotificationId] [int] NOT NULL,
+      [TransactionDate] [date] NOT NULL,
+      [CreditNr] [nvarchar](128) NOT NULL,
+      [TotalBalance] [money] NOT NULL,
+      [InterestBalance] [money] NOT NULL,
+      [CapitalBalance] [money] NOT NULL,
+      [NonInterestAndCapitalBalance] [money] NOT NULL,
+      [DwUpdatedDate] [datetime] NOT NULL default(getdate()),
+      [Timestamp] [timestamp] NOT NULL,
+      PRIMARY KEY ([NotificationId], [TransactionDate]))
+      END
+    </Fact>      
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+          FROM INFORMATION_SCHEMA.TABLES
+          WHERE TABLE_SCHEMA = 'dbo'
+          AND  TABLE_NAME = 'Fact_CreditApplicationFinalDecision'))
+      BEGIN
+          CREATE TABLE [dbo].[Fact_CreditApplicationFinalDecision](
+          [ApplicationNr] [nvarchar](128) NOT NULL,
+          [FinalDecisionDate] [date] NOT NULL,
+          [CreditNr] [nvarchar](128) NOT NULL,
+          [Amount] [money] NOT NULL,
+          [IsAdditionalLoan] [bit] NOT NULL,
+          [DwUpdatedDate] [datetime] NOT NULL default(getdate()),
+          [Timestamp] [timestamp] NOT NULL,
+          PRIMARY KEY ([ApplicationNr]))
+      END
+    </Fact>
+    <Fact featureToggle="ntech.feature.unsecuredloans">
+      IF (NOT EXISTS (SELECT *
+          FROM INFORMATION_SCHEMA.TABLES
+          WHERE TABLE_SCHEMA = 'dbo'
+          AND  TABLE_NAME = 'Fact_CreditApplicationLatestCreditDecision'))
+      BEGIN
+          CREATE TABLE [dbo].[Fact_CreditApplicationLatestCreditDecision](
+          [ApplicationNr] [nvarchar](128) NOT NULL,
+          [DecisionDate] [date] NOT NULL,
+          [OfferedAmount] [money] NULL,
+          [IsAccepted] [bit] NOT NULL,
+          [WasAutomated] [bit] NOT NULL,
+          [DwUpdatedDate] [datetime] NOT NULL default(getdate()),
+          [Timestamp] [timestamp] NOT NULL,
+          PRIMARY KEY ([ApplicationNr]))
+      END
+    </Fact>      
+  </Facts>
+  <Reports>
+    <Report name="ApplicationAnalysis1" featureToggle="ntech.feature.unsecuredloans">
+      <Parameter name="forDate" type="date" />
+      <RowNrDataBatching batchSize="5000" />
+      <Script>
+        <![CDATA[
+with Latest_Fact_CreditApplicationSnapshot
+as
+(
+    select  fc.ApplicationNr, max(fc.[Date]) as LatestDate
+    from    Fact_CreditApplicationSnapshot fc
+    where   fc.[Date] <= @forDate
+    group by fc.ApplicationNr
+),
+CreditInitialPayment
+as
+(
+    select  f.CreditNr,
+            max(f.PaymentFileTransactionDate) as PaymentDate,
+            sum(f.PaymentAmount) as PaymentAmount
+    from    [Fact_CreditOutgoingPayment] f
+    where   f.SourceBusinessEventType = 'NewCredit'
+    group by f.CreditNr
+),
+SatFiCreditReport
+as
+(
+    select  i.CreditReportHeaderId,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'c01') as ValueC01,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'c03') as ValueC03,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'c04') as ValueC04,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'count') as ValueCount
+    from    Dimension_CreditReportItem i
+    where   i.CreditReportProviderName = 'SatFi'
+    group by i.CreditReportHeaderId
+),
+NonSatCreditReport
+as
+(
+    select  i.CreditReportHeaderId,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'bricRiskOfPaymentRemark') as BricRiskOfPaymentRemark,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'hasPaymentRemark') as HasPaymentRemark,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'hasNegativeBusinessConnection') as HasNegativeBusinessConnection,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'hasPositiveBusinessConnection') as HasPositiveBusinessConnection
+    from    Dimension_CreditReportItem i
+    where   i.CreditReportProviderName <> 'SatFi'
+    group by i.CreditReportHeaderId
+),
+ReportBase
+as
+(
+    select  a.ApplicationNr,
+            c.CreditNr,
+            a.ApplicationDateWithTime as ApplicationDate,
+            fa.DecisionDate,
+            fc.PaymentDate as InitialPaymentDate,
+            fa.DecisionStatus,
+            fa.RequestedAmount,
+            fa.OfferedAmount,
+            fc.PaymentAmount as InitialPaymentAmount,
+            fa.LoansToSettleAmount,
+            fa.RequestedRepaymentTimeInMonths,
+            fa.OfferedRepaymentTimeInMonths,
+            fa.OfferedMarginInterestRatePercent,
+      fa.OfferedAdditionalLoanNewMarginInterestRatePercent,
+      fa.OfferedAdditionalLoanNewAnnuityAmount,
+      fa.OfferedAdditionalLoanCreditNr,
+            a.ProviderName,
+            fa.CampaignCode,
+            fa.Score,
+            fa.ScoreGroup,
+            fa.LeftToLiveOn,
+            a.NrOfApplicants,
+            fa.ApplicantsHaveSameAddress,
+            a.Applicant1Age,
+            a.Applicant1IsMale,
+            fa.Applicant1Housing,
+            fa.Applicant1DomesticAddressSinceDate,
+            fa.Applicant1HousingCostPerMonth,
+            fa.Applicant1Education,
+            fa.Applicant1Employment,
+            fa.Applicant1EmployedSince,
+            fa.Applicant1IncomePerMonth,
+            fa.Applicant1Marriage,
+            fa.Applicant1NrOfChildren,
+            fa.Applicant1MortgageLoanAmount,
+            fa.Applicant1MortgageLoanCostPerMonth,
+            fa.Applicant1CarOrBoatLoanAmount,
+            fa.Applicant1CarOrBoatLoanCostPerMonth,
+            fa.Applicant1StudentLoanAmount,
+            fa.Applicant1StudentLoanCostPerMonth,
+            fa.Applicant1OtherLoanAmount,
+            fa.Applicant1OtherLoanCostPerMonth,
+            fa.Applicant1CreditCardAmount,
+            fa.Applicant1CreditCardCostPerMonth,
+            coalesce(cr1.HasPaymentRemark, fa.Applicant1HasPaymentRemark) as Applicant1HasPaymentRemark,
+            coalesce(cr1.BricRiskOfPaymentRemark, fa.Applicant1BricRiskOfPaymentRemark) as Applicant1BricRiskOfPaymentRemark,
+            coalesce(cr1.HasNegativeBusinessConnection, fa.Applicant1HasNegativeBusinessConnection) as Applicant1HasNegativeBusinessConnection,
+            coalesce(cr1.HasPositiveBusinessConnection, fa.Applicant1HasPositiveBusinessConnection) as Applicant1HasPositiveBusinessConnection,
+            a.Applicant2Age,
+            a.Applicant2IsMale,
+            fa.Applicant2Housing,
+            fa.Applicant2DomesticAddressSinceDate,
+            fa.Applicant2HousingCostPerMonth,
+            fa.Applicant2Education,
+            fa.Applicant2Employment,
+            fa.Applicant2EmployedSince,
+            fa.Applicant2IncomePerMonth,
+            fa.Applicant2Marriage,
+            fa.Applicant2NrOfChildren,
+            fa.Applicant2MortgageLoanAmount,
+            fa.Applicant2MortgageLoanCostPerMonth,
+            fa.Applicant2CarOrBoatLoanAmount,
+            fa.Applicant2CarOrBoatLoanCostPerMonth,
+            fa.Applicant2StudentLoanAmount,
+            fa.Applicant2StudentLoanCostPerMonth,
+            fa.Applicant2OtherLoanAmount,
+            fa.Applicant2OtherLoanCostPerMonth,
+            fa.Applicant2CreditCardAmount,
+            fa.Applicant2CreditCardCostPerMonth,
+            coalesce(cr2.HasPaymentRemark, fa.Applicant2HasPaymentRemark) as Applicant2HasPaymentRemark,
+            coalesce(cr2.BricRiskOfPaymentRemark, fa.Applicant2BricRiskOfPaymentRemark) as Applicant2BricRiskOfPaymentRemark,
+            coalesce(cr2.HasNegativeBusinessConnection, fa.Applicant2HasNegativeBusinessConnection) as Applicant2HasNegativeBusinessConnection,
+            coalesce(cr2.HasPositiveBusinessConnection, fa.Applicant2HasPositiveBusinessConnection) as Applicant2HasPositiveBusinessConnection,
+            fa.Applicant1SatConsentStatus,
+            fa.Applicant2SatConsentStatus,
+            cast(sat1.ValueC01 as int) as Applicant1SatValueC01,
+            cast(sat1.ValueC03 as int) as Applicant1SatValueC03,
+            cast(sat1.ValueC04 as int) as Applicant1SatValueC04,
+            cast(sat1.ValueCount as int) as Applicant1SatValueCount,
+            cast(sat2.ValueC01 as int) as Applicant2SatValueC01,
+            cast(sat2.ValueC03 as int) as Applicant2SatValueC03,
+            cast(sat2.ValueC04 as int) as Applicant2SatValueC04,
+            cast(sat2.ValueCount as int) as Applicant2SatValueCount,
+            ROW_NUMBER() over(order by a.ApplicationDate, a.ApplicationNr) as BatchingRowNr
+    from    Dimension_CreditApplication a
+    join    Latest_Fact_CreditApplicationSnapshot lf on lf.ApplicationNr = a.ApplicationNr
+    join    Fact_CreditApplicationSnapshot fa on fa.ApplicationNr = a.ApplicationNr and fa.[Date] = lf.LatestDate
+    left outer join Dimension_Credit c on c.CreditNr = fa.CreditNr
+    left outer join CreditInitialPayment fc on fc.CreditNr = fa.CreditNr
+    left outer join SatFiCreditReport sat1 on sat1.CreditReportHeaderId = fa.Applicant1CreditDecisionSatCreditReportId
+    left outer join SatFiCreditReport sat2 on sat2.CreditReportHeaderId = fa.Applicant2CreditDecisionSatCreditReportId
+    left outer join NonSatCreditReport cr1 on cr1.CreditReportHeaderId = fa.Applicant1CreditDecisionCreditReportId
+    left outer join NonSatCreditReport cr2 on cr2.CreditReportHeaderId = fa.Applicant2CreditDecisionCreditReportId  
+    where   a.ApplicationDate <= @forDate
+)
+select  b.*
+from    ReportBase b
+where   b.BatchingRowNr between @fromBatchingRowNr and @toBatchingRowNr
+order by b.ApplicationDate
+]]>
+      </Script>
+    </Report>
+    <Report name="quarterlyRATIBasis" featureToggle="ntech.feature.unsecuredloans">
+      <Parameter name="fromDate" type="date" />
+      <Parameter name="toDate" type="date" />
+      <Script>
+        <![CDATA[      
+SELECT  f.[CreditNr]
+        ,f.[StartDate]
+        ,f.[InitialRuntimeInMonths]
+        ,f.[CurrentRuntimeInMonths]
+        ,f.[InitialCapitalDebt]
+        ,f.[CurrentCapitalDebt]
+        ,f.[InitialInterestRate]
+        ,f.[CurrentInterestRate]
+        ,r.InitialEffectiveInterestRatePercent as [InitialEffectiveInterest]
+        ,f.[DebtCollectionDate]
+        ,f.[DebtCollectionInterestDebt]
+        ,f.[DebtCollectionCapitalDebt]
+        ,f.[CurrentInterestDebt]
+        ,f.[OverdueDays]
+FROM    [Fact_QuarterlyCreditRATIData] f
+left outer join	[Fact_InitialEffectiveInterestRate] r on r.CreditNr = f.CreditNr
+where   f.[QuarterFromDate] = @fromDate
+and     f.[QuarterToDate] = @toDate]]>
+      </Script>
+    </Report>
+    <Report name="quarterlyRATIBusinessEvents" featureToggle="ntech.feature.unsecuredloans">
+      <Parameter name="fromDate" type="date" />
+      <Parameter name="toDate" type="date" />
+      <Script>
+        <![CDATA[      
+SELECT f.[QuarterFromDate]
+      ,f.[QuarterToDate]
+      ,f.[CreditNr]
+      ,f.[EventId]
+      ,f.[EventType]
+      ,f.[TransactionDate]
+      ,f.[AfterEventRuntimeInMonths]
+      ,f.[AfterEventCapitalDebt]
+      ,f.[AfterEventInterestRate]
+      ,f.[AfterEventEffectiveInterest]
+      ,f.[ByEventAddedCapitalDebt]
+      ,f.[CurrentInterstDebtFraction]
+FROM [dbo].[Fact_QuarterlyCreditRATIBusinessEventData] f
+where   f.[QuarterFromDate] = @fromDate
+and     f.[QuarterToDate] = @toDate
+            ]]>
+      </Script>
+    </Report>
+    <Report name="monthlyLiquidityExposureBasis" featureToggle="ntech.feature.unsecuredloans">
+      <Parameter name="fromDate" type="date" />
+      <Script>
+        <![CDATA[      
+SELECT  d.[MonthFromDate],
+        d.[CreditNr],
+        d.[NrOfRemainingMonths],
+        d.[CurrentCapitalDebt],
+        d.[CurrentNotNotifiedCapitalDebt],
+        d.[CapitalAmount_1_3],
+        d.[InterestAmount_1_3],
+        d.[CapitalAmount_4_12],
+        d.[InterestAmount_4_12],
+        d.[CapitalAmount_13_60],
+        d.[InterestAmount_13_60],
+        d.[CapitalAmount_61_end],
+        d.[InterestAmount_61_end]
+FROM    [Fact_LiquidityExposureItem] d
+where   d.[MonthFromDate] = @fromDate
+            ]]>
+      </Script>
+    </Report>
+    <Report name="dailyLiquidityCoverageBasis" featureToggle="ntech.feature.unsecuredloans">
+      <Parameter name="forDate" type="date" />
+      <Script>
+        <![CDATA[      
+with CreditSnapshot
+as
+(
+	select	c.*,
+			cast(CEILING(LOG(1/(1 - ((c.CapitalBalance * c.TotalInterestRate / 100 / 12)/c.AnnuityAmount))) / LOG(1 + (c.TotalInterestRate / 100 / 12))) as int) as NrOfRemainingMonths,
+			RANK() over(partition by c.CreditNr order by c.[Date] desc) as OrdinalNr
+	from	Fact_CreditSnapshot c
+	where	c.[Date] <= @forDate
+)
+select	c.CreditNr,
+		(	select	isnull(sum(b.Amount), 0)
+			from	Fact_CreditCapitalBalanceEvent b
+			where	b.Amount > 0
+			and		b.CreditNr = c.CreditNr
+			and		b.TransactionDate <= @forDate) as InitialCapitalDebt,
+		c.CapitalBalance,
+		c.NrOfRemainingMonths,
+		DATEADD(month, DATEDIFF(month, 0, DATEADD(m, c.[NrOfRemainingMonths], @forDate)), 0) as ApproximateLastPaymentMonth,
+		c.TotalInterestRate
+from	CreditSnapshot c
+where	c.OrdinalNr = 1
+and		c.[Status] = 'Normal'
+            ]]>
+      </Script>
+    </Report>
+    <Report name="satCustomerCreditInfo" featureToggle="ntech.feature.unsecuredloans">
+      <Script>
+        <![CDATA[
+      with Latest_Fact_CreditApplicationSnapshot
+      as
+      (
+      select    fc.ApplicationNr, max(fc.[Date]) as LatestDate
+      from    Fact_CreditApplicationSnapshot fc
+      group by fc.ApplicationNr
+      ),
+      App
+      as
+      (
+      select    a.Applicant1CustomerId,
+      a.Applicant2CustomerId,
+      a.ApplicationDate,
+      c.CreditNr,
+      c.Applicant1IncomePerMonth,
+      c.Applicant2IncomePerMonth,
+      c.ApplicationNr
+      from    Dimension_CreditApplication a
+      join    Latest_Fact_CreditApplicationSnapshot f on f.ApplicationNr = a.ApplicationNr
+      join    Fact_CreditApplicationSnapshot c on c.ApplicationNr = f.ApplicationNr and c.[Date] = f.LatestDate
+
+      ),
+      CreditCustomerIncome
+      as
+      (
+      select    a.CreditNr,
+      a.ApplicationNr,
+      a.ApplicationDate,
+      a.Applicant1IncomePerMonth as IncomePerMonth,
+      a.Applicant1CustomerId  as CustomerId
+      from    App a
+      where    a.Applicant1CustomerId is not null
+      and        a.CreditNr is not null
+      and        a.ApplicationDate is not null
+      and        a.Applicant1IncomePerMonth is not null
+      union all
+      select    a.CreditNr,
+      a.ApplicationNr,
+      a.ApplicationDate,
+      a.Applicant2IncomePerMonth as IncomePerMonth,
+      a.Applicant2CustomerId  as CustomerId
+      from    App a
+      where    a.Applicant2CustomerId is not null
+      and        a.Applicant2IncomePerMonth is not null
+      and        a.CreditNr is not null
+      and        a.ApplicationDate is not null
+      ),
+      Tmp
+      as
+      (
+      select    c.*,
+      RANK() over(partition by c.CustomerId, c.CreditNr order by c.ApplicationDate desc) as OrdinalNr
+      from    CreditCustomerIncome c
+      )
+      select    t.CreditNr,
+      t.CustomerId,
+      t.ApplicationDate,
+      t.IncomePerMonth
+      from    Tmp t
+      where    t.OrdinalNr = 1
+      ]]>
+      </Script>
+    </Report>
+    <Report name="CancelledApplications1" featureToggle="ntech.feature.unsecuredloans" providerNameColumn="ProviderName">
+      <Parameter name="forDate" type="date" />
+      <Script>
+        <![CDATA[with Latest_Fact_CreditApplicationCancellation
+        as
+        (
+            select  fc.ApplicationNr, max(fc.[Date]) as LatestDate
+            from    Fact_CreditApplicationCancellation fc
+            where   fc.[Date] <= @forDate
+            group by fc.ApplicationNr
+        )
+        select  c.ApplicationNr,
+                c.ApplicationDate,
+                f.CancelledDate,
+                f.CancelledState,
+                c.ProviderName
+        from    Dimension_CreditApplication c
+        join    Latest_Fact_CreditApplicationCancellation ff on c.ApplicationNr = ff.ApplicationNr
+        join    Fact_CreditApplicationCancellation f on f.ApplicationNr = ff.ApplicationNr and f.[Date] = ff.LatestDate
+        order by f.CancelledDate desc]]>
+      </Script>
+    </Report>
+    <Report name="providerRejections1" featureToggle="ntech.feature.unsecuredloans">
+      <Parameter name="providerName" type="string" />
+      <Script>
+        <![CDATA[with Latest_Fact_CreditApplicationSnapshot
+as
+(
+    select  fc.ApplicationNr, max(fc.[Date]) as LatestDate
+    from    Fact_CreditApplicationSnapshot fc
+    group by fc.ApplicationNr
+)
+select	a.ApplicationNr, 
+        fa.RejectionReasons
+from    Dimension_CreditApplication a
+join    Latest_Fact_CreditApplicationSnapshot lf on lf.ApplicationNr = a.ApplicationNr
+join    Fact_CreditApplicationSnapshot fa on fa.ApplicationNr = a.ApplicationNr and fa.[Date] = lf.LatestDate
+where	fa.DecisionStatus = 'Rejected'
+and		a.ProviderName = @providerName
+order by a.ApplicationNr]]>
+      </Script>
+    </Report>
+    <Report name="providerNames1" featureToggle="ntech.feature.unsecuredloans">
+      <Script>
+        <![CDATA[
+select	distinct a.ProviderName 
+from    Dimension_CreditApplication a
+order by a.ProviderName]]>
+      </Script>
+    </Report>
+    <Report name="scoreGroups1" featureToggle="ntech.feature.unsecuredloans">
+      <Script>
+        <![CDATA[select	distinct ScoreGroup from Fact_CreditApplicationSnapshot where ScoreGroup is not null order by ScoreGroup asc]]>
+      </Script>
+    </Report>
+    <Report name="applicationMonths1" featureToggle="ntech.feature.unsecuredloans">
+      <Script>
+        <![CDATA[select distinct DATEADD(month, DATEDIFF(month, 0, a.ApplicationDate), 0) as MonthDate from Dimension_CreditApplication a order by 1 asc]]>
+      </Script>
+    </Report>            
+    <Report name="LoanPerformanceReportPartialData1">
+      <Parameter name="forDate" type="date" />
+      <Script>
+        <![CDATA[with NotificationStateExt
+as
+(
+    select  s.*,
+			case 
+				when s.ClosedDate is null then @forDate 
+				when s.ClosedDate > @forDate then @forDate
+				else s.ClosedDate
+			end as ToDate,
+			case 
+				when s.ClosedDate is null then 1 
+				when s.ClosedDate <= @forDate then 0
+				else 1
+			end as IsOpenOnForDate,
+            day(s.DueDate) as DueDay
+    from    Fact_CreditNotificationState s
+),
+Latest_Fact_CreditNotificationBalanceSnapshot
+as
+(
+    select  cnl.NotificationId, cnl.CreditNr, max(cnl.TransactionDate) as LatestDate
+    from    Fact_CreditNotificationBalanceSnapshot cnl
+	join	NotificationStateExt e on e.NotificationId = cnl.NotificationId
+    where   cnl.TransactionDate <= @forDate
+	and		e.IsOpenOnForDate = 1
+    group by cnl.NotificationId, cnl.CreditNr
+),
+LowBalanceNotificationIds
+as
+(
+	select	s.NotificationId
+	from	Latest_Fact_CreditNotificationBalanceSnapshot a
+	join	Fact_CreditNotificationState s on a.NotificationId = s.NotificationId
+    join	Fact_CreditNotificationBalanceSnapshot n on n.NotificationId = a.NotificationId and n.TransactionDate = a.LatestDate
+	where   s.DueDate <= @forDate
+	and     (s.ClosedDate is null or s.ClosedDate > @forDate)
+	and		n.TotalBalance <= 10
+),
+OpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @forDate
+    and     (s.ClosedDate is null or s.ClosedDate > @forDate)
+),
+OldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    OpenNotification s
+    where   s.RankNr = 1
+),
+ReservationOpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @forDate
+    and     (s.ClosedDate is null or s.ClosedDate > @forDate)
+	and		s.NotificationId not in(select x.NotificationId from LowBalanceNotificationIds x)
+),
+ReservationOldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    ReservationOpenNotification s
+    where   s.RankNr = 1
+),
+NotifiedUnpaidBalancePerCredit
+as
+(
+    select  cn.CreditNr,
+            sum(cn.TotalBalance) as TotalBalance
+    from    Latest_Fact_CreditNotificationBalanceSnapshot cnl
+    join    Fact_CreditNotificationBalanceSnapshot cn on cn.NotificationId = cnl.NotificationId and cn.TransactionDate = cnl.LatestDate
+    group by cn.CreditNr
+)
+select  c.CreditNr,
+        isnull(nn.NrOfPassedDueDatesUntilFullPaymentOrNow, 0) as OverDueCount,
+		isnull(nn.NrOfDaysOverdue, 0) as NrOfDaysOverdue,
+        isnull(mm.NrOfPassedDueDatesUntilFullPaymentOrNow, 0) as ReservationOverDueCount,
+		isnull(mm.NrOfDaysOverdue, 0) as ReservationNrOfDaysOverdue,
+        r.InitialEffectiveInterestRatePercent,
+        (select isnull(sum(e.Amount), 0) from Fact_CreditCapitalBalanceEvent e where e.CreditNr = c.CreditNr and e.TransactionDate <= @forDate) as CurrentCapitalDebt,
+        (select min(e.TransactionDate) from  Fact_CreditCapitalBalanceEvent e where e.CreditNr = c.CreditNr and e.TransactionDate <= @forDate and e.EventType = 'NewCredit') as NewCreditTransactionDate,
+        (select isnull(sum(e.Amount), 0) from  Fact_CreditCapitalBalanceEvent e where e.CreditNr = c.CreditNr and e.TransactionDate <= @forDate and e.EventType = 'NewCredit') as InitialNewCreditCapitalAmount,
+        (select isnull(sum(e.Amount), 0) from  Fact_CreditCapitalBalanceEvent e where e.CreditNr = c.CreditNr and e.TransactionDate <= @forDate and e.EventType = 'NewAdditionalLoan') as TotalNewAdditionalLoanCapitalAmount,
+        cb.TotalBalance as TotalNotifiedUnpaidBalance
+from    Dimension_Credit c
+left outer join Fact_InitialEffectiveInterestRate r on c.CreditNr = r.CreditNr
+left outer join OldestOpenNotification nn on nn.CreditNr = c.CreditNr
+left outer join ReservationOldestOpenNotification mm on mm.CreditNr = c.CreditNr
+left outer join NotifiedUnpaidBalancePerCredit cb on cb.CreditNr = c.CreditNr]]>
+      </Script>
+    </Report>
+    <Report name="BookKeepingLedgeReportPartialData1" featureToggle="ntech.feature.unsecuredloans">
+          <Parameter name="forDate" type="date" />
+          <Script>
+              <![CDATA[with NotificationStateExt
+as
+(
+    select  s.*,
+			case 
+				when s.ClosedDate is null then @forDate 
+				when s.ClosedDate > @forDate then @forDate
+				else s.ClosedDate
+			end as ToDate,
+            day(s.DueDate) as DueDay
+    from    Fact_CreditNotificationState s
+),
+OpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @forDate
+    and     (s.ClosedDate is null or s.ClosedDate > @forDate)
+),
+OldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    OpenNotification s
+    where   s.RankNr = 1
+)
+select  c.CreditNr,
+		isnull(nn.NrOfDaysOverdue, 0) as NrOfDaysOverdue,
+        (select min(e.TransactionDate) from  Fact_CreditCapitalBalanceEvent e where e.CreditNr = c.CreditNr and e.TransactionDate <= @forDate and e.EventType = 'NewCredit') as NewCreditTransactionDate,
+        (select isnull(sum(e.Amount), 0) from  Fact_CreditCapitalBalanceEvent e where e.CreditNr = c.CreditNr and e.TransactionDate <= @forDate and e.EventType = 'NewCredit') as InitialNewCreditCapitalAmount
+from    Dimension_Credit c
+left outer join OldestOpenNotification nn on nn.CreditNr = c.CreditNr]]>
+          </Script>
+     </Report>
+    <Report name="WaterfallReportData1" featureToggle="ntech.feature.unsecuredloans">
+      <Parameter name="fromMonthDate" type="date" />
+      <Parameter name="toMonthDate" type="date" />
+      <Parameter name="providerName" type="string" /> <!-- use 'all' to not filter on this -->
+      <Parameter name="campaignCode" type="string" /> <!-- use 'all' to not filter on this -->
+      <Parameter name="scoreGroup" type="string" /> <!-- use 'all' to not filter on this -->
+      <Script>
+        <![CDATA[with Latest_Fact_CreditApplicationSnapshot
+as
+(
+    select  fc.ApplicationNr, max(fc.[Date]) as LatestDate
+    from    Fact_CreditApplicationSnapshot fc
+    group by fc.ApplicationNr
+),
+Apps
+as
+(
+	select	a.ApplicationNr,
+			a.ProviderName,
+			a.ApplicationDate,
+			fa.DecisionStatus,
+			fa.RequestedAmount,
+			fa.OfferedAmount,
+			fa.CampaignCode,
+			fa.ScoreGroup,
+			case when fd.ApplicationNr is null then 0 else 1 end as IsPaidOut,
+			case when cd.ApplicationNr is not null and cd.IsAccepted = 1 then 1 else 0 end as IsCreditDecisionAccepted,
+			case when cd.ApplicationNr is not null then 1 else 0 end as HasCreditDecision
+	from    Dimension_CreditApplication a
+	join    Latest_Fact_CreditApplicationSnapshot lf on lf.ApplicationNr = a.ApplicationNr
+	join    Fact_CreditApplicationSnapshot fa on fa.ApplicationNr = a.ApplicationNr and fa.[Date] = lf.LatestDate
+	left outer join Fact_CreditApplicationFinalDecision fd on fd.ApplicationNr = a.ApplicationNr
+	left outer join Fact_CreditApplicationLatestCreditDecision cd on cd.ApplicationNr = a.ApplicationNr
+),
+AllMonths 
+AS 
+(
+	(select distinct(DATEADD(month, DATEDIFF(month, 0, a.ApplicationDate), 0)) as MonthDate from Dimension_CreditApplication a)
+),
+WaterfallAppPre
+as
+(
+	select	a.ApplicationNr,
+			DATEADD(month, DATEDIFF(month, 0, a.ApplicationDate), 0) as ApplicationDate,
+			case 
+				when a.IsPaidOut = 1 then 'PaidOut'
+				when a.HasCreditDecision = 0 and a.DecisionStatus = 'Cancelled' then 'Cancelled'
+				when a.DecisionStatus = 'Rejected' then 'Rejected'
+				when a.IsCreditDecisionAccepted = 1 then 'Accepted'								
+				else 'Other'
+			end as CategoryCode,
+			a.RequestedAmount,
+			a.OfferedAmount
+	from	Apps a
+	where	(@providerName = 'all' or a.ProviderName = @providerName)
+	and		(@campaignCode = 'all' or a.CampaignCode = @campaignCode)
+	and		(@scoreGroup = 'all' or a.ScoreGroup = @scoreGroup)
+),
+WaterfallApp
+as
+(
+	select	p.*,
+			case when p.CategoryCode in('PaidOut', 'Accepted') then p.OfferedAmount else p.RequestedAmount end as Amount
+	from	WaterfallAppPre p
+)
+,
+WaterfallAppPerMonth
+as
+(
+	select	a.ApplicationDate as MonthDate,
+			COUNT(*) as ApplicationsCount,
+			SUM(case when (a.CategoryCode = 'Accepted' or a.CategoryCode = 'PaidOut') then 1 else 0 end) as AcceptedCount,
+			SUM(case when a.CategoryCode = 'Rejected' then 1 else 0 end) as RejectedCount,
+			SUM(case when a.CategoryCode = 'Cancelled' then 1 else 0 end) as CancelledCount,
+			SUM(case when a.CategoryCode = 'PaidOut'  then 1 else 0 end) as PaidOutCount,
+			SUM(a.Amount) as ApplicationsAmount,
+			SUM(case when (a.CategoryCode = 'Accepted'  or a.CategoryCode = 'PaidOut') then a.Amount else 0 end) as AcceptedAmount,
+			SUM(case when a.CategoryCode = 'Rejected' then a.Amount else 0 end) as RejectedAmount,
+			SUM(case when a.CategoryCode = 'Cancelled' then a.Amount else 0 end) as CancelledAmount,
+			SUM(case when a.CategoryCode = 'PaidOut' then a.Amount else 0 end) as PaidOutAmount
+	from	WaterfallApp a
+	group by a.ApplicationDate
+),
+WaterFallReport
+as
+(
+	SELECT	a.MonthDate,
+			isnull(m.ApplicationsCount, 0) as ApplicationsCount,
+			isnull(m.AcceptedCount, 0) as AcceptedCount,
+			isnull(m.RejectedCount, 0) as RejectedCount,
+			isnull(m.CancelledCount, 0) as CancelledCount,
+			isnull(m.PaidOutCount, 0) as PaidOutCount,
+			isnull(m.ApplicationsAmount, 0) as ApplicationsAmount,
+			isnull(m.AcceptedAmount, 0) as AcceptedAmount,
+			isnull(m.RejectedAmount, 0) as RejectedAmount,
+			isnull(m.CancelledAmount, 0) as CancelledAmount,
+			isnull(m.PaidOutAmount, 0) as PaidOutAmount
+	FROM	AllMonths a
+	left outer join WaterfallAppPerMonth m on a.MonthDate = m.MonthDate
+)
+select	*
+from	WaterFallReport a
+where	a.MonthDate >= @fromMonthDate
+and		a.MonthDate <= @toMonthDate
+order by a.MonthDate]]>
+      </Script>
+    </Report> 
+    <Report name="applicationStats1" featureToggle="ntech.feature.unsecuredloans">
+      <Script>
+        <![CDATA[select	min(a.ApplicationDate) as MinApplicationDate, 
+		max(a.ApplicationDate) as MaxApplicationDate, 
+		count(*) as ApplicationCount 
+from	Dimension_CreditApplication a]]>
+      </Script>        
+    </Report>
+    <Report name="ScoreCardMonitoringReport1">
+      <Parameter name="forDate" type="date" />
+      <Script>
+        <![CDATA[with Ordinal_CreditApplicationSnapshot
+as
+(
+    select  fc.*,
+			RANK() over(partition by fc.ApplicationNr order by fc.[Date] desc) as OrdinalNr
+    from    Fact_CreditApplicationSnapshot fc
+	where	fc.[Date] <= @forDate
+),
+Ordinal_Fact_CreditSnapshot
+as
+(
+	select	c.*,
+			RANK() over(partition by c.CreditNr order by c.[Date] desc) as OrdinalNr
+	from	Fact_CreditSnapshot c
+	where	c.[Date] <= @forDate
+),
+NotificationStateExt
+as
+(
+    select  s.*,
+			case 
+				when s.ClosedDate is null then @forDate 
+				when s.ClosedDate > @forDate then @forDate
+				else s.ClosedDate
+			end as ToDate,
+			case 
+				when s.ClosedDate is null then 1 
+				when s.ClosedDate <= @forDate then 0
+				else 1
+			end as IsOpenOnForDate,
+            day(s.DueDate) as DueDay
+    from    Fact_CreditNotificationState s
+),
+Latest_Fact_CreditNotificationBalanceSnapshot
+as
+(
+    select  cnl.NotificationId, cnl.CreditNr, max(cnl.TransactionDate) as LatestDate
+    from    Fact_CreditNotificationBalanceSnapshot cnl
+	join	NotificationStateExt e on e.NotificationId = cnl.NotificationId
+    where   cnl.TransactionDate <= @forDate
+	and		e.IsOpenOnForDate = 1
+    group by cnl.NotificationId, cnl.CreditNr
+),
+LowBalanceNotificationIds
+as
+(
+	select	s.NotificationId
+	from	Latest_Fact_CreditNotificationBalanceSnapshot a
+	join	Fact_CreditNotificationState s on a.NotificationId = s.NotificationId
+    join	Fact_CreditNotificationBalanceSnapshot n on n.NotificationId = a.NotificationId and n.TransactionDate = a.LatestDate
+	where   s.DueDate <= @forDate
+	and     (s.ClosedDate is null or s.ClosedDate > @forDate)
+	and		n.TotalBalance <= 10
+),
+ReservationOpenNotification
+as
+(
+    select   s.*,
+            (DATEDIFF(m, s.DueMonth, s.ToDate) + (case when DAY(s.ToDate) > s.DueDay then 1 else 0 end)) as NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      DATEDIFF(D, s.DueDate, s.ToDate) as NrOfDaysOverdue,
+            RANK() over(partition by s.CreditNr order by s.DueDate) as RankNr
+    from    NotificationStateExt s
+    where   s.DueDate <= @forDate
+    and     (s.ClosedDate is null or s.ClosedDate > @forDate)
+	and		s.NotificationId not in(select x.NotificationId from LowBalanceNotificationIds x)
+),
+ReservationOldestOpenNotification
+as
+(
+    select  s.CreditNr,
+            s.NrOfPassedDueDatesUntilFullPaymentOrNow,
+			      s.NrOfDaysOverdue,
+			      s.DueDate
+    from    ReservationOpenNotification s
+    where   s.RankNr = 1
+),
+SatFiCreditReport
+as
+(
+    select  i.CreditReportHeaderId,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'count') as ValueCount
+    from    Dimension_CreditReportItem i
+    where   i.CreditReportProviderName = 'SatFi'
+    group by i.CreditReportHeaderId
+),
+NonSatCreditReport
+as
+(
+    select  i.CreditReportHeaderId,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'domesticAddressSinceDate') as DomesticAddressSinceDate
+    from    Dimension_CreditReportItem i
+    where   i.CreditReportProviderName <> 'SatFi'
+    group by i.CreditReportHeaderId
+),
+ScoringMonitorReportItem
+as
+(
+	select	case when a.OfferedAdditionalLoanCreditNr is null then 0 else 1 end as IsAdditionalLoan,
+			coalesce(a.OfferedAdditionalLoanCreditNr, a.CreditNr) as CreditNr,
+			a.ApplicationNr,
+			a.RequestedAmount,
+			case 
+				when a.OfferedAdditionalLoanCreditNr is not null then
+				(	select	max(p.PaymentFileTransactionDate) 
+					from	[Fact_CreditOutgoingPayment] p 
+					where	p.CreditNr = a.OfferedAdditionalLoanCreditNr 
+					and		p.SourceTransactionDate = a.PartiallyApprovedDate 
+					and		p.SourceBusinessEventType = 'NewAdditionalLoan'
+					and		p.SourceTransactionDate <= @forDate) 
+				else 
+				(	select	min(p.PaymentFileTransactionDate) 
+					from	[Fact_CreditOutgoingPayment] p 
+					where	p.CreditNr = a.CreditNr 
+					and		p.SourceBusinessEventType = 'NewCredit'
+					and		p.SourceTransactionDate <= @forDate) 				
+				end as InitialPaymentDate,
+			case when a.OfferedAdditionalLoanCreditNr is null then a.OfferedAmount else 0 end as InitialPaymentAmount,
+			case when a.OfferedAdditionalLoanCreditNr is not null then a.OfferedAmount else 0 end as AdditionalLoanPaymentAmount,
+			c.CapitalBalance,
+			aa.ProviderName,
+			c.[Status],
+			case 
+				when c.[Status] <> 'Normal' and c.StatusDate <= @forDate then c.StatusDate
+				else null
+			end as ClosedDate,
+			isnull(mm.NrOfPassedDueDatesUntilFullPaymentOrNow, 0) as ReservationOverDueCount,
+			isnull(mm.NrOfDaysOverdue, 0) as ReservationNrOfDaysOverdue,
+			aa.Applicant1Age as Applicant1AgeInYears,
+			aa.Applicant1IsMale,
+			case 
+				when a.Applicant1DomesticAddressSinceDate is not null then a.Applicant1DomesticAddressSinceDate
+				when cr1.DomesticAddressSinceDate is not null then convert(date, cr1.DomesticAddressSinceDate, 126) 
+				else null
+			end as Applicant1DomesticAddressSinceDate,
+			a.Applicant1Employment,
+			a.Applicant1Marriage,
+			a.Applicant1MortgageLoanAmount,
+			cast(sat1.ValueCount as int) as Applicant1SatValueCount,
+			a.Score,
+			a.ScoreGroup,
+      aa.ApplicationDate
+	from	Ordinal_CreditApplicationSnapshot a
+	join	Dimension_CreditApplication aa on aa.ApplicationNr = a.ApplicationNr
+	left outer join	Ordinal_Fact_CreditSnapshot c on c.CreditNr = coalesce(a.OfferedAdditionalLoanCreditNr, a.CreditNr) and c.OrdinalNr = 1
+	left outer join ReservationOldestOpenNotification mm on mm.CreditNr = coalesce(a.OfferedAdditionalLoanCreditNr, a.CreditNr)
+	left outer join SatFiCreditReport sat1 on sat1.CreditReportHeaderId = a.Applicant1CreditDecisionSatCreditReportId
+    left outer join NonSatCreditReport cr1 on cr1.CreditReportHeaderId = a.Applicant1CreditDecisionCreditReportId  
+	where	a.DecisionStatus = 'Approved'
+	and		a.OrdinalNr = 1
+	and		(a.CreditNr is not null or a.OfferedAdditionalLoanCreditNr is not null)
+	and		aa.ApplicationDate <= @forDate
+)
+select	a.* 
+from	ScoringMonitorReportItem a
+order by a.ApplicationDate, a.ApplicationNr]]>
+      </Script>
+    </Report>
+  </Reports>
+  <ScheduledExcelExports>
+    <ScheduledExcelExport name="ApplicationAnalysisDaily" friendlyname="Application Analysis" frequency="Sunday" featureToggle="ntech.feature.unsecuredloans">
+      <ViewableByRole>ConsumerCreditFi.High</ViewableByRole>
+      <CustomerIdColumn>Applicant1CustomerId</CustomerIdColumn>
+      <CustomerIdColumn>Applicant2CustomerId</CustomerIdColumn>
+      <CustomerIdQuery>select a1.Applicant1CustomerId as CustomerId from [Dimension_CreditApplication] a1 union select a2.Applicant2CustomerId from [Dimension_CreditApplication] a2 where a2.Applicant2CustomerId is not null</CustomerIdQuery>
+      <SplitReportRowCount>100000</SplitReportRowCount>
+      <Script>
+        <![CDATA[
+with Latest_Fact_CreditApplicationSnapshot
+as
+(
+    select  fc.ApplicationNr, max(fc.[Date]) as LatestDate
+    from    Fact_CreditApplicationSnapshot fc
+    group by fc.ApplicationNr
+),
+CreditInitialPayment
+as
+(
+    select  f.CreditNr,
+            max(f.PaymentFileTransactionDate) as PaymentDate,
+            sum(f.PaymentAmount) as PaymentAmount
+    from    [Fact_CreditOutgoingPayment] f
+    where   f.SourceBusinessEventType = 'NewCredit'
+    group by f.CreditNr
+),
+SatFiCreditReport
+as
+(
+    select  i.CreditReportHeaderId,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'c01') as ValueC01,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'c03') as ValueC03,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'c04') as ValueC04,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'k11') as ValueK11,
+            (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'count') as ValueCount
+    from    Dimension_CreditReportItem i
+    where   i.CreditReportProviderName = 'SatFi'
+    group by i.CreditReportHeaderId
+),
+NonSatCreditReport
+as
+(
+    select  i.CreditReportHeaderId,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'bricRiskOfPaymentRemark') as BricRiskOfPaymentRemark,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'hasPaymentRemark') as HasPaymentRemark,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'hasNegativeBusinessConnection') as HasNegativeBusinessConnection,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'hasPositiveBusinessConnection') as HasPositiveBusinessConnection,
+    (select top 1 ii.Value from Dimension_CreditReportItem ii where ii.CreditReportHeaderId = i.CreditReportHeaderId and ii.Name = 'domesticAddressSinceDate') as DomesticAddressSinceDate
+    from    Dimension_CreditReportItem i
+    where   i.CreditReportProviderName <> 'SatFi'
+    group by i.CreditReportHeaderId
+),
+ReportBase
+as
+(
+    select  a.ApplicationNr,
+            c.CreditNr,
+            coalesce(ier.InitialEffectiveInterestRatePercent, cer.EffectiveInterestRate) as EffectiveInterestRatePercent,
+            a.ApplicationDateWithTime as ApplicationDate,
+            fa.DecisionDate,
+            fc.PaymentDate as InitialPaymentDate,
+            fa.DecisionStatus,
+            fa.RequestedAmount,
+            fa.OfferedAmount,
+            fc.PaymentAmount as InitialPaymentAmount,
+            fa.LoansToSettleAmount,
+            fa.RequestedRepaymentTimeInMonths,
+            fa.OfferedRepaymentTimeInMonths,
+            fa.OfferedMarginInterestRatePercent,
+      fa.OfferedAdditionalLoanNewMarginInterestRatePercent,
+      fa.OfferedAdditionalLoanNewAnnuityAmount,
+      fa.OfferedAdditionalLoanCreditNr,            
+            a.ProviderName,
+            fa.CampaignCode,
+            fa.Score,
+            fa.ScoreGroup,
+            fa.LeftToLiveOn,
+            a.NrOfApplicants,
+            fa.ApplicantsHaveSameAddress,
+            a.Applicant1Age,
+            a.Applicant1IsMale,
+            fa.Applicant1Housing,
+            coalesce(cr1.DomesticAddressSinceDate, fa.Applicant1DomesticAddressSinceDate) as Applicant1DomesticAddressSinceDate,
+            fa.Applicant1HousingCostPerMonth,
+            fa.Applicant1Education,
+            fa.Applicant1Employment,
+            fa.Applicant1EmployedSince,
+            fa.Applicant1IncomePerMonth,
+            fa.Applicant1Marriage,
+            fa.Applicant1NrOfChildren,
+            fa.Applicant1MortgageLoanAmount,
+            fa.Applicant1MortgageLoanCostPerMonth,
+            fa.Applicant1CarOrBoatLoanAmount,
+            fa.Applicant1CarOrBoatLoanCostPerMonth,
+            fa.Applicant1StudentLoanAmount,
+            fa.Applicant1StudentLoanCostPerMonth,
+            fa.Applicant1OtherLoanAmount,
+            fa.Applicant1OtherLoanCostPerMonth,
+            fa.Applicant1CreditCardAmount,
+            fa.Applicant1CreditCardCostPerMonth,
+            coalesce(cr1.HasPaymentRemark, fa.Applicant1HasPaymentRemark) as Applicant1HasPaymentRemark,
+            coalesce(cr1.BricRiskOfPaymentRemark, fa.Applicant1BricRiskOfPaymentRemark) as Applicant1BricRiskOfPaymentRemark,
+            coalesce(cr1.HasNegativeBusinessConnection, fa.Applicant1HasNegativeBusinessConnection) as Applicant1HasNegativeBusinessConnection,
+            coalesce(cr1.HasPositiveBusinessConnection, fa.Applicant1HasPositiveBusinessConnection) as Applicant1HasPositiveBusinessConnection,
+            a.Applicant2Age,
+            a.Applicant2IsMale,
+            fa.Applicant2Housing,
+            coalesce(cr2.DomesticAddressSinceDate, fa.Applicant2DomesticAddressSinceDate) as Applicant2DomesticAddressSinceDate,
+            fa.Applicant2HousingCostPerMonth,
+            fa.Applicant2Education,
+            fa.Applicant2Employment,
+            fa.Applicant2EmployedSince,
+            fa.Applicant2IncomePerMonth,
+            fa.Applicant2Marriage,
+            fa.Applicant2NrOfChildren,
+            fa.Applicant2MortgageLoanAmount,
+            fa.Applicant2MortgageLoanCostPerMonth,
+            fa.Applicant2CarOrBoatLoanAmount,
+            fa.Applicant2CarOrBoatLoanCostPerMonth,
+            fa.Applicant2StudentLoanAmount,
+            fa.Applicant2StudentLoanCostPerMonth,
+            fa.Applicant2OtherLoanAmount,
+            fa.Applicant2OtherLoanCostPerMonth,
+            fa.Applicant2CreditCardAmount,
+            fa.Applicant2CreditCardCostPerMonth,
+            coalesce(cr2.HasPaymentRemark, fa.Applicant2HasPaymentRemark) as Applicant2HasPaymentRemark,
+            coalesce(cr2.BricRiskOfPaymentRemark, fa.Applicant2BricRiskOfPaymentRemark) as Applicant2BricRiskOfPaymentRemark,
+            coalesce(cr2.HasNegativeBusinessConnection, fa.Applicant2HasNegativeBusinessConnection) as Applicant2HasNegativeBusinessConnection,
+            coalesce(cr2.HasPositiveBusinessConnection, fa.Applicant2HasPositiveBusinessConnection) as Applicant2HasPositiveBusinessConnection,
+            fa.Applicant1SatConsentStatus,
+            fa.Applicant2SatConsentStatus,
+            cast(sat1.ValueC01 as int) as Applicant1SatValueC01,
+            cast(sat1.ValueC03 as int) as Applicant1SatValueC03,
+            cast(sat1.ValueC04 as int) as Applicant1SatValueC04,
+            cast(sat1.ValueK11 as date) as Applicant1SatValueValueK11,
+            cast(sat1.ValueCount as int) as Applicant1SatValueCount,
+            cast(sat2.ValueC01 as int) as Applicant2SatValueC01,
+            cast(sat2.ValueC03 as int) as Applicant2SatValueC03,
+            cast(sat2.ValueC04 as int) as Applicant2SatValueC04,
+            cast(sat2.ValueK11 as date) as Applicant2SatValueValueK11,
+            cast(sat2.ValueCount as int) as Applicant2SatValueCount,
+            a.Applicant1CustomerId,
+            a.Applicant2CustomerId,
+            ROW_NUMBER() over(order by a.ApplicationDate desc, a.ApplicationNr desc) as NTechBatchingRowNr
+    from    Dimension_CreditApplication a
+    join    Latest_Fact_CreditApplicationSnapshot lf on lf.ApplicationNr = a.ApplicationNr
+    join    Fact_CreditApplicationSnapshot fa on fa.ApplicationNr = a.ApplicationNr and fa.[Date] = lf.LatestDate
+    left outer join Dimension_Credit c on c.CreditNr = fa.CreditNr
+    left outer join Fact_InitialEffectiveInterestRate ier on ier.CreditNr = fa.CreditNr    
+    left outer join Fact_CurrentCreditDecisionEffectiveInterestRate cer on cer.ApplicationNr = a.ApplicationNr
+    left outer join CreditInitialPayment fc on fc.CreditNr = fa.CreditNr
+    left outer join SatFiCreditReport sat1 on sat1.CreditReportHeaderId = fa.Applicant1CreditDecisionSatCreditReportId
+    left outer join SatFiCreditReport sat2 on sat2.CreditReportHeaderId = fa.Applicant2CreditDecisionSatCreditReportId
+    left outer join NonSatCreditReport cr1 on cr1.CreditReportHeaderId = fa.Applicant1CreditDecisionCreditReportId
+    left outer join NonSatCreditReport cr2 on cr2.CreditReportHeaderId = fa.Applicant2CreditDecisionCreditReportId
+)
+select  b.*
+from    ReportBase b
+where   b.NTechBatchingRowNr between @ntechBatchingFromNr and @ntechBatchingToNr
+]]>
+      </Script>
+    </ScheduledExcelExport>
+  </ScheduledExcelExports>
+</DataWarehouse>

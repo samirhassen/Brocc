@@ -1,0 +1,467 @@
+<credit-menu
+  activeMenuItemCode="directDebit"
+  [creditNr]="m?.creditNr"
+  *ngIf="m"
+>
+  <div current-item-content>
+    <!-- Internal status -->
+
+    <div class="editblock">
+      <div class="form-horizontal">
+        <div class="text-right">
+          <button
+            *ngIf="m.internalDirectDebitEdit"
+            class="n-icon-btn n-white-btn"
+            (click)="cancelInternalEdit($event)"
+          >
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button
+            *ngIf="m.internalDirectDebitEdit"
+            class="n-icon-btn n-green-btn"
+            (click)="commitInternalEdit($event)"
+          >
+            <span class="glyphicon glyphicon-ok"></span>
+          </button>
+          <button
+            *ngIf="!m.internalDirectDebitEdit"
+            class="n-icon-btn n-blue-btn"
+            (click)="beginInternalEdit($event)"
+          >
+            <span class="glyphicon glyphicon-pencil"></span>
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group" *ngIf="m.internalDirectDebitEdit">
+              <label class="control-label col-xs-6">Internal status</label>
+              <div class="col-xs-6">
+                <select class="form-control" [(ngModel)]="m.ddEdit.Status">
+                  <option value="Active">Active</option>
+                  <option value="NotActive">Not active</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="!m.internalDirectDebitEdit">
+              <label class="control-label col-xs-6">Internal status</label>
+              <div class="col-xs-6">
+                <p class="form-control-static copyable bb-1">
+                  {{ getStatusText(m.ddView.InternalDirectDebitCheckStatus) }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label col-xs-6">Account owner</label>
+              <p
+                class="form-control-static col-xs-6"
+                *ngIf="m.ddView.AccountOwner"
+              >
+                {{ m.ddView.AccountOwner.FirstName }},
+                {{ m.ddView.AccountOwner.BirthDate | date: "yyyyMMdd" }}
+              </p>
+              <p
+                class="form-control-static col-xs-6"
+                *ngIf="!m.ddView.AccountOwner"
+              >
+                -
+              </p>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-xs-6">Bank account</label>
+              <p class="form-control-static col-xs-6">
+                <span class="copyable">{{
+                  getBankAccountDisplayText(m.ddView.BankAccount, true)
+                }}</span>
+              </p>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-xs-6">Payment number</label>
+              <p
+                class="form-control-static col-xs-6 copyable"
+                *ngIf="m.ddView.AccountOwner"
+              >
+                {{ m.ddView.AccountOwner.StandardPaymentNr }}
+              </p>
+              <p
+                class="form-control-static col-xs-6"
+                *ngIf="!m.ddView.AccountOwner"
+              >
+                -
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule Changes -->
+
+    <div class="pt-3">
+      <h2 class="custom-header">
+        <span
+          class="mr-1 glyphicon chevron-bg"
+          [ngClass]="{
+            'glyphicon-chevron-down': m.scheduleChanges,
+            'glyphicon-chevron-right': !m.scheduleChanges
+          }"
+          (click)="toggleScheduleChange($event)"
+        ></span
+        >Schedule change
+      </h2>
+      <hr class="hr-section custom-line mt-0" />
+      <div *ngIf="m.scheduleChanges">
+        <div class="row pt-2 pb-2">
+          <div class="col-sm-6">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-sm-6"
+                  >Latest known external status</label
+                >
+                <p class="form-control-static col-sm-6">
+                  {{
+                    m.ssView.Schedulation.Status
+                      ? getStatusText(m.ssView.Schedulation.Status)
+                      : "Not Active"
+                  }}
+                </p>
+              </div>
+              <div
+                class="form-group"
+                *ngIf="m.ssView.Schedulation.AccountOwner"
+              >
+                <label class="control-label col-sm-6">Account owner</label>
+                <p class="form-control-static col-sm-6">
+                  {{ m.ssView.Schedulation.AccountOwner.FirstName }},
+                  {{
+                    m.ssView.Schedulation.AccountOwner.BirthDate
+                      | date: "yyyyMMdd"
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-horizontal">
+              <div
+                class="form-group"
+                *ngIf="m.ssView.Schedulation.AccountOwner?.StandardPaymentNr"
+              >
+                <label class="control-label col-sm-6">Payment number</label>
+                <p class="form-control-static col-sm-6">
+                  {{ m.ssView.Schedulation.AccountOwner.StandardPaymentNr }}
+                </p>
+              </div>
+              <div
+                class="form-group"
+                *ngIf="m.ssView.Schedulation.BankAccount?.NormalizedNr"
+              >
+                <label class="control-label col-sm-6">Bank account</label>
+                <p class="form-control-static col-sm-6">
+                  {{
+                    getBankAccountDisplayText(
+                      m.ssView.Schedulation.BankAccount,
+                      true
+                    )
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="editblock"
+          *ngIf="
+            m.ssView?.PendingSchedulation && isSchedulationStatusPending(false)
+          "
+          style="background-color: #fff"
+        >
+          <div class="form-horizontal">
+            <div class="pull-right p1-3">
+              <button
+                class="n-direct-btn n-white-btn"
+                (click)="removeDirectDebitSchedulation($event)"
+              >
+                Cancel
+              </button>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-xs-6">Schedule</label>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="m.ssView.PendingSchedulation.Status"
+                >
+                  {{ getStatusText(m.ssView.PendingSchedulation.Status) }}
+                </p>
+              </div>
+
+              <div
+                class="form-group"
+                *ngIf="
+                  m.ssView.PendingSchedulation.Status !== 'PendingCancellation'
+                "
+              >
+                <label class="control-label col-xs-6">Account owner</label>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="m.ssView.PendingSchedulation.AccountOwner"
+                >
+                  {{ m.ssView.PendingSchedulation.AccountOwner.FirstName }},
+                  {{
+                    m.ssView.PendingSchedulation.AccountOwner.BirthDate
+                      | date: "yyyyMMdd"
+                  }}
+                </p>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="!m.ssView.PendingSchedulation.AccountOwner"
+                >
+                  -
+                </p>
+              </div>
+              <div
+                class="form-group pt-2"
+                *ngIf="
+                  m.ssView.PendingSchedulation.Status !== 'PendingCancellation'
+                "
+              >
+                <label class="control-label col-xs-6">Bank account</label>
+                <p class="form-control-static col-xs-6">
+                  <span class="copyable">{{
+                    getBankAccountDisplayText(
+                      m.ssView.PendingSchedulation.BankAccount,
+                      true
+                    )
+                  }}</span>
+                </p>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-xs-6">Payment number</label>
+                <p
+                  class="form-control-static col-xs-6 copyable"
+                  *ngIf="
+                    m.ssView.PendingSchedulation.Status !==
+                      'PendingCancellation' &&
+                    m.ssView.PendingSchedulation.AccountOwner.ApplicantNr
+                  "
+                >
+                  {{
+                    m.getPersonNameAndDateModelByApplicantNr(
+                      m.ssView.PendingSchedulation.AccountOwner.ApplicantNr
+                    ).StandardPaymentNr
+                  }}
+                </p>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="
+                    m.ssView.PendingSchedulation.Status !==
+                      'PendingCancellation' &&
+                    !m.ssView.PendingSchedulation.AccountOwner.ApplicantNr
+                  "
+                >
+                  -
+                </p>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="
+                    m.ssView.PendingSchedulation.Status ===
+                      'PendingCancellation' &&
+                    m.ssView.Schedulation.AccountOwner.ApplicantNr
+                  "
+                >
+                  {{
+                    m.getPersonNameAndDateModelByApplicantNr(
+                      m.ssView.Schedulation.AccountOwner.ApplicantNr
+                    ).StandardPaymentNr
+                  }}
+                </p>
+              </div>
+              <button
+                style="margin-left: 400px; margin-top: 100px"
+                class="n-direct-btn n-green-btn"
+                (click)="changeActivationConfirm($event)"
+              >
+                Change activation
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="editblock"
+          *ngIf="
+            this.m.ssEdit?.PendingSchedulation &&
+            isSchedulationStatusPending(true)
+          "
+        >
+          <div novalidate class="form-horizontal">
+            <div class="clearfix"></div>
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-xs-4">Schedule</label>
+                <div class="col-xs-5">
+                  <select
+                    class="form-control"
+                    [(ngModel)]="m.ssEdit.PendingSchedulation.Status"
+                  >
+                    <option value="Active">Activate</option>
+                    <option value="NotActive">Cancel</option>
+                    <option value="Change">Change</option>
+                  </select>
+                </div>
+              </div>
+              <div
+                class="form-group"
+                *ngIf="m.ssEdit.PendingSchedulation.Status !== 'NotActive'"
+              >
+                <label class="control-label col-xs-4">Account owner</label>
+                <div class="col-xs-5">
+                  <select
+                    class="form-control"
+                    [(ngModel)]="
+                      m.ssEdit.PendingSchedulation.AccountOwnerApplicantNr
+                    "
+                    (change)="onAccountOwnerApplicantNrEdited()"
+                  >
+                    <option
+                      value=""
+                      *ngIf="
+                        !m.ssEdit.PendingSchedulation.AccountOwnerApplicantNr
+                      "
+                    ></option>
+                    <option
+                      value="{{ a.ApplicantNr }}"
+                      *ngFor="let a of m.allOwnersOrdered"
+                    >
+                      {{ a.FirstName }}, {{ a.BirthDate | date: "yyyyMMdd" }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div
+                class="form-group pt-2"
+                *ngIf="m.ssEdit.PendingSchedulation.Status !== 'NotActive'"
+                [ngClass]="{
+                  'has-error':
+                    m.ssEdit.PendingSchedulation.BankAccountValidationResult &&
+                    !m.ssEdit.PendingSchedulation.BankAccountValidationResult
+                      .IsValid
+                }"
+              >
+                <label class="control-label col-xs-4">Bank account</label>
+                <div class="col-xs-5">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="m.ssEdit.PendingSchedulation.BankAccountNr"
+                    (input)="onBankAccountEdited($event)"
+                  />
+                </div>
+              </div>
+              <div
+                class="form-group"
+                *ngIf="m.ssEdit.PendingSchedulation.Status !== 'NotActive'"
+              >
+                <label class="control-label col-xs-6">Payment number</label>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="
+                    m.ssEdit.PendingSchedulation.AccountOwnerApplicantNr &&
+                    !m.ssEdit.PendingSchedulation
+                      .WasAccountOwnerApplicantNrRecentlyChanged
+                  "
+                  [ngSwitch]="
+                    m.ssEdit.PendingSchedulation.AccountOwnerApplicantNr
+                  "
+                >
+                  <span class="copyable" *ngSwitchCase="'1'">{{
+                    m.getPersonNameAndDateModelByApplicantNr(1)
+                      .StandardPaymentNr
+                  }}</span>
+                  <span class="copyable" *ngSwitchCase="'2'">{{
+                    m.getPersonNameAndDateModelByApplicantNr(2)
+                      .StandardPaymentNr
+                  }}</span>
+                  <span *ngSwitchDefault>-</span>
+                </p>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="
+                    !m.ssEdit.PendingSchedulation.AccountOwnerApplicantNr &&
+                    !m.ddEdit.WasAccountOwnerApplicantNrRecentlyChanged
+                  "
+                >
+                  -
+                </p>
+                <p
+                  class="form-control-static col-xs-6"
+                  *ngIf="m.ddEdit.WasAccountOwnerApplicantNrRecentlyChanged"
+                >
+                  ...
+                </p>
+              </div>
+
+              <button
+                [disabled]="
+                  (m.ssEdit.PendingSchedulation.Status !== 'NotActive' &&
+                    !m.ssEdit.PendingSchedulation?.BankAccountValidationResult
+                      ?.IsValid) ||
+                  (m.ssEdit.PendingSchedulation.Status !== 'NotActive' &&
+                    (!m.ssEdit.PendingSchedulation.AccountOwnerApplicantNr ||
+                      !m.ssEdit.PendingSchedulation.BankAccountNr))
+                "
+                class="n-direct-btn n-green-btn"
+                style="margin-left: 400px; margin-top: 100px"
+                (click)="initiateActivation($event)"
+              >
+                {{
+                  m.ssEdit.PendingSchedulation.Status === "Active"
+                    ? "Initiate activation"
+                    : "Initiate change"
+                }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History -->
+
+    <div class="pt-3">
+      <h2 class="custom-header">
+        <span
+          class="mr-1 glyphicon chevron-bg"
+          [ngClass]="{
+            'glyphicon-chevron-down': m.events,
+            'glyphicon-chevron-right': !m.events
+          }"
+          (click)="toggleEvents($event)"
+        ></span>
+        History
+      </h2>
+      <hr class="hr-section custom-line mt-0" />
+
+      <table class="table" *ngIf="m.events">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>User</th>
+            <th>Event</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of m.events">
+            <td>{{ e.Date | date: "yyyy-MM-dd" }}</td>
+            <td>{{ e.UserDisplayName }}</td>
+            <td>{{ e.LongText }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</credit-menu>

@@ -1,0 +1,41 @@
+<div class="wrapper">
+  <div class="navigation">
+    <div class="content-position">
+      <div class="branding">
+        <a
+          class="navbar-brand"
+          [routerLink]="['/unsecured-loan-applications/overview']"
+        >
+          <img
+            *ngIf="!config.config()?.Skinning"
+            src="assets/img/menu-header-logo.png"
+          />
+          <img
+            *ngIf="!!config.config()?.Skinning"
+            [src]="config.config()?.Skinning?.LogoUrl"
+          />
+        </a>
+      </div>
+      <div class="navigation-right">
+        <ul class="navigation-list">
+          <li>
+            <a
+              (click)="logOut($event)"
+              href="#"
+              class="n-direct-btn n-white-btn"
+              >Logga ut</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div class="container-fluid body-content">
+    <ng-content select="[shell-body]"></ng-content>
+    <div class="loading" *ngIf="isLoading.value">Loading&#8230;</div>
+  </div>
+  <footer>
+    <p><img src="assets/img/menu-header-logo.png" alt="Näktergal AB" /></p>
+  </footer>
+</div>

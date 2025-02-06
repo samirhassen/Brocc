@@ -1,0 +1,109 @@
+<div *ngIf="m?.hasNoCustomerRelation">
+  <customerpages-shell
+    [initialData]="{
+      logoRouterLink: ['/my/overview'],
+      skipBodyLayout: true,
+      wideNavigation: true
+    }"
+  >
+    <ng-container navigation-area *ngIf="m">
+      <ul class="navigation-list">
+        <li>
+          <a
+            *ngIf="config?.isAuthenticated()"
+            (click)="logOut($event)"
+            href="#"
+            class="n-direct-btn n-white-btn"
+            >Logga ut</a
+          >
+        </li>
+      </ul>
+    </ng-container>
+  </customerpages-shell>
+  <div class="align-center">
+    <p class="text-center">
+      Du verkar inte ha någon aktiv eller avslutad kundrelation med oss.
+    </p>
+  </div>
+</div>
+
+<customerpages-shell
+  *ngIf="!m?.hasNoCustomerRelation"
+  [initialData]="{
+    logoRouterLink: ['/my/overview'],
+    skipBodyLayout: true,
+    wideNavigation: true
+  }"
+>
+  <ng-container navigation-area *ngIf="m">
+    <ul class="nav navbar-nav navbar-right mobil-menu">
+      <ng-container
+        *ngTemplateOutlet="menuItems; context: { onlyMessages: true }"
+      ></ng-container>
+      <li class="dropdown">
+        <a
+          href="#"
+          class="dropdown-toggle n-anchor"
+          (click)="toggleMobileMenu($event)"
+          >Meny <span class="caret"></span
+        ></a>
+        <ul class="dropdown-menu" *ngIf="m.isMobileMenuVisible">
+          <ng-container
+            *ngTemplateOutlet="menuItems; context: { hideMessages: true }"
+          ></ng-container>
+          <li class="divider"></li>
+          <li class="text-center pb-2 pt-1">
+            <button class="n-direct-btn n-white-btn">Logga ut</button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="navigation-list hide-on-mobile">
+      <li>
+        <a
+          *ngIf="config?.isAuthenticated()"
+          (click)="logOut($event)"
+          href="#"
+          class="n-direct-btn n-white-btn"
+          >Logga ut</a
+        >
+      </li>
+    </ul>
+  </ng-container>
+  <div class="flex-content-area" shell-body *ngIf="m">
+    <div class="desktop-menu">
+      <div class="menu-list pt-3">
+        <ul>
+          <ng-container *ngTemplateOutlet="menuItems"></ng-container>
+        </ul>
+      </div>
+    </div>
+    <div class="left"></div>
+    <div class="content-area">
+      <ng-content select="[active-tab]"></ng-content>
+    </div>
+    <div class="right"></div>
+  </div>
+</customerpages-shell>
+
+<ng-template
+  #menuItems
+  let-hideMessages="hideMessages"
+  let-onlyMessages="onlyMessages"
+>
+  <ng-container *ngFor="let i of m.menuItems">
+    <li *ngIf="i.isVisible(hideMessages, onlyMessages)">
+      <a [class.active]="i.isActive" [routerLink]="i.routerLink">
+        <span>{{ i.codeDisplayName }}</span>
+        <span
+          *ngIf="
+            i.code === 'secureMessages' &&
+            m.unreadMessagesCount.value &&
+            m.unreadMessagesCount.value > 0
+          "
+          >&nbsp;({{ m.unreadMessagesCount.value }})</span
+        >
+      </a>
+    </li>
+  </ng-container>
+</ng-template>

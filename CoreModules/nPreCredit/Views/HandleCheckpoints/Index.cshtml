@@ -1,0 +1,121 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit Decision - Application";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-handlecheckpoints-index")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Handle checkpoint</h1>
+</div>
+
+<div class="row pb-3" ng-if="searchModel">
+    <form name="searchform" novalidate>
+        <div class="col-md-4">
+            <div class="relative">
+                <span class="glyphicon glyphicon-search"></span>
+                <input class="search form-control" id="searchCivicRegNr" type="text" ng-model="searchModel.civicRegNr" ng-keyup="$event.keyCode == 13 && searchform.$valid && search(searchModel.civicRegNr, $event)" placeholder="{{civicRegNrMask}}" custom-validate="isValidCivicNr" required />
+            </div>
+        </div>
+        <div class="col-md-8" ng-show="searchModel.civicRegNr">
+            <!-- Span since enter clicks will trigger reset otherwise since it's the first button in the form -->
+            <span class="n-icon-btn n-white-btn" ng-click="resetSearch($event)"><span class="glyphicon glyphicon-remove"></span></span>
+            <button class="n-main-btn n-blue-btn" ng-disabled="searchform.$invalid" ng-click="search(searchModel.civicRegNr, $event)">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="row pt-3 pb-3" ng-if="customerModel.currentState">
+    <div class="col-md-8 col-md-offset-2 col-sm-12">
+
+        <div class="editblock">
+            <div class="text-right">
+                <button class="n-icon-btn n-blue-btn" ng-if="!customerModel.currentStateEditCopy" ng-click="beginEdit($event)"><span class="glyphicon glyphicon-pencil"></span></button>
+            </div>
+            <div class="form-horizontal pt-2" ng-if="!customerModel.currentStateEditCopy">
+                <div class="form-group">
+                    <label class="control-label col-md-6 col-sm-5 col-xs-5">Civic number</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                        <p>{{customerModel.civicRegNr}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-6 col-sm-5 col-xs-5">Checkpoint</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                        <p>{{customerModel.currentState.IsCheckpointActive ? 'Enabled' : 'Disabled'}}</p>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="customerModel.currentState.IsCheckpointActive">
+                    <label class="control-label col-md-6 col-sm-5 col-xs-5">Reason</label>
+                    <div class="col-md-6 col-sm-6 col-xs-6 form-control-static">
+                        <span ng-hide="customerModel.currentState.isClearTextReasonUnlocked" class="n-unlock" ng-click="unlockCurrentReason($event)"><a href="#"> <span class="glyphicon glyphicon-lock"></span></a></span>
+                        <p ng-show="customerModel.currentState.isClearTextReasonUnlocked">{{customerModel.currentState.clearTextReason}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <form novalidate name="editform" ng-if="customerModel.currentStateEditCopy">
+                <div class="text-right">
+                    <button class="n-icon-btn n-white-btn" ng-click="cancelEdit($event)"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button class="n-icon-btn n-green-btn" ng-click="commitEdit($event)" ng-disabled="editform.$invalid"><span class="glyphicon glyphicon-ok"></span></button>
+                </div>
+                <div class="form-horizontal pt-2">
+                    <div class="form-group">
+                        <label class="control-label col-md-6 col-sm-5 col-xs-5">Civic number</label>
+                        <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                            <p>{{customerModel.civicRegNr}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 col-sm-5 col-xs-5">Checkpoint</label>
+                        <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                            <label class="n-toggle">
+                                <input type="checkbox" ng-model="customerModel.currentStateEditCopy.IsCheckpointActive" />
+                                <span class="n-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="customerModel.currentStateEditCopy.IsCheckpointActive">
+                        <label class="control-label col-md-6 col-sm-5 col-xs-5">Reason</label>
+                        <div class="col-md-6 col-sm-6 col-xs-4 form-control-static">
+                            <textarea class="form-control" rows="10" ng-model="customerModel.currentStateEditCopy.clearTextReason" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--historik-->
+<div class="row pt-3" ng-if="customerModel.historyStates">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-sm-2">Date</th>
+                <th class="col-sm-4">Checkpoint</th>
+                <th class="col-sm-3">Reason</th>
+                <th class="text-right col-sm-3">By</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="h in customerModel.historyStates">
+                <td class="col-sm-2">{{h.StateDate | date}}</td>
+                <td class="col-sm-4">{{h.IsCheckpointActive ? 'Enabled' : 'Disabled'}}</td>
+                <td class="col-sm-3">
+                    <span ng-show="h.IsCheckpointActive && !h.isClearTextReasonUnlocked" class="n-unlock" ng-click="unlockHistoricalReason(h, $event)"><a href="#"><span class="glyphicon glyphicon-lock"></span></a></span>
+                    <span ng-show="h.isClearTextReasonUnlocked">{{h.clearTextReason}}</span>
+                </td>
+                <td class="text-right col-sm-3">{{h.StateByDisplayName}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--slut på historik-->   

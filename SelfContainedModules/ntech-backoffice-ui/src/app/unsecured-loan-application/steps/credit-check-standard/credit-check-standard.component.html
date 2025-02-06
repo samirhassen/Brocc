@@ -1,0 +1,17 @@
+<div *ngIf="m">
+  <div class="text-right" *ngIf="isViewCreditCheckDetailsPossible()">
+    <a class="n-anchor" (click)="viewCreditCheckDetails($event)"
+      >View details</a
+    >
+  </div>
+
+  <credit-check-decision-view
+    [application]="m.application"
+  ></credit-check-decision-view>
+
+  <div class="pt-3" *ngIf="isNewCreditCheckPossible()">
+    <a class="n-main-btn n-blue-btn" (click)="newCreditCheck($event)">
+      New credit check <span class="glyphicon glyphicon-arrow-right"></span>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+.table-button {
+  height: 25px;
+  width: 28px;
+}
+.table-button span {
+  top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.check-container {
+  input {
+    margin-top: 0px;
+    margin-right: 3px;
+  }
+  label {
+    margin: 0px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}

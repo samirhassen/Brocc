@@ -1,0 +1,100 @@
+<div *ngIf="m">
+  <div class="pb-3">
+    <form [formGroup]="m.form.form">
+      <div class="row">
+        <div class="col-sm-5 col-md-4">
+          <div class="form-group" *ngIf="m.isAssignedApplications">
+            <select class="form-control" formControlName="assignedHandler">
+              <option *ngIf="m.assignedHandlers.length < 1" [ngValue]="'all'">
+                All
+              </option>
+              <option *ngFor="let h of m.assignedHandlers" [ngValue]="h.UserId">
+                {{ h.UserDisplayName }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group pt-1">
+            <label class="control-label">Provider</label>
+            <select class="form-control" formControlName="providerName">
+              <option [ngValue]="'all'">All</option>
+              <option *ngFor="let a of m.providers" [ngValue]="a.ProviderName">
+                {{ a.DisplayToEnduserName }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group pt-1">
+            <label class="">&nbsp;</label>
+            <label class="control-label">Step</label>
+            <select class="form-control" formControlName="listName">
+              <option [ngValue]="'all'">All</option>
+              <option
+                *ngFor="let step of m.steps"
+                [ngValue]="step.InitialListName"
+              >
+                {{ step.DisplayName }} ({{
+                  step.InitialListCurrentMemberCount
+                }})
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="pt-3" *ngIf="m.searchResult && m.searchResult.items.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-xs-1">Number</th>
+          <th class="col-xs-2">Date</th>
+          <th class="col-xs-2" *ngIf="!m.isForMortgageLoans">Req. amount</th>
+          <th
+            [ngClass]="{
+              'col-xs-7': m.isForMortgageLoans,
+              'col-xs-5': !m.isForMortgageLoans
+            }"
+          >
+            System comment
+          </th>
+          <th class="col-xs-2 text-right">Provider</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of m.searchResult.items">
+          <td>
+            <a
+              [routerLink]="getApplicationNavigationTree(i.ApplicationNr)"
+              [queryParams]="getApplicationNavigtionParameters(i.ApplicationNr)"
+              class="n-anchor"
+              [ngClass]="{ inactive: !i.IsActive }"
+              >{{ i.ApplicationNr }}</a
+            >
+          </td>
+          <td>{{ i.ApplicationDate | date: "yyyy-MM-dd" }}</td>
+          <td *ngIf="!m.isForMortgageLoans">
+            {{ (i.RequestedAmount | number) || "-" }}
+          </td>
+          <td>{{ i.LatestSystemCommentText }}</td>
+          <td class="text-right">
+            {{ getProviderDisplayName(i.ProviderName) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table-pager
+      *ngIf="m.searchResult"
+      [initialData]="m.searchResult.pagingInitialData"
+    ></table-pager>
+  </div>
+
+  <div
+    class="no-hits"
+    *ngIf="m.searchResult && m.searchResult.items.length === 0"
+  >
+    <p>No hit</p>
+  </div>
+
+  <test-functions-popup [model]="m?.testFunctions"></test-functions-popup>
+</div>

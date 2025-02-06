@@ -1,0 +1,17 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Customer Card - Fatca/Crs";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-kycmanagement-fatcacrs")
+}
+
+<kyc-management-fatca-crs initial-data="fatcaCrsInitialData"></kyc-management-fatca-crs>
+
+@Html.Partial("Components")

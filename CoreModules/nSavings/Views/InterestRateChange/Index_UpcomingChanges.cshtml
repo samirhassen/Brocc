@@ -1,0 +1,65 @@
+﻿<!--upcoming changes, samma för alla users-->
+<div ng-if="c.upcomingChanges">
+    <div class="row pb-3" ng-repeat="u in c.upcomingChanges">
+        <div class="col-sm-offset-1 col-xs-10">
+            <h2 class="text-center">Upcoming interest rate change</h2>
+            <div class="frame">
+                <div class="text-right pb-1">
+                    <button class="n-main-btn n-white-btn" ng-click="c.cancelUpcomingChange(u.Id, $event)">Cancel</button>
+                </div>
+                <div class="row pb-3">
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">New interest</label>
+                                <p class="form-control-static col-xs-6">{{u.NewInterestRatePercent | number:'2'}} %</p>
+                            </div>
+                            <div class="form-group" ng-if="u.HadNewAccountsOnlyRate">
+                                <label class="control-label col-xs-6">Existing accounts</label>
+                                <p class="form-control-static col-xs-3">{{u.AllAccountsRateValidFromDate}}</p>
+                                <div class="form-control-static col-xs-3">
+                                    <i ng-show="u.AllAccountsRateIsPending">Pending</i>
+                                    <span class="glyphicon glyphicon-ok" ng-show="!u.AllAccountsRateIsPending"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="u.HadNewAccountsOnlyRate">
+                                <label class="control-label col-xs-6">New accounts</label>
+                                <p class="form-control-static col-xs-3">{{u.NewAccountsOnlyRateValidFromDate}}</p>
+                                <div class="form-control-static col-xs-3">
+                                    <i ng-show="u.NewAccountsOnlyRateIsPending">Pending</i>
+                                    <span class="glyphicon glyphicon-ok" ng-show="!u.NewAccountsOnlyRateIsPending"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="!u.HadNewAccountsOnlyRate">
+                                <label class="control-label col-xs-6">All accounts</label>
+                                <p class="form-control-static col-xs-3">{{u.AllAccountsRateValidFromDate}}</p>
+                                <div class="form-control-static col-xs-3">
+                                    <i ng-show="u.AllAccountsRateIsPending">Pending</i>
+                                    <span class="glyphicon glyphicon-ok" ng-show="!u.AllAccountsRateIsPending"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Initiated date</label>
+                                <p class="form-control-static col-xs-6">{{u.InitiatedDate}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Created by</label>
+                                <p class="form-control-static col-xs-6">{{u.InitiatedAndCreatedByUserDisplayName}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Verified by</label>
+                                <p class="form-control-static col-xs-6">{{u.VerifiedByUserDisplayName}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

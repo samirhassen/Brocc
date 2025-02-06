@@ -1,0 +1,89 @@
+<div *ngIf="m">
+  <div class="row pb-2">
+    <div class="col-md-offset-2 col-md-8">
+      <div class="frame">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Limit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>-</td>
+            </tr>
+            <tr *ngFor="let level of m.levels">
+              <td>{{level.LimitLevel}}</td>
+              <td>max {{level.MaxAmount | currency}} per credit</td>
+            </tr>
+            <tr *ngIf="m.levels.length > 0">
+              <td>{{m.levels[m.levels.length-1].LimitLevel+1}}</td>
+              <td>no limit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2 class="custom-header">Users</h2>
+    <hr class="hr-section" />
+  </div>
+
+  <div class="row pb-2">
+    <div class="col-md-4">
+      <div class="relative">
+        <span class="glyphicon glyphicon-search"></span>
+        <input type="text" class="form-control search" [(ngModel)]="nameFilter"  placeholder="Name"  [disabled]="isEditingAny()"> <!--  -->
+      </div>
+    </div>
+  </div>
+
+  <table class="table">
+      <thead>
+          <tr>
+              <th class="col-md-3">User</th>
+              <th class="col-md-3">Level</th>
+              <th class="col-md-3 text-end">Exception possible</th>
+              <th class="col-md-3 text-right"></th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let user of m.users | creditHandlerSearchFilter: nameFilter"> 
+              <td class="col-md-3 align-middle">
+                  <span>{{ user.DisplayName }}</span>
+              </td>
+              <td class="col-md-3 align-middle">
+                  <span *ngIf="!user.edit">{{ user.LimitLevel }}</span>
+                  <select class="form-control" *ngIf="user.edit" [(ngModel)]="user.edit.LimitLevel">
+                      <option value="0">0</option>
+                      <option *ngFor="let level of m.levels" [value]="level.LimitLevel">{{ level.LimitLevel }}</option>
+                      <option *ngIf="m.levels.length > 0" [value]="m.levels[m.levels.length-1].LimitLevel+1">{{
+                          m.levels[m.levels.length-1].LimitLevel+1 }}</option>
+                  </select>
+              </td>
+              <td class="col-md-3 text-end align-middle">
+                  <span *ngIf="!user.edit">{{ user.IsOverrideAllowed ? 'Yes' : 'No' }}</span>
+                  <label class="n-toggle" *ngIf="user.edit">
+                      <input type="checkbox" [(ngModel)]="user.edit.IsOverrideAllowed" />
+                      <span class="n-slider"></span>
+                  </label>
+              </td>
+              <td class="col-md-3 text-right">
+                  <button *ngIf="!user.edit" class="n-icon-btn n-blue-btn" (click)="beginEdit(user, $event)">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                  </button>
+                  <button *ngIf="user.edit" class="n-icon-btn n-white-btn mr-1" (click)="cancelEdit(user, $event)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </button>
+                  <button *ngIf="user.edit" class="n-icon-btn n-green-btn" (click)="saveEdit(user, $event)">
+                    <span class="glyphicon glyphicon-ok"></span>
+                  </button>
+              </td>
+          </tr>
+      </tbody>
+  </table>
+</div>

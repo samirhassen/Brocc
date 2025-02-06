@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<translations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tr>
+    <key>customerpages</key>
+    <sv>Kundsidor</sv>
+    <fi>Omat sivut</fi>
+  </tr>
+  <tr>
+    <key>valj</key>
+    <sv>Välj</sv>
+    <fi>Valitse</fi>
+  </tr>
+  <tr>
+    <key>yes</key>
+    <sv>Ja</sv>
+    <fi>Kyllä</fi>
+  </tr>
+  <tr>
+    <key>no</key>
+    <sv>Nej</sv>
+    <fi>Ei</fi>
+  </tr>
+  <tr>
+    <key>cancel</key>
+    <sv>Avbryt</sv>
+    <fi>Keskeytä</fi>
+  </tr>
+  <tr>
+    <key>loading</key>
+    <sv>Laddar&#8230;</sv>
+    <fi>Lataa&#8230;</fi>
+  </tr>
+  <tr>
+    <key>loans</key>
+    <sv>Lån</sv>
+    <fi>Lainat</fi>
+  </tr>
+  <tr>
+    <key>loanNumber</key>
+    <sv>Lånnr</sv>
+    <fi>Lainanumero</fi>
+  </tr>
+  <tr>
+    <key>currentDebt</key>
+    <sv>Kapitalskuld</sv>
+    <fi>Velkapääoma</fi>
+  </tr>
+  <tr>
+    <key>currentInterest</key>
+    <sv>Ränta</sv>
+    <fi>Korko</fi>
+  </tr>
+  <tr>
+    <key>welcome</key>
+    <sv>Välkommen</sv>
+    <fi>Tervetuloa</fi>
+  </tr>
+  <tr>
+    <key>LoginWithCreditToken_header</key>
+    <sv>Logga in med token</sv>
+    <fi>Kirjaudu</fi>
+  </tr>
+  <tr>
+    <key>LoginWithCreditToken_text1</key>
+    <sv>När du loggat in kommer din token att vara förbrukad och du kommer att behöva en ny för att kunna logga in igen.</sv>
+    <fi>Kun olet kirjautunut sisään, on tunnuksesi käytetty ja tarvitset uuden tunnuksen kirjautuaksesi uudelleen sisään.</fi>
+  </tr>
+  <tr>
+    <key>LoginWithCreditToken_loginbutton</key>
+    <sv>Logga in nu</sv>
+    <fi>Kirjaudu sisään nyt</fi>
+  </tr>
+  <tr>
+    <key>Loggedout_header</key>
+    <sv>Tack för besöket!</sv>
+    <fi>Kiitos vierailustasi!</fi>
+  </tr>
+  <tr>
+    <key>Loggedout_header2</key>
+    <sv>Du har nu loggat ut.</sv>
+    <fi>Olet nyt kirjautunut ulos.</fi>
+  </tr>        
+  <tr>
+    <key>AccessDenied_header</key>
+    <sv>Tack för besöket!</sv>
+    <fi>Kiitos vierailustasi!</fi>
+  </tr>
+  <tr>
+    <key>AccessDenied_tokenexpiredmessage</key>
+    <sv>Din token är förbrukad</sv>
+    <fi>Tunnuksesi on käytetty</fi>
+  </tr>
+  <tr>
+    <key>AccessDenied_generalmessage</key>
+    <sv>Du har nu loggat ut.</sv>
+    <fi>Olet nyt kirjautunut ulos.</fi>
+  </tr>
+  <tr>
+    <key>Layout_loggedinas</key>
+    <sv>Inloggad som:</sv>
+    <fi>Sisäänkirjautuneena:</fi>
+  </tr>
+  <tr>
+    <key>logout</key>
+    <sv>Logga ut</sv>
+    <fi>Kirjaudu ulos</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_opensavingsaccount</key>
+    <sv>Öppna sparkonto</sv>
+    <fi>Avaa säästötili</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_savings_domainwarning</key>
+    <sv>Hej! Balanzia har bytt namn till Brocc. Tills vidare använder den här sidan fortfarande Balanzia som domän.</sv>
+    <fi>Hei! Balanzia on vaihtanut nimensä Brocciksi. Toistaiseksi tämä sivu käyttää edelleen Balanzian domainia.</fi>
+  </tr>	
+  <tr>
+    <key>eidlogin_identification</key>
+    <sv>Identifiering</sv>
+    <fi>Tunnistaminen</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_uppgifter</key>
+    <sv>Uppgifter</sv>
+    <fi>Tiedot</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_signering</key>
+    <sv>Signering</sv>
+    <fi>Allekirjoittaminen</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_text1</key>
+    <sv>Hej och välkommen! Vi är glada över att du vill spara hos oss. För att komma vidare behöver du identifiera dig med bank-id. Därefter kommer du att få svara på en del frågor om dig och hur du tänkt använda kontot. Sista steget är att du skriver på ett avtal och därefter är det klart.</sv>
+    <fi>Hei ja tervetuloa! Olemme iloisia, että haluat aloittaa säästämisen meillä. Päästäksesi eteenpäin tulee sinun tunnistautua verkkopankkitunnuksillasi. Sen jälkeen saat vastataksesi kysymyksiä koskien sinua ja säästämisen tarkoitusta. Viimeinen kohta on sopimuksen allekirjoittaminen ja sen jälkeen kaikki on valmista.</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_login</key>
+    <sv>Logga in</sv>
+    <fi>Kirjaudu sisään</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_civicnr</key>
+    <sv>Personbeteckning (ddmmyy-xxxx)</sv>
+    <fi>Henkilötunnus (ppkkvv-xxxx)</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_bankid</key>
+    <sv>Bank ID</sv>
+    <fi>Tunnistaudu</fi>
+  </tr>
+  <tr>
+    <key>ssafailed_oppnakonto</key>
+    <sv>Öppna sparkonto</sv>
+    <fi>Avaa säästötili</fi>
+  </tr>
+  <tr>
+    <key>ssafailed_text1</key>
+    <sv>Just nu är det inte möjligt att öppna sparkonto. Försök lite senare igen. Om problemen kvarstår kontakta kundtjänst.</sv>
+    <fi>Säästötilin avaaminen ei juuri tällä hetkellä ole mahdollista. Yritä myöhemmin uudelleen. Jos ongelma jatkuu, ole yhteydessä asiakaspalveluumme.</fi>
+  </tr>
+  <tr>
+    <key>ssa_oppna</key>
+    <sv>Öppna sparkonto</sv>
+    <fi>Avaa säästötili</fi>
+  </tr>
+  <tr>
+    <key>ssa_ident</key>
+    <sv>Identifiering</sv>
+    <fi>Tunnistautuminen</fi>
+  </tr>
+  <tr>
+    <key>ssa_uppgifter</key>
+    <sv>Uppgifter</sv>
+    <fi>Tiedot</fi>
+  </tr>
+  <tr>
+    <key>ssa_signering</key>
+    <sv>Signering</sv>
+    <fi>Allekirjoitus</fi>
+  </tr>
+  <tr>
+    <key>ssa_civicnr</key>
+    <sv>Personbeteckning</sv>
+    <fi>Henkilötunnus</fi>
+  </tr>
+  <tr>
+    <key>ssa_firstname</key>
+    <sv>Förnamn</sv>
+    <fi>Etunimi</fi>
+  </tr>
+  <tr>
+    <key>ssa_lastname</key>
+    <sv>Efternamn</sv>
+    <fi>Sukunimi</fi>
+  </tr>
+  <tr>
+    <key>ssa_streetadr</key>
+    <sv>Gata</sv>
+    <fi>Osoite</fi>
+  </tr>
+  <tr>
+    <key>ssa_zipcode</key>
+    <sv>Postnummer</sv>
+    <fi>Postinumero</fi>
+  </tr>
+  <tr>
+    <key>ssa_city</key>
+    <sv>Ort</sv>
+    <fi>Paikkakunta</fi>
+  </tr>
+  <tr>
+    <key>ssa_email</key>
+    <sv>E-post</sv>
+    <fi>Sähköpostiosoite</fi>
+  </tr>
+  <tr>
+    <key>ssa_phone</key>
+    <sv>Telefonnummer</sv>
+    <fi>Puhelinnumero</fi>
+  </tr>
+  <tr>
+    <key>ssa_withdrawaliban</key>
+    <sv>IBAN för mottagarkonto vid uttag</sv>
+    <fi>Vastaanottajatilin IBAN nostoja varten</fi>
+  </tr>
+  <tr>
+    <key>ssa_consent</key>
+    <sv>Jag samtycker till att de uppgifter jag anger i denna ansökan används för att identifiera mig som kund i systemet. Jag försäkrar att ovanstående information stämmer.</sv>
+    <fi>Hyväksyn, että antamiani tietoja käytetään tunnistamisekseni järjestelmässä. Vakuutan, että yllä olevat tiedot pitävät paikkansa.</fi>
+  </tr>
+  <tr>
+    <key>ssa_cancel</key>
+    <sv>Avbryt</sv>
+    <fi>Keskeytä</fi>
+  </tr>
+  <tr>
+    <key>ssa_viewandsign</key>
+    <sv>Granska och signera</sv>
+    <fi>Tarkista ja allekirjoita</fi>
+  </tr>
+  <tr>
+    <key>ssa_kycandsign</key>
+    <sv>Kundkännedom och signering</sv>
+    <fi>Asiakastietoisuus ja allekirjoitus</fi>
+  </tr>	
+  <tr>
+    <key>ssa_pepinitialquestion</key>
+    <sv>Har du en hög politisk befattning inom staten, är en nära släktning eller medarbetare till en sådan person?</sv>
+    <fi>Oletko poliittisesti vaikutusvaltainen henkilö tai tällaisen perheenjäsen tai läheinen yhtiökumppani?</fi>
+  </tr>
+  <tr>
+    <key>ssa_hasOtherTaxOrCitizenCountry</key>
+    <sv>Är du skattepliktig eller medborgare i något annat land än Finland?</sv>
+    <fi>Onko sinulla verovelvollisuutta tai kansalaisuutta muussa maassa kuin Suomessa?</fi>        
+  </tr>
+  <tr>
+    <key>ssa_processing_text1</key>
+    <sv>Tack, din ansökan behandlas av kundtjänst och vi kontaktar dig så snart vi har ett besked.</sv>
+    <fi>Kiitos, hakemuksesi käsitellään asiakaspalvelussamme ja otamme sinuun yhteyttä heti, kun hakemuksesi on käsitelty.</fi>
+  </tr>
+  <tr>
+    <key>ssa_hasactive</key>
+    <sv>Du har redan ett aktivt konto</sv>
+    <fi>Sinulla on jo voimassa oleva tili.</fi>
+  </tr>
+  <tr>
+    <key>ssa_rejectminor_text1</key>
+    <sv>Du måste vara 18 år för att öppna sparkonto.</sv>
+    <fi>Sinun tulee olla 18-vuotias avataksesi säästötilin.</fi>
+  </tr>
+  <tr>
+    <key>ssa_rejecttaxcountry</key>
+    <sv>Du måste ha skattehemvist i Finland för att få öppna sparkonto.</sv>
+    <fi>Sinun tulee olla verovelvollinen Suomessa avataksesi säästötilin.</fi>
+  </tr>
+  <tr>
+    <key>ssa_signpreview_ident</key>
+    <sv>Identifiering</sv>
+    <fi>Tunnistautuminen</fi>
+  </tr>
+  <tr>
+    <key>ssa_signpreview_uppg</key>
+    <sv>Uppgifter</sv>
+    <fi>Tiedot</fi>
+  </tr>
+  <tr>
+    <key>ssa_signpreview_sign</key>
+    <sv>Signering</sv>
+    <fi>Allekirjoitus</fi>
+  </tr>
+  <tr>
+    <key>ssa_signpreview_btn</key>
+    <sv>Signera</sv>
+    <fi>Allekirjoita</fi>
+  </tr>
+  <tr>
+    <key>ssa_signpreview_btn</key>
+    <sv>Signera</sv>
+    <fi>Allekirjoita</fi>
+  </tr>
+  <tr>
+    <key>ssa_signpreview_dl</key>
+    <sv>Ladda ner</sv>
+    <fi>Lataa</fi>
+  </tr>
+  <tr>
+    <key>coi_title</key>
+    <sv>Mina kontaktuppgifter</sv>
+    <fi>Omat yhteystiedot</fi>
+  </tr>
+  <tr>
+    <key>coi_adr</key>
+    <sv>Adress</sv>
+    <fi>Osoite</fi>
+  </tr>
+  <tr>
+    <key>coi_email</key>
+    <sv>Epost</sv>
+    <fi>Sähköpostiosoite</fi>
+  </tr>
+  <tr>
+    <key>coi_phone</key>
+    <sv>Telefonnummer</sv>
+    <fi>Puhelinnumero</fi>
+  </tr>
+  <tr>
+    <key>noc_ejkund</key>
+    <sv>Ej kund</sv>
+    <fi>Ei asiakas</fi>
+  </tr>
+  <tr>
+    <key>noc_ejkund_text1</key>
+    <sv>Du verkar inte ha någon aktiv eller avslutad kundrelation med oss.</sv>
+    <fi>Sinulla ei ole aktiivista tai päättynyttä asiakkuutta meillä.</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_m</key>
+    <sv>Mina sparkonton</sv>
+    <fi>Omat säästötilini</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_m</key>
+    <sv>Uttag</sv>
+    <fi>Nostot</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawalaccounts_m</key>
+    <sv>Mottagarkonton</sv>
+    <fi>Vastatili</fi>
+  </tr>
+  <tr>
+    <key>sao_deposits_m</key>
+    <sv>Insättningar</sv>
+    <fi>Talletukset</fi>
+  </tr>
+  <tr>
+    <key>sao_other_m</key>
+    <sv>Övrigt</sv>
+    <fi>Muut</fi>
+  </tr>
+  <tr>
+    <key>sao_details_h</key>
+    <sv>Mitt sparkonto</sv>
+    <fi>Minun säästötilini</fi>
+  </tr>
+  <tr>
+    <key>sao_details_capb</key>
+    <sv>Tillgängligt belopp</sv>
+    <fi>Nostettavissa oleva summa</fi>
+  </tr>
+  <tr>
+    <key>sao_details_interest</key>
+    <sv>Ränta</sv>
+    <fi>Korko</fi>
+  </tr>
+  <tr>
+    <key>sao_details_accintr</key>
+    <sv>Upplupen ränta</sv>
+    <fi>Kertynyt korko</fi>
+  </tr>
+  <tr>
+    <key>sao_details_accop</key>
+    <sv>Kontot öppnades</sv>
+    <fi>Tili avattiin</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_h</key>
+    <sv>Transaktioner</sv>
+    <fi>Tapahtumat</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_date</key>
+    <sv>Datum</sv>
+    <fi>Päivämäärä</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_msg</key>
+    <sv>Meddelande</sv>
+    <fi>Viesti</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_amt</key>
+    <sv>Belopp</sv>
+    <fi>Summa</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_aamt</key>
+    <sv>Tillgängligt belopp</sv>
+    <fi>Nostettavissa oleva summa</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_tdate</key>
+    <sv>Transaktionsdatum</sv>
+    <fi>Tapahtumapäivämäärä</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_bdate</key>
+    <sv>Bokföringsdatum</sv>
+    <fi>Kirjauspäivämäärä</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_idate</key>
+    <sv>Räntedatum</sv>
+    <fi>Korkopäivämäärä</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_note</key>
+    <sv>Notering</sv>
+    <fi>Tapahtuma</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tr_more</key>
+    <sv>Ladda fler transaktioner</sv>
+    <fi>Lataa tapahtumat</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tt_deposit</key>
+    <sv>Insättning</sv>
+    <fi>Talletus</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tt_withdrawal</key>
+    <sv>Uttag</sv>
+    <fi>Nosto</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tt_ycap</key>
+    <sv>Kapitaliserad ränta (årsränta)</sv>
+    <fi>Pääomitettu korko (vuosikorko)</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tt_ytax</key>
+    <sv>Innehållen skatt (årsränta)</sv>
+    <fi>Pidätetty vero (vuosikorko)</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tt_ccap</key>
+    <sv>Kapitaliserad ränta (avslut)</sv>
+    <fi>Pääomitettu korko (lopetus)</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tt_ctax</key>
+    <sv>Innehållen skatt (avslut)</sv>
+    <fi>Pidätetty vero (lopetus)</fi>
+  </tr>
+  <tr>
+    <key>sao_details_tt_cwithdrawal</key>
+    <sv>Uttag (avslut)</sv>
+    <fi>Nosto (lopetus)</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_h</key>
+    <sv>Mina sparkonton</sv>
+    <fi>Omat säästötilini</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_t_nr</key>
+    <sv>Konto</sv>
+    <fi>Tili</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_t_op</key>
+    <sv>Öppnat</sv>
+    <fi>Avattu</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_t_st</key>
+    <sv>Status</sv>
+    <fi>Tila</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_t_ba</key>
+    <sv>Balans</sv>
+    <fi>Saldo</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_t_r</key>
+    <sv>Ränta</sv>
+    <fi>Korko</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_sta_a</key>
+    <sv>Aktivt</sv>
+    <fi>Aktiivinen</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_sta_c</key>
+    <sv>Avslutades</sv>
+    <fi>Lopetettiin</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_sta_f</key>
+    <sv>Din ansökan behandlas</sv>
+    <fi>Hakemustasi käsitellään</fi>
+  </tr>
+  <tr>
+    <key>sao_deposits_h</key>
+    <sv>Insättningar</sv>
+    <fi>Talletukset</fi>
+  </tr>
+  <tr>
+    <key>sao_deposits_noactive</key>
+    <sv>Du har inga aktiva sparkonton</sv>
+    <fi>Sinulla ei ole aktiivisia säästötilejä</fi>
+  </tr>
+  <tr>
+    <key>sao_deposits_text</key>
+    <sv>För att sätta in pengar på ditt konto gör du en inbetalning på nedanstående IBAN och referens.</sv>
+    <fi>Tallettaaksesi varoja säästötilillesi, tee maksu käyttäen alla olevaa tilinumeroa IBAN-muodossa ja viitenumeroa.</fi>
+  </tr>
+  <tr>
+    <key>sao_deposits_t_k</key>
+    <sv>Kontonummer</sv>
+    <fi>Tilinumero</fi>
+  </tr>
+  <tr>
+    <key>sao_deposits_t_i</key>
+    <sv>IBAN</sv>
+    <fi>IBAN</fi>
+  </tr>
+  <tr>
+    <key>sao_deposits_t_r</key>
+    <sv>Referens</sv>
+    <fi>Viite</fi>
+  </tr>
+  <tr>
+    <key>sao_message_h_oa</key>
+    <sv>Öppna sparkonto</sv>
+    <fi>Avaa säästötili</fi>
+  </tr>
+  <tr>
+    <key>sao_message_newaccountgreeting</key>
+    <sv>Tack! Nu är allting klart och ditt konto är aktivt.</sv>
+    <fi>Kiitos! Kaikki on valmista ja tilisi on aktiivinen.</fi>
+  </tr>
+  <tr>
+    <key>sao_message_alreadyhaveaccount</key>
+    <sv>Du har redan ett sparkonto hos oss.</sv>
+    <fi>Sinulla on jo säästötili meillä.</fi>
+  </tr>
+  <tr>
+    <key>sao_message_accountbeingprocessed</key>
+    <sv>Din ansökan behandlas.</sv>
+    <fi>Hakemustasi käsitellään.</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawalaccounts_h</key>
+    <sv>Mottagarkonton</sv>
+    <fi>Vastaanottajan tili</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawalaccounts_na</key>
+    <sv>Du har inga aktiva sparkonton</sv>
+    <fi>Sinulla ei ole aktiivisia säästötilejä</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawalaccounts_t_k</key>
+    <sv>Kontonummer</sv>
+    <fi>Tilinumero</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawalaccounts_t_m</key>
+    <sv>Mottagarkonto</sv>
+    <fi>Vastatili / vastaanottajan tili</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_h</key>
+    <sv>Uttag</sv>
+    <fi>Nostot</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_noact</key>
+    <sv>Du har inga aktiva sparkonton</sv>
+    <fi>Sinulla ei ole aktiivisia säästötilejä</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_hk</key>
+    <sv>Konto</sv>
+    <fi>Tili</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_hb</key>
+    <sv>Belopp</sv>
+    <fi>Summa</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_hg</key>
+    <sv>Godkänn</sv>
+    <fi>Hyväksy</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_text1</key>
+    <sv>Du gör ditt uttag till ett registrerat mottagarkonto, utbetalningen sker nästkommande bankdag.</sv>
+    <fi>Teet noston rekisteröidylle vastatilille ja maksu tapahtuu seuraavana pankkipäivänä.</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_fk</key>
+    <sv>Från konto</sv>
+    <fi>Tililtä</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_vk</key>
+    <sv>Välj konto</sv>
+    <fi>Valitse tili</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_tk</key>
+    <sv>Till konto</sv>
+    <fi>Tilille</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_amt</key>
+    <sv>Belopp</sv>
+    <fi>Summa</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_cmt</key>
+    <sv>Meddelande till mottagaren</sv>
+    <fi>Viesti vastaanottajalle</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_egn</key>
+    <sv>Egen notering</sv>
+    <fi>Oma merkintä</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_add</key>
+    <sv>Lägg till</sv>
+    <fi>Lisää</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_text2</key>
+    <sv>Du behöver lägga till ett mottagarkonto för att kunna göra ett uttag.</sv>
+    <fi>Sinun tulee ilmoittaa vastatili tehdäksesi noston.</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_cancel</key>
+    <sv>Avbryt</sv>
+    <fi>Keskeytä</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_iban</key>
+    <sv>IBAN</sv>
+    <fi>IBAN</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_bank</key>
+    <sv>Bank</sv>
+    <fi>Pankki</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_appr</key>
+    <sv>Godkänn</sv>
+    <fi>Hyväksy</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_text3</key>
+    <sv>Din utbetalning genomfördes.</sv>
+    <fi>Nostosi toteutettiin</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_wagain</key>
+    <sv>Gör en till utbetalning</sv>
+    <fi>Tee toinen nosto</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawals_suspended</key>
+    <sv>Uttag ej tillåtet. Var god kontakta kundtjänst för mer information.</sv>
+    <fi>Tämä sivu ei ole tällä hetkellä saatavilla. Ota yhteyttä asiakaspalveluun.</fi>
+  </tr>
+  <tr>
+    <key>global_m_spar</key>
+    <sv>Spar</sv>
+    <fi>Talletukset</fi>
+  </tr>
+  <tr>
+    <key>global_m_lan</key>
+    <sv>Lån</sv>
+    <fi>Laina</fi>
+  </tr>
+  <tr>
+    <key>global_m_contactinfo</key>
+    <sv>Mina kontaktuppgifter</sv>
+    <fi>Omat yhteystiedot</fi>
+  </tr>
+  <tr>
+    <key>sao_details_rh_h</key>
+    <sv>Räntehistorik</sv>
+    <fi>Korkohistoria</fi>
+  </tr>
+  <tr>
+    <key>sao_details_rh_d</key>
+    <sv>Datum</sv>
+    <fi>Päivämäärä</fi>
+  </tr>
+  <tr>
+    <key>sao_details_rh_r</key>
+    <sv>Ränta</sv>
+    <fi>Korko</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_dl</key>
+    <sv>Ladda ner</sv>
+    <fi>Lataa</fi>
+  </tr>  
+  <tr>
+    <key>sao_details_acccl</key>
+    <sv>Kontot avslutades</sv>
+    <fi>Tili on suljettu</fi>
+  </tr>
+  <tr>
+    <key>sao_accounts_hc</key>
+    <sv>Avslutade konton</sv>
+    <fi>Suljetut tilit</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawalaccounts_change_h</key>
+    <sv>Byta mottagarkonto</sv>
+    <fi>Vastatilin vaihtaminen</fi>
+  </tr>
+  <tr>
+    <key>sao_withdrawalaccounts_change_t1</key>
+    <sv>Om du vill byta ditt mottagare konto, ladda ner fullmakten från länken nedan och skicka ifylld fullmakt till oss. Du kan skicka fullmakten via säkra meddelanden via mina sidor eller via post.</sv>
+    <fi>Vaihtaaksesi säästötilisi vastatiliä, lataa valtakirja allaolevasta linkistä ja lähetä se meille täytettynä joko postitse tai suojattuna viestinä asiakassivujen kautta.</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_m</key>
+    <sv>Mina dokument</sv>
+    <fi>Omat asiakirjani</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_h</key>
+    <sv>Mina dokument</sv>
+    <fi>Omat asiakirjani</fi>
+  </tr>
+  <tr>
+      <key>sao_minatjanster_m</key>
+      <sv>Mina tjänster</sv>
+      <fi>Palveluni</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_d</key>
+    <sv>Datum</sv>
+    <fi>Päivämäärä</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_g</key>
+    <sv>Kontonummer</sv>
+    <fi>Tilinumero</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_t</key>
+    <sv>Typ</sv>
+    <fi>Asiakirja</fi>  
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_do</key>
+    <sv>Dokument</sv>
+    <fi>Asiakirja</fi>  
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_dt_InitialAgreement</key>
+    <sv>Avtal och villkor</sv>
+    <fi>Sopimus ja ehdot</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_dt_WithdrawalAccountChangeAgreement</key>
+    <sv>Fullmakt</sv>
+    <fi>Valtakirja</fi>
+  </tr>
+  <tr>
+    <key>cao_credits_m</key>
+    <sv>Mina lån</sv>
+    <fi>Lainani</fi>
+  </tr>
+  <tr>
+    <key>cao_opennotifications_m</key>
+    <sv>Avier</sv>
+    <fi>Laskut</fi>
+  </tr>
+  <tr>
+    <key>cao_credits_h</key>
+    <sv>Mina lån</sv>
+    <fi>Lainani</fi>
+  </tr>  
+  <tr>
+    <key>cao_credits_t_nr</key>
+    <sv>Lånnummer</sv>
+    <fi>Lainanumero</fi>
+  </tr>
+  <tr>
+    <key>cao_credits_t_st</key>
+    <sv>Status</sv>
+    <fi>Tila</fi>
+  </tr>
+  <tr>
+    <key>cao_credits_t_r</key>
+    <sv>Ränta</sv>
+    <fi>Korko</fi>
+  </tr>
+  <tr>
+    <key>cao_credits_t_d</key>
+    <sv>Kapitalskuld</sv>
+    <fi>Velkapääoma</fi>
+  </tr>
+  <tr>
+    <key>cao_credits_st_debtcol</key>
+    <sv>Skickad på inkasso sedan {{StatusDate}}</sv>
+    <fi>Siirretty perintään {{StatusDate}} lähtien</fi>
+  </tr>
+  <tr>
+    <key>cao_credits_st_closed</key>
+    <sv>Avslutad sedan {{StatusDate}}</sv>
+    <fi>Päätetty {{StatusDate}} lähtien</fi>
+  </tr>
+  <tr>
+    <key>cao_details_h</key>
+    <sv>Låndetaljer</sv>
+    <fi>Lainatiedot</fi>
+  </tr>
+  <tr>
+    <key>cao_details_ks</key>
+    <sv>Kapitalskuld</sv>
+    <fi>Velkapääoma</fi>
+  </tr>
+  <tr>
+    <key>cao_details_creditnr</key>
+    <sv>Lånnummer</sv>
+    <fi>Lainanumero</fi>
+  </tr>
+  <tr>
+    <key>cao_details_sdate</key>
+    <sv>Startdatum</sv>
+    <fi>Avauspäivämäärä</fi>
+  </tr>
+  <tr>
+    <key>cao_details_rsats</key>
+    <sv>Räntesats</sv>
+    <fi>Korko</fi>
+  </tr>
+  <tr>
+    <key>cao_details_mbel</key>
+    <sv>Månadsbelopp</sv>
+    <fi>Kuukausierä</fi>
+  </tr>
+  <tr>
+    <key>cao_details_trs_h</key>
+    <sv>Kapitalskuld</sv>
+    <fi>Velkapääoma</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_d</key>
+    <sv>Datum</sv>
+    <fi>Päivämäärä</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_h</key>
+    <sv>Händelse</sv>
+    <fi>Tapahtuma</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_b</key>
+    <sv>Belopp</sv>
+    <fi>Summa</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_k</key>
+    <sv>Kapitalskuld</sv>
+    <fi>Velkapääoma</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_t_NewCredit</key>
+    <sv>Utbetalning</sv>
+    <fi>Maksu</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_t_CapitalizedInitialFee</key>
+    <sv>Uppläggningsavgift</sv>
+    <fi>Avausmaksu</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_t_NewIncomingPaymentFile</key>
+    <sv>Amortering</sv>
+    <fi>Lyhennyserä</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_t_PlacedUnplacedIncomingPayment</key>
+    <sv>Amortering</sv>
+    <fi>Lyhennyserä</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_t_PaymentFreeMonth</key>
+    <sv>Betalfri månad</sv>
+    <fi>Maksuvapaakuukausi</fi>
+  </tr>
+  <tr>
+    <key>cao_details_tr_t_NewAdditionalLoan</key>
+    <sv>Utbetalning</sv>
+    <fi>Maksu</fi>
+  </tr>
+  <tr>
+    <key>cao_details_trs_load</key>
+    <sv>Ladda fler</sv>
+    <fi>Hae lisää</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_h</key>
+    <sv>Avier</sv>
+    <fi>Laskut</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_ffd</key>
+    <sv>Förfallodag</sv>
+    <fi>Eräpäivä</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_atb</key>
+    <sv>Att betala</sv>
+    <fi>Maksettava</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_ref</key>
+    <sv>Referens</sv>
+    <fi>Viite</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_creditnr</key>
+    <sv>Lånnummer</sv>
+    <fi>Lainanumero</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_ldoc</key>
+    <sv>Senaste utskick</sv>
+    <fi>Viimeisin lasku</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_nup</key>
+    <sv>Du har inga obetalda avier</sv>
+    <fi>Sinulla ei ole maksamattomia laskuja</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_dt_Notification</key>
+    <sv>Avi</sv>
+    <fi>Lasku</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_dt_Reminder1</key>
+    <sv>Påminnelse 1</sv>
+    <fi>Maksuhuomautus 1</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_dt_Reminder2</key>
+    <sv>Påminnelse 2</sv>
+    <fi>Maksuhuomautus 2</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_none</key>
+    <sv>Du har inga obetalda avier.</sv>
+    <fi>Sinulla ei ole maksamattomia laskuja.</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_nr</key>
+    <sv>Kontonummer</sv>
+    <fi>Tilinumero</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_ba</key>
+    <sv>Balans</sv>
+    <fi>Saldo</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_r</key>
+    <sv>Ränta</sv>
+    <fi>Korko</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_ak</key>
+    <sv>Avsluta konto</sv>
+    <fi>Lopeta tili</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_h</key>
+    <sv>Avsluta konton</sv>
+    <fi>Lopeta tili</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_m</key>
+    <sv>Avsluta konton</sv>
+    <fi>Lopeta tili</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_ur</key>
+    <sv>Upplupen ränta</sv>
+    <fi>Kertynyt korko</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_sk</key>
+    <sv>Skatt</sv>
+    <fi>Vero</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_ub</key>
+    <sv>Att utbetala</sv>
+    <fi>Maksettavaa</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_ib</key>
+    <sv>IBAN</sv>
+    <fi>IBAN</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_bb</key>
+    <sv>Bank</sv>
+    <fi>Pankki</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_av</key>
+    <sv>Avsluta</sv>
+    <fi>Lopeta</fi>
+  </tr>
+  <tr>
+    <key>sao_closures_t_txt</key>
+    <sv>Konton är avslutat och utbetalningen kommer att ske nästkommande bankdag.</sv>
+    <fi>Tilit on lopetettu ja varat maksetaan seuraavana pankkipäivänä.</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_dtf_YearlySummary</key>
+    <sv>Årsbesked</sv>
+    <fi>Korkotodistus</fi>
+  </tr>
+    <tr>
+        <key>SignatureLandingPage_Success_header</key>
+        <sv>Signeringen lyckades</sv>
+        <fi>Allekirjoitus onnistui</fi>
+    </tr>
+    <tr>
+        <key>SignatureLandingPage_Success_text</key>
+        <sv>Du kan stänga den här sidan.</sv>
+        <fi>Voit sulkea tämän tyanin.</fi>
+    </tr>
+    <tr>
+        <key>SignatureLandingPage_Failure_header</key>
+        <sv>Signeringen misslyckades</sv>
+        <fi>Allekirjoitus epäonnistui</fi>
+    </tr>
+    <tr>
+        <key>SignatureLandingPage_Failure_text</key>
+        <sv>Kontakta kundtjänst så kan de hjälpa dig.</sv>
+        <fi>Ota yhteyttä asiakaspalveluun ja he voivat auttaa sinua.</fi>
+    </tr>
+  <tr>
+    <key>cao_openn_OriginalAmount</key>
+    <sv>Ursprungligt belopp</sv>
+    <fi>Alkuperäinen summa</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_InitialNotifiedAmount</key>
+    <sv>Kvarvarande belopp</sv>
+    <fi>Jäljellä oleva summa</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_LatestPaymentDate</key>
+    <sv>Senast betaldatum</sv>
+    <fi>Viimeisin maksupäivä</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_Payed</key>
+    <sv>Betalda</sv>
+    <fi>Maksetut</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_UnPayed</key>
+    <sv>Obetalda</sv>
+    <fi>Maksamatta</fi>
+  </tr>
+  <tr>
+    <key>cao_openn_Payednone</key>
+    <sv>Du har inga betalda avier.</sv>
+    <fi>Sinulla ei ole maksettuja eriä.</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_dt_AdditionalLoanAgreement</key>
+    <sv>Tillägsavtal</sv>
+    <fi>Lisäsopimus</fi>
+  </tr>
+  <tr>
+    <key>sao_accountdocuments_dt_ChangeTermAgreement</key>
+    <sv>Tillägsavtal</sv>
+    <fi>Lisäsopimus</fi>
+  </tr>
+  <tr>
+    <key>cao_details_download</key>
+    <sv>Ladda ner</sv>
+    <fi>Lataa</fi>
+  </tr>
+  <tr>
+    <key>cao_details_mortgage</key>
+    <sv>Amorteringsplan</sv>
+    <fi>Lyhennystaulukko</fi>
+  </tr>
+  <tr>
+    <key>cao_details_remainingrepaymenttime</key>
+    <sv>Kvarvarande återbetalningstid</sv>
+    <fi>Jäljellä oleva takaisinmaksuaika</fi>
+  </tr>
+  <tr>
+    <key>cao_details_month</key>
+    <sv>månader</sv>
+    <fi>kuukausia</fi>
+  </tr>
+  <tr>
+    <key>cao_details_noLoan</key>
+    <sv>Det finns inga lån.</sv>
+    <fi>Sinulla ei ole lainoja.</fi>
+  </tr>
+  <tr>
+    <key>cao_details_noSavings</key>
+    <sv>Det finns inga sparkonton.</sv>
+    <fi>Sinulla ei ole talletustilejä.</fi>
+  </tr>
+  <tr>
+    <key>cao_details_contactUs</key>
+    <sv>Kontakta oss</sv>
+    <fi>Ota yhteyttä</fi>
+  </tr>
+  <tr>
+    <key>cao_details_welcome</key>
+    <sv>Du är alltid välkommen att kontakta oss om du har frågor.</sv>
+    <fi>Voit aina olla yhteydessä meihin jos sinulla on kysyttävää hakemuksestasi tai lainastasi.</fi>
+  </tr>
+  <tr>
+    <key>cao_details_phone</key>
+    <sv>Telefon: 010 524 8410 (ppm)</sv>
+    <fi>Puhelin: 010 524 8410 (ppm)</fi>
+  </tr>
+  <tr>
+    <key>cao_details_email</key>
+    <sv>Epost: lainat@brocc.fi</sv>
+    <fi>Sähköposti: lainat@brocc.fi</fi>
+  </tr>
+  <tr>
+    <key>cao_details_kyc_update_header</key>
+    <sv>Kundkännedom</sv>
+    <fi>Asiakkaan tuntemus</fi>
+  </tr>
+  <tr>
+    <key>cao_details_kyc_update_description</key>
+    <sv>Du behöver uppdatera vår information om dig.</sv>
+    <fi>Sinun on päivitettävä sinua koskevat tietomme.</fi>
+  </tr>	
+  <tr>
+    <key>cao_details_action</key>
+    <sv>Uppdatera information nu</sv>
+    <fi>Päivitän tietoni nyt</fi>
+  </tr>
+  <tr>
+    <key>cao_kyc_details</key>
+    <sv>Kundkännedom</sv>
+    <fi>Asiakkaan tuntemus</fi>
+  </tr>		
+  <tr>
+    <key>cao_kyc_details_link</key>
+    <sv>Uppdatera informationen nu</sv>
+    <fi>Päivitän tietoni nyt</fi>
+  </tr>			
+  <tr>
+    <key>cao_details_ourCustomerService</key>
+    <sv>Vår kundtjänst är öppen vardagar mellan kl: 09:00 - 11:30 och 12:30 - 16:00</sv>
+    <fi>Asiakaspalvelumme on avoinna arkisin 09.00 - 11.30 ja 12.30 - 16.00.</fi>
+  </tr>
+  <tr>
+    <key>coi_messages</key>
+    <sv>Meddelanden</sv>
+    <fi>Viestit</fi>
+  </tr>
+  <tr>
+    <key>cao_tellQuestions</key>
+    <sv>Här kan du ställa frågor om dina produkter eller annat som du behöver hjälp med. Vi svarar dig inom en arbetsdag.</sv>
+    <fi>Täällä voit lähettää viestin koskien lainaasi tai säästötiliäsi. Vastaamme viimeistään seuraavan arkipäivän kuluessa.</fi>
+  </tr>
+  <tr>
+    <key>coi_context</key>
+    <sv>Välj kontext</sv>
+    <fi>Aihe</fi>
+  </tr>
+  <tr>
+    <key>coi_message</key>
+    <sv>Meddelande</sv>
+    <fi>Viesti</fi>
+  </tr>
+  <tr>
+    <key>coi_emailNotification</key>
+    <sv>Du kommer att få ett meddelande via epost när det finns svar att läsa.</sv>
+    <fi>Tulet saamaan sähköpostiisi ilmoituksen, kun olemme vastanneet sinulle.</fi>
+  </tr>
+  <tr>
+    <key>coi_sendmessage</key>
+    <sv>Skicka</sv>
+    <fi>Lähetä</fi>
+  </tr>
+  <tr>
+    <key>coi_now</key>
+    <sv>Nyss</sv>
+    <fi>Juuri nyt</fi>
+  </tr>
+  <tr>
+    <key>coi_oneminute</key>
+    <sv>{{Minute}} minut</sv>
+    <fi>{{Minute}} minuutti sitten</fi>
+  </tr>
+  <tr>
+    <key>coi_minutes</key>
+    <sv>{{Minute}} minuter</sv>
+    <fi>{{Minute}} minuuttia sitten</fi>
+  </tr>
+  <tr>
+    <key>coi_onehour</key>
+    <sv>{{Hour}} timme</sv>
+    <fi>{{Hour}} tunti sitten</fi>
+  </tr>
+  <tr>
+    <key>coi_hours</key>
+    <sv>{{Hour}} timmar</sv>
+    <fi>{{Hour}} tuntia sitten</fi>
+  </tr>
+  <tr>
+    <key>coi_oneday</key>
+    <sv>{{Day}} dag</sv>
+    <fi>{{Day}} päivä</fi>
+  </tr>
+  <tr>
+    <key>coi_days</key>
+    <sv>{{Day}} dagar</sv>
+    <fi>{{Day}} päivää </fi>
+  </tr>
+  <tr>
+    <key>coi_mymessage</key>
+    <sv>Mina meddelanden</sv>
+    <fi>Viestini</fi>
+  </tr>
+  <tr>
+    <key>coi_writenewmessage</key>
+    <sv>Skriv nytt meddelande</sv>
+    <fi>Kirjoita uusi viesti</fi>
+  </tr>
+  <tr>
+    <key>coi_today</key>
+    <sv>idag {{time}}</sv>
+    <fi>tänään {{time}}</fi>
+  </tr>
+  <tr>
+    <key>coi_yesterday</key>
+    <sv>igår {{time}}</sv>
+    <fi>eilen {{time}}</fi>
+  </tr>
+  <tr>
+    <key>coi_monday</key>
+    <sv>måndag</sv>
+    <fi>maanantai</fi>
+  </tr>
+  <tr>
+    <key>coi_tuesday</key>
+    <sv>tisdag</sv>
+    <fi>tiistai</fi>
+  </tr>
+  <tr>
+    <key>coi_wednesday</key>
+    <sv>onsdag</sv>
+    <fi>keskiviikko</fi>
+  </tr>
+  <tr>
+    <key>coi_thursday</key>
+    <sv>torsdag</sv>
+    <fi>torstai</fi>
+  </tr>
+  <tr>
+    <key>coi_friday</key>
+    <sv>fredag</sv>
+    <fi>perjantai</fi>
+  </tr>
+  <tr>
+    <key>coi_saturday</key>
+    <sv>lördag</sv>
+    <fi>lauantai</fi>
+  </tr>
+  <tr>
+    <key>coi_sunday</key>
+    <sv>söndag</sv>
+    <fi>sunnuntai</fi>
+  </tr>
+  <tr>
+    <key>coi_january</key>
+    <sv>januari</sv>
+    <fi>tammikuu</fi>
+  </tr>
+  <tr>
+    <key>coi_februari</key>
+    <sv>februari</sv>
+    <fi>helmikuu</fi>
+  </tr>
+  <tr>
+    <key>coi_march</key>
+    <sv>mars</sv>
+    <fi>maaliskuu</fi>
+  </tr>
+  <tr>
+    <key>coi_april</key>
+    <sv>april</sv>
+    <fi>huhtikuu</fi>
+  </tr>
+  <tr>
+    <key>coi_may</key>
+    <sv>maj</sv>
+    <fi>toukokuu</fi>
+  </tr>
+  <tr>
+    <key>coi_june</key>
+    <sv>juni</sv>
+    <fi>kesäkuu</fi>
+  </tr>
+  <tr>
+    <key>coi_july</key>
+    <sv>juli</sv>
+    <fi>heinäkuu</fi>
+  </tr>
+  <tr>
+    <key>coi_august</key>
+    <sv>augusti</sv>
+    <fi>elokuu</fi>
+  </tr>
+  <tr>
+    <key>coi_september</key>
+    <sv>september</sv>
+    <fi>syyskuu</fi>
+  </tr>
+  <tr>
+    <key>coi_october</key>
+    <sv>oktober</sv>
+    <fi>lokakuu</fi>
+  </tr>
+  <tr>
+    <key>coi_november</key>
+    <sv>november</sv>
+    <fi>marraskuu</fi>
+  </tr>
+  <tr>
+    <key>coi_december</key>
+    <sv>december</sv>
+    <fi>joulukuu</fi>
+  </tr>
+  <tr>
+    <key>coi_attachment</key>
+    <sv>Bilaga</sv>
+    <fi>Liite</fi>
+  </tr>
+</translations>

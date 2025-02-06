@@ -1,0 +1,63 @@
+{
+    "WorkflowVersion":  20191128,
+    "Steps": [
+      {
+        "Name": "CreditCheck",
+        "ComponentName": "company-loan-initial-credit-check",
+        "DisplayName": "Initial credit check"
+      },
+      {
+        "Name": "AdditionalQuestions",
+        "ComponentName": "company-loan-additional-questions",
+        "DisplayName": "Additional questions"
+      },
+      {
+        "Name": "CompanyLoanDocumentCheck",
+        "ComponentName": "company-loan-freeform-documents",
+        "DisplayName": "Documents"
+      },
+      {
+        "Name": "CompanyLoanCollateralCheck",
+        "ComponentName": "company-loan-collateral-check",
+        "DisplayName": "Collateral"
+      },
+      {
+        "Name": "CompanyLoanAuthorizedSignatoryCheck",
+        "ComponentName": "company-loan-authorized-signatory-check",
+        "DisplayName": "Company connections"
+      },
+      {
+        "Name": "CompanyLoanKycCheck",
+        "ComponentName": "company-loan-kyc",
+        "DisplayName": "KYC"
+      },
+      {
+        "Name": "CompanyLoanFraudCheck",
+        "ComponentName": "company-loan-fraud-check",
+        "DisplayName": "Fraud"
+      },
+      {
+        "Name": "CompanyLoanAuditAgreement",
+        "ComponentName": "company-loan-audit-agreement",
+        "DisplayName": "Audit agreement"
+      },
+      {
+        "Name": "CompanyLoanApproveAgreement",
+        "ComponentName": "company-loan-approve-agreement",
+        "DisplayName": "Approve agreement"
+      },
+      {
+        "Name": "CompanyLoanAgreement",
+        "ComponentName": "company-loan-agreement",
+        "DisplayName": "Agreement",
+        "CustomData": {
+          "IsSignAgreement": "yes"
+        }
+      },
+      {
+        "Name": "Approval",
+        "ComponentName": null,
+        "DisplayName": "Approval"
+      }
+    ]
+  }

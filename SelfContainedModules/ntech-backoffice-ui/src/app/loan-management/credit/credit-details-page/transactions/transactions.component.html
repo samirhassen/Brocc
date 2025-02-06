@@ -1,0 +1,255 @@
+<div class="pt-3" *ngIf="capitalTransactions">
+  <h2 class="custom-header">Capital debt history</h2>
+  <hr class="hr-section custom-line mt-0" />
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col-xs-2">Date</th>
+        <th class="col-xs-6">Action</th>
+        <th class="text-right col-xs-2">Transaction</th>
+        <th class="text-right col-xs-2">Capital debt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="m.pageItems">
+        <ng-container *ngFor="let t of m.pageItems">
+          <tr [ngClass]="{ 'active-chevron': !!t.transactionDetails }">
+            <td>
+              <span
+                class="glyphicon chevron-bg mr-1"
+                [ngClass]="{
+                  'glyphicon-chevron-down': !!t.transactionDetails,
+                  'glyphicon-chevron-right': !t.transactionDetails
+                }"
+                (click)="showOrHideAccountTransactionDetails(t, $event)"
+              ></span>
+              {{ t.transactionDate | date: "shortDate" }}
+            </td>
+            <td>
+              {{ t.eventDisplayName
+              }}<span *ngIf="t.isWriteOff" style="font-size: smaller"
+                >&nbsp;(writeoff)</span
+              ><span *ngIf="t.businessEventRoleCode"
+                >&nbsp;({{ t.businessEventRoleCode }}
+                <span *ngIf="t.subAccountCode"> - {{ t.subAccountCode }}</span
+                >)</span
+              >
+            </td>
+            <td class="text-right">{{ t.amount | currency }}</td>
+            <td class="text-right">{{ t.totalAmountAfter | currency }}</td>
+          </tr>
+          <tr class="opend" *ngIf="t.transactionDetails">
+            <td colspan="4">
+              <div class="row">
+                <!-- Shared -->
+                <div class="col-md-6">
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Event ledger</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b
+                        ><a
+                          class="n-anchor"
+                          target="_blank"
+                          [href]="
+                            getEventTransactionDetailsXlsUrl(
+                              t.transactionDetails.BusinessEventId
+                            )
+                          "
+                          >XLS<span class="glyphicon glyphicon-save"></span></a
+                      ></b>
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Bookkeeping export date</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.BookkeepingExportDate
+                          | date: "shortDate"
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="col-xs-6"
+                  *ngIf="t.transactionDetails.BusinessEventRoleCode"
+                >
+                  <label class="col-xs-6 text-right">Event role code</label>
+                  <div class="col-xs-6">
+                    <p>
+                      <b
+                        >{{ t.transactionDetails.BusinessEventRoleCode }}
+                        <span *ngIf="t.transactionDetails.SubAccountCode">
+                          - {{ t.transactionDetails.SubAccountCode }}</span
+                        >
+                      </b>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Outgoing payment -->
+                <div
+                  class="col-md-6"
+                  *ngIf="t.transactionDetails.HasConnectedOutgoingPayment"
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Outgoing payment export date</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.OutgoingPaymentFileDate
+                          | date: "shortDate"
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Incoming payment -->
+                <div
+                  class="col-md-6"
+                  *ngIf="
+                    t.transactionDetails.HasConnectedIncomingPayment &&
+                    t.transactionDetails.IncomingPaymentFileDate
+                  "
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Incoming payment import date</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.IncomingPaymentFileDate
+                          | date: "shortDate"
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="col-md-6"
+                  *ngIf="
+                    t.transactionDetails.HasConnectedIncomingPayment &&
+                    t.transactionDetails.IncomingPaymentExternalId
+                  "
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Incoming payment external id</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.IncomingPaymentExternalId
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="col-md-6"
+                  *ngIf="
+                    t.transactionDetails.HasConnectedIncomingPayment &&
+                    t.transactionDetails.IncomingPaymentOcrReference
+                  "
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Incoming payment ocr reference</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.IncomingPaymentOcrReference
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="col-md-6"
+                  *ngIf="
+                    t.transactionDetails.HasConnectedIncomingPayment &&
+                    t.transactionDetails.IncomingPaymentClientAccountIban
+                  "
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Incoming payment client account iban</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.IncomingPaymentClientAccountIban
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="col-md-6"
+                  *ngIf="
+                    t.transactionDetails.HasConnectedIncomingPayment &&
+                    t.transactionDetails.IncomingPaymentCustomerName
+                  "
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Incoming payment customer name</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.IncomingPaymentCustomerName
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="col-md-6"
+                  *ngIf="
+                    t.transactionDetails.HasConnectedIncomingPayment &&
+                    t.transactionDetails.IncomingPaymentAutogiroPayerNumber
+                  "
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Incoming payment direct debit payer nr</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b>{{
+                        t.transactionDetails.IncomingPaymentAutogiroPayerNumber
+                      }}</b>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="col-md-6"
+                  *ngIf="t.transactionDetails.HasConnectedIncomingPayment"
+                >
+                  <label class="col-md-6 col-sm-6 col-xs-6 text-right"
+                    >Payment details</label
+                  >
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p>
+                      <b
+                        ><a
+                          class="n-anchor"
+                          target="_blank"
+                          [href]="
+                            getCreditFilteredPaymentDetailsAsXlsUrl(
+                              t.transactionDetails
+                            )
+                          "
+                          >XLS<span class="glyphicon glyphicon-save"></span></a
+                      ></b>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+  <table-pager *ngIf="m.pagingData" [initialData]="m.pagingData"></table-pager>
+</div>

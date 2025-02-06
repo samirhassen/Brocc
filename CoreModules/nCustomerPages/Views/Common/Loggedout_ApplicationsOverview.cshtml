@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Views/Shared/_EmbeddedCustomerPagesImitationLayout.cshtml";
+    ViewBag.Title = "Ansökningar";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-base")
+}
+<div class="content">
+    <div class="flex-container">
+        <div class="align-center">
+            <div class="text-center">
+                <p>Tack för besöket. Du har nu loggat ut.</p>
+                @if (ViewBag.AllowRelogin)
+                {
+                    <div style="padding-top: 60px;">
+                        <a href="@ViewBag.ReloginUrl" class="n-main-btn n-white-btn">Logga in igen</a>
+                    </div>
+                }            
+            </div>
+        </div>
+    </div>
+</div>

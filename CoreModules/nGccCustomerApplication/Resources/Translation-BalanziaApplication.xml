@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<translations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<tr>
+		<key>ansokan_kreditansokan</key>
+		<sv>Kreditansökan</sv>
+		<fi>Lainahakemus</fi>
+	</tr>
+	<tr>
+		<key>ansokan_soktbelopp</key>
+		<sv>Sökt belopp</sv>
+		<fi>Haettu summa</fi>
+	</tr>
+	<tr>
+		<key>ansokan_valj</key>
+		<sv>Välj</sv>
+		<fi>Valitse</fi>
+	</tr>
+	<tr>
+		<key>ansokan_ar</key>
+		<sv>år</sv>
+		<fi>vuotta</fi>
+	</tr>
+	<tr>
+		<key>ansokan_faltmastekorrigeras</key>
+		<sv>Det finns fält som måste korrigeras.</sv>
+		<fi>Jotkut kentät ovat virheellisiä.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_skickain</key>
+		<sv>Skicka in</sv>
+		<fi>Lähetä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_avbryt</key>
+		<sv>Avbryt</sv>
+		<fi>Keskeytä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_aterbettid</key>
+		<sv>Återbetalningstid</sv>
+		<fi>Takaisinmaksuaika</fi>
+	</tr>
+	<tr>
+		<key>ansokan_antalsokanden</key>
+		<sv>Antal sökanden</sv>
+		<fi>Velallisten lukumäärä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_sokandesammaadr</key>
+		<sv>Bor sökanden på samma adress?</sv>
+		<fi>Asuvatko lainanhakijat samassa osoitteessa?</fi>
+	</tr>
+	<tr>
+		<key>ansokan_nej</key>
+		<sv>Nej</sv>
+		<fi>Ei</fi>
+	</tr>
+	<tr>
+		<key>ansokan_ja</key>
+		<sv>Ja</sv>
+		<fi>Kyllä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_lansomloser</key>
+		<sv>Lån som ska lösas med det sökta lånet</sv>
+		<fi>Haettavalla lainalla maksettavat lainat</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kampanjkod</key>
+		<sv>Kampanjkod</sv>
+		<fi>Kampanjakoodi</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kusokande1</key>
+		<sv>Kunduppgifter om förste sökande</sv>
+		<fi>Päähakijan tiedot</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kusokande2</key>
+		<sv>Kunduppgifter om andre sökande</sv>
+		<fi>Rinnakkaishakijan tiedot</fi>
+	</tr>
+	<tr>
+		<key>ansokan_personuppgifter</key>
+		<sv>Personuppgifter</sv>
+		<fi>Henkilötiedot</fi>
+	</tr>
+	<tr>
+		<key>ansokan_personbeteckning</key>
+		<sv>Personbeteckning</sv>
+		<fi>Henkilötunnus</fi>
+	</tr>
+	<tr>
+		<key>ansokan_epost</key>
+		<sv>E-postadress</sv>
+		<fi>Sähköpostiosoite</fi>
+	</tr>
+	<tr>
+		<key>ansokan_telefon</key>
+		<sv>Telefonnummer</sv>
+		<fi>Puhelinnumero</fi>
+	</tr>
+	<tr>
+		<key>ansokan_education_grundskola</key>
+		<sv>Grundskola</sv>
+		<fi>Peruskoulu</fi>
+	</tr>
+	<tr>
+		<key>ansokan_education_yrkesskola</key>
+		<sv>Yrkesskola</sv>
+		<fi>Ammattikoulu</fi>
+	</tr>
+	<tr>
+		<key>ansokan_education_gymnasie</key>
+		<sv>Gymnasie</sv>
+		<fi>Lukio</fi>
+	</tr>
+	<tr>
+		<key>ansokan_education_hogskola</key>
+		<sv>Högskola</sv>
+		<fi>Korkeakoulu</fi>
+	</tr>
+	<tr>
+		<key>ansokan_housing_egenbostad</key>
+		<sv>Egen bostad</sv>
+		<fi>Omistusasunto</fi>
+	</tr>
+	<tr>
+		<key>ansokan_housing_bostadsratt</key>
+		<sv>Bostadsrätt</sv>
+		<fi>Asumisoikeus</fi>
+	</tr>
+	<tr>
+		<key>ansokan_housing_hyresbostad</key>
+		<sv>Hyresbostad</sv>
+		<fi>Vuokra-asunto</fi>
+	</tr>
+	<tr>
+		<key>ansokan_housing_hosforaldrar</key>
+		<sv>Hos föräldrar</sv>
+		<fi>Vanhempien luona</fi>
+	</tr>
+	<tr>
+		<key>ansokan_housing_tjanstebostad</key>
+		<sv>Tjänstebostad</sv>
+		<fi>Työsuhdeasunto</fi>
+	</tr>
+	<tr>
+		<key>ansokan_eurperman</key>
+		<sv>€/mån</sv>
+		<fi>€/kk</fi>
+	</tr>
+	<tr>
+		<key>ansokan_ekouppgifter</key>
+		<sv>Ekonomiska uppgifter</sv>
+		<fi>Tietoa taloudesta</fi>
+	</tr>
+	<tr>
+		<key>ansokan_education</key>
+		<sv>Utbildning</sv>
+		<fi>Koulutus</fi>
+	</tr>
+	<tr>
+		<key>ansokan_housing</key>
+		<sv>Boendeform</sv>
+		<fi>Asumismuoto</fi>
+	</tr>
+	<tr>
+		<key>ansokan_housingcost</key>
+		<sv>Hyra/avgift</sv>
+		<fi>Vuokra/vastike</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment_fastanstalld</key>
+		<sv>Fast anställd</sv>
+		<fi>Vakituinen</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment_visstidsanstalld</key>
+		<sv>Visstidsanställd</sv>
+		<fi>Määräaikainen</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment_foretagare</key>
+		<sv>Företagare</sv>
+		<fi>Yrittäjä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment_pensionar</key>
+		<sv>Pensionär</sv>
+		<fi>Eläkeläinen</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment_sjukpensionar</key>
+		<sv>Sjukpensionär</sv>
+		<fi>Työkyvyttömyyseläke</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment_studerande</key>
+		<sv>Studerande</sv>
+		<fi>Opiskelija</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment_arbetslos</key>
+		<sv>Arbetslös</sv>
+		<fi>Työtön</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employment</key>
+		<sv>Anställningsform</sv>
+		<fi>Työsuhde</fi>
+	</tr>
+	<tr>
+		<key>ansokan_mmaaaa</key>
+		<sv>(MM.ÅÅÅÅ)</sv>
+		<fi>KK.VVVV</fi>
+	</tr>
+	<tr>
+		<key>ansokan_anstalldsedan</key>
+		<sv>Anställd sedan</sv>
+		<fi>Työsuhde/muu alkaen</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employer</key>
+		<sv>Arbetsgivare</sv>
+		<fi>Työnantaja</fi>
+	</tr>
+	<tr>
+		<key>ansokan_employerphone</key>
+		<sv>Arbetsgivares telefon</sv>
+		<fi>Työnantajan puhelinnumero</fi>
+	</tr>
+	<tr>
+		<key>ansokan_inkomstbrutto</key>
+		<sv>Inkomst (brutto)</sv>
+		<fi>Kuukausitulot (brutto)</fi>
+	</tr>
+	<tr>
+		<key>ansokan_marriage</key>
+		<sv>Civilstånd</sv>
+		<fi>Siviilisääty</fi>
+	</tr>
+	<tr>
+		<key>ansokan_marriage_gift</key>
+		<sv>Gift</sv>
+		<fi>Naimisissa</fi>
+	</tr>
+	<tr>
+		<key>ansokan_marriage_ogift</key>
+		<sv>Ogift</sv>
+		<fi>Naimaton</fi>
+	</tr>
+	<tr>
+		<key>ansokan_marriage_sambo</key>
+		<sv>Sambo</sv>
+		<fi>Avoliitto</fi>
+	</tr>
+	<tr>
+		<key>ansokan_bolan_belopp</key>
+		<sv>Bolån belopp</sv>
+		<fi>Asuntolaina</fi>
+	</tr>
+	<tr>
+		<key>ansokan_bolan_kostnad</key>
+		<sv>Bolån kostnad</sv>
+		<fi>Asuntolaina kuukausierä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_bilbatlan_belopp</key>
+		<sv>Bil/båtlån belopp</sv>
+		<fi>Auto-/venelaina</fi>
+	</tr>
+	<tr>
+		<key>ansokan_bilbatlan_kostnad</key>
+		<sv>Bil/båtlån kostnad</sv>
+		<fi>Auto-/venelaina kuukausierä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_studielan_belopp</key>
+		<sv>Studielån belopp</sv>
+		<fi>Opintolaina</fi>
+	</tr>
+	<tr>
+		<key>ansokan_studielan_kostnad</key>
+		<sv>Studielån kostnad</sv>
+		<fi>Opintolaina kuukausierä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_andralan_belopp</key>
+		<sv>Andra lån belopp</sv>
+		<fi>Muu laina</fi>
+	</tr>
+	<tr>
+		<key>ansokan_andralan_kostnad</key>
+		<sv>Andra lån kostnad</sv>
+		<fi>Muu laina kuukausierä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kreditkort_belopp</key>
+		<sv>Kreditkort belopp</sv>
+		<fi>Luottokortti</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kreditkort_kostnad</key>
+		<sv>Kreditkort kostnad</sv>
+		<fi>Luottokortti kuukausierä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kundsamtycke</key>
+		<sv>Jag samtycker till att de uppgifter jag anger i denna ansökan samt min folkbokföringsadress används för att identifiera mig som kund i systemet.</sv>
+		<fi>Hyväksyn, että hakemuksessa antamiani tietoja ja väestörekisterin osoitetietoja käytetään tunnistamisekseni järjestelmässä.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kreditsamtycke</key>
+		<sv>Jag försäkrar att ovanstående information stämmer och godkänner att kreditgivaren tar en kreditupplysning. Kreditgivaren har rätten att få information om mitt arbetsförhållande från arbetsgivaren.</sv>
+		<fi>Vakuutan, että hakemuksessa ilmoitetut tiedot pitävät paikkansa ja hyväksymme, että luotonantaja tarkistaa luottotietomme. Luotonantajalla on oikeus saada tietoa työsuhteistamme työnantajiltamme.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_integritetspolicy_text</key>
+		<sv>Vill ni veta hur vi behandlar dina personuppgifter finns det i vår</sv>
+		<fi>Jos haluat tietää miten käsittelemme henkilötietojasi, löydät lisätietoja</fi>
+	</tr>
+	<tr>
+		<key>ansokan_integritet_lank</key>
+		<sv>integritetspolicy.</sv>
+		<fi>tietosuojakäytännöstämme.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_jaggodkanner</key>
+		<sv>Jag godkänner.</sv>
+		<fi>Hyväksyn.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_nrofchildren</key>
+		<sv>Antal försörjningspliktiga barn</sv>
+		<fi>Kotona asuvien lasten lukumäärä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_civicRegNr_tooltip</key>
+		<sv>Personbeteckningen är en beteckning som identifierar oss med större precision än namnet. Det finns personer med samma namn, men det existerar inte två personer med samma personbeteckning.</sv>
+		<fi></fi>
+	</tr>
+	<tr>
+		<key>ansokan_kredituppgifter</key>
+		<sv>Kredituppgifter</sv>
+		<fi>Lainan tiedot</fi>
+	</tr>
+	<tr>
+		<key>ansokan_skattehemvist</key>
+		<sv>Uppgifter om skattehemvist</sv>
+		<fi>Tietoja verotuksesta</fi>
+	</tr>
+	<tr>
+		<key>ansokan_skattehemvist_land</key>
+		<sv>Land du är skattepliktig i</sv>
+		<fi>Maa jonka verotuksen piiriin kuulut</fi>
+	</tr>
+	<tr>
+		<key>ansokan_skatteregistreringsnummer</key>
+		<sv>Skatteregistreringsnummer</sv>
+		<fi>Verotunnistetieto</fi>
+	</tr>
+	<tr>
+		<key>ansokan_skattepliktig_ytterligare</key>
+		<sv>Ytterligare land du är skattepliktig i</sv>
+		<fi>Muu maa jonka verotuksen piiriin kuulut</fi>
+	</tr>
+	<tr>
+		<key>ansokan_laggtill</key>
+		<sv>Lägg till</sv>
+		<fi>Lisää</fi>
+	</tr>
+	<tr>
+		<key>ansokan_pep_header</key>
+		<sv>Politiskt exponerad person (PEP)</sv>
+		<fi>Poliittisesti vaikutusvaltaisessa asemassa oleva henkilö (PEP)</fi>
+	</tr>
+	<tr>
+		<key>ansokan_other_info</key>
+		<sv>Övriga uppgifter</sv>
+		<fi>Muut tiedot</fi>
+	</tr>
+	<tr>
+		<key>ansokan_products_header</key>
+		<sv>Vilka av Broccs produkter använder du?</sv>
+		<fi>Mitä Broccin tuotteita käytät</fi>
+	</tr>
+	<tr>
+		<key>ansokan_products_none</key>
+		<sv>Inga</sv>
+		<fi>En mitään</fi>
+	</tr>
+	<tr>
+		<key>ansokan_products_savings</key>
+		<sv>Spar</sv>
+		<fi>Talletustilejä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_warning</key>
+		<sv>Hej! Balanzia har bytt namn till Brocc. Tills vidare använder den här sidan fortfarande Balanzia som domän.</sv>
+		<fi>Hei! Balanzia on vaihtanut nimensä Brocciksi. Toistaiseksi tämä sivu käyttää edelleen Balanzian domainia.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_products_loanorcredit</key>
+		<sv>Lån och krediter</sv>
+		<fi>Lainoja ja luottoja</fi>
+	</tr>
+	<tr>
+		<key>ansokan_iban_header1</key>
+		<sv>Uppgifter för utbetalning</sv>
+		<fi>Tietoja lainan maksuun</fi>
+	</tr>
+	<tr>
+		<key>ansokan_iban_header2</key>
+		<sv>Kontonummer för utbetalning</sv>
+		<fi>Tilinumero</fi>
+	</tr>
+	<tr>
+		<key>ansokan_tabort</key>
+		<sv>Ta bort</sv>
+		<fi>Poista</fi>
+	</tr>
+	<tr>
+		<key>ansokan_pep_header2</key>
+		<sv>Har du en hög politisk befattning inom staten, är en nära släktning eller medarbetare till en sådan person?</sv>
+		<fi>Oletko poliittisesti vaikutusvaltainen henkilö tai tällaisen perheenjäsen tai läheinen yhtiökumppani?</fi>
+	</tr>
+	<tr>
+		<key>ansokan_skattehemvist_land2</key>
+		<sv>Ange samtliga länder du är skattepliktig i</sv>
+		<fi>Ilmoita kaikki maat, joissa olet verovelvollinen</fi>
+	</tr>
+	<tr>
+		<key>ansokan_skattehemvist_ingen</key>
+		<sv>Jag är inte skattepliktig i något land</sv>
+		<fi>En ole verovelvollinen missään maassa</fi>
+	</tr>
+	<tr>
+		<key>ansokan_products_header_pre</key>
+		<sv>Är du befintlig kund hos Brocc?</sv>
+		<fi>Oletko jo Broccin asiakas?</fi>
+	</tr>
+	<tr>
+		<key>ansokan_sat_question</key>
+		<sv>Jag ger Brocc Finance AB i uppdrag att samla in och behandla information om mina utestående krediter från andra kreditgivare för att kunna behandla min kreditansökan. Jag samtycker till att kreditgivarna överlåter nämnda uppgifter om mina krediter till Brocc Finance AB. Brocc Finance AB kommer att göra denna förfrågan via det tekniska upplysningssystem som upprätthålls av Suomen Asiakastieto Oy och förfrågan ställs till de företag som deltar i systemet.</sv>
+		<fi>Annan toimeksiannon Brocc Finance AB:lle kerätä ja käsitellä muilta luotonantajilta saatavia tietoja voimassa olevista luotoistani ja muista sitoumuksistani käytettäväksi luottohakemuksen käsittelyä varten. Annan suostumukseni sille, että luotonantajat luovuttavat näitä minua koskevia tietoja Brocc Finance AB:lle. Näitä tietoja Brocc Finance AB kysyy Suomen Asiakastieto Oy:n ylläpitämän teknisen kyselyjärjestelmän avulla järjestelmään osallistuvilta yhtiöiltä.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_sat_question</key>
+		<sv>Jag ger Brocc Finance AB i uppdrag att samla in och behandla information om mina utestående krediter från andra kreditgivare för att kunna behandla min kreditansökan. Jag samtycker till att kreditgivarna överlåter nämnda uppgifter om mina krediter till Brocc Finance AB. Brocc Finance AB kommer att göra denna förfrågan via det tekniska upplysningssystem som upprätthålls av Suomen Asiakastieto Oy och förfrågan ställs till de företag som deltar i systemet.</sv>
+		<fi>Annan toimeksiannon Brocc Finance AB:lle kerätä ja käsitellä muilta luotonantajilta saatavia tietoja voimassa olevista luotoistani ja muista sitoumuksistani käytettäväksi luottohakemuksen käsittelyä varten. Annan suostumukseni sille, että luotonantajat luovuttavat näitä minua koskevia tietoja Brocc Finance AB:lle. Näitä tietoja Brocc Finance AB kysyy Suomen Asiakastieto Oy:n ylläpitämän teknisen kyselyjärjestelmän avulla järjestelmään osallistuvilta yhtiöiltä.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kf_text</key>
+		<sv>Din ansökan har godkänts preliminärt. För att vi ska kunna gå vidare med din ansökan behöver du svara på några kompletterande frågor. Vi har, precis som banker, en lagstadgad skyldighet att identifiera och känna våra kunder. Utöver personuppgifterna krävs tillräckliga uppgifter om bl.a. kundens verksamhet och ekonomiska ställning.</sv>
+		<fi>Hakemuksesi on alustavasti hyväksytty. Voidaksemme käsitellä hakemuksesi, tulee sinun vielä vastata muutamiin täydentäviin kysymyksiin. Meillä, aivan kuten pankeilla, on lakisääteinen velvollisuus tunnistaa ja tuntea asiakkaamme. Henkilötietojen lisäksi vaaditaan riittävät tiedot muun muassa asiakkaan toiminnasta ja taloudellisesta asemasta.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kf_link</key>
+		<sv>Information om hur Brocc Finance AB behandlar mina personuppgifter.</sv>
+		<fi>Tiedot siitä, miten Brocc Finance AB käsittelee henkilötietojani.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_kf_uri</key>
+		<sv>https://assets.ctfassets.net/6efv05ymvl3z/2i5j9akoOBeAmlpcWr8BBe/3f8962039d668b924832919d7f3bdbb5/Brocc_-_Tietosuojaka__yta__nto___-_Fi_-2022-09-16.pdf</sv>
+		<fi>https://assets.ctfassets.net/6efv05ymvl3z/2i5j9akoOBeAmlpcWr8BBe/3f8962039d668b924832919d7f3bdbb5/Brocc_-_Tietosuojaka__yta__nto___-_Fi_-2022-09-16.pdf</fi>
+	</tr>
+	<tr>
+		<key>ansokan_sg_text</key>
+		<sv>Läs noga igenom avtal och villkor innan du signerar!</sv>
+		<fi>Tutustu huolella sopimukseen ja ehtoihin ennen allekirjoittamista!</fi>
+	</tr>
+	<tr>
+		<key>ansokan_sg_signbtn</key>
+		<sv>Signera avtal</sv>
+		<fi>Allekirjoita sopimus</fi>
+	</tr>
+	<tr>
+		<key>ansokan_payslip_text_1</key>
+		<sv>Vi behöver en kopia på din senaste lönespecifikation, högst 2 månader gammal, eller annat bevis på nuvarande inkomst.</sv>
+		<fi>Tarvitsemme kopion korkeintaan 2 kuukautta vanhasta palkkalaskelmastasi tai muusta todistuksesta, josta ilmenee tämän hetkiset tulosi.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_payslip_text_2</key>
+		<sv>Om du har en papperkopia, ta ett kort med telefonen och ladda upp nedan.</sv>
+		<fi>Jos laskelma on sinulla paperisena, ota laskelmasta kuva ja lataa se alla olevasta kohdasta.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_payslip_text_3</key>
+		<sv>Du kan även skicka dina bilagor med post utan kostnad till Brocc, Kuluttajaluotot, Tunnus 5021420, 00003 VASTAUSLÄHETYS. OBS! Vi returnerar inte bilagorna.</sv>
+		<fi>Voit myös lähettää liitteesi meille maksutta osoitteeseen Brocc, Kuluttajaluotot, Tunnus 5021420, 00003 VASTAUSLÄHETYS. Huom! Emme palauta liitteitä.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_finalapproval_text</key>
+		<sv>Din ansökan är mottagen!</sv>
+		<fi>Hakemuksesi on vastaanotettu!</fi>
+	</tr>
+	<tr>
+		<key>ansokan_closed_text</key>
+		<sv>Din ansökan är avslutad.</sv>
+		<fi>Hakemus on käsitelty.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_active_awaitingclient_text</key>
+		<sv>Din ansökan behandlas!</sv>
+		<fi>Hakemusta käsitellään!</fi>
+	</tr>
+	<tr>
+		<key>ansokan_sg_alreadysigned</key>
+		<sv>Signerat</sv>
+		<fi>Allekirjoitettu</fi>
+	</tr>
+	<tr>
+		<key>ansokan_closed_accepted_text</key>
+		<sv>Din ansökan är godkänd, utbetalning sker inom en arbetsdag.</sv>
+		<fi>Hakemuksesi on hyväksytty. Laina maksetaan yhden arkipäivän kuluessa.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_dc_bifdok</key>
+		<sv>Det finns inga bifogade dokument.</sv>
+		<fi>Ei ladattuja liitteitä.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_dc_laddaupp</key>
+		<sv>Ladda upp dokument</sv>
+		<fi>Lataa liitteet</fi>
+	</tr>
+	<tr>
+		<key>ansokan_dc_avbryt</key>
+		<sv>Avbryt</sv>
+		<fi>Peruuta</fi>
+	</tr>
+	<tr>
+		<key>ansokan_dc_spara</key>
+		<sv>Spara</sv>
+		<fi>Tallenna</fi>
+	</tr>
+	<tr>
+		<key>ansokan_dc_klar</key>
+		<sv>Jag är klar</sv>
+		<fi>Olen valmis</fi>
+	</tr>
+	<tr>
+		<key>ansokan_dc_skickaindok</key>
+		<sv>Skicka in dokument</sv>
+		<fi>Lähetä liitteet</fi>
+	</tr>
+	<tr>
+		<key>ansokan_dc_loading</key>
+		<sv>Laddar...</sv>
+		<fi>Ladataan...</fi>
+	</tr>
+	<tr>
+		<key>anskokan_dc_valjfil</key>
+		<sv>Välj fil</sv>
+		<fi>Valitse tiedosto</fi>
+	</tr>
+	<tr>
+		<key>ansokan_hardukampanjkod</key>
+		<sv>Har du en kampanjkod?</sv>
+		<fi>Onko sinulla kampanjakoodia?</fi>
+	</tr>
+	<tr>
+		<key>ansokan_ja</key>
+		<sv>Ja</sv>
+		<fi>Kyllä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_nej</key>
+		<sv>Nej</sv>
+		<fi>Ei</fi>
+	</tr>
+	<tr>
+		<key>ansokan_hurhorttalasom</key>
+		<sv>Hur har du hört talas om oss?</sv>
+		<fi>Mistä olet kuullut meistä?</fi>
+	</tr>
+	<tr>
+		<key>ansokan_cc_brevhem</key>
+		<sv>Brev hem</sv>
+		<fi>Kirje kotiin</fi>
+	</tr>
+	<tr>
+		<key>ansokan_cc_internet</key>
+		<sv>Internet</sv>
+		<fi>Internet</fi>
+	</tr>
+	<tr>
+		<key>ansokan_cc_tidning</key>
+		<sv>Reklam i tidning</sv>
+		<fi>Mainos lehdessä</fi>
+	</tr>
+	<tr>
+		<key>ansokan_cc_rekommendation</key>
+		<sv>Rekommendation</sv>
+		<fi>Suosittelu</fi>
+	</tr>
+	<tr>
+		<key>ansokan_cc_tvradio</key>
+		<sv>TV/Radio</sv>
+		<fi>TV/Radio</fi>
+	</tr>
+	<tr>
+		<key>ansokan_cc_annat</key>
+		<sv>Annat</sv>
+		<fi>Muu</fi>
+	</tr>
+	<tr>
+		<key>ansokan_cc_varkod</key>
+		<sv>Koden hittar du t.ex. i brevet om du har fått direktreklam.</sv>
+		<fi>Koodin löydät esim. kirjeestä jos olet saanut postia meiltä.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_hasOtherTaxOrCitizenCountry_header</key>
+		<sv>Är du skattepliktig eller medborgare i något annat land än Finland?</sv>
+		<fi>Onko sinulla verovelvollisuutta tai kansalaisuutta muussa maassa kuin Suomessa?</fi>
+	</tr>
+	<tr>
+		<key>accountshare_text_1</key>
+		<sv>För att kunna bedöma din ansökan behöver vi information som styrker din inkomst. För att snabba upp processen, kan du ge oss denna information genom att låta oss få information om ditt lönekonto direkt från den bank du använder. Du kan också ladda upp en kopia på din senaste lönespecifikation (senast 2 månader gammal) eller andra dokument som bekräftar dina nuvarande inkomster manuellt.</sv>
+		<fi>Voidaksemme käsitellä hakemuksesi, tarvitsemme tietoja, jotka vahvistavat tulosi. Jos haluat nopeuttaa prosessia, voit jakaa meille nämä tiedot antamalla meille suostumuksesi saada tietoja palkkatilistäsi suoraan käyttämästäsi pankista. Voit myös ladata kopion uusimmasta, korkeintaan 2 kuukautta vanhasta palkkalaskelmastasi tai muusta todistuksesta, josta ilmenee tämän hetkiset tulosi manuaalisesti.</fi>
+	</tr>
+	<tr>
+		<key>forcedaccountshare_text_1</key>
+		<sv>För att kunna bedöma din ansökan behöver vi information som styrker din inkomst.</sv>
+		<fi>Hakemuksesi arvioimiseksi tarvitsemme tietoja, jotka osoittavat tulosi.</fi>
+	</tr>
+	<tr>
+		<key>accountshare_source_manual_text</key>
+		<sv>Jag vill ladda upp en kopia på min lönespecifikation eller annat dokument som bekräftar mina nuvarande inkomster.</sv>
+		<fi>Haluan ladata kopion uusimmasta, korkeintaan 2 kuukautta vanhasta palkkalaskelmastani tai muusta todistuksesta, josta ilmenee tämän hetkiset tuloni.</fi>
+	</tr>
+	<tr>
+		<key>accountshare_source_share_text</key>
+		<sv>Jag godkänner att Brocc Finance AB inhämtar information om mina kontouppgifter hos den bank som jag anger.</sv>
+		<fi>Hyväksyn, että Brocc Finance AB hakee tietoja tilitapahtumistani määrittämästäni pankista.</fi>
+	</tr>
+	<tr>
+		<key>accountshare_next_button_text</key>
+		<sv>Gå vidare</sv>
+		<fi>Jatka</fi>
+	</tr>
+	<tr>
+		<key>ansokan_payslip_text_4</key>
+		<sv>Kontodelningsdata verkar inte dyka upp. Du kan ladda upp en lönespec för hand eller vänta en stund och testa att ladda om sidan.</sv>
+		<fi>Tilin jakamistiedot eivät näytä ilmestyvän. Voit ladata palkkatiedot käsin tai odottaa hetken ja yrittää ladata sivu uudelleen.</fi>
+	</tr>
+	<tr>
+		<key>forcedaccountshare_ansokan_payslip_text_4</key>
+		<sv>Något gick fel vid delning av kontoinformation och vi behöver istället en kopia på din senaste lönespecifikation, högst 2 månader gammal, eller annat bevis på nuvarande inkomst. Om du har en papperskopia, ta ett kort med telefonen och ladda upp den nedan.</sv>
+		<fi>Jokin meni pieleen tilitietoja jaettaessa, ja tarvitsemme sen sijaan kopion viimeisimmästä, enintään 2 kuukautta vanhasta palkkatodistuksesta tai muun todisteen nykyisistä tuloista. Jos sinulla on paperikopio, ota siitä kuva puhelimellasi ja lataa se alla olevaan kohtaan.</fi>
+	</tr>
+	<tr>
+		<key>ansokan_payslip_text_5</key>
+		<sv>Väntar på kontodelningsdata ...</sv>
+		<fi>Tilitietoja ladataan ...</fi>
+	</tr>
+	<tr>
+		<key>ansokan_consent_header</key>
+		<sv>Samtycke</sv>
+		<fi>Suostumukseni</fi>
+	</tr>
+	<tr>
+		<key>ansokan_consent_text</key>
+		<sv>Jag bekräftar att jag har tagit del av uppgifterna ovan samt läst Brocc Finance AB:s information om hur Brocc Finance AB behandlar mina personuppgifter.</sv>
+		<fi>Vakuutan, että olen lukenut yllä olevat tiedot ja lukenut Brocc Finance AB: n tiedot siitä, miten Brocc Finance AB käsittelee henkilötietojani.</fi>
+	</tr>
+</translations>

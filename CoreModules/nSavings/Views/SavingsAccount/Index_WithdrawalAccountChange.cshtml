@@ -1,0 +1,138 @@
+﻿<script type="text/ng-template" id="withdrawalaccountchange.html">
+    <div ng-hide="d.Status === 'Active' || d.Status === 'FrozenBeforeActive'">
+        <p>Function not accessible for accounts with status: {{d.Status}}</p>
+    </div>
+    <div ng-show="d.Status === 'Active' || d.Status === 'FrozenBeforeActive'">
+        <h4 ng-show="!pendingModel" class="custom-breadcrumb"><a ng-href="{{'#!/WithdrawalAccount/' + d.SavingsAccountNr}}"> External account </a> / Change account</h4>
+        <h4 ng-show="pendingModel" class="custom-breadcrumb">External account / Change account</h4>
+
+        <!--Calculate-->
+        <div class="row pt-1" ng-show="calculateModel && !(doneModel && doneModel.isOk)" id="attachedFileContainer">
+            <div class="col-xs-8 col-sm-offset-2">
+                <div class="editblock">
+                    <form name="calculateform" novalidate>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">New external account IBAN</label>
+                                <div class="col-xs-4"><input type="text" autocomplete="off" ng-model="calculateModel.newWithdrawalAccount" custom-validate="isValidIBAN" required class="form-control"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Upload letter of attorney</label>
+                                <div class="col-xs-6">
+                                    <div class="input-group-addon n-main-btn n-white-btn" style="width: 100px; border-radius: 5px; border-right: 1px solid #000;" ng-click="selectFileToAttach($event)">
+                                        Attach <span class="glyphicon glyphicon-paperclip"></span>
+                                    </div>
+                                    <span class="input-group-addon" ng-show="calculateModel.attachedFileName">{{calculateModel.attachedFileName}}</span>
+                                    <input type="file" id="attachedFile" required name="attachedFile" style="display:none" />
+                                </div>
+                            </div>
+                            <div class="form-group pt-2 text-center">
+                                <button class="n-direct-btn n-blue-btn" ng-click="calculate($event)" ng-disabled="calculateform.$invalid || !calculateModel.attachedFileName">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--end calculate-->
+        <!--så här blir det-->
+        <div class="pt-3 row" ng-show="previewModel && !(doneModel && doneModel.isOk)">
+            <div class="col-xs-10 col-sm-offset-1">
+                <div class="frame">
+                    <div class="text-right pb-1">
+                        <button class="n-main-btn n-white-btn" ng-click="cancelPreview($event)">Cancel</button>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">IBAN</label>
+                                    <p class="form-control-static col-xs-6">{{previewModel.WithdrawalAccount.Formatted}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">BANK</label>
+                                    <p class="form-control-static col-xs-6">{{previewModel.WithdrawalAccount.BankName}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Letter of attorney</label>
+                                    <p class="form-control-static col-xs-6">{{previewModel.AttachedFile.FileName}}</p>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Initiated date</label>
+                                    <p class="form-control-static col-xs-6">{{previewModel.InitiatedDate | date:'shortDate'}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group pt-3 text-center">
+                            <button class="n-main-btn n-blue-btn" ng-click="initiateChange($event)">Initiate change external account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--slut på så här blir det-->
+        <div class="pt-3 row" ng-if="pendingModel">
+            <div class="col-xs-10 col-sm-offset-1">
+                <div class="frame">
+                    <div class="text-right pb-1">
+                        <button class="n-main-btn n-white-btn" ng-click="cancelChange($event)">Cancel</button>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">IBAN</label>
+                                    <p class="form-control-static col-xs-6">{{pendingModel.WithdrawalAccount.Formatted}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">BANK</label>
+                                    <p class="form-control-static col-xs-6">{{pendingModel.WithdrawalAccount.BankName}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Letter of attorney</label>
+                                    <p class="form-control-static col-xs-6">
+                                        <a target="_blank" ng-show="pendingModel.PowerOfAttorneyDocumentArchiveLink" ng-href="{{pendingModel.PowerOfAttorneyDocumentArchiveLink}}" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a>
+                                        <span ng-hide="pendingModel.PowerOfAttorneyDocumentArchiveLink">-</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Initiated date</label>
+                                    <p class="form-control-static col-xs-6">{{pendingModel.InitiatedTransactionDate | date:'shortDate'}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Initiated by</label>
+                                    <p class="form-control-static col-xs-6">{{pendingModel.InitiatedByUserDisplayName}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pt-3 text-center" ng-if="!pendingModel.WasInitiatedByCurrentUser">
+                            <button class="n-main-btn n-green-btn" ng-click="commitChange($event)">Change external account</button>
+                        </div>
+                        <div class="form-group pt-3 text-center" ng-if="pendingModel.WasInitiatedByCurrentUser">
+                            <p>Waiting for approval</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--så här gick det-->
+        <div class="row pt-3" ng-if="doneModel">
+            <div class="col-xs-10 col-sm-offset-1">
+                <div class="frame text-center">
+                    <p class="pt-2" ng-show="doneModel.isOk">External account changed.</p>
+                    <p class="p2" style="color: red;" ng-hide="doneModel.isOk">Something went wrong, could not change external account.</p>
+                </div>
+            </div>
+        </div>
+        <!--slut-->
+    </div>
+    <div class="pt-3">
+        @Html.Partial("Index_WithdrawalAccount_History")
+    </div>
+</script>

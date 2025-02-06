@@ -1,0 +1,21 @@
+<div class="flex-container" [class.standalone]="isStandalonePage">
+  <div class="align-center">
+    <div class="pb-2">
+      <div class="pull-right">
+        <button
+          (click)="close($event)"
+          class="n-icon-btn n-neutral-btn pull-right"
+        >
+          <span class="glyphicon-remove glyphicon close-task-icon"></span>
+        </button>
+      </div>
+      <div class="clearfix"></div>
+      <div class="text-center">
+        <h1>{{ headerText }}</h1>
+      </div>
+    </div>
+    <div>
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

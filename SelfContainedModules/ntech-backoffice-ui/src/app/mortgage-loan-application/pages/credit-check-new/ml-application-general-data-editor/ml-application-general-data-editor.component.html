@@ -1,0 +1,47 @@
+<edit-form *ngIf="model" [initialData]="model?.editFormInitialData">
+  <ng-container form-area>
+    <form [formGroup]="model.form.form">
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-horizontal">
+            <editblock-form-field
+              [model]="model.editFields['isPurchase']"
+            ></editblock-form-field>
+            <editblock-form-field
+              [model]="model.editFields['settlementAmount']"
+            ></editblock-form-field>
+            <editblock-form-field
+              [model]="model.editFields['isAdditionalLoanRequested']"
+            ></editblock-form-field>
+            <editblock-form-field
+              [model]="model.editFields['additionalLoanAmount']"
+            ></editblock-form-field>
+            <editblock-form-field
+              [model]="model.editFields['ownSavingsAmount']"
+            ></editblock-form-field>
+            <editblock-form-field
+              [model]="model.editFields['objectPriceAmount']"
+            ></editblock-form-field>
+            <div class="form-group">
+              <label class="control-label col-xs-6"
+                >Total requested amount</label
+              >
+              <div class="col-xs-6">
+                <p class="form-control-static copyable bb-1">
+                  {{ model.totalRequestedAmount | number }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="form-horizontal">
+            <editblock-form-field
+              [model]="model.editFields['objectValueAmount']"
+            ></editblock-form-field>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</edit-form>

@@ -1,0 +1,33 @@
+<div
+  class="dataTables_paginate paging_simple_numbers custom-pagination"
+  *ngIf="m && m.pages.length > 1"
+>
+  <ul class="pagination">
+    <li class="paginate_button previous" *ngIf="m.isPreviousAllowed">
+      <a href="#" (click)="gotoPage(m.previousPageNr, $event)">Previous</a>
+    </li>
+    <li class="paginate_button previous disabled" *ngIf="!m.isPreviousAllowed">
+      <a href="#" (click)="$event?.preventDefault()">Previous</a>
+    </li>
+
+    <li
+      *ngFor="let p of m.pages"
+      class="paginate_button"
+      [ngClass]="{ active: p.isCurrentPage, disabled: p.isSeparator }"
+    >
+      <a href="#" (click)="gotoPage(p.pageNr, $event)" *ngIf="!p.isSeparator">{{
+        p.pageNr + 1
+      }}</a>
+      <a href="#" *ngIf="p.isSeparator" (click)="$event.preventDefault()"
+        >...</a
+      >
+    </li>
+
+    <li class="paginate_button next" *ngIf="m.isNextAllowed">
+      <a href="#" (click)="gotoPage(m.nextPageNr, $event)">Next</a>
+    </li>
+    <li class="paginate_button next disabled" *ngIf="!m.isNextAllowed">
+      <a href="#" (click)="$event.preventDefault()">Next</a>
+    </li>
+  </ul>
+</div>

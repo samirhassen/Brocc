@@ -1,0 +1,10 @@
+.table {
+  &.row-lined tr {
+    border-bottom: 1px solid #ddd;
+  }
+}
+.approve-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

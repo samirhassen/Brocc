@@ -1,0 +1,58 @@
+.application-row td {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0px;
+
+  /* Intent is to make the columns have equal height and then center the content vertically */
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.application-table th {
+  font-weight: normal;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.application-row p {
+  margin: 0;
+}
+
+.application-row div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.application-row:hover,
+.application-row:hover a {
+  background-color: #034480;
+  cursor: pointer;
+  color: #fff;
+}
+
+.icon-container span {
+  float: right;
+  color: rgb(6, 68, 127);
+}
+
+.application-row:hover .icon-container span {
+  color: white;
+}
+
+.overview-userinfo {
+  font-size: smaller;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.envelope-icon-margin {
+  margin-left: 10px;
+}
+
+@media (max-width: 767px) {
+  .overview-userinfo {
+    font-size: x-small;
+  }
+}

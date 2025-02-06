@@ -1,0 +1,340 @@
+<ng-container *ngIf="m">
+  <form [formGroup]="m.form.form">
+    <div class="row pb-2">
+      <div class="col-xs-2 col-sm-1">
+        <span class="glyphicon glyphicon-home glyphicon-big"></span>
+      </div>
+      <div class="col-xs-4 col-sm-5">
+        <p>
+          {{ m.app.ObjectAddressStreet
+          }}<ng-container *ngIf="m.app.ObjectTypeCode === 'seBrf'"
+            >, lgh {{ m.app.SeBrfApartmentNr }}</ng-container
+          >
+        </p>
+        <p>{{ m.app.ObjectAddressZipcode }}, {{ m.app.ObjectAddressCity }}</p>
+      </div>
+      <div class="col-xs-3">
+        <p>Önskat lånebelopp</p>
+        <p>Uppskattat värde</p>
+      </div>
+      <div class="col-xs-3">
+        <p>{{ m.getWishedToLoanAmount() | number: "1.0-2" }} kr</p>
+        <p>{{ m.getEstimatedValueAmount() | number: "1.0-2" }} kr</p>
+      </div>
+    </div>
+
+    <table class="table">
+      <tbody>
+        <ng-container
+          *ngTemplateOutlet="
+            twoColumn;
+            context: { title: 'Typ av bostad', value: m.getObjectTypeText() }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            twoColumn;
+            context: { title: 'Kommun', value: m.app.ObjectAddressMunicipality }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            twoColumn;
+            context: {
+              title: 'Månadsavgift',
+              value: (m.app.ObjectMonthlyFeeAmount | number: '1.0-2') + ' kr'
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            twoColumn;
+            context: {
+              title: 'Andra fasta kostnader',
+              value:
+                (m.app.ObjectOtherMonthlyCostsAmount | number: '1.0-2') + ' kr'
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            twoColumn;
+            context: { title: 'Boyta', value: m.app.ObjectLivingArea + ' kvm' }
+          "
+        ></ng-container>
+      </tbody>
+    </table>
+
+    <ng-container
+      *ngIf="
+        m.app.ChangeExistingLoan &&
+        m.app.ChangeExistingLoan.MortgageLoansToSettle
+      "
+    >
+      <h2>Nuvarande lån på bostaden</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <td class="col-xs-3">Lånebelopp</td>
+            <td class="col-xs-3">Bank</td>
+            <td class="col-xs-3">Nuvarande amortering</td>
+            <td class="col-xs-3">Nuvarande ränta</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let loan of m.app.ChangeExistingLoan.MortgageLoansToSettle"
+          >
+            <td>{{ loan.CurrentDebtAmount | number: "1.0-2" }} kr</td>
+            <td>{{ loan.BankName ? loan.BankName : "-" }}</td>
+            <td>
+              {{
+                loan.CurrentMonthlyAmortizationAmount
+                  ? (loan.CurrentMonthlyAmortizationAmount | number: "1.0-2") +
+                    " kr"
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                loan.InterestRatePercent ? loan.InterestRatePercent + " %" : "-"
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <h2>Sökande</h2>
+    <ng-container
+      *ngTemplateOutlet="
+        applicantShared;
+        context: { applicant: m.app.Applicants[0], isMainApplicant: true }
+      "
+    ></ng-container>
+
+    <ng-container *ngIf="m.app.Applicants.length === 2">
+      <h2>Medsökande</h2>
+      <ng-container
+        *ngTemplateOutlet="
+          applicantShared;
+          context: { applicant: m.app.Applicants[1], isMainApplicant: false }
+        "
+      ></ng-container>
+    </ng-container>
+
+    <h2>Hushållets ekonomi</h2>
+    <table class="table">
+      <tbody>
+        <ng-container
+          *ngTemplateOutlet="
+            twoColumn;
+            context: {
+              title: 'Antal barn',
+              value: m.app.HouseholdChildren
+                ? m.app.HouseholdChildren.length + ' st'
+                : 'Inga'
+            }
+          "
+        ></ng-container>
+        <ng-container *ngIf="m.app.HouseholdChildren">
+          <ng-container
+            *ngTemplateOutlet="
+              twoColumn;
+              context: {
+                title: 'Ålder på barn',
+                value: (m.app.HouseholdChildren | join: ', ':'AgeInYears')
+              }
+            "
+          ></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              twoColumn;
+              context: {
+                title: 'Får i barnbidrag/studiebidrag',
+                value:
+                  (m.app.ChildBenefitAmount | number: '1.0-2') + ' kr / mån'
+              }
+            "
+          ></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              twoColumn;
+              context: {
+                title: 'Får i underhåll',
+                value: m.app.IncomingChildSupportAmount + ' kr / mån',
+                hide: !m.app.IncomingChildSupportAmount
+              }
+            "
+          ></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              twoColumn;
+              context: {
+                title: 'Betalar i underhåll',
+                value: m.app.OutgoingChildSupportAmount + ' kr / mån',
+                hide: !m.app.OutgoingChildSupportAmount
+              }
+            "
+          ></ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <ng-container>
+      <h2>Övriga lån</h2>
+      <table
+        class="table"
+        *ngIf="m.app.LoansToSettle?.length > 0; else noLoans"
+      >
+        <thead>
+          <tr>
+            <td class="col-xs-4">Lånetyp</td>
+            <td class="col-xs-4">Lånebelopp</td>
+            <td class="col-xs-4">Månadskostnad</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let loan of m.app.LoansToSettle">
+            <td>{{ m.getLoanType(loan.LoanType) }}</td>
+            <td>{{ loan.CurrentDebtAmount | number: "1.0-2" }} kr</td>
+            <td>{{ loan.MonthlyCostAmount | number: "1.0-2" }} kr</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <hr class="hr-section dotted" />
+
+    <form [formGroup]="m.form.form">
+      <div class="checkbox">
+        <label
+          ><input type="checkbox" formControlName="hasGivenConsent" /> Jag
+          intygar att uppgifterna i ansökan är korrekta och godkänner att en
+          kreditupplysning inhämtas för låntagarna samt att personuppgifter
+          behandlas i enlighet med
+          <a target="_blank" [href]="m.personalDataPolicyUrl" class="n-anchor"
+            >personuppgiftspolicyn</a
+          >.</label
+        >
+      </div>
+      <div class="text-right pt-5">
+        <button
+          class="n-main-btn n-green-btn"
+          [disabled]="m.form.invalid()"
+          (click)="apply($event)"
+        >
+          Skicka in ansökan
+        </button>
+      </div>
+    </form>
+  </form>
+</ng-container>
+
+<ng-template #noLoans>
+  <p>Du har inte angivit några lån.</p>
+</ng-template>
+
+<ng-template
+  #applicantShared
+  let-applicant="applicant"
+  let-isMainApplicant="isMainApplicant"
+>
+  <table class="table">
+    <tbody>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: {
+            title: 'Ingår i hushållet?',
+            value: applicant.IsPartOfTheHousehold ? 'Ja' : 'Nej',
+            hide: isMainApplicant
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: { title: 'Personnummer', value: applicant.CivicRegNr }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: { title: 'Epost', value: applicant.Email }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: { title: 'Telefonnummer', value: applicant.Phone }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: {
+            title: 'Sysselsättning',
+            value: m.getEmploymentType(applicant.Employment)
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: {
+            title: 'Arbetsgivarens namn',
+            value: applicant.Employer,
+            hide: !applicant.Employer
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: {
+            title: 'Arbetsgivarens telefon',
+            value: applicant.EmployerPhone,
+            hide: !applicant.EmployerPhone
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: {
+            title: 'Sysselsättning sedan',
+            value: applicant.EmployedSince,
+            hide: !applicant.EmployedSince
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: {
+            title: 'Sysselsättning till',
+            value: applicant.EmployedTo,
+            hide: !applicant.EmployedTo
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          twoColumn;
+          context: {
+            title: 'Månadsinkomst innan skatt',
+            value: (applicant.IncomePerMonthAmount | number: '1.0-2') + ' kr'
+          }
+        "
+      ></ng-container>
+    </tbody>
+  </table>
+</ng-template>
+
+<ng-template #twoColumn let-title="title" let-value="value" let-hide="hide">
+  <tr *ngIf="!hide">
+    <td class="col-xs-4 col-sm-6">{{ title }}</td>
+    <td class="col-xs-4 col-sm-6">{{ value }}</td>
+  </tr>
+</ng-template>

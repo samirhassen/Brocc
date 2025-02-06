@@ -1,0 +1,559 @@
+[ng\:cloak], [ng-cloak], .ng-cloak, .translate-cloak {
+  display: none !important;
+}
+
+body {
+    background-image: url(../img/body-bg.png);
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+    color:#323232;
+}
+
+
+button {
+    font-family:Helvetica, Arial, sans-serif;
+    font-size: 1em;
+}
+
+
+h1 {
+    font-size:2.6em;
+    line-height:1.3em;
+    color: #fff;
+    font-weight: normal;
+    padding:20px;
+    margin: 0 auto;
+    text-transform: uppercase;
+    text-align: center;
+    border:2px solid #fff;
+}
+
+h2 {
+    font-size: 1.7em;
+    margin: 0 0 0.67em 0;
+    color: #66A84F;
+    font-weight: bold;
+}
+
+h3 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    color: #3e4347;
+    font-weight: normal;
+    padding:20px;
+    margin: 20px auto 0 auto;
+    text-transform: uppercase;
+    text-align: center;
+    border:2px solid #7c878e;
+    width:75%;
+}
+
+h4 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.3em;
+    margin: 0.8em 0 0.3em 0;
+    color: #3e4347;
+    text-transform: uppercase;
+}
+
+p {
+    margin: 0.3em 0 0.3em 0;
+    
+}
+input, select {
+    padding: 0.3em;
+    font-size: 0.8em;    
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.bg-gray {
+    width:85%;
+    padding:20px;
+    background-image: url(../img/body-bg.png);
+    margin:0 auto;
+    -webkit-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    -moz-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+}
+
+.bg-white {
+    padding:30px 0px;
+    background-color: #fff;
+    width:75%;
+    max-width: 1500px;
+    margin:20px auto;
+    -webkit-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    -moz-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+}
+
+.demo {
+    background-color: #f5f5f5;
+    border:none
+    }
+
+.heading-background {
+    padding-top:220px;
+    width:50%;
+    background-color: transparent;
+    margin:0 auto;
+    }
+
+.demo-functions {
+    text-align: center;
+    }
+
+.demo-functions a {
+    color: #000;
+    }
+
+.invalid_mark {
+    font-size:35px;
+    line-height:35px;
+    font-weight:bold;
+    text-transform:uppercase;
+    color: #E5AC53;
+    
+    position: absolute;
+    right: 18%;
+    top: 0px;
+}
+
+.invalid_message {
+    padding-top: 30px;
+    font-size:15px;
+    font-weight:bold;
+    color: #E5AC53;
+    position: absolute;
+    right: 18%;
+}
+
+.invalid_field, 
+form.ng-submitted input.ng-invalid,
+form.ng-submitted select.ng-invalid,
+input.ng-touched.ng-invalid, 
+select.ng-touched.ng-invalid {
+    color: white;
+    background-color: #E5AC53;
+    border: 1px solid #715128;
+    -moz-box-shadow: inset 2px 2px 2px 0px #cb9148;
+    -webkit-box-shadow: inset 2px 2px 2px 0px #cb9148;
+    box-shadow: inset 2px 2px 2px 0px #cb9148;
+}
+
+.invalid_checkbox {
+    color: white;
+    background-color: #E5AC53;
+    width: 300px;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.invalid_radio  {
+    color: white;
+    background-color: #E5AC53;
+}
+
+.flag_area {
+    width: 200px;
+    float:right;
+    padding-top:20px;
+    padding-right:30px;
+    vertical-align: bottom;
+}
+
+.flag_icon {
+    padding: 20px;
+}
+.swedish {
+    float:right;
+}
+
+.finnish {
+    float:left; 
+}
+
+.unselected_language {
+    opacity: 0.5;
+}
+
+.unselected_language:hover {
+    opacity: 0.8;
+}
+
+.constant_width {
+    background-color: #fff;
+    width: 100%;
+    border:1px solid #66A84F;
+    border-radius: 3px;
+    font-size: 0.9em;
+    -moz-box-shadow: inset 1px 1px 3px 0px #c1dcb8;
+    -webkit-box-shadow: inset 1px 1px 3px 0px #c1dcb8;
+    box-shadow: inset 1px 1px 3px 0px #c1dcb8;
+    margin:0 auto;
+}
+
+.partial_width {
+    border:none;
+    width:60%;
+    border-radius: 3px;
+    font-size: 0.9em;
+    -moz-box-shadow: inset 2px 2px 2px 0px #ccc;
+    -webkit-box-shadow: inset 2px 2px 2px 0px #ccc;
+    box-shadow: inset 2px 2px 2px 0px #ccc;
+    font-size: 0.9em;
+}
+
+.content_wrap {
+    width: 100%;
+}
+
+.none {display:none;}
+
+input[type="checkbox"] {
+    margin: 3px 3px 3px 0px;
+}
+
+.header {
+    background-image: url('../img/manskligpyramid.jpg');
+    background-size: cover;
+    height: 400px;
+    width:75%;
+    max-width: 1500px;
+    margin: 10px auto 0 auto;
+}
+
+.header .logo_area {
+    float:left;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.logo_area img {
+    width: 150px;
+    height: 150px;
+}
+
+.header .menu_area {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    right: 20px;
+    font-weight: bold;
+    color: #213963;
+}
+
+.fields_area .key_value {
+    margin-bottom: 10px;
+}
+
+.key_value .the_key {
+    color: #66a84f;
+    text-align: left;
+    vertical-align: middle;       
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0 22%;
+    padding: .3em;
+    width:60%;
+}
+
+.key_value .the_value {
+    color: #000;
+    vertical-align: middle;    
+    width: 60%;       
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0 22%;
+    padding: .3em;
+}
+
+.fields_area .key_value .checkbox_list div {
+    width: 100%;
+    padding: 8px 0 8px 4px;
+     -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.consent {
+    padding-top: 2em ;
+}
+
+.nft_button {
+    color: #ffffff;
+    font-weight: bold;
+    width: 158px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.bg-white .ansok_button {
+    background-color: #66A84F;
+    border-radius:7px;
+    border:none;
+    -webkit-box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+    -moz-box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+    box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+}
+
+.ansok_button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+
+.button_area { 
+    margin-top: 50px;
+    position: relative;
+    text-align: center;
+}
+
+.button_remove {
+    background-color: #ffffff;
+    color: #000;
+    width:100px;
+    height:27px;
+    cursor: pointer;
+    float:right;
+    border:1px solid #999;
+    border-radius:3px;
+    -webkit-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    -moz-box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+    box-shadow: 1px 1px 4px 0px rgba(35,35,35,0.5);
+}
+
+.button_add {
+    background-color: #66A84F;
+    color: #fff;
+    width: 100px;
+    height:27px;
+    cursor: pointer;
+    float:right;
+    border:none;
+    border-radius:3px;
+    -webkit-box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+    -moz-box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+    box-shadow: 1px 1px 4px 0px rgba(35,35,35,1);
+}
+
+.centered_section {
+    display: block;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.none{
+    display: none;
+}
+
+.alignment{
+    vertical-align:middle;
+}
+
+table.radio-button{
+    width: 300px;
+}
+
+table.radio-button td{
+    width: 50%;
+}
+
+
+
+@media screen and (max-width: 1300px) {
+    
+    .header .logo_area {
+       left: 35px;
+    }
+    
+    .logo_area img {
+       width: 130px;
+       height: 130px;
+    }
+
+    .header {
+        width:90%;
+    }    
+    
+}
+
+@media screen and (max-width: 1050px){
+
+    h1 {
+        font-size:2em;
+        line-height:1.3em;
+    }
+
+}
+
+
+@media screen and (max-width: 900px){
+
+    .bg-white {
+        width:80%;
+    }
+
+    .bg-gray {
+        width:85%;
+    }
+        
+    .centered_section{
+        width: 100%;
+    }
+    
+    .partial_width{
+        width: 90%;
+    }
+
+    .header {
+        width:100%;
+        min-width: 0;
+        height:300px;
+    }
+
+    .heading-background {
+        padding-top:150px;
+    }
+
+    .key_value .the_value {
+        width:80%;
+        margin:0 10%;
+    }
+
+    .key_value .the_key {
+        width:80%;
+        margin: 0 10%;
+    }
+  
+}
+
+
+@media screen and (max-width: 730px){
+      
+    .invalid_mark{
+        right: 5%;
+    }
+    
+    .invalid_message{
+        right: 5%;
+    }
+}
+
+
+@media screen and (max-width: 580px){
+
+    .bg-white {
+        width:95%;
+    }
+
+    .header {
+        background-size: cover;
+        margin-top:0;
+        height: 200px;
+    }
+
+    .heading-background {
+        width:80%;
+        padding-top:120px;
+    }
+    
+    input, select{
+        background-color: #f9f9f9;
+    }
+    
+     .key_value .the_key {
+        width: 90%;
+        padding-bottom: 3px;
+        padding-right: 0px;
+        margin:0;
+    }
+
+    .key_value .the_value {
+        width: 90%;
+        margin:0;
+    }
+    
+    .constant_width {
+        width: 100%;
+    }
+        
+    .button_remove{
+        top: 20px;
+    }
+    
+    .button_add{
+        top: 20px;
+    }
+    
+    h1{
+        font-size: 1.6em;
+        padding:10px;
+    }
+
+    h3 {
+        line-height: 1.3em;
+        padding:10px;
+    }
+    
+    .invalid_mark{
+        right: 0%;
+    }
+    
+    .invalid_message{
+        right: 0%;
+    }
+    
+    .flag_area{
+        padding: 0px;
+    }
+    .flag_icon{
+        padding: 0px;
+        padding-right: 5px;
+        padding-top: 30px;
+    }
+    .finnish{
+        padding-left: 50px;
+    }
+    
+    .header .logo_area{
+        margin:0;
+        padding:0;
+    }
+    
+    .logo_area img {
+       width: 100px;
+       height: 100px;
+    }
+    
+    .nft_button{
+        width: 30%;
+    }
+}
+
+input.ng-touched.ng-invalid::-webkit-input-placeholder {
+    color: #fff;
+    letter-spacing: 0.8px;
+}
+
+input.ng-touched.ng-invalid::-moz-placeholder { 
+    color: #fff;
+    letter-spacing: 0.8px;
+}
+
+input.ng-touched.ng-invalid:-ms-input-placeholder { 
+    color: #fff;
+    letter-spacing: 0.8px;
+}
+
+input.ng-touched.ng-invalid:-moz-placeholder { 
+    color: #fff;
+    letter-spacing: 0.8px;
+}
+

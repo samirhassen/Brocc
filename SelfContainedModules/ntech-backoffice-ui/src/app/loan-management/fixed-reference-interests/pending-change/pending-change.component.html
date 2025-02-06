@@ -1,0 +1,72 @@
+<div class="frame pending-container" *ngIf="m">
+  <div class="cancel-row">
+    <button class="n-main-btn n-white-btn" (click)="cancelChange($event)">
+      Cancel
+    </button>
+  </div>
+  <div class="change-row">
+    <div class="change-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fixed time</th>
+            <th>Rate</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let r of m.rates"
+            [ngClass]="{ 'unchanged-rate': r.isUnchanged, 'new-rate': r.isNew }"
+          >
+            <td>
+              {{ parseMonthCount(r.monthCount).nrOfMonthsOrYears }}
+              {{ parseMonthCount(r.monthCount).localizedUnitName }}
+            </td>
+            <td>{{ r.rate | number }}%</td>
+            <td *ngIf="r.isNew">New</td>
+            <td *ngIf="r.isUnchanged">-</td>
+            <td *ngIf="!r.isNew && !r.isUnchanged">
+              <span *ngIf="r.diff > 0" class="rate-raised"
+                >+<span>{{ r.diff | number }}%</span></span
+              >
+              <span *ngIf="!(r.diff > 0)" class="rate-lowered"
+                >-<span>{{ -r.diff | number }}%</span></span
+              >
+            </td>
+          </tr>
+          <tr *ngIf="m.removedRatesText" class="text-center">
+            <td colspan="3">
+              <b><u>Removed</u></b>
+            </td>
+          </tr>
+          <tr *ngIf="m.removedRatesText" class="text-center">
+            <td colspan="3">{{ m.removedRatesText }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="change-by">
+      <div class="change-by-item">
+        <span class="change-by-item-label">Initiated by</span>
+        <span class="change-by-item-value">{{ m.initiatedByUserName }}</span>
+      </div>
+      <div class="change-by-item">
+        <span class="change-by-item-label">Initiated date</span>
+        <span class="change-by-item-value">{{
+          m.initiatedDate | date: "shortDate"
+        }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="commit-row">
+    <button
+      *ngIf="m.isCommitAllowed"
+      (click)="commitChange($event)"
+      class="n-main-btn n-blue-btn"
+    >
+      Change interests
+    </button>
+    <p *ngIf="!m.isCommitAllowed">Someone else needs to approve the change.</p>
+  </div>
+</div>

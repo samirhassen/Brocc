@@ -1,0 +1,239 @@
+﻿@model nCustomerPages.Controllers.ProductOverViewModel
+
+@{
+    ViewBag.Title = "Customer Pages";
+    var f = System.Globalization.CultureInfo.GetCultureInfo(NEnv.ClientCfg.Country.BaseFormattingCulture);
+    Func<string, string> tr = x => Model.Translations.ContainsKey(x) ? Model.Translations[x] : x;
+}
+
+@section Scripts {
+    <script>
+        initialData = null
+    </script>
+    @Scripts.Render("~/Content/js/bundle-base")
+    @if (!string.IsNullOrWhiteSpace(Model.MessageTypeCode))
+    {
+        <script>
+            $(document).ready(function () {
+
+                $("#closebuttonProductOverviewMessageModal").click(function () {
+                    $('#productOverviewMessageModal').modal('hide')
+                    $('body').removeClass('modal-open')
+                    $('.modal-backdrop').remove()
+                });
+
+                $('#productOverviewMessageModal').modal('show');
+            });
+        </script>
+    }
+    <script>
+        var isMenuVisible = false;
+        $(document).ready(function () {
+            function onProductOverviewMenuToggle(event) {
+                if (!isMenuVisible) {
+                    $('#productOverviewMenu_OpenMenuIcon').addClass('hidden')
+                    $('#productOverviewMenu_CloseMenuIcon').removeClass('hidden')
+                    $('#productOverviewMobileMenu').removeClass('hidden')
+                    isMenuVisible = true
+                } else {
+                    $('#productOverviewMenu_OpenMenuIcon').removeClass('hidden')
+                    $('#productOverviewMenu_CloseMenuIcon').addClass('hidden')
+                    $('#productOverviewMobileMenu').addClass('hidden')
+                    isMenuVisible = false
+                }
+            }
+            $("#productOverviewMenu_OpenMenuIcon").on('click', onProductOverviewMenuToggle);
+            $("#productOverviewMenu_CloseMenuIcon").on('click', onProductOverviewMenuToggle);
+        });
+    </script>
+
+}
+<div class="fixed">
+    <div class="miniture mobile" id="productOverviewMenuToggle">
+        <img class="item" id="productOverviewMenu_OpenMenuIcon" src="~/Content/img/icons-menu.png" />
+        <img class="item hidden" id="productOverviewMenu_CloseMenuIcon" src="~/Content/img/icons-close-menu.png" />
+    </div>
+    <div class="order">
+        <div class="submenu mobile hidden" id="productOverviewMobileMenu">
+            @Html.Partial("Product_Overview_Menu")
+        </div>
+        <div class="desktopmenu desktop">
+            @Html.Partial("Product_Overview_Menu")
+        </div>
+    </div>
+</div>
+
+
+<div class="content" style="">
+    <p class="warning-box">@tr("eidlogin_savings_domainwarning")</p>
+    @if (Model.HasCreditModule)
+    {
+        <h1 class="panel-title">
+            @tr("cao_credits_h")
+        </h1>
+        <div class="pt-1 pb-3 row">
+            <div class="col-sm-8">
+                <div class="list-details list-hover">
+                    @if (Model.Credits != null)
+                    {
+                        foreach (var c in Model.Credits)
+                        {
+                            <div class="list-item">
+                                @if (c.Status == "Normal")
+                                {
+                                    <div>
+                                        <a href="/credit/overview#!/credits/@c.CreditNr/details">
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <b><span>@tr("cao_credits_t_nr")</span> @c.CreditNr</b>
+                                                    <span class="subinfo"><span>@tr("cao_credits_t_r")  </span> @c.CurrentTotalInterestRatePercent.ToString("N2", f)%</span>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <p><b>@c.CurrentCapitalDebtAmount.ToString("C", f)</b></p>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <span class="glyphicon glyphicon-chevron-right custom"></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <b><span>@tr("cao_credits_t_nr")</span> @c.CreditNr</b>
+                                            @if (c.Status == "SentToDebtCollection")
+                                            {
+                                                <span class="subinfo">@tr("cao_credits_st_debtcol").Replace("{{StatusDate}}", @Model.ConvertDate(c.StatusDate, f))</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="subinfo">@tr("cao_credits_st_closed").Replace("{{StatusDate}}", @Model.ConvertDate(c.StatusDate, f)) </span>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        if (Model.Credits == null)
+        {
+            <div> @tr("cao_details_noLoan") </div>
+        }
+    }
+    <div class="clearfix"></div>
+    @if (Model.HasSavingModule && Model.HasCreditModule)
+    {<br />
+    }
+    @if (Model.HasSavingModule)
+    {
+        <h1 class="panel-title">@tr("sao_accounts_h")</h1>
+        if (Model.SavingsAccounts != null)
+        {
+
+            <div class="row pt-1 pb-3">
+                <div class="col-sm-8">
+                    <div class="list-details list-hover">
+                        @foreach (var a in Model.SavingsAccounts.Where(x => x.Status != "Closed").ToList())
+                        {
+                            <div class="list-item">
+                                <!--frozen-->
+                                @if (a.Status == "FrozenBeforeActive")
+                                {
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <b><span>@tr("sao_accounts_t_nr")</span> @a.SavingsAccountNr</b>
+                                            <span class="subinfo">@tr("sao_accounts_sta_f")</span>
+                                        </div>
+                                    </div>
+                                }
+                                <!--active-->
+                                @if (a.Status == "Active")
+                                {
+                                    <div>
+                                        <a href="/savings/overview#!/accounts/@a.SavingsAccountNr/details">
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <b><span>@tr("sao_accounts_t_nr")</span> @a.SavingsAccountNr</b>
+                                                    <span class="subinfo"><span>@tr("sao_accounts_t_r")</span> @Model.ConvertDecimal(a.CurrentInterestRatePercent, f) %</span>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <p><b>@Model.ConvertCurrency(a.CapitalBalanceAmount, f)</b></p>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <span class="glyphicon glyphicon-chevron-right custom"></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            if (Model.SavingsAccounts.Where(x => x.Status == "Closed").ToList().Count > 0)
+            {
+                <div class="pt-3">
+                    <h2 class="border"><span>@tr("sao_accounts_hc")</span></h2>
+                    <div class="row pt-2">
+                        <div class="col-sm-8">
+                            <div class="list-details list-hover">
+                                @foreach (var a in Model.SavingsAccounts.Where(x => x.Status == "Closed").ToList())
+                                {
+                                    <div class="list-item">
+                                        <a href="/savings/overview#!/accounts/@a.SavingsAccountNr/details">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <b><span>@tr("sao_accounts_t_nr")</span> @a.SavingsAccountNr</b>
+                                                    <span class="subinfo"> <span>@tr("sao_accounts_sta_c")</span>@Model.ConvertDate(a.StatusDate, f)</span>
+                                                </div>
+                                                <div class="col-xs-6 text-right">
+                                                    <span class="glyphicon glyphicon-chevron-right custom"></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        if (Model.SavingsAccounts == null)
+        {<div> @tr("cao_details_noSavings") </div><br />}
+}
+    @if(Model.HasKycQuestions && Model.IsKycReminderRequired)
+    {
+        <div id="KycQuestionsUpdate" style="padding-top: 50px;">
+            <h2>@tr("cao_details_kyc_update_header")</h2>
+            <p>@tr("cao_details_kyc_update_description")</p>
+            <div class="pt-2 pb-3">
+                <a href="@Html.Raw(Model.KycUrl)"><span class="n-main-btn n-green-btn">@tr("cao_details_action")</span></a>
+            </div>
+        </div>
+    }
+<div id="ContactUs" style="padding-top: 50px;">
+    <h1 class="panel-title">@tr("cao_details_contactUs") </h1>
+    <p>@tr("cao_details_welcome")</p>
+    <p>@tr("cao_details_phone")</p>
+    <p>@tr("cao_details_email")</p>
+    <p>@tr("cao_details_ourCustomerService")</p>
+    @if (NEnv.IsSecureMessagesEnabled)
+    {
+        <div class="pt-2 pb-3">
+            <a href="@Url.Action("Index", "SecureMessages")"><span class="n-main-btn n-green-btn">@tr("coi_messages")</span></a>
+        </div>
+    }
+</div>
+</div>
+@if (!string.IsNullOrWhiteSpace(Model.MessageTypeCode))
+{
+    @Html.Partial("Index_Message", Model)
+}

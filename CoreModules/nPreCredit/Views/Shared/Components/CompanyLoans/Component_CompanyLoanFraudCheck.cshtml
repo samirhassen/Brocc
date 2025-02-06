@@ -1,0 +1,51 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-fraud-check.html">
+    <div ng-if="$ctrl.m">
+        <div ng-if="!$ctrl.m.isWaitingForPreviousSteps">
+            <div class="row pb-3">
+                <div class="col-xs-12">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Bank account</label>
+                            <div class="col-xs-8">
+                                <p class="form-control-static">
+                                    <a ng-href="{{$ctrl.getBankAccountEditUrl()}}" class="n-anchor n-longer inverted">
+                                        {{$ctrl.m.bankAccountNrTypeReadable}} {{$ctrl.m.bankAccountNrReadable}}
+                                        <span class="pull-right n-star" ng-show="false">*</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-4">Control</th>
+                        <th class="col-xs-2">Status</th>
+                        <th class="col-xs-3"></th>
+                        <th class="col-xs-3 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Account is company account</td>
+                        <td><span class="glyphicon {{$ctrl.isAccountNrApproved() ? 'glyphicon-ok' : 'glyphicon-minus'}}"></span></td>
+                        <td><a class="n-anchor" href="https://kontoutdrag.plusgirot.se/ku/html/sokkto.htm" target="_blank">Plusgiro <span class="glyphicon glyphicon-new-window"></span></a> | <a class="n-anchor" ng-href="{{$ctrl.getBankGiroUrl()}}" target="_blank">Bankgiro <span class="glyphicon glyphicon-new-window"></span></a></td>
+                        <td class="text-right">
+                            <button ng-if="$ctrl.isEditAllowed() && !$ctrl.isAccountNrApproved()" ng-disabled="!$ctrl.isApproveAccountNrAllowed()" ng-click="$ctrl.approveBankAccountNr($event)" class="n-direct-btn n-green-btn">Approve</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-if="$ctrl.m.isWaitingForPreviousSteps">
+            <p>Waiting for previous steps</p>
+        </div>
+    </div>
+</script>

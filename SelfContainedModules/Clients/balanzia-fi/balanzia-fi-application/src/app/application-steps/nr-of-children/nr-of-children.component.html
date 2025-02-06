@@ -1,0 +1,9 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label" [translate]="'steps.nrOfChildren.header'">Hur många barn är du försörjningspliktig över?</label>
+            <input type="text" class="custom-input" placeholder="{{'steps.nrOfChildren.placeHolder' | translate}}" formControlName="nrOfChildren">
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

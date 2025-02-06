@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-object-valuation-new.html">
+    <div class="row pb-3">
+        <div class="col-xs-8 col-sm-offset-2">
+            <div class="editblock">
+                <mortgage-application-object-info initial-data="$ctrl.applicationObjectInitialData"></mortgage-application-object-info>
+            </div>            
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-10 col-sm-offset-1">
+            <div class="frame" ng-show="$ctrl.automationFailedMessage">
+                <p>{{$ctrl.automationFailedMessage}}</p>
+            </div>
+            <div class="frame" ng-show="$ctrl.isResultExpanded">
+                <div class="row">
+                    <simple-form initial-data="$ctrl.resultForm"></simple-form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pt-3">
+        <h2>
+            <span ng-class="{ 'glyphicon glyphicon-chevron-down chevron-bg' : $ctrl.isManualResultExpanded, 'glyphicon glyphicon-chevron-right chevron-bg' : !$ctrl.isManualResultExpanded  }" ng-click="$ctrl.isManualResultExpanded = !$ctrl.isManualResultExpanded"></span>
+            Manual
+        </h2>
+        <hr class="hr-section" />
+        <div ng-show="$ctrl.isManualResultExpanded" style="padding-bottom: 70px;">
+            <div class="row">
+                <div class="col-sm-offset-2 col-xs-8">
+                    <div class="editblock">
+                        <simple-form initial-data="$ctrl.manualResultForm"></simple-form>
+                    </div>
+
+                    <div class="pt-3">
+                        <h2>
+                            <span ng-class="{ 'glyphicon glyphicon-chevron-down chevron-bg' : $ctrl.isUcbvManualLookupExpanded, 'glyphicon glyphicon-chevron-right chevron-bg' : !$ctrl.isUcbvManualLookupExpanded  }" ng-click="$ctrl.isUcbvManualLookupExpanded = !$ctrl.isUcbvManualLookupExpanded"></span>
+                            UC Bostadsvärdering - Manual lookup
+                        </h2>
+                        <hr class="hr-section" />
+                        <div ng-show="$ctrl.isUcbvManualLookupExpanded" style="padding-bottom: 70px;">
+                            <mortgage-application-object-valuation-manual-search initial-data="$ctrl.ucbvSearchInitialData"></mortgage-application-object-valuation-manual-search>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            
+        </div>
+    </div>
+</script>

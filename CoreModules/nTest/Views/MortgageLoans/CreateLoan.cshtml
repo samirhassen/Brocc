@@ -1,0 +1,117 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Mortgage Loan - Create Loan";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"mortgageLoanCreateLoanCtr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-mortgageloans-createloan")
+}
+<div class="pb-2"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nTest"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+<div class="row">
+    <div class="col-sm-6">
+        <div ng-if="state=='initial'">
+            <h1>Custom application <button type="submit" class="btn btn-default pull-right" ng-click="submitInitial($event)">Next>></button><span class="clearfix"></span></h1>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Applicant 1</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" ng-model="initial.applicant1">
+                            <option value="New">New</option>
+                            <option value="Existing">Existing</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="initial.applicant1Custom" ng-if="initial.applicant1 && initial.applicant1 === 'New'" placeholder="Customize, ie 'CreditReportCivicRegNr=...', 'BirthDate=yyyy-mm-dd'" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Applicant 2</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" ng-model="initial.applicant2">
+                            <option value="None">None</option>
+                            <option value="New">New</option>
+                            <option value="Existing">Existing</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="initial.applicant2Custom" ng-if="initial.applicant2 && initial.applicant2 === 'New'" placeholder="Customize, ie 'CreditReportCivicRegNr=...', 'BirthDate=yyyy-mm-dd'" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Provider</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" ng-model="initial.providerName">
+                            <option ng-repeat="p in providerNames" value="{{p}}">{{p}}</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div ng-if="state=='applicants'">
+            <h1>Applicants<button type="submit" class="btn btn-default pull-right" ng-click="submitApplicants($event)">Next>></button><span class="clearfix"></span></h1>
+            <div ng-if="applicants.newApplicant1">
+                <h2>New Applicant 1</h2>
+                <angular-jsoneditor ng-model="applicants.newApplicant1.data" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 400px;"></angular-jsoneditor>
+            </div>
+            <div ng-if="applicants.newApplicant2">
+                <h2>New Applicant 2</h2>
+                <angular-jsoneditor ng-model="applicants.newApplicant2.data" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 400px;"></angular-jsoneditor>
+            </div>
+            <div ng-if="applicants.existingApplicant1">
+                <h2>Existing Applicant 1</h2>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Civic regnr</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="applicants.existingApplicant1.civicRegNr" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div ng-if="applicants.existingApplicant2">
+                <h2>Existing Applicant 2</h2>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Civic regnr</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="applicants.existingApplicant2.civicRegNr" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default" ng-click="submitApplicants($event)">Next>></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-if="state === 'loan'">
+            <h1>Loan<button type="submit" class="btn btn-primary pull-right" ng-click="createLoan($event)">Create loan</button><span class="clearfix"></span></h1>
+
+            <div>
+                <angular-jsoneditor ng-model="loan.model.data" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 400px;"></angular-jsoneditor>
+            </div>
+        </div>
+
+        <div class="row" ng-if="state === 'done'">
+            <h2>New loan created</h2>
+            <p><a ng-href="{{newLoanUrl}}" target="_blank">Goto loan >></a></p>
+            <br />
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default" ng-click="restart($event)">Create more</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5">
+    </div>
+</div>

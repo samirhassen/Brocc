@@ -1,0 +1,49 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Generate Test Data";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Styles {
+    <style type="text/css">
+        .test-group-header {
+            background-color: antiquewhite;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-basewithangular")
+    <script @Html.CspScriptNonce()>
+        var app = angular.module('app', []);
+        app
+            .controller('ctr', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+                $scope.items = initialData.items
+
+                $scope.refresh = function () {
+                    $scope.isLoading = true
+                    $timeout(function () {
+                        location.reload()
+                    })
+                }
+                window.scope = $scope
+            }])
+    </script>
+}
+<div class="col-sm-12">
+    <div class="row">
+        <table class="table">
+            <tbody>
+                <tr ng-repeat="i in items" ng-class="{ 'test-group-header' : !!i.Group }">
+                    <td colspan="2" ng-if="i.Group">{{i.Group}} <span ng-if="$first" class="pull-right glyphicon glyphicon-repeat" ng-click="refresh()" ng-hide="isLoading"></span></td>
+                    <td class="col-sm-4" ng-if="!i.Group">{{i.Name}}</td>
+                    <td class="col-sm-8" ng-if="!i.Group"><span class="copyable">{{i.Value}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

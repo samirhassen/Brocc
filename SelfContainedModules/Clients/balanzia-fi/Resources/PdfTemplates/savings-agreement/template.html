@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+
+
+</head>
+<body>
+
+    <div id="header">
+        <img class="balanzia_logo" src="[[[skinning:img/pdf-logo.png|img/logo.png]]]" alt="Lender Logo">
+    </div>
+    <div class="page">
+        <div class="header">
+            <h1>Tilisopimus</h1>
+            <p>{{agreementDate}}</p>
+        </div>
+        <div class="clear"></div>
+
+        <div class="content">
+            <br /><br />
+            <div class="parties">
+                <div class="column">
+                    <h3>Tilinomistaja</h3>
+                    {{#contact}}
+                    <p>{{fullName}}</p>
+                    <p>{{civicRegNr}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                    {{/contact}}
+                </div>
+            </div>
+            <br /><br />
+            <div class="area">
+                <h2>Tilin tiedot</h2>
+                <table>
+                    <tr>
+                        <td>Tilinumero</td>
+                        <td>{{savingsAccountNr}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tämänhetkinen korko</td>
+                        <td>{{interestRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vastatili</td>
+                        <td>{{#ibanFormatted}}{{ibanReadable}}{{/ibanFormatted}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="area">
+                <p>Tilin käyttöoikeus on ainoastaan tilinomistajalla. Tämänhetkinen korko tilin avaamishetkellä. Broccilla on oikeus muuttaa korkoa yleisten ehtojen mukaisesti. Muutos astuu voimaan aikaisintaan kahden kuukauden kuluttua siitä, kun asiakkaalle on ehtojen mukaisesti ilmoitettu muutoksesta. Korko lasketaan vuoden kaikille kalenteripäiville. Korkokausi on aina 1.1. – 31.12. ja korko maksetaan tilille vuosittain vuodenvaihteessa tai tilin lopettamisen yhteydessä.</p>
+            </div>
+            <div class="area">
+                <h3>Palvelumaksut</h3>
+                <p>Broccilla on oikeus veloittaa tilin avaamiseen, ylläpitämiseen ja käyttämiseen liittyvät maksut ja palkkiot asiakkaan tililtä. Maksut ja palkkiot ilmenevät kulloinkin voimassaolevasta hinnastosta. Kulloinkin voimassa oleva hinnasto on nähtävissä Broccin verkkosivuilla.</p>
+            </div>
+            <br /><br /><br /><br /><br /><br /><br /><br />
+            <div class="area">
+                <h3>Tarkista, että tilisopimuksessa ilmoitetut tiedot ovat oikein ennen kuin allekirjoitat sopimuksen.</h3>
+                <p>Tiliin ja sen käyttöön sovelletaan tämän sopimuksen lisäksi kulloinkin voimassaolevia Brocc Säästötilin yleisiä ehtoja ja Broccin hinnastoa. Vakuutan, että tilisopimuksessa ilmoitetut tiedot ovat oikein ja että olen tutustunut yleisiin ehtoihin, hinnastoon ja kuluttajasuojalain mukaisiin ennakkotietoihin etämyynnistä. Sitoudun noudattamaan yleisiä ehtoja ja siihen, että henkilötietoja käsitellään yleisten ehtojen kohdan 18. mukaisesti.</p>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_name}}, PL 359, 00101 Helsinki | Puh: 010 524 8410 | Sähköposti: talletukset@brocc.fi <span class="counter"></span></p>
+    </div>    
+
+    [[[include:terms.html]]]
+</body>
+</html>

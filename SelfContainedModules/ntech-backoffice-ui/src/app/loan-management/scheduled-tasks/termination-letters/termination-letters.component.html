@@ -1,0 +1,47 @@
+<scheduled-tasks-menu [currentTaskName]="'TerminationLetters'">
+    <ng-container task-area *ngIf="m">
+        <toggle-block [initialData]="m.triggerInitialData">
+            <div class="col-sm-8 col-sm-offset-2" *ngIf="m.counts">
+                <div class="frame">
+                    <div class="row">
+                        <div class="col-sm-6 text-right">
+                            <p>Eligible credits</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p><b>{{m.counts.eligableCount}}</b></p>
+                        </div>
+                    </div>
+                    <div class="text-center pt-3" *ngIf="m.counts.eligableCount > 0">
+                        <button class="n-main-btn n-green-btn" (click)="createTerminationLetters($event)">Create termination letters</button>
+                    </div>
+                </div>
+            </div>
+        </toggle-block>
+        <ng-container *ngIf="m.files">
+            <div class="pt-3 text-center no-hits" *ngIf="m.files.TotalNrOfPages === 0"><p>There are no termination letters files yet.</p></div>
+            <div class="pt-3" *ngIf="m.files.TotalNrOfPages > 0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="">Date</th>
+                            <th class="text-right">Number of letters</th>
+                            <th class="text-right">Download file</th>
+                            <th class="text-right">By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let f of m.files.Page">
+                            <td class="">{{f.TransactionDate | date:'shortDate'}}</td>
+                            <td class="text-right">{{f.LettersCount}}</td>
+                            <td class="text-right">
+                                <a class="n-direct-btn n-purple-btn" target="_blank" [href]="getArchiveDocumentUrl(f.FileArchiveKey)">Data <span class="glyphicon glyphicon-save"></span></a>
+                            </td>
+                            <td class="text-right">{{f.UserDisplayName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table-pager [initialData]="m.files.pagingData"></table-pager>
+        </ng-container>
+    </ng-container>
+</scheduled-tasks-menu>

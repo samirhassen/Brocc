@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="#" type="image/vnd.microsoft.icon">
+		<title>Credit</title>    
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/toastr.css" rel="stylesheet">
+		<link href="../../css/magellan.css" rel="stylesheet">		
+	</head>
+<body style="">
+    <div class="navigation">
+        <div class="branding">
+            <a class="navbar-brand" href="#">
+                    <img src="img/menu-header-logo.png" style="max-height:60px;">
+            </a>
+        </div>
+        <div class="navigation-right">
+                <ul class="navigation-list">
+                    <li>Andreas Lundgren</li>
+                    <li>2017-04-25</li>
+                    <li><a href="#" class="logout-link">Log out</a></li>
+                </ul>
+        </div>
+        <div class="search-field">
+            <div class="search-placeholder-icon" id="modulesearchicon">search</div>
+            <form id="modulesearchform" style="display:none;">
+
+            </form>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    
+    <div id="messageAnchor">
+    </div>
+    <div class="container-fluid body-content" ng-app="app">
+        
+
+
+
+<div class="col-sm-12">
+    <div class="row">
+        <p ng-show="backUrl" class="ng-scope"><a class="btn btn-back" href="#" href="#">Back</a></p>
+        <h1 class="panel-title">Credit search</h1>
+    </div>    
+    
+<div class="row">
+    <div class="row">
+        <h2>Credit</h2>
+    </div>
+</div>    
+    <div class="row">
+        <div class="row">
+            <div class="col-sm-2">
+                
+            </div>
+            <div class="col-sm-10">
+   
+                  
+<div class="row" ng-controller="notificationDetails">
+	<div>
+		
+	</div>
+    <div class="panel-body">
+        <h3>Specification</h3>
+        <hr class="hr-section">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Notification</label>
+                <p class="form-control-static col-sm-6"><a ng-show="n.NotifcationPdfLink" target="_blank" ng-href="{{n.NotifcationPdfLink}}">Notification <span class="glyphicon glyphicon-file"></span></a></p>
+            </div>
+            <div class="form-group" ng-repeat="r in n.Reminders">
+                <label class="control-label col-sm-3">Reminder {{r.ReminderNumber}}</label>
+                <p class="form-control-static col-sm-6"><a target="_blank" ng-href="{{r.ReminderPdfLink}}">Reminder {{r.ReminderNumber}} <span class="glyphicon glyphicon-file"></span></a></p>
+            </div>
+        </div>
+
+
+        <div class="panel-heading form-group-expanded">
+            <h4>Notification</h4>
+        </div>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Notification date</label>
+                <p class="form-control-static col-sm-2">{{n.NotificationDate | date:'shortDate'}}</p>
+                <label ng-if="n.PaymentIBAN" class="control-label col-sm-2">IBAN</label>
+                <p ng-if="n.PaymentIBAN" class="form-control-static col-sm-3">{{n.PaymentIBAN}}</p>
+                <label ng-if="n.PaymentBankGiro" class="control-label col-sm-2">Bankgiro</label>
+                <p ng-if="n.PaymentBankGiro" class="form-control-static col-sm-3">{{n.PaymentBankGiro}}</p>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Due date</label>
+                <p class="form-control-static col-sm-2">{{n.DueDate | date:'shortDate'}}</p>
+                <label class="control-label col-sm-2">Reference number</label>
+                <p class="form-control-static col-sm-3">{{n.OcrPaymentReference}}</p>
+            </div>
+        </div>
+        <div class="grey-box">
+            <table class="table notification-table">
+                <thead>
+                    <tr>
+                        <th class="col-sm-2"></th>
+                        <th ng-hide="isEdit()" class="col-sm-2 text-right">Initial amount</th>
+                        <th ng-hide="isEdit()" class="col-sm-2 text-right">Paid</th>
+                        <th class="col-sm-2 text-right">Written off</th>
+                        <th class="col-sm-2 text-right">Remaining</th>  
+                        <th ng-show="isEdit()"  class="col-sm-4"></th>   
+                        <th class="col-sm-2 text-right">
+                            <button class="button-data" ng-click="beginEdit()" ng-hide="isEdit()">&#9998;</button>
+                            <button class="save-edit" ng-click="cancelEdit()" ng-show="isEdit()">&#10004;</button>
+                            <button class="cancel-edit" ng-click="saveEdit()" ng-show="isEdit()">&#10006;</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="t in n.PaymentOrder">
+                        <td><b>{{t}}</b></td>
+                        <td ng-hide="isEdit()" class="text-right">{{n.Balance[t + 'InitialAmount'] | currency}}</td>
+                        <td ng-hide="isEdit()" class="text-right">{{n.Balance[t + 'PaidAmount'] | currency}}</td>
+                        <td class="text-right"><span class="green-text">{{n.Balance[t + 'WrittenOffAmount'] | currency}}</span></td>
+                        <td class="text-right"><span class="line-through">{{n.Balance[t + 'RemainingAmount'] | currency}}</span></td>
+                        <td ng-show="isEdit()"><a href="">write off</a></td>          
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>TOTAL</td>
+                        <td ng-hide="isEdit()" class="text-right">{{n.Balance['TotalInitialAmount'] | currency}}</td>
+                        <td ng-hide="isEdit()" class="text-right">{{n.Balance['TotalPaidAmount'] | currency}}</td>
+                        <td class="text-right">{{n.Balance['TotalWrittenOffAmount'] | currency}}</td>
+                        <td class="text-right">{{n.Balance['TotalRemainingAmount'] | currency}}</td>
+                        <td ng-show="isEdit()"></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="form-group-expanded">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Placed</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="p in n.Payments">
+                        <td>{{p.TransactionDate | date:'shortDate'}}</td>
+                        <td>{{p.Amount | currency}}</td>
+                    </tr>
+                    <tr ng-show="n.Payments.length == 0">
+                        <td colspan="2">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+                
+
+
+            </div>
+        </div>        
+    </div>
+</div>
+
+<div class="col-sm-12 form-group-expanded">
+        
+</div>
+
+    
+    </div>
+    <footer>
+            <p>2021 - Näktergal AB <span style="font-size:smaller">(5.5.2021 6:00)</span> <span><a href="#">Timetravel in test</a></span></p>
+    </footer>
+
+    <script>
+        ntechClientCountry = 'FI';
+    </script>
+    
+    <script>
+        initialData = JSON.parse('{"searchUrl":"/Api/Credit/Search","creditDetailsUrl":"/Api/Credit/Details","creditCustomerDetailsUrl":"/Api/Credit/Customers","creditNotificationsUrl":"/Api/Credit/Notifications","creditNotificationDetailsUrl":"/Api/Credit/NotificationDetails","loadCommentsUrl":"/Api/CreditComment/LoadForCredit","createCommentUrl":"/Api/CreditComment/Create","getAmortizationPlanUrl":"/Api/Credit/AmortizationPlan","getAmortizationPlanPdfUrl":"/Api/Credit/AmortizationPlanPdf","testFindRandomCreditUrl":"/Api/Credit/TestFindRandom","createCustomerPagesOneTimeLoginLinkUrl":"/Api/CreateCustomerPagesLoginLink","creditNr":null,"backUrl":"#"}')
+    </script>	
+	<script src="js/jquery-1.12.4.js"></script>
+	<script src="js/jquery.flexselect.js"></script>
+	<script src="js/liquidmetal.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<script src="js/toastr.min.js"></script>
+	<script src="js/moment.js"></script>
+	<script src="js/download.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-locale_fi-fi.js"></script>
+	<script src="js/angular-resource.min.js"></script>
+	<script src="js/ntech.js.shared.js"></script>
+	<script src="js/ntech-forms.js"></script>
+    <script src="js/creditNotificationDetails.js"></script>
+</body>
+</html>

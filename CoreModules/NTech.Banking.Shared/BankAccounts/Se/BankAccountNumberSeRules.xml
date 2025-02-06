@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Banks>
+	<Bank>
+		<Name>Svea Bank</Name>
+		<ClearingRange>9660-9669</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Avanza Bank AB</Name>
+		<ClearingRange>9550-9569</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>BlueStep Finans AB</Name>
+		<ClearingRange>9680-9689</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>BNP Paribas Fortis Bank</Name>
+		<ClearingRange>9470-9479</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Citibank</Name>
+		<ClearingRange>9040-9049</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Danske Bank</Name>
+		<ClearingRange>1200-1399,2400-2499</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>DNB Bank </Name>
+		<ClearingRange>9190-9199,9260-9269</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Ekobanken</Name>
+		<ClearingRange>9700-9709</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Erik Penser AB </Name>
+		<ClearingRange>9590-9599</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Forex Bank</Name>
+		<ClearingRange>9400-9449</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>ICA Banken AB</Name>
+		<ClearingRange>9270-9279</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>JAK Medlemsbank</Name>
+		<ClearingRange>9670-9679</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Landshypotek AB</Name>
+		<ClearingRange>9390-9399</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Lån och Spar Bank Sverige</Name>
+		<ClearingRange>9630-9639</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Länsförsäkringar Bank</Name>
+		<ClearingRange>3400-3409,9060-9069</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>		
+	<Bank>
+		<Name>Länsförsäkringar Bank</Name>
+		<ClearingRange>9020-9029</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Marginalen Bank</Name>
+		<ClearingRange>9230-9239</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>		
+	<Bank>
+		<Name>Nordax Bank AB</Name>
+		<ClearingRange>9640-9649</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Nordea</Name>
+		<ClearingRange>1100-1199,1400-2099,3000-3299,3301-3399,3410-3781,3783-3999</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Nordea</Name>
+		<ClearingRange>4000-4999</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Nordnet Bank</Name>
+		<ClearingRange>9100-9109</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Resurs Bank</Name>
+		<ClearingRange>9280-9289</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Riksgälden</Name>
+		<ClearingRange>9880-9889</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Royal bank of Scotland</Name>
+		<ClearingRange>9090-9099</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Santander Consumer Bank AS</Name>
+		<ClearingRange>9460-9469</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>SBAB</Name>
+		<ClearingRange>9250-9259</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>SEB</Name>
+		<ClearingRange>5000-5999,9120-9124,9130-9149</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Skandiabanken</Name>
+		<ClearingRange>9150-9169</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Swedbank</Name>
+		<ClearingRange>7000-7999</ClearingRange>
+		<RuleSet>Type1_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Ålandsbanken Sverige AB</Name>
+		<ClearingRange>2300-2399</ClearingRange>
+		<RuleSet>Type1_2</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Danske Bank</Name>
+		<ClearingRange>9180-9189</ClearingRange>
+		<RuleSet>Type2_1</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Handelsbanken</Name>
+		<ClearingRange>6000-6999</ClearingRange>
+		<RuleSet>Type2_2</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Nordea/Plusgirot</Name>
+		<ClearingRange>9500-9549,9960-9969</ClearingRange>
+		<RuleSet>Type2_3</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Nordea</Name>
+		<ClearingRange>3300-3300,3782-3782</ClearingRange>
+		<RuleSet>Type2_1</RuleSet>
+	</Bank>	
+	<Bank>
+		<Name>Riksgälden</Name>
+		<ClearingRange>9890-9899</ClearingRange>
+		<RuleSet>Type2_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Sparbanken Syd</Name>
+		<ClearingRange>9570-9579</ClearingRange>
+		<RuleSet>Type2_1</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Swedbank</Name>
+		<ClearingRange>8000-8999</ClearingRange>
+		<RuleSet>Type2_3_swedbank</RuleSet>
+	</Bank>
+	<Bank>
+		<Name>Swedbank (f.d. Sparbanken Öresund)</Name>
+		<ClearingRange>9300-9329,9330-9349</ClearingRange>
+		<RuleSet>Type2_1</RuleSet>
+	</Bank>
+</Banks>	

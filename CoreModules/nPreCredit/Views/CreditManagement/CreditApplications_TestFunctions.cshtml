@@ -1,0 +1,25 @@
+﻿<div ng-if="isTest" class="pt-3">
+    <div class="col-sm-4 frame">
+        <h4>Test only functions</h4>
+        <ul>
+            <li>
+                Goto random application
+                <ul>
+                    <li><a style="cursor: pointer" ng-click="testGotoRandomApplication('autorejected', $event)">Auto rejected</a></li>
+                    <li><a style="cursor: pointer" ng-click="testGotoRandomApplication('manuallyrejected', $event)">Manually rejected</a></li>
+                    <li><a style="cursor: pointer" ng-click="testGotoRandomApplication('autoapproved', $event)">Auto approved</a></li>
+                    <li><a style="cursor: pointer" ng-click="testGotoRandomApplication('manuallyapproved', $event)">Manually approved</a></li>
+                    <li><a style="cursor: pointer" ng-click="testGotoRandomApplication('autocancelled', $event)">Auto cancelled</a></li>
+                    <li><a style="cursor: pointer" ng-click="testGotoRandomApplication('manuallycancelled', $event)">Manually cancelled</a></li>
+                </ul>
+            </li>
+            <li>
+                Other
+                <ul>
+                    <li><a style="cursor: pointer" ng-click="toggleCategoriesInResult($event)">Toggle categories in result</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="clearfix"></div>
+</div>

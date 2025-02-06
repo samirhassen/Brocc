@@ -1,0 +1,88 @@
+﻿<script type="text/ng-template" id="withdrawals.html">
+    <div class="pb-3" ng-hide="d.status != 'Active' || !d.withdrawalIban">
+
+        <div ng-if="d && d.areWithdrawalsSuspended">
+            <h2 class="text-center">Transactions are blocked due to checkpoint</h2>
+            <hr class="hr-section">
+        </div>
+
+        <!-- skapa betalning-->
+        <div class="row" ng-show="editModel">
+            <form name="editform" novalidate>
+                <div class="col-sm-offset-2 col-xs-8">
+                    <div class="editblock">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">From account</label>
+                                <div class="col-xs-4">
+                                    <p class="form-control-static">{{d.savingsAccountNr}} ({{d.withdrawableBalance | number:'2'}})</p>
+                                </div>
+                            </div>
+                            <div class="form-group pb-3">
+                                <label class="control-label col-xs-6">To account</label>
+                                <div class="col-xs-4">
+                                    <p class="form-control-static">{{d.withdrawalIbanFormatted}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Amount</label>
+                                <div class="col-xs-4">
+                                    <input ng-model="editModel.amount" required money autocomplete="off" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center pt-2">
+                            <button class="n-direct-btn n-blue-btn" ng-click="calculate($event)" ng-disabled="editform.$invalid">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--slut-->
+        <!--bekräfta betalning -->
+        <div class="row" ng-show="confirmModel">
+            <div class="col-sm-offset-1 col-xs-10">
+                <div class="frame">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Amount</label>
+                                    <p class="form-control-static col-xs-6">{{confirmModel.amount | number:'2'}}</p>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-4">IBAN</label>
+                                    <p class="form-control-static col-xs-8">{{d.withdrawalIbanFormatted}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-4">Bank</label>
+                                    <p class="form-control-static col-xs-8">{{d.withdrawalIbanBankName}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2 text-center">
+                        <button class="n-main-btn n-green-btn" ng-click="withdraw($event)">Withdraw</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!--end betalning-->
+        <!--done-->
+        <div class="row" ng-show="!confirmModel && !editModel">
+            <div class="col-sm-offset-1 col-xs-10">
+                <div class="frame">
+                    <p class="pt-3 pbt-3 text-center">Withdrawal done.</p>
+                </div>
+            </div>
+        </div><!--end done-->
+    </div>
+
+    <div class="pb-3" ng-show="d.status != 'Active' || !d.withdrawalIban">
+        <div ng-show="(!confirmModel && !editModel) || d.status != 'Active' ">
+            <p ng-show="d.status != 'Active'">Account is not active.</p>
+            <p ng-show="!d.withdrawalIban">No withdrawal account defined.</p>
+        </div><!--end done-->
+    </div>
+</script>

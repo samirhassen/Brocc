@@ -1,0 +1,146 @@
+<div class="form-horizontal" *ngIf="m">
+  <div style="border-top: 1px solid lightgrey; margin-top: 20px; padding-top: 10px" class="form-group"
+    *ngIf="!m.inEditMode && m.state.isNewPaymentPlanPossible">
+    <label class="control-label col-xs-3">Create payment plan</label>
+    <div class="col-xs-6">
+      <button class="n-icon-btn n-blue-btn" (click)="beginCreate($event)"
+        [disabled]="!m.state.isNewPaymentPlanPossible">
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
+    </div>
+  </div>
+
+  <div style="border-top: 1px solid lightgrey; margin-top: 20px; padding-top: 10px" class="form-group" *ngIf="
+      m.state.paymentPlanState?.alternatePaymentPlanMonths !== null &&
+      !m.state.isNewPaymentPlanPossible
+    ">
+    <div *ngIf="!m.pendingEdit && !m.pendingCancel">
+      <label class="control-label col-xs-4 text-left">Payment plan</label>
+      <div class="col-xs-8 text-right">
+        <button class="n-icon-btn n-blue-btn" (click)="beginEdit($event)" [disabled]="m.state.isNewPaymentPlanPossible">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="m.pendingEdit || m.pendingCancel">
+      <div class="col-xs-12 text-right">
+        <button style="float: right; margin-left: 5px" (click)="commitCancel($event)" class="n-icon-btn n-green-btn"
+          [disabled]="!m.pendingCancel">
+          <span class="glyphicon glyphicon-ok"></span>
+        </button>
+        <button style="float: right" (click)="cancelEdit($event)" class="n-icon-btn n-white-btn">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </div>
+    </div>
+    <table class="table lined-table" style="border-top: 1px solid lightgrey; margin-top: 50px">
+      <thead>
+        <tr>
+          <th class="col-xs-3">Date</th>
+          <th class="col-xs-3">Amount</th>
+          <th class="col-xs-3 text-right">Paid</th>
+          <th class="col-xs-3 text-right">Last payment date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="
+            let x of m.state.paymentPlanState?.paymentPlanPaidAmountsResult
+          ">
+          <tr>
+            <td class="col-xs-3">{{ x.dueDate | date : "shortDate" }}</td>
+            <td class="col-xs-3">{{ x.paymentPlanAmount | currency }}</td>
+            <td class="col-xs-3 text-right">{{ x.paidAmount | currency }}</td>
+            <td class="col-xs-3 text-right">
+              {{ x.latestPaymentDate | date : "shortDate" }}
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="form-group pb-2" *ngIf="m.inEditMode">
+    <label class="control-label col-xs-4">&nbsp;</label>
+    <div class="col-xs-8 text-right">
+      <button style="float: right; margin-left: 5px" (click)="commitCreate($event)" class="n-icon-btn n-green-btn"
+        [disabled]="m.paymentPlanForm.invalid() || m.isValidationError">
+        <span class="glyphicon glyphicon-ok"></span>
+      </button>
+      <button style="float: right" (click)="cancelCreate($event)" class="n-icon-btn n-white-btn">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="form-group text-center" *ngIf="m.pendingEdit || m.pendingCancel">
+    <button *ngIf="!m.pendingCancel" class="n-direct-btn n-blue-btn" (click)="beginCancel($event)"
+      [disabled]="!m.pendingEdit">
+      Cancel payment plan
+    </button>
+    <p *ngIf="m.pendingCancel">Pending cancel payment plan</p>
+  </div>
+  <div class="editblock" *ngIf="m.inEditMode && m.paymentPlanForm">
+    <div [formGroup]="m.paymentPlanForm.form">
+      <div class="col-xs-12 pb-2">
+        <div class="col-xs-4" style="text-align: center">
+          <button (click)="changeMonth(false, $event)" title="Remove one month" class="n-icon-btn n-white-btn"
+            [disabled]="m.nrOfMonths <= 2">
+            <span class="glyphicon glyphicon-minus"></span>
+          </button>
+        </div>
+        <div>
+          <label class="control-label col-xs-4" style="text-align: center">{{ m.nrOfMonths }} months</label>
+        </div>
+        <div class="col-xs-4" style="text-align: center">
+          <button (click)="changeMonth(true, $event)" title="Add one month" class="n-icon-btn n-white-btn"
+            [disabled]="m.nrOfMonths >= 12">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-4 col-xs-offset-2">First due date</div>
+        <div class="col-xs-6">
+          <select class="form-control" formControlName="forceStartNextMonth" (change)="changeForceStartNextMonth()">
+            <option value="false">Current month</option>
+            <option value="true">Next month</option>
+          </select>
+        </div>
+      </div>
+      <div *ngFor="let month of m.suggestedPlan.months; let i = index">
+        <ng-container [formGroupName]="(i + 1).toString()">
+          <div class="form-group" [ngClass]="{
+              'has-error': m.paymentPlanForm.hasError(
+                'amount',
+                (i + 1).toString()
+              )
+            }">
+            <div class="col-xs-4 col-xs-offset-2">
+              {{ month.dueDate | date : "shortDate" }}
+            </div>
+            <div class="col-xs-6">
+              <input (input)="onFormInput()" class="form-control text-right" type="text" formControlName="amount" />
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div>
+        <div class="col-xs-6"></div>
+        <div class="form-group" *ngIf="m.formPaymentPlanSum && m.requiredPaymentPlanSum">
+          <div class="text-right pt-1" style="font-weight: 1000">
+            {{ m.formPaymentPlanSum | currency }} ({{ m.requiredPaymentPlanSum | currency }})
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="form-group pt-2" *ngIf="m.isValidationError">
+          <div class="editblock" style="
+              background-color: rgba(224, 47, 47, 0.25);
+              border: #e02f2f solid 1px;
+            ">
+            {{ m.isValidationError.errorBlockMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

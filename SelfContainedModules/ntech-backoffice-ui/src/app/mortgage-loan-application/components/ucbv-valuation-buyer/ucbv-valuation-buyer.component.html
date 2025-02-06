@@ -1,0 +1,58 @@
+<div *ngIf="m">
+  <ng-container *ngIf="m.lastResult.resultCode === 'error'">
+    <h2>Error</h2>
+    <p>{{ m.lastResult.errorMessage }}</p>
+  </ng-container>
+  <ng-container
+    *ngIf="
+      m.lastResult.resultCode !== 'error' &&
+      m.lastResult.resultCode !== 'success'
+    "
+  >
+    <h3 *ngIf="m.headerText">{{ m.headerText }}</h3>
+    <hr *ngIf="m.headerText" class="hr-section" />
+    <div class="editblock col-xs-8" *ngIf="m.editFields.length > 0">
+      <form [formGroup]="m.form.form" class="form-horizontal">
+        <editblock-form-field
+          *ngFor="let field of m.editFields"
+          [model]="field"
+        ></editblock-form-field>
+        <div class="form-group">
+          <div class="col-xs-3"></div>
+          <div class="col-xs-9" style="display: flex; justify-content: center">
+            <button
+              class="n-main-btn n-blue-btn"
+              [disabled]="m.form.invalid()"
+              (click)="continue($event)"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-xs-8" *ngIf="m.objectChoice">
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let object of m.objectChoice.objects">
+            <td class="col-xs-9">{{ object.Name }}</td>
+            <td class="col-xs-3">
+              <a href="#" (click)="pickAddress(object.Id, $event)">Pick</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-8" *ngIf="m.apartmentChoice">
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let nr of m.apartmentChoice.seTaxOfficeApartmentNrs">
+            <td>{{ nr }}</td>
+            <td><a href="#" (click)="pickApartmentNr(nr, $event)">Pick</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="clearfix"></div>
+  </ng-container>
+</div>

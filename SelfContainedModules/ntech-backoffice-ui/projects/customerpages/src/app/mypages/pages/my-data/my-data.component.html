@@ -1,0 +1,24 @@
+<mypages-shell [initialData]="shellInitialData" *ngIf="shellInitialData">
+  <div active-tab>
+    <h1 class="header-light pt-2">Mina uppgifter</h1>
+
+    <div class="pt-1">
+      <table class="table">
+        <tbody>
+          <tr class="active-task-row" routerLink="contactinfo">
+            <td class="col-xs-6">Kontaktuppgifter</td>
+            <td class="text-right col-xs-6">
+              <span class="glyphicon glyphicon-play"></span>
+            </td>
+          </tr>
+          <tr class="active-task-row" routerLink="" (click)="goToKycOverview()">
+            <td class="col-xs-6">Kundkännedom</td>
+            <td class="text-right col-xs-6">
+              <span class="glyphicon glyphicon-play"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</mypages-shell>

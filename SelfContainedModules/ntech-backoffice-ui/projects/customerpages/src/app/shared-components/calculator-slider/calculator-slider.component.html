@@ -1,0 +1,13 @@
+<div class="row" [formGroup]="m?.form?.form">
+    <div class="col-xs-2 col-sm-1">
+        <button class="n-icon-btn n-blue-btn" (click)="tickSlider(false)"><span class="glyphicon glyphicon-minus glyphicon-centered"></span></button>
+    </div>
+    <div class="col-xs-8 col-sm-10 pt-2">
+        <div class="calculator-slider">
+            <ngx-slider class="calculator-slider" [formControlName]="m.formControlName" [options]="m.sliderOptions"></ngx-slider>
+        </div>
+    </div>
+    <div class="col-xs-2 col-sm-1 text-right">
+        <button class="n-icon-btn n-blue-btn" (click)="tickSlider(true)"><span class="glyphicon glyphicon-plus glyphicon-centered"></span></button>
+    </div>
+</div>

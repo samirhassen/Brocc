@@ -1,0 +1,86 @@
+<div class="editblock" *ngIf="m">
+    <div class="form-horizontal">
+        <form *ngIf="!m.isEditing">
+            <!-- view mode-->
+            <div class="text-right pb-1">
+                <button class="n-icon-btn n-blue-btn" (click)="beginEdit($event)">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+            </div>
+            <div class="form-group" *ngFor="let f of m.viewFields">
+                <label class="col-xs-5 control-label">{{ f.labelText }}</label>
+                <p class="col-xs-6 form-control-static word-wrap">
+                    <span>{{ f.valueText }}</span>
+                </p>
+                <div class="col-xs-1"></div>
+            </div>
+        </form>
+
+        <form *ngIf="m.isEditing && m.edit" [formGroup]="m.edit.form.form">
+            <!-- edit mode -->
+            <div class="text-right pb-1">
+                <button *ngIf="hasHiddenFields()" class="n-icon-btn n-white-btn"
+                    (click)="m.showHiddenFields = !m.showHiddenFields" style="margin-right: 5px">
+                    <span class="glyphicon"
+                        [ngClass]="{'glyphicon-eye-open': m.showHiddenFields, 'glyphicon-eye-close' : !m.showHiddenFields }"></span>
+                </button>
+                <button class="n-icon-btn n-white-btn" (click)="rollbackEdit($event)" style="margin-right: 5px">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button class="n-icon-btn n-green-btn" (click)="commitEdit($event)" [disabled]="m.edit.form.invalid()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </button>
+            </div>
+
+            <ng-container *ngFor="let f of m.edit.editFields">
+                <ng-container [ngSwitch]="f.controlType">
+                    <div class="form-group" [class.has-error]="m.edit.form.hasError(f.formControlName)"
+                        *ngSwitchCase="'inputText'">
+                        <label class="control-label col-xs-5">{{ f.labelText }}</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" [formControlName]="f.formControlName" />
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                    <div class="form-group" [class.has-error]="m.edit.form.hasError(f.formControlName)"
+                        *ngSwitchCase="'hiddenText'">
+                        <label class="control-label col-xs-5">{{ f.labelText }}</label>
+                        <div class="col-xs-6">
+                            <input *ngIf="m.showHiddenFields" type="text" class="form-control" [formControlName]="f.formControlName" />
+                            <input *ngIf="!m.showHiddenFields" type="password" class="form-control" [formControlName]="f.formControlName" />
+                        </div>
+                    </div>
+                    <div class="form-group" [class.has-error]="m.edit.form.hasError(f.formControlName)"
+                        *ngSwitchCase="'dropdown'">
+                        <label class="control-label col-xs-5">{{ f.labelText }}</label>
+                        <div class="col-xs-6">
+                            <select class="form-control" [formControlName]="f.formControlName">
+                                <option *ngFor="let opt of f.dropdownOptions" [value]="opt.Code">
+                                    {{ opt.DisplayName }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                    <div class="form-group" [class.has-error]="m.edit.form.hasError(f.formControlName)"
+                        *ngSwitchCase="'textarea'">
+                        <label class="control-label col-xs-5">{{ f.labelText }}</label>
+                        <div class="col-xs-6">
+                            <textarea class="form-control" rows="{{ f.nrOfRows || 2 }}" [formControlName]="f.formControlName"></textarea>
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="m.edit.validationErrors && m.edit.validationErrors.length > 0">
+                <div class="form-group has-error" *ngFor="let errorMessage of m.edit.validationErrors; let isFirst = first">
+                    <label class="control-label col-xs-5" style="color:#a94442">{{isFirst ? 'Validation errors' : ''}}</label>
+                    <div class="col-xs-6">
+                        <p class="form-control-static" style="color:#a94442">{{errorMessage}}</p>
+                    </div>
+                    <div class="col-xs-1"></div>
+                </div>
+            </ng-container>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Custom application";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-create-payment-file")   
+}
+<div class="pt-2">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nTest"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Create payment file</h1>
+</div>
+<div class="row" ng-hide="download">
+    <form novalidate name="f">
+
+        <div class="row pb-3">
+            <div class="form-group col-sm-4">
+                <label class="control-label">Bookkeeping date</label>
+                <input class="form-control" type="text" ng-model="p.bookkeepingDate" placeholder="Bookkeeping date yyyy-mm-dd" />
+            </div>
+            <div class="form-group col-sm-4">
+                <label class="control-label">Client IBAN</label>
+                <input class="form-control" type="text" ng-model="p.clientIban" placeholder="Client iban" />
+            </div>
+            <div class="form-group col-sm-4">
+                <br />
+                <button class="btn btn-secondary" ng-click="autoFillUnpaidInvoices()">Auto fill unpaid invoices</button>
+            </div>            
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-2">Add</th>
+                    <th class="col-sm-2">Amount</th>
+                    <th class="col-sm-2">Reference</th>
+                    <th class="col-sm-2">Book. date</th>
+                    <th class="col-sm-2">Payer name</th>
+                    <th class="col-sm-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in p.payments | filter: { active: '1' } track by $index">
+                    <td></td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.amount" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.reference" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.bookKeepingDate" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.payerName" required />
+                    </td>
+                    <td><button class="btn" ng-click="p.active = '0'">Remove</button></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="credit/savings nr or empty" ng-model="p.paymentCreditNr" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary" ng-click="addPayment()">Add payment</button>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <div class="pt-2">
+        <button class="btn" ng-click="createFile()" ng-disabled="p.payments.length === 0 || f.$invalid">Create file</button>
+    </div>
+</div>
+<div class="row" ng-show="download">
+    <h2>Download</h2>
+    <a ng-href="{{download.url}}" target="_blank">{{download.fileName}}</a>
+    <br />
+    <br />
+    <br />
+    <button class="btn" ng-click="reset()">Reset</button>
+</div>

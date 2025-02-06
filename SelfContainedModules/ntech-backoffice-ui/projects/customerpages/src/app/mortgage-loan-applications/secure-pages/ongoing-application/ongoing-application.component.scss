@@ -1,0 +1,27 @@
+.ml-app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .app-header {
+    font-size: larger;
+  }
+
+  .app-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.tasks-container {
+  .non-first-task {
+    border-top: none;
+  }
+}

@@ -1,0 +1,135 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="unsecured-application-credit-check-status.html">
+    <div ng-if="$ctrl.initialData">
+        <div>
+            <div class="text-right" ng-if="$ctrl.initialData.applicationInfo.CreditCheckStatus !== 'Initial'">
+                <a class="n-anchor" ng-href="{{$ctrl.m.ViewCreditDecisionUrl}}">View details</a>
+            </div>
+            <div ng-if="$ctrl.m.acceptedCreditDecision && $ctrl.m.acceptedCreditDecision.offer" class="row">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Offer</label>
+                            <div class="col-xs-6"><p class="form-control-static"><b>New loan</b></p></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Amount</label>
+                            <div class="col-xs-6 form-control-static">{{$ctrl.m.acceptedCreditDecision.offer.amount | currency}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Repayment time</label>
+                            <div class="col-xs-6 form-control-static">{{$ctrl.m.acceptedCreditDecision.offer.repaymentTimeInMonths}} months</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Interest rate</label>
+                            <div class="col-xs-6 form-control-static">
+                                <span>{{$ctrl.m.acceptedCreditDecision.offer.marginInterestRatePercent | number}} %</span>
+                                <span ng-if="$ctrl.m.acceptedCreditDecision.offer.referenceInterestRatePercent">&nbsp;({{($ctrl.m.acceptedCreditDecision.offer.referenceInterestRatePercent > 0 ? '+' : '') + ($ctrl.m.acceptedCreditDecision.offer.referenceInterestRatePercent | number:2)}} %)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label ng-if="$ctrl.m.acceptedCreditDecision.offer.annuityAmount" class="col-xs-6 control-label">Monthly amount</label>
+                            <div ng-if="$ctrl.m.acceptedCreditDecision.offer.annuityAmount" class="col-xs-6 form-control-static">
+                                <span>{{$ctrl.m.acceptedCreditDecision.offer.annuityAmount | currency}}</span>
+                                <span ng-if="$ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount && $ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount > 0">(+{{$ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount | currency}})</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label ng-if="$ctrl.m.acceptedCreditDecision.offer.effectiveInterestRatePercent" class="col-xs-6 control-label">Eff. Interest</label>
+                            <div ng-if="$ctrl.m.acceptedCreditDecision.offer.effectiveInterestRatePercent" class="col-xs-6 form-control-static">
+                                {{$ctrl.m.acceptedCreditDecision.offer.effectiveInterestRatePercent | number:'2'}} %
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="$ctrl.m.acceptedCreditDecision.offer.initialFeeAmount">
+                            <label class="col-xs-6 control-label">Initial fee</label>
+                            <div class="col-xs-6 form-control-static">{{$ctrl.m.acceptedCreditDecision.offer.initialFeeAmount | currency}}</div>
+                        </div>
+                        <div class="form-group" ng-show="$ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount">
+                            <label class="col-xs-6 control-label">Initial notification fee</label>
+                            <div class="col-xs-6 form-control-static">{{$ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount | currency}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="$ctrl.m.acceptedCreditDecision && $ctrl.m.acceptedCreditDecision.additionalLoanOffer" class="row">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Offer</label>
+                            <div class="col-xs-6 form-control-static">Add to {{$ctrl.m.acceptedCreditDecision.additionalLoanOffer.creditNr}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Additional Loan amount</label>
+                            <div class="col-xs-6 form-control-static">{{$ctrl.m.acceptedCreditDecision.additionalLoanOffer.amount | currency}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">New annuity Amount</label>
+                            <div class="col-xs-6 form-control-static">
+                                <span ng-if="$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newAnnuityAmount">{{$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newAnnuityAmount | currency}}</span>
+                                <span ng-if="!$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newAnnuityAmount">No</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">New margin interest rate</label>
+                            <div class="col-xs-6 form-control-static">
+                                <span ng-if="$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newMarginInterestRatePercent">{{$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newMarginInterestRatePercent | number:'2'}} %</span>
+                                <span ng-if="!$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newMarginInterestRatePercent">No</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">New notification fee</label>
+                            <div class="col-xs-6 form-control-static">
+                                <span ng-if="$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newNotificationFeeAmount">{{$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newNotificationFeeAmount | currency}}</span>
+                                <span ng-if="!$ctrl.m.acceptedCreditDecision.additionalLoanOffer.newNotificationFeeAmount">No</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label ng-if="$ctrl.m.acceptedCreditDecision.offer.annuityAmount" class="col-xs-6 control-label">Monthly amount</label>
+                            <div ng-if="$ctrl.m.acceptedCreditDecision.offer.annuityAmount" class="col-xs-6 form-control-static">
+                                <span>{{$ctrl.m.acceptedCreditDecision.offer.annuityAmount | currency}}</span>
+                                <span ng-if="$ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount && $ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount > 0">(+{{$ctrl.m.acceptedCreditDecision.offer.notificationFeeAmount | currency}})</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label ng-if="$ctrl.m.acceptedCreditDecision.offer.effectiveInterestRatePercent" class="col-xs-6 control-label">Eff. interest</label>
+                            <div ng-if="$ctrl.m.acceptedCreditDecision.offer.effectiveInterestRatePercent" class="col-xs-6 form-control-static">
+                                {{$ctrl.m.acceptedCreditDecision.offer.effectiveInterestRatePercent | number:'2'}} %
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            <div ng-if="$ctrl.m.rejectedCreditDecision" class="form-horizontal">
+                <div class="form-group" ng-if="$ctrl.m.rejectedCreditDecision.scoringPass">
+                    <label class="col-xs-3 control-label">Scoring pass</label>
+                    <div class="col-xs-9 form-control-static">
+                        {{$ctrl.m.rejectedCreditDecision.scoringPass}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">Reasons</label>
+                    <div class="col-xs-9 form-control-static">
+                        <span ng-repeat="r in $ctrl.m.rejectedCreditDecision.rejectionReasons"><span ng-hide="$first">, </span>{{$ctrl.getRejectionReasonDisplayName(r)}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-3">
+                <a class="n-main-btn n-blue-btn" ng-href="{{$ctrl.m.NewCreditCheckUrl}}" ng-hide="$ctrl.initialData.applicationInfo.IsFinalDecisionMade === true || $ctrl.initialData.applicationInfo.AgreementStatus === 'Accepted'" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation">
+                    New credit check <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</script>

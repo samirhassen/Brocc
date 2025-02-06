@@ -1,0 +1,62 @@
+<application-template>
+    <div calculator-body>
+        <p class="warning-box" [translate]="'steps.calculator.warningText'">Hei! Balanzia on vaihtanut nimensä Brocciksi. Toistaiseksi tämä sivu käyttää edelleen Balanzian domainia.</p>
+        <h1 class="text-center" [translate]="'steps.calculator.header'">Privatlånet som passar dig och dina behov!</h1>
+        <div *ngIf="request">
+            <p class="text-center pt-3" [translate]="'steps.calculator.loanAmount'">Hur mycket önskar du låna?</p>
+            <p class="text-center lead">{{request.LoanAmount.snapshot.currentValue | currency: 'EUR'}}</p>
+            <div class="pb-2">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <button class="calculate-btn" (click)="request.LoanAmount.addSteps(-1, $event)"><span class="glyphicon glyphicon-minus"></span></button>
+                    </div>
+                    <div class="col-xs-8 pt-2">
+                        <div #loanAmountProgressBar class="progress" style="height: 5px;" (click)="onClickLoanAmount($event)">
+                            <div class="progress-bar" role="progressbar" [style.width]="request.LoanAmount.snapshot.currentFractionPercent + '%'"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 text-right">
+                        <button class="calculate-btn" (click)="request.LoanAmount.addSteps(1, $event)"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div *ngIf="request">
+            <p class="text-center pt-3" [translate]="'steps.calculator.repayment'">Hur lång återbetalningstid vill du ha?</p>
+            <p class="text-center lead">{{request.RepaymentTimeInYears.snapshot.currentValue}} {{'steps.calculator.year' | translate}}</p>
+            <div class="pb-2">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <button class="calculate-btn" (click)="request.RepaymentTimeInYears.addSteps(-1, $event)"><span class="glyphicon glyphicon-minus"></span></button>
+                    </div>
+                    <div class="col-xs-8 pt-2">
+                        <div #repaymentTimeProgressBar class="progress" style="height: 5px;" (click)="onClickRepaymentTime($event)">
+                            <div class="progress-bar" role="progressbar" [style.width]="request.RepaymentTimeInYears.snapshot.currentFractionPercent + '%'">                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 text-right">
+                        <button class="calculate-btn" (click)="request.RepaymentTimeInYears.addSteps(1, $event)"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div *ngIf="offer">
+            <div class="pt-3">
+                <p class="text-center lead">{{offer.MonthlyCostIncludingFeesAmount | currency: 'EUR' }} {{'steps.calculator.monthlyCost' | translate}}</p>
+                <p class="text-center">{{offer.NominalInterestRatePercent | number}} % {{'steps.calculator.interest' | translate}}</p>
+            </div>
+        
+            <div class="text-center pt-5 pb-5"><button (click)="apply($event)" class="n-main-btn n-dark-btn" [disabled]="!isApplyAllowed.value" [translate]="'steps.forwardBackButtons.start'">Ansök om ett lån </button></div>
+        
+            <div class="text-center pt-5 pb-5">
+                <small [innerHTML]="(isLegalInterestCeilingEnabled.value ? 'steps.calculator.offerText2' : 'steps.calculator.offerText') | translate: { nominalInterestRatePercent: offer.NominalInterestRatePercent | number, loanAmount: offer.LoanAmount | number, repaymentTimeInYears: offer.RepaymentTimeInYears, effectiveInterstRatePercent: offer.EffectiveInterstRatePercent | number, monthlyCostIncludingFeesAmount: offer.MonthlyCostIncludingFeesAmount | number, totalPaidAmount: offer.TotalPaidAmount | number }">
+                    
+                </small>
+            </div>
+        </div>
+    </div>
+</application-template>
+

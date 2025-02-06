@@ -1,0 +1,27 @@
+<div class="editblock" *ngIf="m">
+  <application-data-editor
+    [initialData]="m.applicationInitialData"
+  ></application-data-editor>
+  <div class="pb-1">
+    <h2 class="custom-header">{{ getApplicantHeader(1) }}</h2>
+    <hr class="hr-section custom-line mt-0" />
+    <applicant-data-editor
+      [initialData]="m.mainApplicantInitialData"
+    ></applicant-data-editor>
+
+    <div *ngIf="m.coApplicantInitialData">
+      <h2 class="custom-header pt-1">{{ getApplicantHeader(2) }}</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <div>
+        <applicant-data-editor
+          [initialData]="m.coApplicantInitialData"
+        ></applicant-data-editor>
+      </div>
+    </div>
+  </div>
+  <h2 class="custom-header">Household economy</h2>
+  <hr class="hr-section custom-line mt-0" />
+  <household-economy-data-editor
+    [initialData]="m.householdEconomyInitialData"
+  ></household-economy-data-editor>
+</div>

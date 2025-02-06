@@ -1,0 +1,95 @@
+<BookkeepingRules>
+	<CompanyName>Balanzia FI</CompanyName>
+  <CustomDimensions>
+    <Declarations><![CDATA[#DIM 1 "Kostnadsställe"
+#OBJEKT 1 "99" "Spar Finland"]]></Declarations>
+    <TransactionDimension case="fallback"><![CDATA[{ 1 "99" }]]></TransactionDimension>
+  </CustomDimensions>
+	<!-- Insättning -->
+	<BusinessEvent>
+		<BusinessEventName>IncomingPaymentFileImport</BusinessEventName>
+		<Booking>
+			<LedgerAccount>Capital</LedgerAccount>
+			<Connections>SavingsAccount,IncomingPayment</Connections>
+			<Accounts>1976,2411</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>UnplacedPayment</LedgerAccount>
+			<Connections>IncomingPayment</Connections>
+			<Accounts>1976,2431</Accounts>
+		</Booking>		
+	</BusinessEvent>
+  <BusinessEvent>
+    <BusinessEventName>NewManualIncomingPaymentBatch</BusinessEventName>
+    <Booking>
+      <LedgerAccount>UnplacedPayment</LedgerAccount>
+      <Connections>IncomingPayment</Connections>
+      <Accounts>1976,2431</Accounts>
+    </Booking>
+  </BusinessEvent>
+  <!-- Kapitaliserad ränta årsvis -->
+	<BusinessEvent>
+		<BusinessEventName>YearlyInterestCapitalization</BusinessEventName>
+    <Booking>
+			<LedgerAccount>Capital</LedgerAccount>
+			<Connections>SavingsAccount</Connections>
+			<Accounts>8412,2411</Accounts>
+		</Booking>
+		<Booking>
+			<LedgerAccount>WithheldCapitalizedInterestTax</LedgerAccount>
+			<Connections>SavingsAccount</Connections>
+			<Accounts>8412,2415</Accounts>
+		</Booking>			
+	</BusinessEvent>
+  <!-- Placering från oplac: PlacementOfUnplacedPayment -->
+  <BusinessEvent>
+    <BusinessEventName>PlacementOfUnplacedPayment</BusinessEventName>
+    <Booking>
+      <LedgerAccount>Capital</LedgerAccount>
+      <Connections>IncomingPayment,SavingsAccount</Connections>
+      <Accounts>2431,2411</Accounts>
+    </Booking>
+  </BusinessEvent>
+  <!-- Återbetalning från oplac: RepaymentOfUnplacedPayment -->
+  <BusinessEvent>
+    <BusinessEventName>RepaymentOfUnplacedPayment</BusinessEventName>
+    <Booking>
+      <LedgerAccount>UnplacedPayment</LedgerAccount>
+      <Connections>IncomingPayment</Connections>
+      <Accounts>1976,2431</Accounts>
+    </Booking>
+  </BusinessEvent>
+  <!-- AccountClosure -->
+  <BusinessEvent>
+    <BusinessEventName>AccountClosure</BusinessEventName>
+    <Booking>
+      <LedgerAccount>ShouldBePaidToCustomer</LedgerAccount>
+      <Connections>SavingsAccount,OutgoingPayment</Connections><!-- Total paid-->
+      <Accounts>2411,1976</Accounts>
+    </Booking>
+    <Booking>
+      <LedgerAccount>WithheldCapitalizedInterestTax</LedgerAccount><!-- Withheld tax -->
+      <Connections>SavingsAccount</Connections>
+      <Accounts>8412,2415</Accounts>
+    </Booking>
+    <Booking>
+      <LedgerAccount>WithheldCapitalizedInterestTax</LedgerAccount> <!-- Make sure the tax is not double counted -->
+      <Connections>SavingsAccount</Connections>
+      <Accounts>2411,8412</Accounts>
+    </Booking>
+    <Booking>
+      <LedgerAccount>CapitalizedInterest</LedgerAccount><!-- Total interest including tax -->
+      <Connections>SavingsAccount</Connections>
+      <Accounts>8412,2411</Accounts>
+    </Booking>
+  </BusinessEvent>
+  <!-- Withdrawal -->
+  <BusinessEvent>
+    <BusinessEventName>Withdrawal</BusinessEventName>
+    <Booking>
+      <LedgerAccount>ShouldBePaidToCustomer</LedgerAccount>
+      <Connections>SavingsAccount,OutgoingPayment</Connections>
+      <Accounts>2411,1976</Accounts>
+    </Booking>
+  </BusinessEvent>
+</BookkeepingRules>

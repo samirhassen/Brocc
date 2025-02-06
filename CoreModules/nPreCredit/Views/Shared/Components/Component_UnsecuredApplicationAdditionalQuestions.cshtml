@@ -1,0 +1,210 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="unsecured-application-additional-questions.html">
+    <div ng-show="$ctrl.m.additionalQuestionsStatus && ($ctrl.m.additionalQuestionsStatus.canSkipAdditionalQuestions || $ctrl.m.additionalQuestionsStatus.sentDate || $ctrl.m.provider.IsUsingDirectLinkFlow)">
+        <div>
+            <div class="pb-1">
+                <h3 style="text-decoration:underline;">Additional questions</h3>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group" ng-hide="!$ctrl.m.additionalQuestionsStatus.sentDate && $ctrl.m.additionalQuestionsStatus.canSkipAdditionalQuestions">
+                                <label class="col-xs-6 control-label">Sent</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">{{$ctrl.m.additionalQuestionsStatus.sentDate | date:'short'}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Customer link</label>
+                                <div class="col-xs-6 form-control-static">
+                                    <button ng-click="$ctrl.showDirectLink($event)" class="n-direct-btn n-turquoise-btn">Link <span class="glyphicon glyphicon-resize-full"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Answered</label>
+                                <div class="col-xs-6">
+                                    <p class="form-control-static">{{$ctrl.m.additionalQuestionsStatus.hasAnswered ? 'Yes' : ($ctrl.m.additionalQuestionsStatus.canSkipAdditionalQuestions ? 'Not required' : 'No')}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">Consent answers</label>
+                                <div class="col-xs-6 form-control-static">
+                                    <button ng-click="$ctrl.openConsentAnswersDialog($event)" class="n-direct-btn n-turquoise-btn">Raw data <span class="glyphicon glyphicon-resize-full"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="text-decoration:underline;">Agreement</h3>
+            <div class="row">
+                <div class="col-xs-5">
+                    <div ng-show="$ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant1 && ($ctrl.m.agreementSigningStatus.applicant1.status != 'NotSent' || $ctrl.m.agreementSigningStatus.isSendAllowed)" id="agreementsign1">
+                        <div class="form-horizontal">
+                            <div class="form-group" ng-hide="$ctrl.m.agreementSigningStatus.applicant1.status === 'Success'">
+                                <label class="col-xs-6 control-label">Unsigned agreement</label>
+                                <div class="col-xs-6">
+                                    <a target="_blank" class="n-direct-btn n-purple-btn" ng-href="{{'/api/Application/Create-Agreement-Pdf?ApplicantNr=1&ApplicationNr=' + $ctrl.initialData.applicationInfo.ApplicationNr}}">File<span class="glyphicon glyphicon-save"></span> </a>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="$ctrl.m.agreementSigningStatus.applicant1.status === 'Success'">
+                                <label class="col-xs-6 control-label">Agreement</label>
+                                <div class="col-xs-6 form-control-static"><a target="_blank" class="n-direct-btn n-purple-btn" ng-href="{{$ctrl.m.agreementSigningStatus.applicant1.signedDocumentUrl}}">PDF<span class="glyphicon glyphicon-save"></span></a></div>
+                            </div>
+
+                            <div class="form-group pt-2">
+                                <label class="col-xs-6 control-label"></label>
+                                <div class="col-xs-6">
+                                    <div ng-show="$ctrl.m.showMoreAgreementSigningOptions && !$ctrl.m.agreementSigningStatus.applicant1.attachedFileName">
+                                        <a ng-click="$ctrl.selectAttachedSignedAgreement(1, $event)" class="n-direct-btn n-blue-btn" ng-show="$ctrl.initialData.applicationInfo.IsActive === true && $ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant1 && $ctrl.initialData.applicationInfo.AgreementStatus !== 'Accepted'" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true" href="#">
+                                            Attach agreement <span class="glyphicon glyphicon-paperclip"></span>
+                                        </a>
+                                        <form style="display:none" id="signedagreementfileform1"><input type="file" id="signedagreementfile1" name="signedagreementfile1" style="display:none" /></form>
+                                    </div>
+                                    <div ng-show="$ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant1 && $ctrl.m.agreementSigningStatus.applicant1.attachedFileName && $ctrl.initialData.applicationInfo.AgreementStatus !== 'Accepted'">
+                                        <span>{{$ctrl.m.agreementSigningStatus.applicant1.attachedFileName}}</span>
+                                        <span ng-click="$ctrl.cancelAttachedSignedAgreement(1, $event)" class="n-icon-btn n-white-btn"> <span class="glyphicon glyphicon-remove"></span> </span>
+                                        <span ng-click="$ctrl.acceptAttachedSignedAgreement(1, $event)" class="n-icon-btn n-green-btn"> <span class="glyphicon glyphicon-ok"></span> </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <img ng-show="!$ctrl.m.showMoreAgreementSigningOptions && $ctrl.initialData.applicationInfo.NrOfApplicants == 1 && $ctrl.initialData.applicationInfo.AgreementStatus !== 'Accepted'" ng-click="$ctrl.m.showMoreAgreementSigningOptions=true" alt="more options" src="/Content/img/arrow-down.png" width="20" height="10" style="float:right;margin-right:10px;cursor:pointer" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-5">
+                    <div ng-show="$ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant2 && ($ctrl.m.agreementSigningStatus.applicant2.status != 'NotSent' || $ctrl.m.agreementSigningStatus.isSendAllowed)" id="agreementsign2">
+                        <div class="form-horizontal">
+                            <div class="form-group" ng-hide="$ctrl.m.agreementSigningStatus.applicant2.status === 'Success'">
+                                <label class="col-xs-6 control-label">Unsigned agreement</label>
+                                <div class="col-xs-6">
+                                    <a target="_blank" class="n-direct-btn n-purple-btn" ng-href="{{'/api/Application/Create-Agreement-Pdf?ApplicantNr=2&ApplicationNr=' + $ctrl.initialData.applicationInfo.ApplicationNr}}">File<span class="glyphicon glyphicon-save"></span> </a>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="$ctrl.m.agreementSigningStatus.applicant2.status === 'Success'">
+                                <label class="col-xs-6 control-label">Agreement</label>
+                                <div class="col-xs-6 form-control-static">
+                                    <a target="_blank" class="n-direct-btn n-purple-btn" ng-href="{{$ctrl.m.agreementSigningStatus.applicant2.signedDocumentUrl}}">PDF<span class="glyphicon glyphicon-save"></span> </a>
+                                </div>
+                            </div>
+
+                            <div class="form-group pt-2">
+                                <label class="col-xs-6 control-label"></label>
+                                <div class="col-xs-6">
+                                    <div ng-show="$ctrl.m.showMoreAgreementSigningOptions && !$ctrl.m.agreementSigningStatus.applicant2.attachedFileName">
+                                        <a ng-click="$ctrl.selectAttachedSignedAgreement(2, $event)" class="n-direct-btn n-blue-btn" ng-show="$ctrl.initialData.applicationInfo.IsActive === true && $ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant2 && $ctrl.initialData.applicationInfo.AgreementStatus !== 'Accepted'" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation === true" href="#">
+                                            Attach agreement  <span class="glyphicon glyphicon-paperclip"></span>
+                                        </a>
+                                        <form style="display:none" id="signedagreementfileform2"><input type="file" id="signedagreementfile2" name="signedagreementfile2" style="display:none" /></form>
+                                    </div>
+                                    <div ng-show="$ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant2 && $ctrl.m.agreementSigningStatus.applicant2.attachedFileName">
+                                        <span>{{$ctrl.m.agreementSigningStatus.applicant2.attachedFileName}}</span>
+                                        <span ng-click="$ctrl.cancelAttachedSignedAgreement(2, $event)" class="n-icon-btn n-white-btn"> <span class="glyphicon glyphicon-remove"></span> </span>
+                                        <span ng-click="$ctrl.acceptAttachedSignedAgreement(2, $event)" class="n-icon-btn n-green-btn"> <span class="glyphicon glyphicon-ok"></span> </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <img ng-show="!$ctrl.m.showMoreAgreementSigningOptions && $ctrl.initialData.applicationInfo.NrOfApplicants > 1 && $ctrl.initialData.applicationInfo.AgreementStatus !== 'Accepted'" ng-click="$ctrl.m.showMoreAgreementSigningOptions=true" alt="more options" src="/Content/img/arrow-down.png" width="20" height="10" style="float:right;margin-right:10px;cursor:pointer" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <hr class="hr-section dotted" />
+            </div>
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="form-horizontal" ng-show="$ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant1 && ($ctrl.m.agreementSigningStatus.applicant1.status != 'NotSent' || $ctrl.m.agreementSigningStatus.isSendAllowed)">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label">Applicant 1</label>
+                            <div class="col-xs-6">
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant1.status === 'Failure'">
+                                    Failed {{$ctrl.m.agreementSigningStatus.applicant1.failureMessage}}
+                                </p>
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant1.status === 'Success'">
+                                    Signed {{$ctrl.m.agreementSigningStatus.applicant1.signedDate | date:'short'}}
+                                </p>
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant1.status === 'NotSent'">
+                                    Link not sent
+                                </p>
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant1.status === 'Pending'">
+                                    Sent {{$ctrl.m.agreementSigningStatus.applicant1.sentDate | date:'short'}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-5">
+                    <div class="form-horizontal" ng-show="$ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant2 && ($ctrl.m.agreementSigningStatus.applicant2.status != 'NotSent' || $ctrl.m.agreementSigningStatus.isSendAllowed)" id="agreementsign2">
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label" ng-show="$ctrl.m.agreementSigningStatus && $ctrl.m.agreementSigningStatus.applicant2">Applicant 2</label>
+                            <div class="col-xs-6">
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant2.status === 'Failure'">
+                                    Failed {{$ctrl.m.agreementSigningStatus.applicant2.failureMessage}}
+                                </p>
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant2.status === 'Success'">
+                                    Signed {{$ctrl.m.agreementSigningStatus.applicant2.signedDate | date:'short'}}
+                                </p>
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant2.status === 'NotSent'">
+                                    Link not sent yet
+                                </p>
+                                <p class="form-control-static" ng-show="$ctrl.m.agreementSigningStatus.applicant2.status === 'Pending'">
+                                    Sent {{$ctrl.m.agreementSigningStatus.applicant2.sentDate | date:'short'}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-xs-12 form-control-static">
+                                <button ng-click="$ctrl.resetSigning($event)" ng-if="$ctrl.canResetSigning()" class="n-direct-btn n-blue-btn">Reset signing</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <hr class="hr-section dotted" />
+            </div>
+        </div>
+    </div>
+
+    <div id="userDirectLinkDialog" class="modal fade" role="dialog" style="margin-right: -15px">
+        <div class="modal-dialog" style="width:60%; max-width: 1200px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                    <h1>User link</h1>
+                </div>
+                <div class="modal-body">
+                    <textarea rows="1" style="width:100%;resize: none"  ng-click="$ctrl.focusAndSelect($event);" readonly="readonly">{{$ctrl.m.userDirectLinkUrl}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="consentAnswersDialog" class="modal fade" role="dialog" style="margin-right: -15px">
+        <div class="modal-dialog" style="width:60%; max-width: 1200px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                    <h1>Consent answers</h1>
+                </div>
+                <div class="modal-body">
+                    <textarea rows="1" style="width:100%;resize: none; height:500px"  ng-click="$ctrl.focusAndSelect($event);" readonly="readonly">{{$ctrl.m.consentAnswers}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>

@@ -1,0 +1,21 @@
+<credit-menu activeMenuItemCode="customer" [creditNr]="m?.creditNr" *ngIf="m">
+  <div current-item-content>
+    <hr class="hr-section dotted" />
+    <div *ngFor="let c of m.customers">
+      <div class="row">
+        <div class="col-xs-11">
+          <customer-info [initialData]="c"></customer-info>
+        </div>
+      </div>
+      <hr class="hr-section dotted" />
+    </div>
+
+    <div *ngIf="m.isCompanyLoansEnabled">
+      <company-connections [creditNr]="m.creditNr"></company-connections>
+    </div>
+
+    <div *ngIf="m.isStandardMortgageLoansEnabled">
+      <ml-std-connections [creditNr]="m.creditNr"></ml-std-connections>
+    </div>
+  </div>
+</credit-menu>

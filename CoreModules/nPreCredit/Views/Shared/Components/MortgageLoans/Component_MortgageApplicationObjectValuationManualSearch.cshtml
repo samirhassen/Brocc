@@ -1,0 +1,160 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-object-valuation-manual-search.html">
+    <div>
+        <h3>1. Find adress</h3>
+        <hr class="hr-section" />
+        <div class="row">
+            <div class="col-sm-offset-1 col-xs-10">
+                <div class="editblock">
+                    <simple-form initial-data="$ctrl.ucbvSearchForm"></simple-form>
+                </div>
+            </div>
+        </div>
+        <div class="pt-3 pb-3" ng-if="$ctrl.ucbvSearchAddressHits">
+            <div class="frame">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-6">Name</th>
+                            <th class="col-xs-6">Id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="i in $ctrl.ucbvSearchAddressHits">
+                            <td>{{i.Name}}</td>
+                            <td><span class="copyable">{{i.Id}}</span></td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvSearchAddressHits && $ctrl.ucbvSearchAddressHits.length === 0">
+                            <td colspan="3">No hits</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3>2. Get object</h3>
+        <hr class="hr-section" />
+        <div class="row">
+            <div class="col-sm-offset-1 col-xs-10">
+                <div class="editblock">
+                    <simple-form initial-data="$ctrl.ucbvFetchObjectForm"></simple-form>
+                </div>
+            </div>
+        </div>
+        <div class="pt-3 pb-3" ng-if="$ctrl.ucbvFetchObjectHit">
+            <div class="frame">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-3">Lghnr</th>
+                            <th class="col-xs-3">Boarea</th>
+                            <th class="col-xs-3">Vaning</th>
+                            <th class="col-xs-3">Rum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit.hit.Kommun">
+                            <td colspan="1">Kommun</td>
+                            <td colspan="3">{{$ctrl.ucbvFetchObjectHit.hit.Kommun}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit.hit.Adress">
+                            <td colspan="1">Adress</td>
+                            <td colspan="3">{{$ctrl.arrayToCommaList($ctrl.ucbvFetchObjectHit.hit.Adress)}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit.hit.Fastighet">
+                            <td colspan="1">Fastighet</td>
+                            <td colspan="3">{{$ctrl.ucbvFetchObjectHit.hit.Fastighet}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit.hit.Forening">
+                            <td colspan="1">Forening</td>
+                            <td colspan="3">{{$ctrl.ucbvFetchObjectHit.hit.Forening}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit.hit.Objekttyp">
+                            <td colspan="1">Objekttyp</td>
+                            <td colspan="3">{{$ctrl.ucbvFetchObjectHit.hit.Objekttyp}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit.hit.Kommentar">
+                            <td colspan="1">Kommentar</td>
+                            <td colspan="3">{{$ctrl.ucbvFetchObjectHit.hit.Kommentar}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit.hit.Lagenheter && $ctrl.ucbvFetchObjectHit.hit.Lagenheter.length > 0">
+                            <td colspan="4">Lagenheter</td>
+                        </tr>
+                        <tr ng-repeat="i in $ctrl.ucbvFetchObjectHit.hit.Lagenheter">
+                            <td>{{i.Lghnr}}</td>
+                            <td><span class="copyable">{{i.Boarea}}</span></td>
+                            <td>{{i.Vaning}}</td>
+                            <td>{{i.Rum}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.ucbvFetchObjectHit && !$ctrl.ucbvFetchObjectHit.hit">
+                            <td colspan="4">No such object</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3>3. Valuation</h3>
+        <hr class="hr-section" />
+        <div class="row">
+            <div class="col-sm-offset-1 col-xs-10">
+                <div class="editblock">
+                    <simple-form initial-data="$ctrl.ucbvVarderaBostadsrattForm"></simple-form>
+                </div>
+            </div>
+        </div>
+        <div class="pt-3" ng-if="$ctrl.ucbvVarderaBostadsrattHit">
+            <div class="frame" ng-if="$ctrl.ucbvVarderaBostadsrattHit.hit === null"><p>No such object</p></div>
+            <div class="frame" ng-if="$ctrl.ucbvVarderaBostadsrattHit.hit != null">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-2">Name</th>
+                            <th class="col-xs-10">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Varde</td>
+                            <td>{{$ctrl.ucbvVarderaBostadsrattHit.hit.Varde}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Brf - signal</td>
+                        </tr>
+                        <tr>
+                            <td>Ar</td>
+                            <td>{{$ctrl.ucbvVarderaBostadsrattHit.hit.Brfsignal.Ar}}</td>
+                        </tr>
+                        <tr>
+                            <td>Belaning</td>
+                            <td>{{$ctrl.brfSignalToCode($ctrl.ucbvVarderaBostadsrattHit.hit.Brfsignal.Belaning)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Likviditet</td>
+                            <td>{{$ctrl.brfSignalToCode($ctrl.ucbvVarderaBostadsrattHit.hit.Brfsignal.Likviditet)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Sjalvforsorjningsgrad</td>
+                            <td>{{$ctrl.brfSignalToCode($ctrl.ucbvVarderaBostadsrattHit.hit.Brfsignal.Sjalvforsorjningsgrad)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Rantekanslighet</td>
+                            <td>{{$ctrl.brfSignalToCode($ctrl.ucbvVarderaBostadsrattHit.hit.Brfsignal.Rantekanslighet)}}</td>
+                        </tr>
+                        <tr><td colspan="2">Raw</td></tr>
+                        <tr>
+                            <td colspan="2">
+                                <button class="btn btn-default" ng-hide="ucbvVarderaBostadsrattShowAll" ng-click="ucbvVarderaBostadsrattShowAll = true">Show</button>
+                                <button class="btn btn-default" ng-show="ucbvVarderaBostadsrattShowAll" ng-click="ucbvVarderaBostadsrattShowAll = false">Hide</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre ng-if="ucbvVarderaBostadsrattShowAll">{{$ctrl.ucbvVarderaBostadsrattJson($ctrl.ucbvVarderaBostadsrattHit.hit) | json}}</pre>
+            </div>
+        </div>
+    </div>
+</script>

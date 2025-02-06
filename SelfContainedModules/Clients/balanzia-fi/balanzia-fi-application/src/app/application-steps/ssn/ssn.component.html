@@ -1,0 +1,13 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5">
+            <label class="custom-label" [translate]="'steps.ssn.header'">Vad är ditt personnummer?</label>
+            <input type="text" class="custom-input" placeholder="{{'steps.ssn.placeHolder' | translate}}"
+                formControlName="ssn">
+        </div>
+        <small style="position:absolute;margin-top:-40px;color: #000;" *ngIf="isDuplicateSsn()" [translate]="'steps.ssn.duplicateText'">
+            Du har använt samma personbeteckning på båda sökande.
+        </small>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

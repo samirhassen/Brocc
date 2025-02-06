@@ -1,0 +1,24 @@
+<div style="max-width:500px" *ngIf="m">
+    <form [formGroup]="m.f.form" *ngIf="!m.error">
+        <div class="form-group">
+            <label for="dropdown">Select a function</label>
+            <select class="form-control" formControlName="functionName">
+                <option value=""></option>
+                <option value="removeMainApplicant">Remove main applicant</option>
+                <option value="removeCoApplicant">Remove co applicant</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="text-input">Credit nr</label>
+            <input type="text" formControlName="creditNr" class="form-control">
+        </div>
+
+        <button type="submit" [disabled]="m.f.invalid()" class="btn btn-primary mt-2" (click)="executeFunction($event)">Submit</button>
+    </form>
+    <div *ngIf="m.error">
+        <h2>Error</h2>
+        <button class="btn btn-primary mb-1" (click)="reset($event)">Reset</button>
+        <pre>{{m.error | json}}</pre>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿@model nCustomerPages.Controllers.ProductOverViewModel
+@{ Func<string, string>
+             tr = x => Model.Translations.ContainsKey(x) ? Model.Translations[x] : x;
+}
+<div class="modal fade in" data-backdrop="static" data-keyboard="false" id="productOverviewMessageModal">
+    <div class="modal-dialog" style="width:90%; max-width: 800px;padding-top:90px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="pull-right">
+                    <button type="button" id="closebuttonProductOverviewMessageModal" class="n-icon-btn n-grey-btn"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                @if (@Model.MessageTypeCode == "newaccountgreeting" || @Model.MessageTypeCode == "alreadyhaveaccount" || @Model.MessageTypeCode == "accountbeingprocessed")
+                {
+                    <h1 class="modal-header">@tr("sao_message_h_oa")</h1>
+                }
+
+                <div class="pt-3 pb-3 text-center">
+
+                    @if (@Model.MessageTypeCode == "newaccountgreeting")
+                    {
+                        <p>@tr("sao_message_newaccountgreeting")</p>
+                    }
+                    @if (@Model.MessageTypeCode == "alreadyhaveaccount")
+                    {
+                        <p>@tr("sao_message_alreadyhaveaccount")</p>
+                    }
+                    @if (@Model.MessageTypeCode == "accountbeingprocessed")
+                    {
+                        <p>@tr("sao_message_accountbeingprocessed")</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

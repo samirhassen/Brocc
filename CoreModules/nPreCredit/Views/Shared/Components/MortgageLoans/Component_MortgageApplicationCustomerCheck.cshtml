@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-customer-check.html">
+    <div class="editblock">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Issue</th>
+                    <th>Resolution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Proof of identity</td>
+                    <td ng-if="$ctrl.isApproved() || $ctrl.m.proofOfIdentityIssues.length === 0" colspan="2"><span class="glyphicon glyphicon-ok"></span></td>
+                    <td ng-if="$ctrl.m.proofOfIdentityIssues.length > 0">Missing for applicant(s): <span class="comma" ng-repeat="i in $ctrl.m.proofOfIdentityIssues">{{i.ApplicantNr}}</span></td>
+                    <td ng-if="$ctrl.m.proofOfIdentityIssues.length > 0">Attach proof of identity document(s)</td>
+                </tr>
+                <tr>
+                    <td>Pep question answered</td>
+                    <td ng-if="$ctrl.isApproved() || $ctrl.m.pepQuestionNotAnsweredIssues.length === 0" colspan="2"><span class="glyphicon glyphicon-ok"></span></td>
+                    <td ng-if="$ctrl.m.pepQuestionNotAnsweredIssues.length > 0">Not answered by applicant(s): <span class="comma" ng-repeat="i in $ctrl.m.pepQuestionNotAnsweredIssues">{{i.ApplicantNr}}</span></td>
+                    <td ng-if="$ctrl.m.pepQuestionNotAnsweredIssues.length > 0 &&  $ctrl.m.kycCustomerDecisionMissingIssues.length > 0">Collect answers from the applicants</td>
+                </tr>
+                <tr>
+                    <td>List screen done</td>
+                    <td ng-if="$ctrl.isApproved() || $ctrl.m.kycListScreenNotDoneIssues.length === 0" colspan="2"><span class="glyphicon glyphicon-ok"></span></td>
+                    <td ng-if="$ctrl.m.kycListScreenNotDoneIssues.length > 0">Not done for applicant(s): <span class="comma" ng-repeat="i in $ctrl.m.kycListScreenNotDoneIssues">{{i.ApplicantNr}}</span></td>
+                    <td ng-if="$ctrl.m.isKycListScreenAllowed && $ctrl.m.kycListScreenNotDoneIssues.length > 0">
+                        <button class="n-direct-btn n-purple-btn" ng-click="$ctrl.tryKycScreen($event)">Screen now<span class="glyphicon glyphicon-refresh"></span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pep &amp; Sanction</td>
+                    <td ng-if="$ctrl.isApproved() || $ctrl.m.kycCustomerDecisionMissingIssues.length === 0" colspan="2"><span class="glyphicon glyphicon-ok"></span></td>
+                    <td ng-if="$ctrl.m.kycCustomerDecisionMissingIssues.length > 0">Not done for applicant(s): <span class="comma" ng-repeat="i in $ctrl.m.kycCustomerDecisionMissingIssues">{{i.ApplicantNr}}</span></td>
+                    <td ng-if="$ctrl.m.kycCustomerDecisionMissingIssues.length > 0">
+                        <a class="n-anchor" ng-href="{{$ctrl.getCustomerLocalDecisionUrl(i, $event)}}" ng-repeat="i in $ctrl.m.kycCustomerDecisionMissingIssues">View details A{{i.ApplicantNr}}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center pt-3" ng-if="$ctrl.m && $ctrl.m.isApproveAllowed">
+            <a class="n-main-btn n-green-btn" ng-click="$ctrl.approve($event)">Approve</a>
+        </div>
+    </div>
+</script>

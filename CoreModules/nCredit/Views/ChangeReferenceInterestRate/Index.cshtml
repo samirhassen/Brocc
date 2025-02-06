@@ -1,0 +1,205 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit - Change reference interest rate";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr as c\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"c.isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+          var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-changereferenceinterest-index")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="c.onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Reference interest rate</h1>
+</div>
+
+<div class="pb-2">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-6 control-label ">Current interest rate</label>
+            <p class="form-control-static col-md-6">{{c.currentReferenceInterestRate | number:2}} %</p>
+        </div>
+    </div>
+</div>
+
+<form name="f" novalidate>
+    <div class="row pb-3" ng-if="c.initial">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="editblock">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">New reference interest rate (%)</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" name="i" placeholder="0.00" autocomplete="off" ng-model="c.initial.newReferenceInterestRate" required custom-validate="c.isValidDecimal">
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-2 text-center" ng-show="f.$valid && !c.isReasonableChange()">
+                    <p>Warning: You are changing the rate by {{c.changeSize() | number:2}} %.</p>
+                    <p>Allow: <input type="checkbox" ng-model="c.overrideSafeguard" /> </p>
+                </div>
+                <div class="row pt-2 text-center">
+                    <a class="n-main-btn n-blue-btn" ng-click="c.calculate($event)" ng-disabled="!c.isChangeAllowed()">Calculate <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="pt-3" ng-if="c.calculated">
+    <div class="row pt-1">
+        <div class="col-sm-offset-1 col-xs-10">
+            <div class="frame">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">New reference interest rate (%)</label>
+                        <div class="col-xs-3">
+                            <p class="form-control-static">{{c.calculated.newReferenceInterestRate | number:2}} %</p>
+                        </div>
+                        <label class="col-xs-3 control-label">Initiated by</label>
+                        <div class="col-xs-3">
+                            <p class="form-control-static ng-binding">{{c.calculated.userName}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label"></label>
+                        <div class="col-xs-3">
+                            <p class="form-control-static ng-binding"></p>
+                        </div>
+                        <label class="col-xs-3 control-label"></label>
+                        <div class="col-xs-3">
+                            <p class="form-control-static ng-binding">{{c.calculated.now | date:'short'}}</p>
+                        </div>
+                    </div>
+                    <div class="pt-3 text-center">
+                        <button class="n-main-btn n-blue-btn" ng-click="c.beginChange($event)">Initiate change</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pt-3" ng-if="c.pending">
+    <div class="row pt-1">
+        <div class="col-sm-offset-1 col-xs-10">
+            <div class="frame">
+                <div class="text-right pb-1">
+                    <button class="n-main-btn n-white-btn" ng-click="c.cancelChange($event)">Cancel</button>
+                </div>
+                <div class="row">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">New reference interest rate (%)</label>
+                            <div class="col-xs-3">
+                                <p class="form-control-static">{{c.pending.NewInterestRatePercent | number:2}} %</p>
+                            </div>
+                            <label class="col-xs-3 control-label">Initiated by</label>
+                            <div class="col-xs-3">
+                                <p class="form-control-static ng-binding">{{c.pending.InitiatedByUserName}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label"></label>
+                            <div class="col-xs-3">
+                                <p class="form-control-static ng-binding"></p>
+                            </div>
+                            <label class="col-xs-3 control-label"></label>
+                            <div class="col-xs-3">
+                                <p class="form-control-static ng-binding">{{c.pending.InitiatedDate | date:'short'}}</p>
+                            </div>
+                        </div>
+                        <div class="pt-3 text-center">
+                            <button ng-if="!c.isCurrentUser(c.pending.InitiatedByUserId)" class="n-main-btn n-green-btn" ng-click="c.commitChange(false, $event)">Change reference interest rate</button>
+                            <div ng-if="c.isCurrentUser(c.pending.InitiatedByUserId)">
+                                <span class="clearfix"></span>
+                                <span style="font-weight:bold;font-style:italic">Waiting for approval</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center no-hits" ng-show="c.nrOfCreditsUpdated">
+    <p>Changed interest rate on {{c.nrOfCreditsUpdated}} credits</p>
+</div>
+
+<div class="pt-3">
+    <h2>History</h2>
+    <hr class="hr-section" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-xs-6">From date</th>
+                <th class="col-xs-6">New value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="f in c.files.Page">
+                <td>
+                    <span ng-class="{ 'glyphicon glyphicon-chevron-down chevron-bg mr-1' : !!f.showDetails, 'glyphicon glyphicon-chevron-right chevron-bg mr-1' : !f.showDetails  }" ng-click="$event.preventDefault(); f.showDetails = !f.showDetails"></span>
+                    {{f.TransactionDate | date:'shortDate'}}
+                </td>
+                <td>{{f.ChangedToValue | number:2}} %</td>
+            </tr>
+            <tr ng-repeat-end class="opend" ng-show="f.showDetails">
+                <td colspan="2">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label class=" col-xs-6 text-right">Nr of credits</label>
+                            <div class="col-xs-6">{{f.ChangedCreditCount}}</div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div>
+                                <label class=" col-xs-6 text-right">Initiated by</label>
+                                <div class="col-xs-6">
+                                    <p><b>{{f.InitiatedByDisplayName}}</b></p>
+                                    <p><b>{{f.InitiatedDate | date:'short'}}</b></p>
+                                </div>
+                            </div>
+                            <div>
+                                <label class=" col-xs-6 text-right">Approved by</label>
+                                <div class="col-xs-6">
+                                    <p><b>{{f.UserDisplayName}}</b></p>
+                                    <p><b>{{f.ApprovedDate | date:'short'}}</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-show="!c.filesPaging || (c.filesPaging && !c.filesPaging.isNextAllowed)">
+                <td>(Initial)</td>
+                <td>{{ 0.00 | number:2}} %</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row" ng-show="c.files && c.files.TotalNrOfPages > 1">
+    <div class="col-sm-12">
+        <div class="dataTables_paginate paging_simple_numbers custom-pagination">
+            <ul class="pagination">
+                <li class="paginate_button previous" ng-show="c.filesPaging.isPreviousAllowed"><a href="#" ng-click="c.gotoPage(c.filesPaging.previousPageNr, $event)">Previous</a></li>
+                <li class="paginate_button previous disabled" ng-hide="c.filesPaging.isPreviousAllowed"><a href="#" ng-click="$event.preventDefault()">Previous</a></li>
+
+                <li ng-repeat="p in c.filesPaging.pages" class="paginate_button" ng-class="{ 'active' : p.isCurrentPage, 'disabled' : p.isSeparator }">
+                    <a href="#" ng-click="c.gotoPage(p.pageNr, $event)" ng-hide="p.isSeparator">{{p.pageNr+1}}</a>
+                    <a href="#" ng-show="p.isSeparator" ng-click="$event.preventDefault()">...</a>
+                </li>
+
+                <li class="paginate_button next" ng-show="c.filesPaging.isNextAllowed"><a href="#" ng-click="c.gotoPage(c.filesPaging.nextPageNr, $event)">Next</a></li>
+                <li class="paginate_button next disabled" ng-hide="c.filesPaging.isNextAllowed"><a href="#" ng-click="$event.preventDefault()">Next</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<ntech-test-functions ng-if="c.testFunctions" test-functions="c.testFunctions"></ntech-test-functions>

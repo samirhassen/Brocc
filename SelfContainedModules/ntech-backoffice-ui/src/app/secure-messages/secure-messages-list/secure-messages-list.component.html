@@ -1,0 +1,23 @@
+<menu-shell [initialData]="{ activeItemName: 'unread' }">
+  <div right-content>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-md-3">Date</th>
+          <th class="col-md-8">Product</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of m?.messages?.list">
+          <td>
+            <a class="n-anchor" href="#" (click)="openChannel(c, $event)">{{
+              c.CreationDate | date: "short"
+            }}</a>
+          </td>
+          <td>{{ getProductName(c) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="clearfix"></div>
+</menu-shell>

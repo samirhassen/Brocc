@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak translate-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-savings-standardapplication-signingdocumentpreview")
+}
+<div class="content">
+    <div class="status pt-3">
+        <div class="col-md-offset-1 col-md-10">
+            <div class="item done">
+                <p translate="ssa_signpreview_ident">Identifiering</p>
+            </div>
+            <div class="item done">
+                <p translate="ssa_signpreview_uppg">Uppgifter</p>
+            </div>
+            <div class="item active">
+                <p translate="ssa_signpreview_sign">Signering</p>
+            </div>
+        </div>        
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="col-md-offset-1 col-md-10">
+        <div class="pt-2">
+            <div class="editblock">
+                <div class="pdf-container" id="pdf-container">
+                </div>
+                <p class="text-right pt-1"><a class="n-download-anchor" ng-href="{{publicDocumentUrl}}" target="_blank" translate="ssa_signpreview_dl">Ladda ner <span class="glyphicon glyphicon-save"></span></a></p>
+                <div class="text-center pt-1">
+                    <button class="n-main-btn n-green-btn" ng-click="sign($event)" translate="ssa_signpreview_btn">Signera</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    
+</div>
+<div class="clearfix"></div>

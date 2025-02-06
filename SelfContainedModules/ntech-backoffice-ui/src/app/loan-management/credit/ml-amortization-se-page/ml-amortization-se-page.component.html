@@ -1,0 +1,182 @@
+<credit-menu activeMenuItemCode="mortgageloanStandardAmortizationSe" [creditNr]="m?.creditNr" *ngIf="m">
+    <div current-item-content>
+        <div *ngIf="m" class="col-sm-10 col-sm-offset-1">
+            <div class="row">
+                <h2>Nuvarande amortering</h2>
+                <hr class="hr-section custom-line mt-0" />
+            </div>
+            <div class="row">
+                <div class="pull-right">
+                    <button type="button" class="n-popup-btn n-turquoise-btn n-help"
+                        (click)="showAmortizationBasis(popup, $event)">
+                        Detaljer
+                        <span class="glyphicon glyphicon-resize-full"></span>
+                    </button>
+                </div>
+            </div>
+            <ng-container *ngTemplateOutlet="underlagPreview; 
+                context: { underlag: m.basisResult.amorteringsunderlag, basis: m.basisResult.amortizationBasis, includeBasis: true }">
+            </ng-container>
+            <ml-se-loans [initialData]="m.loansData"></ml-se-loans>
+            <div class="row mt-3 pb-5">
+                <toggle-block [initialData]="{ headerText: 'Omprövning' }">
+                    <form *ngIf="m.revalueForm" [formGroup]="m.revalueForm?.form">
+                        <div class="col-xs-12 editblock" style="padding-bottom:20px">
+                            <div class="form-horizontal">
+                                <div class="form-group"
+                                    [ngClass]="{ 'has-error': m.revalueForm.hasError('currentCombinedYearlyIncomeAmount') }">
+                                    <label class="control-label col-xs-4">Årsinkomst</label>
+                                    <div class="col-xs-8">
+                                        <input type="text" class="form-control"
+                                            formControlName="currentCombinedYearlyIncomeAmount">
+                                    </div>
+                                </div>
+                                <div class="form-group"
+                                    [ngClass]="{ 'has-error': m.revalueForm.hasError('otherMortageLoansAmount') }">
+                                    <label class="control-label col-xs-4">Bolån på andra säkerheter</label>
+                                    <div class="col-xs-8">
+                                        <input type="text" class="form-control"
+                                            formControlName="otherMortageLoansAmount">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-4">Ny värdering?</label>
+                                    <div class="col-xs-8 form-control-static">
+                                        <label class="n-toggle">
+                                            <input type="checkbox" formControlName="isNewValuationSelected" />
+                                            <span class="n-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group" *ngIf="m.revalueForm.getValue('isNewValuationSelected')">
+                                    <label class="control-label col-xs-4">Senaste värdering</label>
+                                    <p class="form-control-static col-xs-8">
+                                        {{m.basisResult.amortizationBasis.objectValueDate | date: "shortDate" }}</p>
+                                </div>
+                                <div class="form-group" *ngIf="m.revalueForm.getValue('isNewValuationSelected')"
+                                    [ngClass]="{ 'has-error': m.revalueForm.hasAnyError('newObjectValueDate', 'missingNewObjectValueDate') }">
+                                    <label class="control-label col-xs-4">Ny värdering - datum</label>
+                                    <div class="col-xs-8">
+                                        <input type="text" class="form-control"
+                                            formControlName="newObjectValueDate">
+                                    </div>
+                                </div>
+                                <div class="form-group" *ngIf="m.revalueForm.getValue('isNewValuationSelected')"
+                                    [ngClass]="{ 'has-error': m.revalueForm.hasAnyError('newObjectValue', 'missingNewObjectValue') }">
+                                    <label class="control-label col-xs-4">Ny värdering - belopp</label>
+                                    <div class="col-xs-8">
+                                        <input type="text" class="form-control" formControlName="newObjectValue">
+                                    </div>
+                                </div>
+                                <div class="pt-2 text-center">
+                                    <button class="n-direct-btn n-blue-btn" [disabled]="m.revalueForm.invalid()"
+                                        (click)="previewRevalue($event)">
+                                        Beräkna <span class="glyphicon glyphicon-refresh"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                    <div *ngIf="m.revaluePreview" class="frame mt-2">
+                        <ng-container *ngTemplateOutlet="underlagPreview; 
+                            context: { underlag: m.revaluePreview.newUnderlag, basis: m.revaluePreview.newBasis }">
+                        </ng-container>
+                        <div class="row mt-2">
+                            <table class="table text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-4 text-center">Skuldkvot > 4,5</th>
+                                        <th class="col-xs-4 text-center">Belåningsgrad > 50%</th>
+                                        <th class="col-xs-4 text-center">Belåningsgrad > 70%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            {{m.revaluePreview.newBasis.ltiFraction > 4.5 ? '1%' : '0%'}}
+                                        </td>
+                                        <td>
+                                            {{m.revaluePreview.newBasis.ltvFraction > 0.5 ? '1%' : '0%'}}
+                                        </td>
+                                        <td>
+                                            {{m.revaluePreview.newBasis.ltvFraction > 0.7 ? '1%' : '0%'}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <ml-se-loans-amortization [initialData]="m.initLoanAmortizationData.initLoanData"></ml-se-loans-amortization>
+                        </div>
+                        <div *ngIf="m.revaluePreview.isKeepExistingRuleCodeAllowed">
+                            <ml-se-loans-amortization [initialData]="m.initLoanAmortizationData.initLoanDataKeepExistingRuleCode"></ml-se-loans-amortization>
+                        </div>
+                        <div class="pt-2 text-center">
+                            <button class="n-main-btn n-green-btn" (click)="commitRevalue($event)" [disabled]="!m.revaluePreview.isValid">
+                                Uppdatera amortering
+                            </button>
+                        </div>
+                    </div>
+                </toggle-block>
+            </div>
+        </div>
+    </div>
+</credit-menu>
+
+<ng-template #popup>
+    <div class="modal-header">
+        <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="modalRef.hide()">
+            <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span>
+                <span class="glyphicon glyphicon-arrow-up"></span></span>
+        </button>
+        <h1>Amortization details</h1>
+    </div>
+    <div class="modal-body">
+        <div class="pt-2">
+            <ng-container *ngIf="m?.basisResult">
+                <ml-se-amortization-basis [preloadedBasis]="m.basisResult"
+                    [creditNr]="m.creditNr" [reloadWithUpdatedBalance]="true"></ml-se-amortization-basis>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #underlagPreview let-underlag="underlag" let-basis="basis" let-includeBasis="includeBasis">
+    <div class="row mt-2">
+        <div class="col-xs-6">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-xs-6">AGS</label>
+                    <p class="form-control-static col-xs-6">{{underlag.amorteringsgrundandeSkuld | currency}}</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-6">AGV</label>
+                    <p class="form-control-static col-xs-6">{{basis.objectValue | currency}}</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-6">AGV Datum</label>
+                    <p class="form-control-static col-xs-6">{{basis.objectValueDate | date: "shortDate"}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-xs-6">Skuldkvot (LTI)</label>
+                    <p class="form-control-static col-xs-6">{{basis.ltiFraction | number}}</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-6">Belåningsgrad (LTV)</label>
+                    <p class="form-control-static col-xs-6">{{basis.ltvFraction | percent}}</p>
+                </div>
+                <div class="form-group" *ngIf="includeBasis">
+                    <label class="control-label col-xs-6">Amorteringsunderlag</label>
+                    <p class="form-control-static col-xs-6">
+                        <a [href]="getAmortizationBasisPdfUrl()" target="_blank" class="n-anchor">PDF<span class="glyphicon glyphicon-download-alt"></span></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

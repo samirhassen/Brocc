@@ -1,0 +1,25 @@
+<application-template>
+    <div class="pb-5 text-center movein" independent-body>
+        <div [ngSwitch]="failureCode.value">
+            <div *ngSwitchCase="'questionsNotFound'">
+                <p style="font-size: 2em;font-weight: bold" >HMM...</p>
+                <p>Du verkar inte ha någon ansökan hos oss.</p>
+                <p>Vid frågor kontakta kundtjänst.</p>
+                <br>
+                <br>
+            </div>
+            <div *ngSwitchCase="'questionsNotPendingAnswers'">
+                <p>Din ansökan har inga frågor som behöver besvaras i nuläget.</p>
+                <p>Vid frågor kontakta kundtjänst.</p>
+                <br>
+                <br>
+            </div>
+            <div *ngSwitchDefault>
+                <p>Något gick fel.</p>
+                <p>Du kan försöka igen senare eller kontakta vår kundtjänst för att få hjälp.</p>
+            </div>
+        </div>
+        <p class="pt-5">Med vänlig hälsning, Balanzia Kundtjänst</p>
+        <p>Tel. 08 - 557 66 500, foretagslan@balanzia.se</p>
+    </div>
+</application-template>

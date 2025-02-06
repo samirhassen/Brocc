@@ -1,0 +1,75 @@
+<div *ngIf="m">
+  <div class="pb-2">
+    <div class="col-xs-6">
+      <div
+        class="form-horizontal"
+        *ngIf="
+          m.unsignedAgreementPdfArchiveKey && !m.signedAgreementPdfArchiveKey
+        "
+      >
+        <div class="form-group">
+          <label class="col-xs-12 control-label text-left"
+            >Förhandsgranska</label
+          >
+        </div>
+        <div class="form-group">
+          <p class="col-xs-12 form-control-static">
+            <a
+              [href]="getDocumentUrl(m.unsignedAgreementPdfArchiveKey)"
+              target="_blank"
+              class="n-direct-btn n-purple-btn"
+              >Ladda ned <span class="glyphicon glyphicon-save"></span
+            ></a>
+          </p>
+        </div>
+      </div>
+      <div class="form-horizontal" *ngIf="m.signedAgreementPdfArchiveKey">
+        <div class="form-group">
+          <label class="col-xs-12 control-label text-left"
+            >Signerat avtal</label
+          >
+        </div>
+        <div class="form-group">
+          <p class="col-xs-12 form-control-static">
+            <a
+              [href]="getDocumentUrl(m.signedAgreementPdfArchiveKey)"
+              target="_blank"
+              class="n-direct-btn n-purple-btn"
+              >Ladda ned <span class="glyphicon glyphicon-save"></span
+            ></a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">&nbsp;</div>
+    <div class="clearfix"></div>
+  </div>
+  <table class="table table-separate pt-2">
+    <thead>
+      <tr>
+        <th class="col-xs-4">Sökande</th>
+        <th class="col-xs-6"></th>
+        <th class="col-xs-2 text-right">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let applicant of m.applicants">
+        <td>{{ applicant.applicantDisplayName }}</td>
+        <td>
+          <a
+            *ngIf="applicant.signatureUrl"
+            [href]="applicant.signatureUrl"
+            class="n-direct-btn n-white-btn"
+            >Signera</a
+          >
+        </td>
+        <td class="text-right">
+          <span
+            [ngClass]="getIconClass(applicant.hasSigned, false)"
+            class="ntech-status-icon"
+          ></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

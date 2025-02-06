@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+
+
+</head>
+<body>
+
+    <div id="header">
+        <img class="balanzia_logo" src="img/balanzia_logo.png" alt="Balanzia Logo">
+    </div>
+    <div class="page">
+
+        <div class="blackborder">
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>Balanzia</p>
+                    <p>Box 7790</p>
+                    <p>SE-103 96 Stockholm</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Påminnelse {{reminderNumber}}</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Påminnelsedatum</td>
+                                <td class="text-right">{{reminderDate}}</td>
+                            </tr>
+                            <tr>
+                                <td>Lånenummer</td>
+                                <td class="text-right">{{creditNr}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column2 greenborder">
+                    <p>{{customerName}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area">
+                <div class="column1">
+                    <p>Vid frågor kontakta oss på foretagslan@balanzia.se eller 08-557 665 00.</p>
+                    <p>Enligt våra noteringar så är nedanstående avi obetald. Vi ber er omgående kontrollera detta, är betalning ej reglerad bör betalning ske per omgående enligt betalningsuppgifter på denna påminnelse för att undvika vidare hantering. </p>
+
+
+                </div>
+            </div>
+            <div class="column2 ">
+                <table class="summery">
+                    <tbody>
+                        <tr>
+                            <td>Bankgiro</td>
+                            <td class="text-right">{{paymentBankGiroNr}}</td>
+                        </tr>
+                        <tr>
+                            <td>OCR</td>
+                            <td class="text-right">{{ocrPaymentReference}}</td>
+                        </tr>
+                        <tr>
+                            <td class="greenborder" style="padding-top: 20px;">Att betala</td>
+                            <td class="text-right greenborder" style="padding-top: 20px;">{{totalCurrentAmount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        <div class="area pt-5">
+            <h2>Specifikation</h2>
+
+            <div class="area">
+                <table class="spec">
+                    <thead>
+                        <tr>
+                            <th>Avser</th>
+                            <th>Förfallodatum</th>
+                            <th class="text-right">Totalt</th>
+                            <th class="text-right">Obetalt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{notificationMonth}}</td>
+                            <td>{{notificationDueDate}}</td>
+                            <td class="text-right">{{notificationTotalAmount}}</td>
+                            <td class="text-right">{{notificationCurrentAmount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="area">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Specification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Avser {{notificationMonth}}</td>
+                            <td class="text-right">{{notificationCurrentAmount}}</td>
+                        </tr>
+                        {{#newNotificationFeeAmount}}
+                        <tr>
+                            <td>Påminnelseavgift</td>
+                            <td class="text-right">{{newNotificationFeeAmount}}</td>
+                        </tr>
+                        {{/newNotificationFeeAmount}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="area">
+                <table class="total">
+                    <thead>
+                        <tr>
+                            <th class="">Att betala</b></th>
+                            <th class="text-right">{{totalCurrentAmount}}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div id="footer">
+        <p>Postadress: Box 7790, 103 96 Stockholm | Telefonnummer: 08-557 665 00 | Org.nr: 556058-8740 <span class="counter"></span></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    var isNavPage = !(ViewBag.IsNavPage == null || ViewBag.IsNavPage == false);
+    var clock = NTech.ClockFactory.SharedInstance;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>@ViewBag.Title</title>
+    @if (ViewBag.SkipDefaultStyles == null || ViewBag.SkipDefaultStyles == false)
+    {
+        @Styles.Render("~/Content/css/bundle-base")
+        @Styles.Render("~/Content/css/bundle-magellan")
+    }
+    @RenderSection("Styles", false)
+    @if (NEnv.IsSkinningCssEnabled)
+    {
+        <link href="@(Url.Content("~/Skinning/css/skinning.css") + "?v=" + DateTime.Now.ToString("yyyyMMddHH"))" rel="stylesheet" />
+    }
+</head>
+<body @Html.Raw(isNavPage ? "class=\"function-navigation\"" : "") ng-csp="no-unsafe-eval">
+    <div class="wrapper">        
+        <div class="navigation">
+            <div class="content-position">
+                <div class="branding">
+                    <a class="navbar-brand" href="@Url.Action("NavMenu", "Secure")">
+                        @if (NEnv.IsSkinningEnabled)
+                        {
+                            <img src="@Url.Content("~/Skinning/img/menu-header-logo.png")">
+                        }
+                        else
+                        {
+                            @Html.Raw("Backoffice")
+                        }
+                    </a>
+                </div>
+                <div class="navigation-right">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <ul class="navigation-list">
+                            <li>@User.Identity.Name</li>
+                            <li>@clock.Today.ToString("yyyy-MM-dd")</li>
+                            <li><a href="@Url.Action("Logout", "Secure")" class="logout-link">Log out</a></li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navigation-list">
+                            <li><a href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())" class="logout-link">Log in</a></li>
+                        </ul>
+                    }
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            
+        </div>
+
+        <div @Html.Raw(isNavPage ? "" : "class=\"container body-content\"") @Html.Raw(" " + (ViewBag.AngularDeclaration ?? "") + " ")>
+            @RenderBody()
+            <div class="loading" @Html.Raw(" " + (ViewBag.LoaderDeclaration ?? "style=\"display: none;\"") + " ")>Loading&#8230;</div>
+        </div>
+        <footer>
+            <p class="releaseNumber">@ViewBag.ReleaseNumber</p>
+            <p><img src="~/Content/img/naktergal-logo.png" alt="Näktergal AB" /></p>
+        </footer>
+    </div>
+    <script type="text/javascript"  @Html.CspScriptNonce()>
+        @Html.Raw(NTech.Legacy.Module.Shared.Infrastructure.CustomerOverviewHeaderSearchBoxGenerator.GenerateScriptBlock(NEnv.ServiceRegistry, NEnv.ClientCfg));
+    </script>
+    @RenderSection("Scripts", true)
+</body>
+</html>

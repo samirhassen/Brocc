@@ -1,0 +1,95 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Custom savings account application";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-main-addcustomsavingsapplication")
+}
+<div class="pb-2"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nTest"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+<div class="row">
+    <div class="col-sm-6">
+        <div ng-if="state=='initial'">
+            <h1>Create savings account<button type="submit" class="btn btn-default pull-right" ng-click="submitInitial($event)">Next>></button><span class="clearfix"></span></h1>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Applicant 1</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" ng-model="initial.applicant1">
+                            <option value="New">New</option>
+                            <option value="Existing">Existing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Remarks</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" ng-model="initial.remarks">
+                            <option value="NoRemarks">No remarks</option>
+                            <option value="WithRemarks">With remarks</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div ng-if="state=='applicants'">
+            <h1>Applicants<button type="submit" class="btn btn-default pull-right" ng-click="submitApplicants($event)">Next>></button><span class="clearfix"></span></h1>
+            <div ng-if="applicants.newApplicant1">
+                <h2>New Applicant 1</h2>
+                <angular-jsoneditor ng-model="applicants.newApplicant1.data" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 400px;"></angular-jsoneditor>
+            </div>
+            <div ng-if="applicants.existingApplicant1">
+                <h2>Existing Applicant 1</h2>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Civic regnr</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="applicants.existingApplicant1.civicRegNr" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default" ng-click="submitApplicants($event)">Next>></button>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="state === 'application'">
+            <h1>Application<button type="submit" class="btn btn-primary pull-right" ng-click="submitApplication($event)">Send application</button><span class="clearfix"></span></h1>
+
+            <div>
+                <angular-jsoneditor ng-model="application.application.data" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 400px;"></angular-jsoneditor>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5">
+        <div class="row" ng-if="history && history.items.length > 0">
+            <h1>History</h1>
+            <div ng-repeat="h in history.items track by $index" style="border: dashed 1px black; margin-bottom: 5px; padding:3px">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="min-height:35px">
+                        <span><a ng-show="h.savingsAccountNr" ng-href="{{savingsAccountUrlPrefix + h.savingsAccountNr}}" target="_blank">Backoffice - Account {{h.savingsAccountNr}}</a></span>
+                        <span class="pull-right">{{h.date}}</span>
+                    </div>
+                    <div class="panel-body">
+                        <ul style="clear:both">
+                            <li>Applicant 1: {{h.applicant1CivicRegNr}}</li>
+                            <li>Remarks: {{h.remarks}}</li>
+                        </ul>
+                        <h4>Call log</h4>
+                        <p ng-repeat="r in h.callLog track by $index">{{r}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

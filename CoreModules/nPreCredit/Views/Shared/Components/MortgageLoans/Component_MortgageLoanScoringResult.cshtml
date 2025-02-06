@@ -1,0 +1,152 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-loan-scoring-result.html">
+    <div>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Recommendation</label>
+                        <p class="form-control-static col-xs-6">{{$ctrl.m.isAccepted ? 'Accept' : 'Reject'}}</p>
+                    </div>
+                    <div ng-if="$ctrl.m.isAccepted">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Loan amount</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.offer.LoanAmount | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Monthly amortization</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.offer.MonthlyAmortizationAmount | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Interest rate</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.offer.NominalInterestRatePercent | number:'2'}} %</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Initial fee</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.offer.InitialFeeAmount | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Monthly fee</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.offer.MonthlyFeeAmount | currency}}</p>
+                        </div>
+                        <div class="form-group" ng-if="$ctrl.m.offer.BindingUntilDate">
+                            <label class="control-label col-xs-6">Binding until</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.m.offer.BindingUntilDate}}</p>
+                        </div>
+                    </div>
+                    <div ng-if="!$ctrl.m.isAccepted">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Rejection reasons</label>
+                            <p class="form-control-static col-xs-6"><span ng-repeat="r in $ctrl.m.rejectionReasonNames">{{$ctrl.getRejectionReasonDisplayName(r)}}<br /></span></p>
+                        </div>
+                        <div class="form-group" ng-if="$ctrl.m.ucTemplateRejectionCodes" ng-repeat="r in $ctrl.m.ucTemplateRejectionCodes">
+                            <label class="control-label col-xs-6">Template reason</label>
+                            <p class="form-control-static col-xs-6">{{$ctrl.getUcTemplateRejectionReason(r)}}</p>
+                        </div>
+                    </div>
+                    <hr class="hr-section dotted" />
+                    <div class="form-group" ng-repeat="r in $ctrl.m.applicantCreditReports">
+                        <label class="control-label col-xs-6">Credit report for applicant {{r.applicantNr}}</label>
+                        <p class="form-control-static col-xs-6"><a ng-click="$ctrl.showCreditReport(r, $event)" class="n-direct-btn n-turquoise-btn">Show <span class="glyphicon glyphicon-resize-full"></span></a></p>
+                        <modal-dialog dialog-title="'Credit report'" dialog-id="r.creditReportDialogId">
+                            <div ng-if="r.loadCreditReportDocument" ng-include="'/CreditManagement/ArchiveDocument?key='+r.htmlArchiveKey">
+
+                            </div>
+                        </modal-dialog>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="frame">
+                    <div class="row">
+                        <div class="col-xs-9">
+                            <div class="form-horizontal">
+                                <div class="form-group" ng-if="$ctrl.m.riskClass">
+                                    <label class="control-label col-xs-6">Risk class</label>
+                                    <p class="form-control-static col-xs-6">{{$ctrl.m.riskClass}}</p>
+                                </div>
+                                <div class="form-group" ng-if="$ctrl.m.loanFraction">
+                                    <label class="control-label col-xs-6">Loan fraction</label>
+                                    <p class="form-control-static col-xs-6">{{$ctrl.m.loanFraction | number:'2'}}%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <button type="button" class="n-icon-btn n-turquoise-btn" ng-click="$ctrl.showDecisionDetails($event)">
+                                <span class="glyphicon glyphicon-resize-full"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pt-3">
+            <div class="editblock">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-xs-6">Household income</label>
+                                <p class="form-control-static col-xs-6">
+                                    <a ng-if="$ctrl.initialData.isBasisChangeAllowed" ng-click="$ctrl.gotoHouseholdIncome($event)" class="n-anchor n-longer" href="#">{{$ctrl.getHouseholdGrossMonthlyIncome() | currency}}</a>
+                                    <span ng-if="!$ctrl.initialData.isBasisChangeAllowed">{{$ctrl.getHouseholdGrossMonthlyIncome() | currency}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+        <modal-dialog dialog-title="'Decision details'" dialog-id="$ctrl.decisionDetailsDialogId">
+            <div class="pt-3">
+                <toggle-block header-text="'Rejection rules'" ng-if="!$ctrl.m.isAccepted">
+                    <table class="table">
+                        <tbody>
+                            <tr class="open-inner-separator" ng-repeat-start="r in $ctrl.m.rejectionReasonDetailItems">
+                                <td class="col-xs-2"><span class="glyphicon" ng-class="{ 'chevron-bg glyphicon-chevron-down' : r.isDetailsExpanded, 'chevron-bg glyphicon-chevron-right' : !r.isDetailsExpanded  }" ng-click="r.isDetailsExpanded = !r.isDetailsExpanded"></span></td>
+                                <td class="col-xs-10">
+                                    <b>{{$ctrl.getRejectionReasonDisplayName(r.reasonName)}}</b>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="n in r.ruleNames" ng-repeat-end ng-show="r.isDetailsExpanded">
+                                <td></td>
+                                <td colspan="4">{{n}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </toggle-block>
+
+                <toggle-block header-text="'Manual attention rules'" ng-if="$ctrl.m.manualAttentionInitialData">
+                    <simple-table initial-data="$ctrl.m.manualAttentionInitialData"></simple-table>
+                </toggle-block>
+
+                <toggle-block header-text="'Score point breakdown'" ng-if="$ctrl.m.scorePointsInitialData">
+                    <simple-table initial-data="$ctrl.m.scorePointsInitialData"></simple-table>
+                </toggle-block>
+
+                <toggle-block header-text="'Score model data'" ng-if="$ctrl.m.scoreModelDataInitialData">
+                    <simple-table initial-data="$ctrl.m.scoreModelDataInitialData"></simple-table>
+                </toggle-block>
+
+                <toggle-block header-text="'Left to live on'" on-expanded="$ctrl.leftToLiveOnExpanded">
+                    <div class="pt-1" ng-if="$ctrl.m.leftToLiveOnFormInitialData">
+                        <h2>Input</h2>
+                        <simple-form initial-data="$ctrl.m.leftToLiveOnFormInitialData"></simple-form>
+                    </div>
+                    <div class="pt-1" ng-if="$ctrl.m.leftToLiveOnResultInitialData">
+                        <h2>Result</h2>
+                        <simple-table initial-data="$ctrl.m.leftToLiveOnResultInitialData"></simple-table>
+                    </div>
+                </toggle-block>
+            </div>
+        </modal-dialog>
+
+        <modal-dialog dialog-title="'Household income'" dialog-id="$ctrl.householdIncomeDialogId">
+            <mortgage-loan-application-household-income ng-if="$ctrl.m.householdIncomeDialogModel" initial-data="$ctrl.m.householdIncomeDialogModel.initialData"></mortgage-loan-application-household-income>
+        </modal-dialog>
+    </div>
+</script>

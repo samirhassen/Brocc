@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div>
+        <div class="addressArea">
+            <div class="">
+                <div class="senderlogo">
+                    <img class="balanzia_logo" src="img/balanzia_logo.png" alt="Balanzia Logo">
+                </div>
+                <div class="returnaAdress">
+                    <p>Balanzia</p>
+                    <p>Box 7790</p>
+                    <p>103 96 Stockholm</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="destinationAddress">
+                <p>{{customerName}}</p>
+                <p>{{streetAddress}}</p>
+                <p>{{areaAndZipcode}}</p>
+            </div>
+        </div>   
+        
+        <div class="right-area">            
+            <div class="print-info">
+                <table>
+                    <tr>
+                        <td>Utskriftsdatum</td>
+                        <td>{{printDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Lånenummer</td>
+                        <td>{{creditNr}}</td>
+                    </tr>					
+                </table>
+            </div>
+            <div class="summation">
+                <table>
+                    <tr>
+                        <td>Bankgiro</td>
+                        <td>{{paymentBankGiroNr}}</td>
+                    </tr>
+                    <tr>
+                        <td>Ocr</td>
+                        <td>{{ocrPaymentReference}}</td>
+                    </tr>
+                </table>
+            </div>
+                
+        </div>
+    </div>
+			
+	<div class="row">
+		<div class="conditions">
+			<br />
+			<h1></h1>
+            <p>
+                Om inte nedanstående obetalt regleras innan <span class="bold">{{dueDate}}</span> så kommer hela lånesumman <span class="bold">{{totalDebt}}</span> att förfalla till omedelbar betalning.
+            </p>
+
+			  <br /><br />
+            
+            <table>
+                <thead>
+                    <tr>
+                        <td class="border">Förfallodatum</td>
+                        <td class="text-right border">Kapital</td>
+                        <td class="text-right border">Ränta</td>
+                        <td class="text-right border">Påminnelseavgift</td>
+                        <td class="text-right border">Aviavgift</td>
+                        <td class="text-right border">Totalt</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#notifications}}
+                    <tr>
+                        <td class="border">{{dueDate}}</td>
+                        <td class="text-right border">{{currentCapitalAmount}}</td>
+                        <td class="text-right border">{{currentInterestAmount}}</td>
+                        <td class="text-right border">{{currentReminderFeeAmount}}</td>
+                        <td class="text-right border">{{currentNotificationFeeAmount}}</td>
+                        <td class="text-right border">{{currentAmount}}</td>
+                    </tr>
+                    {{/notifications}}
+                    <tr class="sum">
+                        <td colspan="5" class="text-right">Totalt</td>
+                        <td class="text-right">{{notifiedDebt}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Hälsningar,<br /> Balanzia</p>				
+		</div>
+	</div>
+    
+    <div class="contact">
+        <h3>Vid frågor kontakta oss på foretagslan@balanzia.se eller 08-557 665 00.</h3>
+    </div>
+
+</body>
+    
+</html>

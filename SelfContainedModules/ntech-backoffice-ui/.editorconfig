@@ -1,0 +1,25 @@
+# Editor configuration, see https://editorconfig.org
+root = true
+​
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+​
+# 4 space indentation
+[*.ts]
+indent_style = space
+indent_size = 4
+​
+#Typescript file formatting
+[*.{js,ts}]
+quote_type = single
+max_line_length = 120
+print_width = 120
+trailing_comma = es5
+bracket_spacing = true #Prints spaces between brackets in object literals
+semi = true #Prints semicolons at the ends of statements
+​
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false

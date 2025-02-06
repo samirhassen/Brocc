@@ -1,0 +1,52 @@
+﻿@{ 
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />    
+    <title>Signature</title>
+     @Styles.Render("~/Content/css/bundle-base")
+</head>
+<body>
+    <div style="padding:50px">        
+        
+        <div class="container">
+            @if(!ViewBag.IsSessionClosed)
+            {
+            <div class="row">
+                <div class="col-xs-2" style="padding-bottom:50px">
+                    <h1>Sign</h1>
+                    <form action="@Url.Action("DoSign", "MockEidSignature")" method="post">
+                        <div>
+                            <input type="hidden" name="signerToken" value="@Html.Raw(ViewBag.SignerToken)" />
+                            <input type="hidden" name="hasSigned" value="true" />
+                            <button class="text-center btn btn-success" type="submit">Sign using E-ID >></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-10" style="width:850px;height:700px;border:solid 2px black;margin-bottom:20px">
+                    <h2>Preview</h2>
+                    <div>
+                        <object width="790" height="590" type="application/pdf" data="@ViewBag.UnsignedDocumentUrl">
+                            <p>Insert your error message here, if the PDF cannot be displayed.</p>
+                        </object>
+                    </div>
+                </div>
+            </div>
+            }
+            else 
+            {
+            <div class="row">
+                <div class="col-xs-12" style="padding-bottom:50px">
+                    <h1>Sign</h1>
+                    <p>Signature session closed.</p>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<form novalidate class="pull-right">
+  <button
+    class="n-main-btn n-white-btn"
+    (click)="cancelApplication($event)"
+    [disabled]="!isCancelApplicationAllowed()"
+    [hidden]="!isApplicationActive()"
+  >
+    Cancel
+  </button>
+  <button
+    class="n-main-btn n-green-btn"
+    (click)="reactivateApplication($event)"
+    [hidden]="!isReactivateApplicationAllowed()"
+  >
+    Reactivate
+  </button>
+</form>

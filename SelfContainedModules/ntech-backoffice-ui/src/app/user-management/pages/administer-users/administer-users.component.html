@@ -1,0 +1,225 @@
+<div class="row" *ngIf="m">
+  <div class="col-sm-3">
+    <div class="text-center">
+      <p>Create new user</p>
+      <button
+        type="button"
+        class="n-main-btn n-blue-btn"
+        (click)="onCreateUserStarted(createUserPopupTemplate, $event)"
+      >
+        Create <span class="glyphicon glyphicon-resize-full"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="col-sm-9">
+    <span style="float: right">
+      <label for="showDeactivated">
+        <input
+          type="checkbox"
+          id="showDeactivated"
+          (change)="onShowDeactivatedToggled($event)"
+          [checked]="m?.areDeactivatedIncluded"
+        />
+        Show deactivated users</label
+      >
+    </span>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-sm-1">Id</th>
+          <th class="col-sm-2">Creation date</th>
+          <th class="col-sm-2">Created by ID</th>
+          <th class="col-sm-4">Display name</th>
+          <th class="text-right col-sm-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of m?.users">
+          <td>{{ x.Id }}</td>
+          <td>{{ x.CreationDate | date: "yyyy-MM-dd" }}</td>
+          <td>{{ x.CreatedById }}</td>
+          <td>{{ x.Name }}</td>
+          <td class="text-right" *ngIf="!x.DeletionDate">
+            <button
+              type="button"
+              class="n-anchor"
+              (click)="navigateToUser(x.Id, $event)"
+            >
+              View details
+            </button>
+          </td>
+          <td class="text-right" *ngIf="x.DeletionDate">
+            <div style="padding-right: 6px">
+              <i
+                >Deactivated {{ x.DeletionDate | date: "yyyy-MM-dd" }} <br />
+                by {{ x.DeletedBy }}</i
+              >
+            </div>
+            <button
+              type="button"
+              class="n-anchor"
+              (click)="reactivateUser(x.Id, $event)"
+            >
+              Reactivate
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="m?.users && m.users.length === 0">
+      <p>There are no users</p>
+    </div>
+  </div>
+</div>
+
+<ng-template #createUserPopupTemplate>
+  <div class="modal-content" *ngIf="m?.createUserForm">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="n-icon-btn n-white-btn pull-right"
+        (click)="createUserModalRef?.hide()"
+      >
+        <span class="arrows-close"
+          ><span class="glyphicon glyphicon-arrow-down"></span
+          ><span class="glyphicon glyphicon-arrow-up"></span
+        ></span>
+      </button>
+      <h1>Create user</h1>
+    </div>
+    <div class="modal-body">
+      <div class="editblock">
+        <form [formGroup]="m?.createUserForm?.form">
+          <div class="radio">
+            <label>
+              <input
+                type="radio"
+                formControlName="userType"
+                name="userType"
+                required
+                value="user"
+              />
+              Regular user
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input
+                type="radio"
+                formControlName="userType"
+                name="userType"
+                required
+                value="provider"
+              />
+              Provider
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input
+                type="radio"
+                formControlName="userType"
+                name="userType"
+                required
+                value="systemUser"
+              />
+              System User
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input
+                type="radio"
+                formControlName="userType"
+                name="userType"
+                required
+                value="admin"
+              />
+              Admin
+            </label>
+          </div>
+          <br />
+          <div
+            class="form-group"
+            *ngIf="m.createUserForm.getValue('userType')"
+            [ngClass]="{
+              'has-error': m.createUserForm.hasError('displayName')
+            }"
+          >
+            <label *ngIf="m.createUserForm.getValue('userType') !== 'provider'"
+              >Display Name</label
+            >
+            <label *ngIf="m.createUserForm.getValue('userType') === 'provider'"
+              >Provider name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              name="displayName"
+              formControlName="displayName"
+              placeholder="{{
+                m.createUserForm.getValue('userType') === 'provider'
+                  ? ''
+                  : 'Firstname Lastname'
+              }}"
+            />
+          </div>
+          <div
+            class="form-group"
+            *ngIf="m.createUserForm.form.contains('adminStartDate')"
+            [ngClass]="{
+              'has-error': m.createUserForm.hasError('adminStartDate')
+            }"
+          >
+            <label>Admin start date</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="adminStartDate"
+              placeholder="YYYY-MM-DD"
+            />
+          </div>
+          <div
+            class="form-group"
+            *ngIf="m.createUserForm.form.contains('adminEndDate')"
+            [ngClass]="{
+              'has-error': m.createUserForm.hasError('adminEndDate')
+            }"
+          >
+            <label>Admin end date</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="adminEndDate"
+              placeholder="YYYY-MM-DD"
+            />
+          </div>
+
+          <div
+            class="form-group text-center"
+            *ngIf="
+              m.createUserForm.form.get('displayName')?.errors
+                ?.duplicateDisplayName === 'invalid'
+            "
+          >
+            <div class="form-control-static" style="color: #b94a48">
+              There is already a user with that name!
+            </div>
+          </div>
+          <div class="form-group text-center">
+            <button
+              type="button"
+              class="n-main-btn n-green-btn"
+              [disabled]="m.createUserForm.invalid()"
+              (click)="createUser($event)"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

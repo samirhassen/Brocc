@@ -1,0 +1,60 @@
+<form
+  [formGroup]="m?.entityForm?.form"
+  class="form-horizontal col-sm-12"
+  *ngIf="m?.entityForm"
+>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Entity type</label>
+    <div class="col-sm-4">
+      <select class="form-control" formControlName="entityType">
+        <option value="person" *ngIf="m.allowPerson">Person</option>
+        <option value="company" *ngIf="m.allowCompany">Company</option>
+      </select>
+    </div>
+  </div>
+  <div
+    class="form-group"
+    *ngIf="m.entityForm.getValue('entityType')"
+    [ngClass]="{
+      'has-error':
+        m.entityForm.hasError('civicRegNr') || m.entityForm.hasError('orgnr')
+    }"
+  >
+    <label
+      class="col-sm-2 control-label"
+      *ngIf="m.entityForm.getValue('entityType') === 'person'"
+      >Civic regnr</label
+    >
+    <label
+      class="col-sm-2 control-label"
+      *ngIf="m.entityForm.getValue('entityType') === 'company'"
+      >Orgnr</label
+    >
+    <div class="col-sm-4">
+      <input
+        type="text"
+        *ngIf="m.entityForm.getValue('entityType') === 'person'"
+        formControlName="civicRegNr"
+        class="form-control"
+        autocomplete="off"
+      />
+      <input
+        type="text"
+        *ngIf="m.entityForm.getValue('entityType') === 'company'"
+        formControlName="orgnr"
+        class="form-control"
+        autocomplete="off"
+      />
+    </div>
+    <div class="col-sm-2">
+      <button
+        class="btn btn-default"
+        [disabled]="m.entityForm.invalid()"
+        (click)="search($event)"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+</form>
+<div *ngIf="m?.entityForm" class="clearfix"></div>

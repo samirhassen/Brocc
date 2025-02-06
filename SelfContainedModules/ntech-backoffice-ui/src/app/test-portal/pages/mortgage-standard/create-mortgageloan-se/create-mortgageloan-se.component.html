@@ -1,0 +1,254 @@
+<div class="row" *ngIf="m && !m?.requestEditForm">
+    <div class="col-sm-7">
+        <div>
+            <h1>Skapa bolån</h1>
+            <br><br>
+            <form [formGroup]="m.form.form" class="form-horizontal">
+                <h2>Kunder</h2>
+                <hr />
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Antal sökande</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" formControlName="nrOfApplicants">
+                            <option value="1">En</option>
+                            <option value="2">Två</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Sökande 1 personnr</label>
+                    <div class="col-sm-8">
+                        <input type="text" formControlName="applicant1CivicRegNr" class="form-control"
+                            placeholder="Leave empty to generate a new applicant" />
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="m.form.getValue('nrOfApplicants') === '2'">
+                    <label class="col-sm-4 control-label">Sökande 2 personnr</label>
+                    <div class="col-sm-8">
+                        <input type="text" formControlName="applicant2CivicRegNr" class="form-control"
+                            placeholder="Leave empty to generate a new applicant" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Antal samtyckande parter</label>
+                    <div class="col-sm-8">
+                        <select formControlName="nrOfConsentingParties" class="form-control">
+                            <option value="0">Noll</option>
+                            <option value="1">En</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="m.form.getValue('nrOfConsentingParties') === '1'">
+                    <label class="col-sm-4 control-label">Samtyckande part 1 (personnr)</label>
+                    <div class="col-sm-8">
+                        <input type="text" formControlName="consentingParty1CivicRegNr" class="form-control"
+                            placeholder="Leave empty to generate a new party" />
+                    </div>
+                </div>
+                <br><br>
+                <h2>Säkerhet{{m.isAgreementNrAllowed ? '/Avtal' : ''}}</h2>
+                <hr />
+                <ng-container *ngIf="m.loansToBeAdded.length === 0">
+                    <div class="form-group" *ngIf="m.isAgreementNrAllowed">
+                        <label class="col-sm-4 control-label">Avtalsnr</label>
+                        <div class="col-sm-8">
+                            <input formControlName="mortgageLoanAgreementNr" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Typ</label>
+                        <div class="col-sm-8">
+                            <select formControlName="collateralType" class="form-control">
+                                <option value="reuse">Återanvänd från annat lån</option>
+                                <option value="newBrf">Ny brf</option>
+                                <option value="newOther">New fastighet</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="m.form.getValue('collateralType') === 'reuse'">
+                        <label class="col-sm-4 control-label">Lånenr</label>
+                        <div class="col-sm-8">
+                            <input formControlName="reuseCollateralCreditNr" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <p *ngIf="m.form.getValue('collateralType') === 'reuse'" class="text-center">De nya lånen läggs på alternativregeln</p>
+                    <div class="form-group" *ngIf="m.form.getValue('collateralType') !== 'reuse'">
+                        <label class="col-sm-4 control-label">LTV</label>
+                        <div class="col-sm-8">
+                            <select formControlName="newCollateralLtvPercent" class="form-control">
+                                <option value="45">45%</option>
+                                <option value="55">55%</option>
+                                <option value="75">75%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="m.form.getValue('collateralType') !== 'reuse'">
+                        <label class="col-sm-4 control-label">Amorteringskrav</label>
+                        <div class="col-sm-8">
+                            <select formControlName="newCollateralAmortizationRuleCode" class="form-control">
+                                <option value="none">Inget krav</option>
+                                <option value="r201616">Krav</option>
+                                <option value="r201723">Skärpt krav</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="m.form.getValue('collateralType') !== 'reuse'">
+                        <label class="col-sm-4 control-label">LTI</label>
+                        <div class="col-sm-8">
+                            <select formControlName="newCollateralLtiFraction" class="form-control">
+                                <option value="3">3</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p *ngIf="m.form.getValue('collateralType') === 'reuse'" class="text-center">De nya lånen läggs på alternativregeln</p>
+                    <div class="form-group" *ngIf="m.form.getValue('collateralType') !== 'reuse'">
+                        <label class="col-sm-4 control-label">Ålder värdering</label>
+                        <div class="col-sm-8">
+                            <select formControlName="objectValuationAgeInMonths" class="form-control">
+                                <option value="0">Ny</option>
+                                <option value="24">Två år</option>
+                                <option value="72">Sex år</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+                <br><br>
+                <h2>Lån</h2>
+                <hr />
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Nuvarande lånebelopp</label>
+                    <div class="col-sm-8">
+                        <input formControlName="loanAmount" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="m.form.getValue('collateralType') !== 'reuse'">
+                    <label class="col-sm-4 control-label">Max lånebelopp</label>
+                    <div class="col-sm-8">
+                        <input formControlName="maxLoanAmount" type="text" class="form-control" placeholder="Lämna tom för nya lån" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Marginalränta %</label>
+                    <div class="col-sm-8">
+                        <input formControlName="marginInterestRatePercent" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Bindningstid</label>
+                    <div class="col-sm-8">
+                        <select formControlName="rebindingMonthCount" class="form-control">
+                            <option *ngFor="let rate of m.currentFixedRates" [value]="rate.MonthCount">
+                                {{rate.MonthCount}} mån - {{rate.RatePercent}}%</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="m.form.getValue('collateralType') !== 'reuse' && m.form.getValue('newCollateralAmortizationRuleCode') !== 'r201723'">
+                    <label class="col-sm-4 control-label">Alternativregeln</label>
+                    <div class="col-sm-8">
+                        <select formControlName="isUsingAlternateAmortizationRule" class="form-control">
+                            <option value="true">Ja</option>
+                            <option value="false">Nej</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="m.form.getValue('collateralType') !== 'reuse'">
+                    <label class="col-sm-4 control-label">Undantag</label>
+                    <div class="col-sm-8">
+                        <select formControlName="amortizationException" class="form-control">
+                            <option *ngFor="let e of m.possibleExceptions" [value]="e.key">{{e.text}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" *ngFor="let item of m.customPaymentOrderItems">
+                    <label class="col-sm-4 control-label">{{item.text}}</label>
+                    <div class="col-sm-8">
+                        <input [formControlName]="'custom_' + item.uniqueId" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12 text-right">
+                        <button class="n-icon-btn n-blue-btn" [disabled]="m.form.invalid()" (click)="addLoan($event)">
+                            <span class="glyphicon glyphicon-plus glyphicon-centered"></span>
+                        </button>
+                    </div>
+                </div>
+                <hr />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Belopp</th>
+                            <th>Marginalränta %</th>
+                            <th>Bindningstid (mån)</th>
+                            <th *ngIf="m.form.getValue('collateralType') !== 'reuse'">Alternativregeln</th>
+                            <th *ngIf="m.form.getValue('collateralType') !== 'reuse'">Undantag</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let loanToBeAdded of m.loansToBeAdded; let i = index">
+                            <tr>
+                                <td>{{loanToBeAdded.parsed.loanAmount | currency}}</td>
+                                <td>{{loanToBeAdded.parsed.marginInterestRatePercent / 100 | percent:'1.0-4'}}</td>
+                                <td>{{loanToBeAdded.raw['rebindingMonthCount']}}</td>
+                                <td *ngIf="m.form.getValue('collateralType') !== 'reuse'">{{loanToBeAdded.raw['isUsingAlternateAmortizationRule'] == 'true' ? 'Ja' : 'Nej'}}</td>
+                                <td *ngIf="m.form.getValue('collateralType') !== 'reuse'">{{getExceptionText(loanToBeAdded.raw['amortizationException'])}}</td>
+                                <td>
+                                    <button class="n-icon-btn n-blue-btn"  (click)="removeLoan(i, $event)">
+                                        <span class="glyphicon glyphicon-minus glyphicon-centered"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <ng-container *ngFor="let cost of loanToBeAdded.parsed.firstNotificationCosts">
+                                <tr *ngIf="cost.requestItem.costAmount > 0">
+                                    <td></td>
+                                    <td colspan="2">{{cost.text}}</td>
+                                    <td colspan="3">{{cost.requestItem.costAmount | currency}}</td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <hr />
+                <br><br>
+                <div class="col-sm-12 text-center">
+                    <button class="btn btn-default" [disabled]="m.form.invalid() || m.loansToBeAdded.length === 0"
+                        (click)="createInLedger(false, $event)">Lägg upp i reskontran</button>
+
+                        <button class="btn btn-default" style="float:right" [disabled]="m.form.invalid() || m.loansToBeAdded.length === 0"
+                        (click)="createInLedger(true, $event)">Redigera anrop</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <div>
+            <h1>
+                History
+                <button type="submit" class="btn btn-default" (click)="clearHistoryItems()">
+                    Clear
+                </button>
+            </h1>
+            <div *ngFor="let item of m.historyItems"
+                style="border: dashed 1px black; margin-bottom: 5px; padding: 3px">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="min-height: 35px">
+                        <span><a [href]="getUrlToCredit(item)" target="_blank">Credit {{ item.creditNrs.join(',') }}</a></span>
+                        <span class="pull-right">{{item.createdDate | date: "short"}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="m?.requestEditForm">
+    <form [formGroup]="m.requestEditForm.form" >
+        <json-editor [options]="getJsonEditorOptions()" formControlName="requestModel"></json-editor>
+    </form>
+    <br><br>
+    <div class="col-sm-12 text-center">
+        <button class="btn btn-default"
+            (click)="createInLedgerFromRequest(m.requestEditForm.getValue('requestModel'), $event)">Lägg upp i reskontran</button>
+    </div>
+</div>

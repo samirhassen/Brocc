@@ -1,0 +1,79 @@
+<mypages-shell [initialData]="shellInitialData" *ngIf="shellInitialData">
+  <div active-tab *ngIf="customer">
+    <a routerLink=".." class="n-anchor pt-2">Mina uppgifter</a>
+    <h1 class="header-light pt-2">Kontaktuppgifter</h1>
+    <h2 class="header-light pt-2">Adress</h2>
+    <ng-container *ngIf="customer.Address">
+      <p>{{ customer.FirstName }} {{ customer.LastName }}</p>
+      <p>{{ customer.Address.Street }}</p>
+      <p>{{ customer.Address.Zipcode }} {{ customer.Address.City }}</p>
+      <p>{{ customer.Address.Country }}</p>
+    </ng-container>
+    <ng-container *ngIf="!customer.Address">
+      <p>Vi saknar tyvärr adressdata om dig.</p>
+    </ng-container>
+
+    <div class="pt-2">
+      <div class="text-right">
+        <div *ngIf="!editForm">
+          <button
+            class="n-icon-btn n-blue-btn"
+            [disabled]="editForm"
+            (click)="beginEdit($event)"
+          >
+            <span class="glyphicon glyphicon-pencil"></span>
+          </button>
+        </div>
+        <div *ngIf="editForm">
+          <button
+            (click)="onCancelEdit($event)"
+            class="n-icon-btn n-white-btn right-5"
+          >
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button
+            (click)="onSave($event)"
+            [disabled]="editForm?.invalid()"
+            class="n-icon-btn n-green-btn"
+          >
+            <span class="glyphicon glyphicon-ok"></span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <form [formGroup]="editForm?.form || dummyViewForm">
+          <div class="col-sm-6 col-xs-12">
+            <div class="form-group pb-1">
+              <label>Epost</label>
+              <input
+                type="text"
+                formControlName="emailAddress"
+                class="form-control"
+                placeholder="Email"
+                *ngIf="editForm"
+              />
+              <p class="form-control-static copyable bb-1" *ngIf="!editForm">
+                {{ customer.Email ? customer.Email : "N/A" }}
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xs-12">
+            <div class="form-group pb-1">
+              <label>Telefonnummer</label>
+              <input
+                type="text"
+                formControlName="phoneNumber"
+                class="form-control"
+                placeholder="Telefonnummer"
+                *ngIf="editForm"
+              />
+              <p class="form-control-static copyable bb-1" *ngIf="!editForm">
+                {{ customer.Phone ? customer.Phone : "N/A" }}
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</mypages-shell>

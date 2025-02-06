@@ -1,0 +1,30 @@
+<div *ngIf="m">
+    <credit-search [isDisplayingSearchResult]="m.isDisplayingSearchResult"></credit-search>
+    <div class="row pt-3" *ngIf="!m.isDisplayingSearchResult.value">
+        <div class="col-xs-2">
+            <div class="custom-submenu">
+                <ul class="nav nav-pills nav-stacked">
+                    <li *ngFor="let menuItem of m.menuItems" [class.active]="menuItem.code === activeMenuItemCode">
+                        <a *ngIf="getUrlOrRouterLink(menuItem.code).routerLink" [routerLink]="getUrlOrRouterLink(menuItem.code).routerLink">{{menuItem.displayName}}</a>
+                        <a *ngIf="getUrlOrRouterLink(menuItem.code).url" [href]="getUrlOrRouterLink(menuItem.code).url">{{menuItem.displayName}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-10">
+            <div *ngIf="m.status && m.status.isOverdue">
+                <h2 class="text-center">{{m.status.text}} since {{m.status.statusDate | date:'shortDate'}}</h2>
+                <hr class="hr-section custom-line mt-0">
+            </div>
+            <div *ngIf="m.status && !m.status.isOverdue">
+                <h2 class="text-center">{{m.status.text}} since {{m.status.statusDate | date:'shortDate'}}</h2>
+                <hr class="hr-section custom-line mt-0">
+            </div>
+            <ng-content select="[current-item-content]"></ng-content>
+        </div>
+    </div>
+    <div class="pt-3" *ngIf="!m.isDisplayingSearchResult.value">
+        <credit-comments [creditNr]="creditNr"></credit-comments>
+    </div>
+    <test-functions-popup *ngIf="m.testFunctions" [model]="m?.testFunctions"></test-functions-popup>
+</div>

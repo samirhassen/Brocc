@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+    <div class="page">
+        <div class="blackborder">
+            
+            <div class="addressArea">
+                <!--
+                <div class="returnaAdress">
+                </div>-->
+            </div>
+            <div class="header">
+                <h1>Autogiroanmälan,<br>medgivande till kontonummer</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+            </div>
+
+            <div class="area">
+                <div class="column1">
+                    <h2>Betalningsmottagare </h2>     
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Namn</td>
+                                <td class="text-right">{{documentClientData_name}}</td>
+                            </tr>
+                            <tr>
+                                <td>Adress</td>
+                                <td class="text-right">{{documentClientData_streetAddress}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="text-right">{{documentClientData_zipCode}} {{documentClientData_postalArea}}</td>
+                            </tr>
+                            <tr>
+                                <td>Org.nr</td>
+                                <td class="text-right">{{documentClientData_orgnr}}</td>
+                            </tr>
+                            <tr>
+                                <td>Bankgiro</td>
+                                <td class="text-right">{{clientBankGiroNr}}</td>
+                            </tr>
+                        </tbody>
+                    </table>       
+
+                </div>
+            </div>
+            <div class="column2 ">
+                <h2>Betalare</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Namn</td>
+                            <td class="text-right">{{customerFullName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Adress</td>
+                            <td class="text-right">{{customerStreetAddress}}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-right">{{customerZipCodeAndCity}}</td>
+                        </tr>
+                        <tr>
+                            <td>Konto</td>
+                            <td class="text-right">{{customerBankAccountNr}}</td>
+                        </tr>
+                        <tr>
+                            <td>Betalar-/kundnummer</td>
+                            <td class="text-right">{{customerPayerNr}}</td>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        <div class="area pt-5">
+            <h2>Medgivande till betalning via Autogiro </h2>
+
+            <p>Undertecknad (”betalaren”), medger att betalning får göras genom uttag från angivet konto eller av betalaren senare angivet konto, på begäran av angiven betalningsmottagare för betalning till denne på viss dag (”förfallodagen”) via Autogiro.</p>
+            <br><br>
+            <p>Betalaren samtycker till att behandling av personuppgifter som lämnats i detta medgivande behandlas av betalarens betaltjänstleverantör, betalningsmottagaren, betalningsmottagarens betaltjänstleverantör och Bankgirocentralen BGC AB för administration av tjänsten. Personuppgiftsansvariga för denna personuppgiftsbehandling är betalarens betaltjänstleverantör, betalningsmottagaren samt betalningsmottagarens betaltjänstleverantör. Betalaren kan när som helst begära att få tillgång till eller rättelse av personuppgifterna genom att kontakta betalarens betaltjänstleverantör. Ytterligare information om behandling av personuppgifter i samband med betalningar kan finnas i villkoren för kontot och i avtalet med betalningsmottagaren. Betalaren kan när som helst återkalla sitt samtycke, vilket medför att tjänsten i sin helhet avslutas. </p>
+            
+        </div>
+
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_footerAddress}}</p>
+    </div>

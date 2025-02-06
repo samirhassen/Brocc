@@ -1,0 +1,98 @@
+<div *ngIf="m">
+    <h1 *ngIf="m.hasRejectedOffer" class="text-center pb-3">Ansökan {{m.applicationNr}}</h1>
+    <h1 *ngIf="!m.hasRejectedOffer" class="text-center pb-3">Vårt erbjudande</h1>
+
+
+    <p *ngIf="!m.hasRejectedOffer" class="text-center">Totalt lånebelopp</p>
+    <h1 *ngIf="!m.hasRejectedOffer" class="header-light text-center pb-2">{{m.offerItems.getUniqueItemInteger('loanAmount') | number:'1.0-2' }} {{currencySymbol()}}</h1>
+
+    <p class="align-center text-center pb-2" *ngIf="m.hasRejectedOffer"><b>Ärendet är avslutat, du har tackat nej till erbjudandet.</b></p>
+
+    <ng-content select="[focus-block]"></ng-content>
+
+    <task-toggle-block [initialData]="m.toggleInitialData">
+        <table class="table table-separate">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Lånebelopp</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('loanAmount') | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('loansToSettleAmount') > 0">
+                    <td>&nbsp;&nbsp;&nbsp;Varav lösenbelopp</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('loansToSettleAmount') | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('paidToCustomerAmount') > 0">
+                    <td>&nbsp;&nbsp;&nbsp;Varav nytt lån</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('paidToCustomerAmount') | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('initialFeeWithheldAmount') > 0">
+                    <td>Uppläggningsavgift som dras från lånebeloppet</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('initialFeeWithheldAmount') | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('initialFeeCapitalizedAmount') > 0">
+                    <td>Kapitaliserad uppläggningsavgift</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('initialFeeCapitalizedAmount') | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('repaymentTimeInMonths') > 0">
+                    <td>Återbetalningstid</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('repaymentTimeInMonths') | number:'1.0-0' }} månader</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('singlePaymentLoanRepaymentTimeInDays') > 0">
+                    <td>Återbetalningstid</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('singlePaymentLoanRepaymentTimeInDays') | number:'1.0-0' }} dagar</td>
+                </tr>
+                <tr *ngFor="let cost of m.firstNotificationCosts">
+                    <td>På första avin - {{cost.displayName}}</td>
+                    <td class="text-right">{{cost.amount | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('notificationFeeAmount') > 0">
+                    <td>Aviavgift</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('notificationFeeAmount') | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('totalInterestRatePercent') > 0">
+                    <td>Ränta</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemDecimal('totalInterestRatePercent') | number:'1.2-4' }} %</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('annuityAmount') > 0">
+                    <td>Månadsbetalning</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemInteger('annuityAmount') | number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemInteger('effectiveInterestRatePercent') > 0">
+                    <td>Effektivränta</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemDecimal('effectiveInterestRatePercent') | number:'1.2-2' }} %</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItemDecimal('totalPaidAmount') > 0">
+                    <td>Totalt att betala</td>
+                    <td class="text-right">{{m.offerItems.getUniqueItemDecimal('totalPaidAmount') |  number:'1.0-2' }} {{currencySymbol()}}</td>
+                </tr>
+                <tr *ngIf="m.offerItems.getUniqueItem('customerDecisionCode') !== 'initial'">
+                    <td>Beslut</td>
+                    <td class="text-right">
+                        <ng-container [ngSwitch]="m.offerItems.getUniqueItem('customerDecisionCode')" >
+                            <span *ngSwitchCase="'accepted'">Tackat ja</span>
+                            <span *ngSwitchCase="'rejected'">Tackat nej</span>
+                            <span *ngSwitchDefault>{{m.offerItems.getUniqueItem('customerDecisionCode')}} </span>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </task-toggle-block>
+
+    <div *ngIf="m.isPossibleToDecide" class="pt-1">
+        <div class="row">
+            <div class="col-sm-5 col-xs-6 pt-1">
+                <button type="button" class="n-direct-btn n-white-btn" (click)="rejectOffer($event)">Tacka nej</button>
+            </div>
+            <div class="col-sm-7 col-xs-6">
+                <button type="button" class="n-main-btn n-green-btn" (click)="acceptOffer($event)">Tacka ja</button>
+            </div>
+        </div>
+    </div>
+</div>

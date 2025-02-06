@@ -1,0 +1,100 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-import.html">
+<div ng-if="$ctrl.m">
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Import loans</h1>
+</div>
+
+<div class="row pt-3 pb-3" ng-if="!$ctrl.m.result">
+    <div class="col-sm-offset-2 col-sm-8">
+        <div class="editblock">
+            <div class="text-center">
+                <button ng-click="$ctrl.selectAndLoadPreview($event)" class="n-direct-btn n-blue-btn">Select file <span class="glyphicon glyphicon-paperclip"></span></button>
+            </div>
+            <form novalidate class="form-inline" name="secureform" id="climportform">
+                <input type="file" id="climportfile" name="climportfile" style="display:none" />
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <p>Download sample file</p>
+        <a href="/Content/xls/CompanyLoanFileImportExample_v_20210423.xlsx" target="_blank" class="n-direct-btn n-purple-btn">File <span class="glyphicon glyphicon-save"></span></a>
+    </div>
+</div>
+
+<div class="pt-3" ng-if="$ctrl.m.result.Shared.Errors && $ctrl.m.result.Shared.Errors.length > 0">    
+    <h2>Errors</h2>
+    <div>
+        <table class="table table-bordered">
+            <tr ng-repeat="e in $ctrl.m.result.Shared.Errors track by $index">
+                <td>{{e}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="pt-3" ng-if="$ctrl.m.result.Preview.Summaries">    
+    <h2>Summaries</h2>
+    <div>
+        <table class="table table-bordered">
+            <tr ng-repeat="e in $ctrl.m.result.Preview.Summaries track by $index">
+                <td>{{e.Key}}</td>
+                <td>{{e.Value}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="pt-3" ng-if="$ctrl.m.result.Shared.Warnings && $ctrl.m.result.Shared.Warnings.length > 0">    
+    <h2>Warnings</h2>
+    <div>
+        <table class="table table-bordered">
+            <tr ng-repeat="e in $ctrl.m.result.Shared.Warnings track by $index">
+                <td>{{e}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="pt-3" ng-if="$ctrl.m.result.Preview.Loans">    
+    <toggle-block header-text="'Raw data'">
+        <h2>Raw loans</h2>
+        <div><pre>{{$ctrl.m.result.Preview.Loans | json}}</pre></div>
+        <h2>Raw persons</h2>
+        <div><pre>{{$ctrl.m.result.Preview.Persons | json}}</pre></div>
+    </toggle-block>
+</div>
+
+<div class="pt-3" ng-if="$ctrl.m.result.Import">
+    <h2>Result</h2>
+    <div>
+        <table class="table table-bordered">
+            <tr>
+                <td>ImportedCreditNr</td>
+                <td>NewCreditNr</td>
+            </tr>
+            <tr ng-repeat="e in $ctrl.m.result.Import.CreditNrs track by $index">
+                <td>{{e.ImportedCreditNr}}</td>
+                <td>{{e.NewCreditNr}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row pt-3" ng-if="$ctrl.m.result">
+    <div class="col-sm-4">
+        <button ng-click="$ctrl.reset($event)" class="n-main-btn n-blue-btn">Reset</button>
+    </div>
+    <div class="text-center col-sm-4" ng-if="$ctrl.isImportAllowed()">
+        <button ng-click="$ctrl.import($event)" class="n-main-btn n-green-btn">Import</button>
+    </div>
+</div>
+
+</div>
+</script>

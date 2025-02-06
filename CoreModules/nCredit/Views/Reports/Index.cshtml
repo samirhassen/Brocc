@@ -1,0 +1,656 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit - Reports";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-reports")
+}
+
+<div class="pt-1 pb-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Reports</h1>
+</div>
+
+@if (ViewBag.ShowDwWarning)
+{
+    <div class="pt-1 pb-2" ng-if="!(dwAgeInDays === 0 || dwAgeInDays === 1)">
+        <div style="color:red;">
+            <p ng-if="dwAgeInDays">The jobs that update the datawarehouse last completed {{dwAgeInDays}} days ago.</p>
+            <p ng-if="!dwAgeInDays">The jobs that update the datawarehouse never completed.</p>
+            <p>Reports may not be accurate!</p>
+        </div>
+    </div>
+}
+
+<div class="row" style="min-height:300px;">
+    <div class="col-sm-4">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <select ng-model="reportName" class="form-control">
+                    <option value="" ng-hide="reportName">Select report</option>
+                    @if (ViewBag.IsUnsecuredLoansEnabled)
+                    {
+                        <option value="providerFeedback" ng-if="reportUrls.providerFeedback">Provider Feedback</option>
+                        <option value="cancelledApplications" ng-if="reportUrls.cancelledApplications">Cancelled applications</option>
+                        <option value="quarterlyRATI" ng-if="reportUrls.quarterlyRATI">Quarterly RATI</option>
+                        <option value="loanPerformance" ng-if="reportUrls.loanPerformance">Loan Performance</option>
+                        <option value="liquidityExposure" ng-if="reportUrls.liquidityExposure">Liquidity Exposure</option>
+                        <option value="lcr" ng-if="reportUrls.lcr">Liquidity Coverage</option>
+                        <option value="contactlist">Contact list</option>
+                        <option value="bookkeepingLoanLedger" ng-if="reportUrls.bookkeepingLoanLedger">Bookkeeping loan ledger</option>
+                        <option value="applicationRejectionReasons" ng-if="reportUrls.applicationRejectionReasons">Rejection reasons</option>
+                        <option value="applicationWaterfall" ng-if="reportUrls.applicationWaterfall">Application waterfall</option>
+                        if (ViewBag.IsBalanziaFi)
+                        {
+                            <option value="abTestExperiments">A/B test experiments</option>
+                            <option value="paymentsConsumerCredits">Payments Consumer Credits</option>
+                            <option value="reservationBasis">Reservation Basis</option>
+                        }
+                    }
+                    else if (ViewBag.IsCompanyLoansEnabled)
+                    {
+                        if (ViewBag.IsPreCreditEnabled)
+                        {
+                            <option value="companyLoanApplicationList">Applications</option>
+                        }
+                        <option value="companyLoanledger">Company loan ledger</option>
+                        <option value="companyLoanOverdueNotifications">Company loan overdue notifications</option>
+                    }
+                    else if (ViewBag.IsMortgageLoansEnabled)
+                    {
+                        if (NEnv.ClientCfg.Country.BaseCountry == "SE")
+                        {
+                            <option value="mortgageLoanQuarterlyBKI">Quarterly BKI F820</option>
+                            <option value="mortgageLoanCollateral">Collateral</option>
+                        }
+                        <option value="mortgageLoanPerformance">Loan Performance</option>
+                        if (NEnv.ClientCfg.Country.BaseCountry == "FI")
+                        {
+                            <option value="mortgageLoanIfrsCollateral">IFRS Collateral</option>
+                            <option value="mortgageLoanApplications">Applications</option>
+                            <option value="mortgageLoanApplicationWaterfall">Application waterfall</option>
+                        }
+                    }
+
+                    <option value="unplacedBalance">Unplaced balance</option>
+
+                    @if (nCredit.WebserviceMethods.Reports.CompanyLoanCustomLedgerReportMethod.IsReportEnabled)
+                    {
+                        <option value="companyLoanCustomLedger">Company loan custom ledger</option>
+                    }
+                    @if (nCredit.WebserviceMethods.Reports.SwedishQuarterlyF818ReportMethod.IsReportEnabled)
+                    {
+                        <option value="swedishQuarterlyF818">Kvartalsrapport konsumentkreditinstitut (F818)</option>
+                    }
+                    @if (ViewBag.IsStandardUnsecuredLoansEnabled)
+                    {
+                        <option value="standardApplicationWaterfall">Application waterfall</option>
+                    }
+                    @if (ViewBag.IsLegacyAmlReportingAidFiReportEnabled)
+                    {
+                        <option value="legacyAmlReportingAidFi">AML reporting aid</option>
+                    }
+                    <option value="amlReportingAidCompanySe" ng-if="reportUrls.amlReportingAidCompanySe">AML reporting aid</option>
+                    <option value="mortgageFixedInterestRateHistory" ng-if="reportUrls.mortgageFixedInterestRateHistory">Fixed interest rate history</option>
+                    <option value="mortgageAverageInterestRates" ng-if="reportUrls.mortgageAverageInterestRates">Average interest rates</option>
+                    <option value="kycQuestionsStatus" ng-if="reportUrls.kycQuestionsStatus">Kyc questions status</option>
+                    <option value="bookkeepingReconciliation" ng-if="reportUrls.bookkeepingReconciliation">Bookkeeping reconciliation</option>
+                    <option value="alternatePaymentPlans" ng-if="reportUrls.alternatePaymentPlans">Alternate payment plans</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+
+        <!-- Share surface for all reports with just a date fields. Make new ones for the others-->
+        <div ng-if="current.modelType === 'dateOnly'">
+            <div class="editblock">
+                <form name="dateOnlyForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>{{current.date1LabelText || 'Transaction date'}}</label>
+                            <input ng-model="current.model.date" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateOnlyForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'noOptions'">
+            <div class="editblock">
+                <form name="noOptionsForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateOnlyForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'dateAndDropdown'">
+            <div class="editblock">
+                <form name="dateAndDropdownForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>{{current.date1LabelText || 'Transaction date'}}</label>
+                            <input ng-model="current.model.date" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-sm-3">
+                            <label>{{current.dropdown1LabelText}}</label>
+                            <select ng-model="current.model.dropdown1" class="form-control">
+                                <option ng-repeat="i in current.dropdown1Options" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateAndDropdownForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'dropdown'">
+            <div class="editblock">
+                <form name="dropdownForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>{{current.dropdown1LabelText}}</label>
+                            <select ng-model="current.model.dropdown1" class="form-control">
+                                <option ng-repeat="i in current.dropdown1Options" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dropdownForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'recentQuarter'">
+            <div class="editblock">
+                <form name="recentQuarterForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Quarter</label>
+                            <select ng-options="item as item.text for item in current.model.quarters" ng-model="current.model.quarter" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="recentQuarterForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'recentMonth'">
+            <div class="editblock">
+                <form name="recentMonthForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Month</label>
+                            <select ng-options="item as item.text for item in current.model.months" ng-model="current.model.month" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="recentQuarterForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <form name="twoDatesForm" ng-show="current.modelType === 'twoDates'" ng-model-options="{allowInvalid: true}">
+            <!-- This nesting is to prevent ng-if from eating the form because of nested scopes -->
+            <div ng-if="current.modelType === 'twoDates'">
+                <div class="editblock">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.name1}}</label>
+                            <input ng-model="current.model.date1" required custom-validate="isValidDateTwoDates1" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.name2}}</label>
+                            <input ng-model="current.model.date2" required custom-validate="isValidDateTwoDates2" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                    </div>
+                    <div class="row" ng-if="current.model.invalidDateIntervalLengthInDays">
+                        <p>Max interval is {{current.model.maxDateIntervalLengthInDays}} days.</p>
+                    </div>
+                    <div class="row pb-2" ng-show="current.dropdown1Options">
+                        <div class="col-sm-3">
+                            <label>{{current.dropdown1LabelText}}</label>
+                            <select ng-model="current.model.dropdown1" class="form-control" ng-required="current.dropdown1Options">
+                                <option ng-repeat="i in current.dropdown1Options" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row pb-2" ng-show="current.useInputPair1">
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.inputPair1.label1}}</label>
+                            <input ng-model="current.model.inputPair1.value1" class="form-control" placeholder="{{current.model.inputPair1.placeholder1}}">
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.inputPair1.label2}}</label>
+                            <input ng-model="current.model.inputPair1.value2" class="form-control" placeholder="{{current.model.inputPair1.placeholder2}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="twoDatesForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div ng-if="current.modelType === 'consistency'">
+            <div class="editblock">
+                <form name="consistencyForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.name1}}</label>
+                            <input ng-model="current.model.date1" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">{{current.model.name2}}</label>
+                            <input ng-model="current.model.date2" required custom-validate="isValidDate" class="form-control" placeholder="YYYY-MM-DD">
+                        </div>
+                    </div>
+                    <div class="row pb-2" ng-show="isValid2Dates(current.model.date1,current.model.date2)">
+                        <div class="col-sm-6">
+                            <label class="control-label">{{GetErrorTextValid2Dates(current.model.date1,current.model.date2)}}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="isValid2Dates(current.model.date1,current.model.date2)" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'contactlist'">
+            <div class="editblock">
+                <form name="contactListForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-4">
+                            <label class="control-label">Application nrs</label>
+                            <textarea ng-model="current.model.applicationNrs" ng-required="!current.model.creditNrs" class="form-control" placeholder="One nr per line" rows="20" cols="10">
+                            </textarea>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="control-label">Credit nrs</label>
+                            <textarea ng-model="current.model.creditNrs" ng-required="!current.model.applicationNrs" class="form-control" placeholder="One nr per line" rows="20" cols="10">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createContactList($event)" ng-disabled="contactListForm.$invalid">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'abTestExperiments'">
+            <div class="editblock">
+                <form name="abTestExperimentsForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-8">
+                            <label class="control-label">Experiment</label>
+                            <select ng-model="current.model.experimentId" class="form-control">
+                                <option value="">Select experiment</option>
+                                <option ng-repeat="i in current.experimentIdOptions" value="{{i['ExperimentId']}}">{{i['ExperimentName']}}</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="abTestExperimentsForm.$invalid || !current.model.experimentId" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'applicationWaterfall'">
+            <div class="editblock">
+                <form name="applicationWaterfallForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Period</label>
+                            <select ng-model="current.model.groupPeriod" class="form-control">
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'monthly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationMonthOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationMonthOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'quarterly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationQuartersOptions" value="{{i.FirstDate | date:'yyyy-MM-dd'}}">{{i.Year}} - Q{{i.Quarter}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationQuartersOptions" value="{{i.LastDate | date:'yyyy-MM-dd'}}">{{i.Year}} - Q{{i.Quarter}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'yearly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationYearsOptions" value="{{i.FirstDate | date:'yyyy-MM-dd'}}">{{i.Year}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationYearsOptions" value="{{i.LastDate | date:'yyyy-MM-dd'}}">{{i.Year}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Provider</label>
+                            <select ng-model="current.model.providerName" class="form-control">
+                                <option value="">All</option>
+                                <option ng-repeat="i in current.providerOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Risk group</label>
+                            <select ng-model="current.model.scoreGroup" class="form-control">
+                                <option value="">All</option>
+                                <option ng-repeat="i in current.scoreGroupOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">Campaign code</label>
+                            <input ng-model="current.model.campaignCode" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="dateOnlyForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'mortgageLoanApplicationWaterfall'">
+            <div class="editblock">
+                <form name="applicationWaterfallForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Period</label>
+                            <select ng-model="current.model.groupPeriod" class="form-control">
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'monthly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationMonthOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationMonthOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'quarterly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationQuartersOptions" value="{{i.FirstDate | date:'yyyy-MM-dd'}}">{{i.Year}} - Q{{i.Quarter}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationQuartersOptions" value="{{i.LastDate | date:'yyyy-MM-dd'}}">{{i.Year}} - Q{{i.Quarter}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'yearly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationYearsOptions" value="{{i.FirstDate | date:'yyyy-MM-dd'}}">{{i.Year}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationYearsOptions" value="{{i.LastDate | date:'yyyy-MM-dd'}}">{{i.Year}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Provider</label>
+                            <select ng-model="current.model.providerName" class="form-control">
+                                <option value="">All</option>
+                                <option ng-repeat="i in current.providerOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label class="control-label">Campaign parameter - Name</label>
+                            <input ng-model="current.model.campaignParameterName" class="form-control" placeholder="ie utm_campaign">
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">Value</label>
+                            <input ng-model="current.model.campaignParameterValue" class="form-control" placeholder="ie summer-2020">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="applicationWaterfallForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'standardApplicationWaterfall'">
+            <div class="editblock">
+                <form name="applicationWaterfallForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Period</label>
+                            <select ng-model="current.model.groupPeriod" class="form-control">
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'monthly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationMonthOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationMonthOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'quarterly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationQuartersOptions" value="{{i.FirstDate | date:'yyyy-MM-dd'}}">{{i.Year}} - Q{{i.Quarter}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationQuartersOptions" value="{{i.LastDate | date:'yyyy-MM-dd'}}">{{i.Year}} - Q{{i.Quarter}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" ng-if="current.model.groupPeriod == 'yearly'">
+                        <div class="col-sm-3">
+                            <label>From month</label>
+                            <select ng-model="current.model.monthFromDate" class="form-control">
+                                <option ng-repeat="i in current.applicationYearsOptions" value="{{i.FirstDate | date:'yyyy-MM-dd'}}">{{i.Year}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>To month</label>
+                            <select ng-model="current.model.monthToDate" class="form-control">
+                                <option ng-repeat="i in current.applicationYearsOptions" value="{{i.LastDate | date:'yyyy-MM-dd'}}">{{i.Year}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Provider</label>
+                            <select ng-model="current.model.providerName" class="form-control">
+                                <option value="">All</option>
+                                <option ng-repeat="i in current.providerOptions" value="{{i[0]}}">{{i[1]}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="applicationWaterfallForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="current.modelType === 'mortgageAverageInterestRates'">
+            <div class="editblock">
+                <form name="mortgageAverageInterestRatesForm">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Month</label>
+                            <select ng-options="item as item.text for item in current.model.months" ng-model="current.model.month" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Language</label>
+                            <select ng-options="item as item.text for item in current.model.languages" ng-model="current.model.language" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <label>Include details</label>
+                            <select ng-options="item as item.text for item in current.model.includeDetailsOptions" ng-model="current.model.includeDetails" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#" class="n-direct-btn n-purple-btn" ng-click="createReport($event)" ng-disabled="mortgageAverageInterestRatesForm.$invalid" target="_blank" ng-href="{{current.reportUrl}}">Download <span class="glyphicon glyphicon-save"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--end-->
+    </div>
+</div>
+
+@if (ViewBag.ShowScheduledReports)
+{
+<div class="pt-3">
+    <div ng-show="preGeneratedReports.length > 0">
+        <h2 class="custom-header">Scheduled</h2>
+        <hr class="hr-section" />
+    </div>
+    <div ng-show="preGeneratedReports.length > 0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Report</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in preGeneratedReports">
+                    <td><a ng-href="{{r.AllReportsViewUrl}}" class="n-anchor">{{r.FriendlyName}}</a></td>
+                    <td ng-if="r.LatestReportViewUrl">{{r.LatestReportDate | date:'short'}}</td>
+                    <td ng-if="r.LatestReportViewUrl"><a ng-href="{{r.LatestReportViewUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></td>
+                    <td ng-if="!r.LatestReportViewUrl" colspan="2">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+}

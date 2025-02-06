@@ -1,0 +1,118 @@
+<customerpages-shell [initialData]="shellData">
+    <div shell-body>
+        <div class="row" *ngIf="errorMessage"><p>{{errorMessage}}</p></div>
+        <div class="row" *ngIf="m">
+            <div class="col-xs-12">
+                <div class="flex-container">
+                    <div class="align-center frame">
+                        <h1 class="header-light text-center pb-3">Privatlån - ansökan</h1>
+                        <form [formGroup]="m.form.form">
+                            <div class="row pb-2">
+                                <div class="col-xs-12">
+                                    <div class="form-group pb-1" [ngClass]="{ 'has-error': m.form.hasError('housing') }">
+                                        <label>Hur bor du idag?</label>
+                                        <select class="form-control" formControlName="housing">
+                                            <option value="" *ngIf="!m.form.getValue('housing')"></option>
+                                            <option [value]="opt.Code" *ngFor="let opt of m.housingTypes">{{opt.DisplayName}}</option>
+                                        </select>
+                                    </div>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'housingCostPerMonthAmount', displayText: 'Hur mycket betalar du i hyra och eventuellt ränta och amortering för ditt boende?' }"></ng-container>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'otherHouseholdFixedCostsAmount', displayText: 'Vad har du för andra fasta månadskostnader för ditt boende, ex. el eller sophämtning?' }"></ng-container>
+                                    <div>
+                                        <div class="pb-1">
+                                            <label>Hur många barn bor i hushållet?</label>
+                                            <div class="row">
+                                                <div class="col-sm-1 col-xs-3">
+                                                  <button (click)="removeChild()" [disabled]="!m.form || m.childrenGroupNames.length === 0" title="Remove a child" class="n-icon-btn n-blue-btn"><span class="glyphicon glyphicon-minus glyphicon-centered"></span></button>
+                                                </div>
+                                                <div class="col-sm-2 col-xs-6">
+                                                    <p class="form-control copyable bb-1 text-center">{{m.childrenGroupNames.length}}</p>
+                                                </div>
+                                                <div class="col-sm-1 col-xs-3 text-right">
+                                                    <button (click)="addChild()" title="Add a child" class="n-icon-btn n-blue-btn"><span class="glyphicon glyphicon-plus glyphicon-centered"></span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ng-container *ngFor="let groupName of m.childrenGroupNames">
+                                            <div class="row pb-1" formGroupName="{{groupName}}">
+                                                <div class="col-sm-8 col-xs-6" [ngClass]="{ 'has-error': m.form.form.hasError('ageInYears', groupName) }">
+                                                    <label>Ålder</label>
+                                                    <input class="form-control" type="text" formControlName="ageInYears" />
+                                                </div>
+                                                <div class="col-sm-4 col-xs-6">
+                                                    <label>Delad vårdnad?</label>
+                                                    <select class="form-control" formControlName="sharedCustody">
+                                                        <option [ngValue]="''"></option>
+                                                        <option [ngValue]="'true'">Ja</option>
+                                                        <option [ngValue]="'false'">Nej</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'childBenefitAmount', displayText: 'Hur mycket får du i barnbidrag?' }"></ng-container>
+                                    <div class="form-group pb-1">
+                                        <p>Har du andra lån?</p>
+                                        <div class="radio-inline">
+                                            <label *ngIf="getHasOtherLoans() === true"><input type="radio" (click)="setHasOtherLoans(true, $event)" checked> Ja</label>
+                                            <label *ngIf="getHasOtherLoans() === null || getHasOtherLoans() === false"><input type="radio" (click)="setHasOtherLoans(true, $event)"> Ja</label>
+                                        </div>
+                                        <div class="radio-inline">
+                                            <label *ngIf="getHasOtherLoans() === false"><input type="radio" (click)="setHasOtherLoans(false, $event)" checked> Nej</label>
+                                            <label *ngIf="getHasOtherLoans() === null || getHasOtherLoans() === true"><input type="radio" (click)="setHasOtherLoans(false, $event)"> Nej</label>
+                                        </div>
+                                    </div>
+                                    <ng-container *ngFor="let groupName of m.otherLoanGroupNames">
+                                        <div class="row pb-1">
+                                            <div class="col-sm-11 col-xs-9">
+                                                <div class="row">
+                                                    <div class="form-group col-sm-4 col-xs-12 pb-1" formGroupName="{{groupName}}">
+                                                        <label>Typ av lån</label>
+                                                        <select class="form-control" formControlName="loanType">
+                                                          <option value=""></option>
+                                                          <option [value]="opt.Code" *ngFor="let opt of m.otherLoanTypes">{{opt.DisplayName}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-sm-4 col-xs-12 pb-1" formGroupName="{{groupName}}" [ngClass]="{ 'has-error': m.form.hasError('monthlyCostAmount', groupName) }">
+                                                        <label>Månadskostnad</label>
+                                                        <input type="text" class="form-control" formControlName="monthlyCostAmount">
+                                                    </div>
+                                                    <div class="form-group col-sm-4 col-xs-12 pb-1" formGroupName="{{groupName}}" [ngClass]="{ 'has-error': m.form.hasError('currentDebtAmount', groupName) }">
+                                                        <label>Nuvarande skuld</label>
+                                                        <input type="text" class="form-control" formControlName="currentDebtAmount">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 col-xs-3" *ngIf="m.otherLoanGroupNames.length > 1">
+                                                <div class="pt-3">
+                                                    <button class="n-icon-btn n-blue-btn" (click)="removeOtherLoan(false, groupName)"><span class="glyphicon glyphicon-minus glyphicon-centered"></span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <div class="pb-2" *ngIf="getHasOtherLoans() === true">
+                                        <button class="n-icon-btn n-blue-btn" (click)="addOtherLoan()">
+                                            <span class="glyphicon glyphicon-plus glyphicon-centered"></span>
+                                        </button>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" formControlName="hasConsented" /> Jag intygar att uppgifterna i ansökan är korrekta och godkänner att en kreditupplysning inhämtas samt att personuppgifter behandlas i enlighet med <a target="_blank" [href]="m.personalDataPolicyUrl" class="n-anchor">personuppgiftspolicyn</a>.</label>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="text-right pt-2">
+                                <button class="n-main-btn n-green-btn" [disabled]="m.form.invalid() || m.form.getValue('hasConsented') !== true" (click)="apply($event)">Gå vidare</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</customerpages-shell>
+<ng-template #textGroup let-displayText="displayText" let-formControlName="formControlName">
+    <div class="form-group pb-1" *ngIf="m.form.hasFormControl(null, formControlName)" [ngClass]="{ 'has-error': m.form.hasError(formControlName) }" [formGroup]="m.form.form">
+        <label>{{displayText}}</label>
+        <input type="text" class="form-control" [formControlName]="formControlName">
+    </div>
+</ng-template>

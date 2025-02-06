@@ -1,0 +1,161 @@
+<ng-container *ngIf="m">
+  <form [formGroup]="m.form">
+    <h2 class="custom-header">{{ initialData.title }}</h2>
+    <hr class="hr-section" />
+    <p>{{ initialData.helpText }}</p>
+
+    <div
+      class="mt-2"
+      formGroupName="new"
+      *ngIf="!m.isAdding && !initialData.isReadonly"
+    >
+      <div class="col-xs-6">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="YYYYMMDD-XXXX"
+          formControlName="civicNr"
+        />
+      </div>
+      <div class="col-xs-6">
+        <button
+          class="n-main-btn n-blue-btn"
+          [disabled]="m.newForm.invalid"
+          (click)="search($event)"
+        >
+          Search
+        </button>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+
+    <div class="mt-2" formGroupName="add" *ngIf="m.isAdding">
+      <div class="col-xs-4">
+        <div class="form-group">
+          <label>Civic nr</label>
+          <p class="form-control-static">{{ m.newForm.value.civicNr }}</p>
+        </div>
+      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'firstName', labelText: 'First name' }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'lastName', labelText: 'Last name' }
+        "
+      ></ng-container>
+
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'addressStreet', labelText: 'Street' }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'addressZipcode', labelText: 'Zip' }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'addressCity', labelText: 'City' }
+        "
+      ></ng-container>
+
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'addressCountry', labelText: 'Country' }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'email', labelText: 'E-mail' }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          addField;
+          context: { formControlName: 'phone', labelText: 'Phone' }
+        "
+      ></ng-container>
+
+      <div
+        class="col-xs-12"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <button
+          class="n-main-btn n-green-btn"
+          [disabled]="m.addForm.invalid"
+          (click)="addCustomer($event)"
+        >
+          Add
+        </button>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+
+    <table class="mt-2 table row-lined" *ngIf="initialData.memberCustomers">
+      <tbody>
+        <tr *ngFor="let customer of initialData.memberCustomers">
+          <td class="col-xs-10">
+            <a [href]="getCustomerCardUrl(customer.customerId)" class="n-anchor"
+              >{{ customer.firstName }}, {{ customer.birthDate }}</a
+            >
+          </td>
+          <td class="col-xs-2">
+            <button
+              *ngIf="!initialData.isReadonly"
+              class="n-icon-btn n-red-btn"
+              (click)="removeCustomer(customer, $event)"
+            >
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </td>
+        </tr>
+        <tr
+          *ngIf="
+            initialData.memberCustomers.length === 0 &&
+            initialData.noMembersText
+          "
+        >
+          <td colspan="2">
+            {{ initialData.noMembersText }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</ng-container>
+
+<ng-template
+  #addField
+  let-labelText="labelText"
+  let-formControlName="formControlName"
+>
+  <div class="col-xs-4">
+    <div
+      class="form-group pb-1"
+      [ngClass]="{
+        'has-error':
+          !m.addForm.get(formControlName).pristine &&
+          m.addForm.get(formControlName).invalid
+      }"
+      [formGroup]="m.addForm"
+    >
+      <label>{{ labelText }}</label>
+      <input
+        type="text"
+        class="form-control"
+        [formControlName]="formControlName"
+      />
+    </div>
+  </div>
+</ng-template>

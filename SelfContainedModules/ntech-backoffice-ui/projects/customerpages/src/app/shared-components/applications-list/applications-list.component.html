@@ -1,0 +1,92 @@
+<div class="flex-container" *ngIf="m && !hasCustomerRelation()">
+  <div class="align-center">
+    <p class="text-center">
+      Du verkar inte ha någon aktiv eller avslutad kundrelation med oss.
+    </p>
+  </div>
+</div>
+
+<div class="flex-container" *ngIf="m && hasCustomerRelation()">
+  <div class="align-center">
+    <h1 class="text-center">Ansökningar</h1>
+    <ng-container
+      *ngTemplateOutlet="
+        applicationsTable;
+        context: {
+          applications: m.activeApplications,
+          isActive: true,
+          title: 'Aktiva ansökningar',
+          paddingClass: 'pt-8'
+        }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        applicationsTable;
+        context: {
+          applications: m.rejectedOrCancelledApplications,
+          isActive: false,
+          title: 'Inaktiva ansökningar',
+          paddingClass: 'pt-8'
+        }
+      "
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        applicationsTable;
+        context: {
+          applications: m.loanCreatedApplications,
+          isActive: false,
+          title: 'Godkända ansökningar',
+          paddingClass: 'pt-8'
+        }
+      "
+    ></ng-container>
+  </div>
+</div>
+
+<ng-template
+  #applicationsTable
+  let-applications="applications"
+  let-isActive="isActive"
+  let-title="title"
+  let-paddingClass="paddingClass"
+>
+  <div
+    *ngIf="applications && applications.length > 0"
+    class="{{ paddingClass }}"
+  >
+    <table class="table application-table">
+      <thead>
+        <tr>
+          <th>{{ title }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          (click)="navigateToApplication(a.applicationNr, $event)"
+          class="application-row"
+          *ngFor="let a of applications"
+        >
+          <td class="clear-children">
+            <div class="col-xs-10">
+              <p class="font-weight-bold no-margin">
+                Ansökan om lån<span
+                  *ngIf="a.unreadCount > 0"
+                  class="envelope-icon envelope-icon-margin"
+                  ><span class="glyphicon glyphicon-envelope"></span
+                  ><span class="unread-message">{{ a.unreadCount }}</span></span
+                >
+              </p>
+              <br />
+              <p class="no-margin">{{ a.applicationDate | date: "short" }}</p>
+            </div>
+            <div class="col-xs-2 icon-container">
+              <span class="glyphicon-play glyphicon"></span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

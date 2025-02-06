@@ -1,0 +1,114 @@
+<div *ngIf="m">
+  <div *ngIf="m.applicationNr">
+    <application-cancel-buttons
+      [initialData]="m.cancelButtonsInitialData"
+    ></application-cancel-buttons>
+  </div>
+  <div class="row pt-1">
+    <div class="col-xs-8">
+      <ng-container *ngFor="let step of m.steps">
+        <step-status-block [initialData]="step.statusInitialData">
+          <ng-container [ngSwitch]="step.componentName">
+            <ng-container *ngSwitchCase="'CreditCheckStandardComponent'"
+              ><credit-check-standard
+                [initialData]="step.initialData"
+              ></credit-check-standard
+            ></ng-container>
+            <ng-container
+              *ngSwitchCase="'CustomerOfferDecisionStandardComponent'"
+              ><customer-offer-decision-standard
+                [initialData]="step.initialData"
+              ></customer-offer-decision-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'KycStandardComponent'"
+              ><kyc-standard [initialData]="step.initialData"></kyc-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'FraudStandardComponent'"
+              ><fraud-standard [initialData]="step.initialData"></fraud-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'AgreementStandardComponent'"
+              ><agreement-standard
+                [initialData]="step.initialData"
+              ></agreement-standard
+            ></ng-container>
+            <ng-container *ngSwitchCase="'PaymentStandardComponent'"
+              ><payment-standard
+                [initialData]="step.initialData"
+              ></payment-standard
+            ></ng-container>
+          </ng-container>
+        </step-status-block>
+      </ng-container>
+    </div>
+    <div class="col-xs-4">
+      <div class="pb-1">
+        <customer-info
+          [initialData]="m.applicationCustomerInfo1InitialData"
+        ></customer-info>
+      </div>
+      <hr
+        *ngIf="m.applicationCustomerInfo2InitialData"
+        class="hr-section custom-line"
+      />
+      <div *ngIf="m.applicationCustomerInfo2InitialData" class="pb-3">
+        <customer-info
+          [initialData]="m.applicationCustomerInfo2InitialData"
+        ></customer-info>
+      </div>
+      <hr class="hr-section custom-line" />
+      <div>
+        <application-assigned-handlers
+          [initialData]="m.assignedHandlersInitialData"
+        ></application-assigned-handlers>
+      </div>
+      <div>
+        <hr class="hr-section custom-line" />
+        <div
+          class="application-text-link-container"
+          *ngIf="m.unreadCustomerMessagesCount !== null"
+        >
+          <application-numbered-icon-with-link
+            linkText="Secure messages"
+            iconClass="glyphicon-envelope"
+            [onNavigate]="navigateToApplicationMessages"
+            [iconNumber]="m.unreadCustomerMessagesCount"
+          >
+          </application-numbered-icon-with-link>
+        </div>
+        <div class="application-text-link-container mt-1" *ngIf="m.isTest">
+          <application-numbered-icon-with-link
+            linkText="Application basis"
+            iconClass="glyphicon-folder-open"
+            [linkRoute]="[
+              '/unsecured-loan-application/application-basis/',
+              this.m.applicationNr
+            ]"
+          >
+          </application-numbered-icon-with-link>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="comments" style="padding-top: 100px">
+    <application-comments
+      [initialData]="m.commentsInitialData"
+    ></application-comments>
+  </div>
+</div>
+<div *ngIf="error?.unupportedWorkflowVersion">
+  <h2>Invalid workflow version</h2>
+  <ul>
+    <li>
+      Application version:
+      {{ error.unupportedWorkflowVersion.applicationVersion }}
+    </li>
+    <li>
+      Current version: {{ error.unupportedWorkflowVersion.currentVersion }}
+    </li>
+  </ul>
+</div>
+<div *ngIf="error?.applicationDoesNotExist">
+  <p>Applicaton does not exist</p>
+</div>
+<test-functions-popup [model]="m?.testFunctions"></test-functions-popup>

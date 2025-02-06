@@ -1,0 +1,32 @@
+﻿<div>
+    <form name="aq.fc" novalidate>
+        <h3>{{state.ActiveState.AdditionalQuestionsData.Applicant1.FirstName}} {{state.ActiveState.AdditionalQuestionsData.Applicant1.LastName}} ({{state.ActiveState.AdditionalQuestionsData.Applicant1.CivicRegNr}})</h3>
+        <div class="key_value">
+            <div class="the_key"><h4 translate="ansokan_kredituppgifter">Kredituppgifter</h4></div>
+        </div>
+        @Html.Partial("Index_AdditionalQuestions_Applicant", new IndexApplicantPartialViewModel  { ApplicantNr = 1 })
+        <!-- sökande 2 -->
+        <div ng-if="state.ActiveState.AdditionalQuestionsData.Applicant2">
+            <h3>{{state.ActiveState.AdditionalQuestionsData.Applicant2.FirstName}} {{state.ActiveState.AdditionalQuestionsData.Applicant2.LastName}} ({{state.ActiveState.AdditionalQuestionsData.Applicant2.CivicRegNr}})</h3>
+            <div class="key_value">
+                <div class="the_key"><h4 translate="ansokan_kredituppgifter">Kredituppgifter</h4></div>
+            </div>
+            @Html.Partial("Index_AdditionalQuestions_Applicant", new IndexApplicantPartialViewModel  { ApplicantNr = 2 })
+        </div><!-- slut sökande 2 -->
+
+        <br />
+        <!-- Navigering -->
+        <div>
+            <div class="button_area" ng-hide="aq.isApplying">
+                <button type="submit" class="main-btn green-btn main-green-btn" ng-click="aq.apply()" translate="accountshare_next_button_text">Gå vidare</button>
+                <div class="invalid_mark hidden" ng-show="aq.isFormInvalid() && fc.$submitted">!</div>
+                <div class="invalid_message hidden" ng-show="aq.isFormInvalid() && fc.$submitted" translate="ansokan_faltmastekorrigeras">Det finns fält som måste korrigeras.</div>
+            </div>
+            <div class="button_area" ng-show="aq.isApplying">
+                <img src="~/Content/img/loading.gif" ng-show="aq.isApplying" />
+            </div>
+        </div>
+    </form>
+</div>
+
+

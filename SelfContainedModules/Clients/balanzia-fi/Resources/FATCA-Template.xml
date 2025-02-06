@@ -1,0 +1,68 @@
+<ftc:FATCA_OECD xmlns:ftc="urn:oecd:ties:fatca:v2" xmlns:sfa="urn:oecd:ties:stffatcatypes:v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oecd:ties:fatca:v2 FatcaXML_v2.0.xsd">
+	<ftc:MessageSpec>
+		<sfa:SendingCompanyIN>2760357-3</sfa:SendingCompanyIN>
+		<sfa:TransmittingCountry>FI</sfa:TransmittingCountry>
+		<sfa:ReceivingCountry>US</sfa:ReceivingCountry>
+		<sfa:MessageType>FATCA</sfa:MessageType>
+		<sfa:Contact>Nanni Kuparinen,+358105248410,nanni.kuparinen@balanzia.fi</sfa:Contact>
+		<sfa:MessageRefId></sfa:MessageRefId>
+		<sfa:ReportingPeriod></sfa:ReportingPeriod>
+		<sfa:Timestamp></sfa:Timestamp>
+	</ftc:MessageSpec>
+	<ftc:FATCA>
+		<ftc:ReportingFI>
+			<sfa:ResCountryCode>FI</sfa:ResCountryCode>
+			<sfa:TIN issuedBy="US">3EYR70.99999.BR.246</sfa:TIN>
+			<sfa:Name>GCC Capital, filial i Finland</sfa:Name>
+			<sfa:Address>
+				<sfa:CountryCode>FI</sfa:CountryCode>
+				<sfa:AddressFix>
+					<sfa:Street>Pukinmaenukio</sfa:Street>
+					<sfa:BuildingIdentifier>2</sfa:BuildingIdentifier>
+					<sfa:DistrictName>Pukinmaki</sfa:DistrictName>
+					<sfa:PostCode>00720</sfa:PostCode>
+					<sfa:City>Helsinki</sfa:City>
+				</sfa:AddressFix>
+			</sfa:Address>
+			<ftc:FilerCategory>FATCA601</ftc:FilerCategory>
+			<ftc:DocSpec>
+				<ftc:DocTypeIndic>FATCA1</ftc:DocTypeIndic>
+				<ftc:DocRefId></ftc:DocRefId>
+			</ftc:DocSpec>			
+		</ftc:ReportingFI>
+		<ftc:ReportingGroup>
+			<ftc:AccountReport>
+				<ftc:DocSpec>
+					<ftc:DocTypeIndic>FATCA1</ftc:DocTypeIndic>
+					<ftc:DocRefId></ftc:DocRefId>
+				</ftc:DocSpec>
+				<ftc:AccountNumber></ftc:AccountNumber>
+				<ftc:AccountClosed></ftc:AccountClosed>
+				<ftc:AccountHolder>
+					<ftc:Individual>
+						<sfa:ResCountryCode>US</sfa:ResCountryCode>
+						<sfa:TIN issuedBy="US"></sfa:TIN>
+						<sfa:Name>
+							<sfa:FirstName></sfa:FirstName>
+							<sfa:LastName></sfa:LastName>
+						</sfa:Name>
+						<sfa:Address>
+							<sfa:CountryCode></sfa:CountryCode>
+							<sfa:AddressFix>
+								<sfa:Street></sfa:Street>
+								<sfa:PostCode></sfa:PostCode>
+								<sfa:City></sfa:City>
+							</sfa:AddressFix>
+						</sfa:Address>
+						<sfa:Nationality>FI</sfa:Nationality>
+					</ftc:Individual>
+				</ftc:AccountHolder>
+				<ftc:AccountBalance currCode="EUR"></ftc:AccountBalance>
+				<ftc:Payment>
+					<ftc:Type>FATCA502</ftc:Type>
+					<ftc:PaymentAmnt currCode="EUR"></ftc:PaymentAmnt>
+				</ftc:Payment>
+			</ftc:AccountReport>		
+		</ftc:ReportingGroup>
+	</ftc:FATCA>
+</ftc:FATCA_OECD>

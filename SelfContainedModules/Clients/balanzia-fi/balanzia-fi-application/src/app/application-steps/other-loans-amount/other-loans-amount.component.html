@@ -1,0 +1,17 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label" [translate]="getTrKey('totalAmountQuestion')">Vad har du för
+                totalbelopp?</label>
+            <input #totalAmountInput type="text" class="custom-input"
+                placeholder="{{getTrKey('totalAmountExample') | translate }}" formControlName="totalAmount">
+        </div>
+        <div class="pb-5 movein">
+            <label class="custom-label" [translate]="getTrKey('monthAmountQuestion')">Vad betalar du i genomsnitt i
+                månaden?</label>
+            <input type="text" class="custom-input" placeholder="{{getTrKey('monthAmountExample') | translate }}"
+                formControlName="monthAmount">
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

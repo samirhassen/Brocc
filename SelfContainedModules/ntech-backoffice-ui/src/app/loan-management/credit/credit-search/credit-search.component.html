@@ -1,0 +1,65 @@
+<div *ngIf="m">
+  <div class="row">
+    <form name="searchcreditform" novalidate role="form">
+      <div class="col-xs-4">
+        <div class="relative">
+          <span class="glyphicon glyphicon-search"></span>
+          <input
+            autocomplete="none"
+            onEnter
+            (onEnterClick)="searchCredit()"
+            (ngModelChange)="onSearchTextChanged($event)"
+            [(ngModel)]="m.omniSearchValue"
+            class="search form-control"
+            name="omniSearchValue"
+            type="text"
+            placeholder="{{
+              m.civicRegNrMask
+            }} · Credit number · Email · Name · Ocr"
+          />
+        </div>
+      </div>
+      <div class="col-xs-8" *ngIf="m.omniSearchValue">
+        <!-- NOTE: Dont make the below a button or it will search twice on enter -->
+        <span class="n-icon-btn n-white-btn" (click)="resetSearch($event)"
+          ><span class="glyphicon glyphicon-remove"></span
+        ></span>
+        <span
+          class="n-main-btn n-blue-btn"
+          (click)="searchCredit($event)"
+          style="margin-left: 5px"
+          >Search</span
+        >
+      </div>
+    </form>
+  </div>
+  <div class="pt-3" *ngIf="m.searchHits">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-xs-3">Credit number</th>
+          <th class="col-xs-3">Status</th>
+          <th class="col-xs-6">Start date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of m.searchHits">
+          <td>
+            <a
+              class="n-anchor"
+              href="#"
+              [routerLink]="getCreditLink(s.creditNr).commands"
+              [queryParams]="getCreditLink(s.creditNr).extras.queryParams"
+              >{{ s.creditNr }}</a
+            >
+          </td>
+          <td>{{ s.status }}</td>
+          <td>{{ s.startDate | date: "shortDate" }}</td>
+        </tr>
+        <tr *ngIf="m.searchHits.length == 0">
+          <td colspan="3">No hits</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

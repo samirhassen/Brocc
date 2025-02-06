@@ -1,0 +1,95 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{ 
+    var clock = NTech.ClockFactory.SharedInstance;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+    <title>@ViewBag.Title</title>
+    @if (ViewBag.SkipDefaultStyles == null || ViewBag.SkipDefaultStyles == false)
+    {
+        @Styles.Render("~/Content/css/bundle-base")
+        @Styles.Render("~/Content/css/bundle-magellan")
+    }
+    @RenderSection("Styles", false)
+    @if (NEnv.IsSkinningCssEnabled)
+    {
+        <link href="@(Url.Content("~/Skinning/css/skinning.css") + "?v=" + DateTime.Now.ToString("yyyyMMddHH"))" rel="stylesheet" />
+    }
+</head>
+<body ng-csp="no-unsafe-eval">
+    <div class="wrapper">
+        <div class="navigation">
+            <div class="content-position">
+                <div class="branding">
+                    <a class="navbar-brand" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())">
+                        @if (NEnv.IsSkinningEnabled)
+                        {
+                            <img src="@Url.Content("~/Skinning/img/menu-header-logo.png")">
+                        }
+                        else
+                        {
+                            @Html.Raw("Customer")
+                        }
+                    </a>
+                </div>
+                <div class="navigation-right">
+                    <ul class="navigation-list">
+                        @if (Request.IsAuthenticated)
+                        {
+                            <li>@User.Identity.Name</li>
+                            <li>@clock.Today.ToString("yyyy-MM-dd")</li>
+                            <li><a href="@Url.Action("Logout", "Common")" class="logout-link">Log out</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())" class="logout-link">Log out</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+
+        <div class="container-fluid body-content" @Html.Raw(" " + (ViewBag.AngularDeclaration ?? "") + " ")>
+            @RenderBody()
+
+            <div class="loading" @Html.Raw(" " + (ViewBag.LoaderDeclaration ?? "style=\"display:none\"") + " ")>Loading&#8230;</div>
+            @if (!NEnv.IsProduction && ((ViewBag.AngularDeclaration ?? "").Length > 0))
+            {
+                <div ng-show="isTestFunctionsVisible" class="frame popup-position">
+                    <div class="pt-1">
+                        @RenderSection("TestFunctions", false)
+                    </div>
+                </div>
+                <div style="position:fixed;bottom:20px;right:5%;">
+                    <button class="btn btn-default" ng-class="{ 'toned-down' : !isTestFunctionsVisible }" ng-click="isTestFunctionsVisible=!isTestFunctionsVisible"><span class="glyphicon glyphicon-sort"></span></button>
+                </div>
+            }
+            else
+            {
+                <!-- Not in use in production
+
+                    @RenderSection("TestFunctions", false)
+
+                -->
+            }
+        </div>
+        <footer>
+            <p><img src="~/Content/img/naktergal-logo.png" alt="Näktergal AB" /></p>
+        </footer>
+    </div>
+    <script @Html.CspScriptNonce()>
+        ntechClientCountry = '@Html.Raw(NEnv.ClientCfg.Country.BaseCountry)';
+    </script>
+    <script type="text/javascript" @Html.CspScriptNonce()>
+        @Html.Raw(NTech.Legacy.Module.Shared.Infrastructure.CustomerOverviewHeaderSearchBoxGenerator.GenerateScriptBlock(NEnv.ServiceRegistry, NEnv.ClientCfg));
+    </script>
+    @RenderSection("Scripts", true)
+</body>
+</html>

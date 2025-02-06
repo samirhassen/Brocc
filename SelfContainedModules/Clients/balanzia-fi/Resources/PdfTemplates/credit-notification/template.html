@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div>
+        <div class="addressArea">
+            <div class="">
+                <div class="senderlogo">
+                    <img class="balanzia_logo" src="[[[skinning:img/pdf-logo.png|img/logo.png]]]" alt="Lender Logo">
+                </div>
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>PL 359 </p>
+                    <p>00101, Helsinki</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="destinationAddress">
+                <p>{{fullName}}</p>
+                <p>{{streetAddress}}</p>
+                <p>{{areaAndZipcode}}</p>
+            </div>
+        </div>
+
+
+        <div class="right-area">
+            <div class="print-info">
+                <table>
+                    <tr>
+                        <td>Laskutuskuukausi</td>
+                        <td>{{dueMonth}}</td>
+                    </tr>
+                    <tr>
+                        <td>Lainanumero</td>
+                        <td>{{creditNr}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tulostuspäivä</td>
+                        <td>{{notificationDate}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="summation">
+                <table>
+                    <tr>
+                        <td>IBAN</td>
+                        <td>{{paymentIban}}</td>
+                    </tr>
+                    <tr>
+                        <td>Viitenumero</td>
+                        <td>{{ocrPaymentReference}}</td>
+                    </tr>
+                </table>
+                <br />
+                <table>
+                    <tr>
+                        <td>Maksettavaa</td>
+                        <td>{{totalAmountIncludingOtherNotifications}}</td>
+                    </tr>
+                    <tr>
+                        <td>Eräpäivä</td>
+                        <td>{{dueDate}}</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Kreditavtal & Särskilda villkor -->
+
+
+    <div class="row">
+        <div class="conditions">
+            <br />
+            <h1>Erittely</h1>
+            <p class="info">Tämänhetkinen lainakorko on {{currentInterestRatePercent}}% ja avoin lainapääoma {{totalUnpaidcreditCapitalAmount}} euroa</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Laskutuskuukausi {{dueMonth}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#currentNotificationAmounts}}
+                    [[[include:amountTypes.html]]]
+                    {{/currentNotificationAmounts}}
+                </tbody>
+            </table>
+
+            {{#overdue}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Erääntyneet erät, maksettava välittömästi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#overdueNotificationAmounts}}
+                    [[[include:amountTypes.html]]]
+                    {{/overdueNotificationAmounts}}
+                </tbody>
+            </table>
+            {{/overdue}}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Summa laskutuskuukausi {{dueMonth}}</th>
+                        <th>{{#overdue}}Summa erääntyneet erät{{/overdue}}</th>
+                        <th class="text-right">Maksettava yhteensä</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{totalAmountCurrentNotification}}</td>
+                        <td>{{#overdue}}{{totalOverDueAmount}}{{/overdue}}</td>
+                        <td class="text-right">{{totalAmountIncludingOtherNotifications}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="contact">
+        <h3>Jos sinulla on kysyttävää, voit olla yhteydessä meihin sähköpostitse {{documentClientData_email}} tai puhelimitse <span style="white-space:nowrap;">010 524 8410</span>. Olemme avoinna ma-pe klo 9-11.30 ja 12.30-16. Voit myös tarkistaa lainaasi koskevat ajantasaiset tiedot kirjautumalla asiakassivuillemme osoitteessa {{documentClientData_website}}.</h3>
+    </div>
+
+    
+
+    <div class="paymentCard">
+        <img src="img/bankgiro-banor-fi.jpg" />
+    </div>
+    <div class="paymentCardValues">
+        <div class="iban"><div class="left">{{paymentBankName}}</div> <div class="righ">{{paymentIban}}</div></div>
+        <div class="bic">{{paymentBic}}</div>
+        <div class="recieveradress">
+            {{documentClientData_name}}<br />
+            PL 359 <br />
+            00101 Helsinki
+        </div>
+        <div class="ocr">
+            {{ocrPaymentReference}}
+        </div>
+        <div class="msg">Tiesithän, että voit saada laskusi myös OmaPostiin aktivoimalla palvelun Postin verkkosivuilla. Kirjaudu asiakassivuillemme osoitteessa {{documentClientData_website}} ja tarkastele laskujasi.</div>
+        <div class="duedate">{{dueDate}}</div>
+        <div class="amount">{{totalAmountIncludingOtherNotificationsRaw}}</div>
+    </div>
+</body>
+    
+</html>

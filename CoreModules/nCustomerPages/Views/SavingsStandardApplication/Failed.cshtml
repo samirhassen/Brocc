@@ -1,0 +1,18 @@
+﻿@{
+ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
+ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-angular-translateonly")
+}
+<div class="content">    
+    <div class="vh-50">
+        <div class="aligned-center">
+            <p translate="ssafailed_text1">Just nu är det inte möjligt att öppna sparkonto. Försök lite senare igen. Om problemen kvarstår kontakta kundtjänst.</p>
+        </div>
+    </div>
+</div>

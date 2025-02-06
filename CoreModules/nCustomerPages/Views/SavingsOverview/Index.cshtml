@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Customer Pages";
+    ViewBag.AngularDeclaration = "ng-controller=\"mainCtr\" ng-app=\"app\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-savingsoverview")
+}
+<div class="fixed" ng-show="currentMenuItemName">
+    <div class="miniture mobile" ng-click="showMenu=!showMenu">
+        <a ng-hide="showMenu" href="" class="item"><img src="~/Content/img/icons-menu.png" /></a>
+        <a ng-show="showMenu" href="" class="item"><img src="~/Content/img/icons-close-menu.png" /></a>
+    </div>
+    <div class="order">
+        <div class="submenu mobile" ng-show="showMenu">
+            @Html.Partial("Index_Menu")
+        </div>
+        <div class="desktopmenu desktop">
+            @Html.Partial("Index_Menu")
+        </div>   
+    </div>
+</div>
+<div class="content" style="" ng-view>
+
+</div>
+<div class="clearfix"></div>
+
+@Html.Partial("Index_AccountDetails")
+@Html.Partial("Index_Message")
+@Html.Partial("Index_Withdrawals")
+@Html.Partial("Index_WithdrawalAccounts")
+@Html.Partial("Index_AccountDocuments")
+@Html.Partial("Index_Closures")
+
+@section LastInHead {
+    @if(ViewBag.HasAffiliateTracking)
+    {
+        <script>
+            function ntechSetCookie(name, value) {
+                var cookieName = name; // Name of your cookie
+                var cookieValue = value; // Value of your cookie
+                var expirationTime = 2592000; // One month in seconds
+                expirationTime = expirationTime * 1000; // Converts expirationtime to milliseconds
+                var date = new Date(); 
+                var dateTimeNow = date.getTime(); 
+ 
+                date.setTime(dateTimeNow + expirationTime); // Sets expiration time (Time now + one month)
+                var date = date.toUTCString(); // Converts milliseconds to UTC time string
+                document.cookie = cookieName+"="+cookieValue+"; expires="+date+"; path=/; domain=." + location.hostname.replace(/^www\./i, ""); // Sets cookie for all subdomains
+            }
+            @Html.Raw(ViewBag.AffiliateCookieScripts)
+        </script>
+        @Html.Raw(ViewBag.AffiliateGtmTag1)
+    }
+}
+
+@section FirstInBody {
+    @if(ViewBag.HasAffiliateTracking)
+    {
+        @Html.Raw(ViewBag.AffiliateGtmTag2)
+    }
+}

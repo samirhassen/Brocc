@@ -1,0 +1,492 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Balanzialånet</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="img/png" href="img/favicon.png" />	
+	<link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/balanzia-application.css" rel="stylesheet"/>
+</head>
+<body ng-app="app" ng-controller="ctr" ng-cloak translate-cloak>
+    <div class="content_wrap">
+        <div class="header">
+            <div class="logo_area">
+                <a href="#"><img src="img/Balanzia.png" alt="Balanzia" /></a>
+            </div>
+            <div class="flag_area">
+                <div class="flag_icon finnish">
+                    <a href="#" ng-click="changeLanguage('fi', $event)" ng-class="{ 'unselected_language': (currentLanguage() == 'sv') }">
+                        <img src="img/finlands-flagga.png" width="50" height="31">
+                    </a>
+                </div>
+                <div class="flag_icon swedish">
+                    <a href="#" ng-click="changeLanguage('sv', $event)" ng-class="{ 'unselected_language': (currentLanguage() == 'fi') }">
+                        <img src="img/sveriges-flagga.png" width="50" height="31">
+                    </a>
+                </div>
+            </div>
+            <div class="heading-background">
+                <h1 translate="ansokan_kreditansokan">Kredit&shy;ansökan</h1>
+            </div>
+            <div class="menu_area">
+                &nbsp;
+            </div>
+        </div>
+        <div class="bg-white">
+            <div class="bg-gray">
+                <div class="fields_area centered_section">
+                    <div>
+                        <form name="fc" novalidate>
+                            <h3>{{readonly.applicant1.firstName}} ({{readonly.applicant1.civicRegNr}}) - <span translate="ansokan_kompletterande_uppgifter">Kompletterande uppgifter</span></h3>
+                            <div class="key_value">
+                                <div class="the_key"><h4 translate="ansokan_kredituppgifter">Kredituppgifter</h4></div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key">{{kycQuestions.loan_purpose.text[currentLanguage()]}}</div>
+                                <div class="the_value">
+                                    <select class="constant_width" ng-model="aa(1).purpose" required>
+                                        <option value="" ng-hide="aa(1).purpose" translate="ansokan_valj">Välj</option>
+                                        <option value="{{e.key}}" ng-repeat="e in kycQuestions.loan_purpose.answers">{{e[currentLanguage()]}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key">{{kycQuestions.loan_whosmoney.text[currentLanguage()]}}</div>
+                                <div class="the_value">
+                                    <select class="constant_width" ng-model="aa(1).whosmoney" required>
+                                        <option value="" ng-hide="aa(1).whosmoney" translate="ansokan_valj">Välj</option>
+                                        <option value="{{e.key}}" ng-repeat="e in kycQuestions.loan_whosmoney.answers">{{e[currentLanguage()]}}</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="key_value" ng-show="kycQuestions.loan_whosmoney.resources[aa(1).whosmoney]">
+                                <div class="the_key">{{kycQuestions.loan_whosmoney.resources[aa(1).whosmoney][currentLanguage()]}}</div>
+                                <div class="the_value"><input ng-model="aa(1).whosmoney_extra" ng-required="kycQuestions.loan_whosmoney.resources[aa(1).whosmoney]" class="constant_width"></div>
+                            </div>
+
+                            <div class="key_value">
+                                <div class="the_key">{{kycQuestions.loan_paymentfrequency.text[currentLanguage()]}}</div>
+                                <div class="the_value">
+                                    <select class="constant_width" ng-model="aa(1).paymentfrequency" required>
+                                        <option value="" ng-hide="aa(1).paymentfrequency" translate="ansokan_valj">Välj</option>
+                                        <option value="{{e.key}}" ng-repeat="e in kycQuestions.loan_paymentfrequency.answers">{{e[currentLanguage()]}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="key_value">
+                                <div class="the_key consent"><h4 translate="ansokan_skattehemvist">Uppgifter om skattehemvist</h4></div>
+                            </div>
+
+
+                            <!-- Skattepliktig del som ska bytas ut-->
+                            <div class="key_value" ng-repeat-start="c in aa(1).taxCountries">
+                                <div class="the_key" translate="ansokan_skattehemvist_land">Land du är skattepliktig i</div>
+                                <div class="the_value min_height"><span class="alignment">{{countryName(c)}}</span><button class="button_remove" ng-click="removeCountry(c, 1)" translate="ansokan_tabort">Ta bort</button></div>
+                            </div>
+                            <div class="key_value" ng-show="c != 'FI'" ng-repeat-end="">
+                                <div class="the_key"><span translate="ansokan_skatteregistreringsnummer">Skatteregistreringsnummer</span>: {{countryName(c)}}</div>
+                                <div class="the_value min_height"><input ng-model="aa(1).taxNumbers[c]" class="partial_width"></div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_skattepliktig_ytterligare">Ytterligare land du är skattepliktig i</div>
+                                <div class="the_value">
+                                    <select class="partial_width" ng-model="tmp(1).Country">
+                                        <option value="" ng-hide="tmp(1).Country" translate="ansokan_valj">Välj</option>
+                                        <option ng-hide="isCountrySelected(c.key, 1)" value="{{c.key}}" ng-repeat="c in countries">{{c[currentLanguage()]}}</option>
+                                    </select>
+                                    <button class="button_add" translate="ansokan_laggtill" ng-click="addCountry(tmp(1).Country, 1)" ng-show="tmp(1).Country">Lägg till</button>
+                                </div>
+                            </div>
+                            <!-- end på skattepliktig del som ska bytas ut  -->
+
+                            <!--  Start ny skatttepliktig del-->
+                            <!--
+                            <div class="key_value">
+                                <div class="the_key">Ange samtliga länder du är skattepliktig i</div>
+                                <div class="">
+                                    <div class="the_value">
+                                        <select class="partial_width">
+                                            <option>Finland</option>
+                                            <option>Sverige</option>
+                                        </select>
+                                        <button class="button_remove">Ta bort</button>
+                                    </div>                                    
+                                    <div class="the_value">
+                                        <select class="partial_width">
+                                            <option>Sverige</option>
+                                            <option>Norge</option>
+                                        </select>
+                                        <button class="button_remove">Ta bort</button>
+                                    </div>
+                                    <div class="the_value">
+                                        <input class="partial_width" placeholder="Ange skatteregistreringsnummer: Sverige" />
+                                    </div>
+                                    <div class="the_value">
+                                        <select class="partial_width">
+                                            <option>Ytterligare land du är skattepliktig i</option>
+                                            <option>Sverige</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                </div>                                
+                                <div class="the_value">
+                                    <input type="checkbox" checked/> Jag är inte skattepliktig i något land
+                                </div>
+                            </div>
+                            -->
+                            <!-- END ny skattepliktig del -->
+
+                            <div class="key_value">
+                                <div class="the_key"><h4 translate="ansokan_pep_header">Politiskt exponerad person (PEP)</h4></div>
+                            </div>
+                            <!--PEP del som ska bytas ut -->
+                            <div class="key_value">
+                                <div class="the_key">{{kycQuestions.customer_pep.text[currentLanguage()]}}</div>
+                                <div class="the_value checkbox_list">
+                                    <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredPep(1) }" ng-repeat="a in kycQuestions.customer_pep.answers"><input type="checkbox" ng-model="aa(1).pep[a.key]" value="true" ng-required="!hasAnsweredPep(1)" />&nbsp;{{a[currentLanguage()]}}</div>
+                                </div>
+                            </div>
+                            <div class="key_value" ng-show="isPep(1)">
+                                <div class="the_key">{{kycQuestions.customer_pep.resources.who[currentLanguage()]}}</div>
+                                <div class="the_value"><input class="constant_width" ng-model="aa(1).pep_who" ng-required="isPep(1)"></div>
+                            </div>
+                            <!-- slut på PEP del som ska bytas ut-->
+
+                            <!--Start på Ny PEP del -->
+                            <!-- Samma som PEP alternativen förut, ta bort översta -> Nej, varken jag eller någon i min närhet har eller har haft någon av nedanstående roller. -->
+                            <!--
+                            <div class="key_value">
+                                <div class="the_key">Har du en hög politisk befattning inom staten, är en nära släktning eller medarbetare till en sådan person?</div>
+                                <div class="the_value">
+                                    <table class="radio-button">
+                                        <tr>
+                                            <td><input type="radio" class="radio-button" />Ja </td>
+                                            <td><input type="radio" class="radio-button" />Nej</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="none">
+                                <div class="key_value">
+                                    <div class="the_key">Jag eller någon i min närhet har eller har haft någon av nedanstående roller:</div>                                    
+                                    <div class="the_value checkbox_list">
+                                        <div class="invalid_checkbox" ><input type="checkbox" value="true" />[pep alternativ 1]</div>
+                                        <div class="invalid_checkbox" ><input type="checkbox" value="true" />[pep alternativ 2]</div>
+                                    </div>                                    
+                                </div>
+                                <div class="key_value">
+                                    <div class="the_key">Vem eller vilka har i så fall haft rollerna?</div>
+                                    <div class="the_value"><input class="constant_width"></div>
+                                </div>
+                            </div>
+                            -->
+                            <!--slut på ny PEP del-->
+
+                            <div class="key_value">
+                                <div class="the_key"><h4 translate="ansokan_other_info">Övriga uppgifter</h4></div>
+                            </div>
+
+                            <div class="key_value">
+                                <div class="the_key">{{kycQuestions.customer_mainoccupation.text[currentLanguage()]}}</div>
+                                <div class="the_value">
+                                    <select class="partial_width" ng-model="aa(1).mainOccupation" required>
+                                        <option value="" ng-hide="aa(1).mainOccupation" translate="ansokan_valj">Välj</option>
+                                        <option value="{{c.key}}" ng-repeat="c in kycQuestions.customer_mainoccupation.answers">{{c[currentLanguage()]}}</option>
+                                    </select>
+                                </div>
+                            </div>            
+
+                            <div class="key_value">
+                                <!-- Start på befintlig kund som ska bytas ut -->
+                                 <div class="the_key" translate="ansokan_products_header">Vilka av Balanzias produkter använder du?</div>
+                                
+                                <div class="the_value checkbox_list">
+                                    <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredProducts(1) }"><input type="checkbox" ng-model="aa(1).products.none" value="true" />&nbsp;<span translate="ansokan_products_none">Inga</span></div>
+                                    <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredProducts(1) }"><input type="checkbox" ng-model="aa(1).products.savings" value="true" />&nbsp;<span translate="ansokan_products_savings">Spar</span></div>
+                                    <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredProducts(1) }"><input type="checkbox" ng-model="aa(1).products.loanorcredit" value="true" />&nbsp; <span translate="ansokan_products_loanorcredit">Lån och krediter</span></div>
+                                </div>
+                                <!-- slut på del som ska bytas ut-->  
+
+                                <!-- Start på Ny befintlig kund  del -->
+                                <!--
+                                <div class="the_key">Är du befintlig kund hos Balanzia?</div>
+                                <div class="the_value">
+                                    <table class="radio-button">
+                                        <tr>
+                                            <td><input type="radio" class="radio-button" />Ja </td>
+                                            <td><input type="radio" class="radio-button" />Nej</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="none">
+                                    <div class="the_key">Vilka av Balanzias produkter använder du?</div>
+                                    <div class="the_value checkbox_list">
+                                        <div class=""><input type="checkbox" />Spar</div>
+                                        <div class=""><input type="checkbox" />Lån och krediter</div>
+                                    </div>
+                                </div>
+                                    -->
+                                <!--end ny del på befintligt kund-->
+                            </div>
+
+                            <div class="key_value">
+                                <div class="the_key"><h4 translate="ansokan_iban_header1">Uppgifter för utbetalning</h4></div>
+                            </div>
+                            <div class="key_value">
+                                <div class="the_key" translate="ansokan_iban_header2">Kontonummer för utbetalning</div>
+                                <div class="the_value"><input custom-validate="isValidIBAN" ng-model="answers.iban" class="partial_width" placeholder="FIkk bbbb bbcc cccc cx" required /></div>
+                            </div>
+                            <br /><br />
+
+
+                            <!-- sökande 2 -->
+                            <div ng-if="hasCo()">
+                                <h3>{{readonly.applicant2.firstName}} ({{readonly.applicant2.civicRegNr}}) - <span translate="ansokan_kompletterande_uppgifter">Kompletterande uppgifter</span></h3>
+                                <div class="key_value">
+                                    <div class="the_key"><h4 translate="ansokan_kredituppgifter">Kredituppgifter</h4></div>
+                                </div>
+
+                                <div class="key_value">
+                                    <div class="the_key">{{kycQuestions.loan_purpose.text[currentLanguage()]}}</div>
+                                    <div class="the_value">
+                                        <select class="constant_width" ng-model="aa(2).purpose" required>
+                                            <option value="" ng-hide="aa(2).purpose" translate="ansokan_valj">Välj</option>
+                                            <option value="{{e.key}}" ng-repeat="e in kycQuestions.loan_purpose.answers">{{e[currentLanguage()]}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="key_value">
+                                    <div class="the_key">{{kycQuestions.loan_whosmoney.text[currentLanguage()]}}</div>
+                                    <div class="the_value">
+                                        <select class="constant_width" ng-model="aa(2).whosmoney" required>
+                                            <option value="" ng-hide="aa(2).whosmoney" translate="ansokan_valj">Välj</option>
+                                            <option value="{{e.key}}" ng-repeat="e in kycQuestions.loan_whosmoney.answers">{{e[currentLanguage()]}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="key_value" ng-show="kycQuestions.loan_whosmoney.resources[aa(2).whosmoney]">
+                                    <div class="the_key">{{kycQuestions.loan_whosmoney.resources[aa(2).whosmoney][currentLanguage()]}}</div>
+                                    <div class="the_value"><input ng-model="aa(2).whosmoney_extra" ng-required="kycQuestions.loan_whosmoney.resources[aa(2).whosmoney]" class="constant_width"></div>
+                                </div>
+                                <div class="key_value">
+                                    <div class="the_key">{{kycQuestions.loan_paymentfrequency.text[currentLanguage()]}}</div>
+                                    <div class="the_value">
+                                        <select class="constant_width" ng-model="aa(2).paymentfrequency" required>
+                                            <option value="" ng-hide="aa(2).paymentfrequency" translate="ansokan_valj">Välj</option>
+                                            <option value="{{e.key}}" ng-repeat="e in kycQuestions.loan_paymentfrequency.answers">{{e[currentLanguage()]}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="key_value">
+                                    <div class="the_key consent"><h4 translate="ansokan_skattehemvist">Uppgifter om skattehemvist</h4></div>
+                                </div>
+
+                                <!-- Skattepliktig del som ska bytas ut-->
+                                <div class="key_value" ng-repeat-start="c in aa(2).taxCountries">
+                                    <div class="the_key" translate="ansokan_skattehemvist_land">Land du är skattepliktig i</div>
+                                    <div class="the_value min_height">{{countryName(c)}}<button class="button_remove" ng-click="removeCountry(c, 2)" translate="ansokan_tabort">Ta bort</button></div>
+                                </div>
+                                <div class="key_value" ng-show="c != 'FI'" ng-repeat-end="">
+                                    <div class="the_key"><span translate="ansokan_skatteregistreringsnummer">Skatteregistreringsnummer</span>: {{countryName(c)}}</div>
+                                    <div class="the_value min_height"><input ng-model="aa(2).taxNumbers[c]" class="partial_width"></div>
+                                </div>
+                                <div class="key_value">
+                                    <div class="the_key" translate="ansokan_skattepliktig_ytterligare">Ytterligare land du är skattepliktig i</div>
+                                    <div class="the_value">
+                                        <select class="partial_width" ng-model="tmp(2).Country">
+                                            <option value="" ng-hide="tmp(2).Country" translate="ansokan_valj">Välj</option>
+                                            <option ng-hide="isCountrySelected(c.key, 2)" value="{{c.key}}" ng-repeat="c in countries">{{c[currentLanguage()]}}</option>
+                                        </select>
+                                        <button class="button_add" translate="ansokan_laggtill" ng-click="addCountry(tmp(2).Country, 2, $event)" ng-show="tmp(2).Country">Lägg till</button>
+                                    </div>
+                                </div>
+                                <!-- end på skattepliktig del som ska bytas ut  -->
+
+                                <!--  Start ny skatttepliktig del-->
+                                <!--
+                                <div class="key_value">
+                                    <div class="the_key">Ange samtliga länder du är skattepliktig i</div>
+                                    <div class="">
+                                        <div class="the_value">
+                                            <select class="partial_width">
+                                                <option>Finland</option>
+                                                <option>Sverige</option>
+                                            </select>
+                                            <button class="button_remove">Ta bort</button>
+                                        </div>
+                                        <div class="the_value">
+                                            <select class="partial_width">
+                                                <option>Sverige</option>
+                                                <option>Norge</option>
+                                            </select>
+                                            <button class="button_remove">Ta bort</button>
+                                        </div>
+                                        <div class="the_value">
+                                            <input class="partial_width" placeholder="Ange skatteregistreringsnummer: Sverige" />
+                                        </div>
+                                        <div class="the_value">
+                                            <select class="partial_width">
+                                                <option>Ytterligare land du är skattepliktig i</option>
+                                                <option>Sverige</option>
+                                            </select>
+                                        </div>
+                                        <br />
+                                    </div>
+                                    <div class="the_value">
+                                        <input type="checkbox" checked/> Jag är inte skattepliktig i något land
+                                    </div>
+                                </div>
+                                -->
+                                <!-- END ny skattepliktig del -->
+
+
+                                <div class="key_value">
+                                    <div class="the_key"><h4 translate="ansokan_pep_header">Politiskt exponerad person (PEP)</h4></div>
+                                </div>
+
+                                <!--PEP del som ska bytas ut -->                             
+                                <div class="key_value">
+                                    <div class="the_key">{{kycQuestions.customer_pep.text[currentLanguage()]}}</div>
+                                    <div class="the_value checkbox_list">
+                                        <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredPep(2) }" ng-repeat="a in kycQuestions.customer_pep.answers"><input type="checkbox" ng-model="aa(2).pep[a.key]" value="true" ng-required="!hasAnsweredPep(2)" />&nbsp;{{a[currentLanguage()]}}</div>
+                                    </div>
+                                </div>
+                                <div class="key_value" ng-show="isPep(2)">
+                                    <div class="the_key">{{kycQuestions.customer_pep.resources.who[currentLanguage()]}}</div>
+                                    <div class="the_value"><input class="constant_width" ng-model="aa(2).pep_who" ng-required="isPep(2)"></div>
+                                </div>
+                                <!-- slut på PEP del som ska bytas ut-->
+
+                                <!--Start på Ny PEP del -->
+                                <!-- Samma som PEP alternativen förut, ta bort översta -> Nej, varken jag eller någon i min närhet har eller har haft någon av nedanstående roller. -->
+                                <!--
+                                <div class="key_value">
+                                    <div class="the_key">Har du en hög politisk befattning inom staten, är en nära släktning eller medarbetare till en sådan person?</div>
+                                    <div class="the_value">
+                                        <table class="radio-button">
+                                            <tr>
+                                                <td><input type="radio" class="radio-button" />Ja </td>
+                                                <td><input type="radio" class="radio-button" />Nej</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="none">
+                                   
+                                    <div class="key_value">
+                                        <div class="the_key">Jag eller någon i min närhet har eller har haft någon av nedanstående roller:</div>
+                                        <div class="the_value checkbox_list">
+                                            <div class="invalid_checkbox" ><input type="checkbox" value="true" />[pep alternativ 1]</div>
+                                            <div class="invalid_checkbox" ><input type="checkbox" value="true" />[pep alternativ 2]</div>
+                                        </div>
+                                    </div>
+                                    <div class="key_value">
+                                        <div class="the_key">Vem eller vilka har i så fall haft rollerna?</div>
+                                        <div class="the_value"><input class="constant_width"></div>
+                                    </div>
+                                </div>
+                                -->
+                                <!--slut på ny PEP del-->
+
+
+
+
+                                <div class="key_value">
+                                    <div class="the_key"><h4 translate="ansokan_other_info">Övriga uppgifter</h4></div>
+                                </div>
+
+                                <div class="key_value">
+                                    <div class="the_key">{{kycQuestions.customer_mainoccupation.text[currentLanguage()]}}</div>
+                                    <div class="the_value">
+                                        <select class="partial_width" ng-model="aa(2).mainOccupation" required>
+                                            <option value="" ng-hide="aa(2).mainOccupation" translate="ansokan_valj">Välj</option>
+                                            <option value="{{c.key}}" ng-repeat="c in kycQuestions.customer_mainoccupation.answers">{{c[currentLanguage()]}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="key_value">
+
+                                    <!-- Start på befintlig kund som ska bytas ut -->
+                                    <div class="the_key" translate="ansokan_products_header">Vilka av Balanzias produkter använder du?</div>
+                                    <div class="the_value checkbox_list">
+                                        <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredProducts(2) }"><input type="checkbox" ng-model="aa(2).products.none" value="true" />&nbsp;<span translate="ansokan_products_none">Inga</span></div>
+                                        <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredProducts(2) }"><input type="checkbox" ng-model="aa(2).products.savings" value="true" />&nbsp;<span translate="ansokan_products_savings">Spar</span></div>
+                                        <div ng-class="{ 'invalid_checkbox' : fc.$invalid && fc.$submitted && !hasAnsweredProducts(2) }"><input type="checkbox" ng-model="aa(2).products.loanorcredit" value="true" />&nbsp; <span translate="ansokan_products_loanorcredit">Lån och krediter</span></div>
+                                    </div>
+                                    <!-- slut på del som ska bytas ut-->
+
+
+                                    <!-- Start på Ny befintlig kund  del -->
+                                    <!--
+                                    <div class="the_key">Är du befintlig kund hos Balanzia?</div>
+                                    <div class="the_value">
+                                        <table class="radio-button">
+                                            <tr>
+                                                <td><input type="radio" class="radio-button" />Ja </td>
+                                                <td><input type="radio" class="radio-button" />Nej</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="none">
+                                        <div class="the_key">Vilka av Balanzias produkter använder du?</div>
+                                        <div class="the_value checkbox_list">
+                                            <div class=""><input type="checkbox" />Spar</div>
+                                            <div class=""><input type="checkbox" />Lån och krediter</div>
+                                        </div>
+                                    </div>
+                                        -->
+                                    <!--end ny del på befintligt kund-->
+
+
+                                </div>
+
+                            </div><!-- slut sökande 2 -->
+
+
+                            <br />
+
+
+
+                            <!-- Navigering -->
+                            <div>
+                                <div class="button_area" ng-hide="isApplying">
+                                    <button type="submit" class="ansok_button nft_button" ng-click="apply()" translate="ansokan_skickain">Skicka in</button>
+                                    <div class="invalid_mark hidden" ng-show="isFormInvalid() && fc.$submitted">!</div>
+                                    <div class="invalid_message hidden" ng-show="isFormInvalid() && fc.$submitted" translate="ansokan_faltmastekorrigeras">Det finns fält som måste korrigeras.</div>
+                                </div>
+                                <div class="button_area" ng-show="isApplying">
+                                    <img src="img/loading.gif" ng-show="isApplying" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-functions">
+            <p ng-show="isTest"><a href="#" ng-click="loadTestData($event)">fyll i samma som föregående ansökan (endast i test)</a></p>
+        </div>
+    </div>
+    <script>
+        initialData = JSON.parse(atob('eyJpc1Byb2R1Y3Rpb24iOmZhbHNlLCJpZCI6ImR4T1RFckVPUkY5NTRwRXFNTW1rIiwidHJhbnNsYXRlVXJsIjoiL3RyYW5zbGF0aW9uIiwiYXBwbHlVcmwiOiIvYWRkaXRpb25hbC1xdWVzdGlvbnMtYXBwbHk/aWQ9ZHhPVEVyRU9SRjk1NHBFcU1NbWsiLCJmYWlsZWRVcmwiOiIvYWRkaXRpb25hbC1xdWVzdGlvbnMtZmFpbGVkIiwiY291bnRyaWVzIjpbeyJrZXkiOiJGSSIsInN2IjoiRmlubGFuZCIsImZpIjoiU3VvbWkifSx7ImtleSI6IlNFIiwic3YiOiJTdmVyaWdlIiwiZmkiOiJSdW90c2kifSx7ImtleSI6Ik5PIiwic3YiOiJOb3JnZSIsImZpIjoiTm9yamEifSx7ImtleSI6IkRLIiwic3YiOiJEYW5tYXJrIiwiZmkiOiJUYW5za2EifSx7ImtleSI6IkFGIiwic3YiOiJBZmdoYW5pc3RhbiIsImZpIjoiQWZnaGFuaXN0YW4ifSx7ImtleSI6IkFYIiwic3YiOiLFbGFuZCIsImZpIjoixWxhbmQifSx7ImtleSI6IkFMIiwic3YiOiJBbGJhbmlhIiwiZmkiOiJBbGJhbmlhIn0seyJrZXkiOiJEWiIsInN2IjoiQWxnZXJpYSIsImZpIjoiQWxnZXJpYSJ9LHsia2V5IjoiQVMiLCJzdiI6IkFtZXJpYW4gU2Ftb2EiLCJmaSI6IkFtZXJpY2FuIFNhbW9hIn0seyJrZXkiOiJBRCIsInN2IjoiQW5kb3JyYSIsImZpIjoiQW5kb3JyYSJ9LHsia2V5IjoiQU8iLCJzdiI6IkFuZ29sYSIsImZpIjoiQW5nb2xhIn0seyJrZXkiOiJBSSIsInN2IjoiQW5ndWlsbGEiLCJmaSI6IkFuZ3VpbGxhIn0seyJrZXkiOiJBUSIsInN2IjoiQW50YXJjdGljYSIsImZpIjoiQW50YXJjdGljYSJ9LHsia2V5IjoiQUciLCJzdiI6IkFudGlndWEgYW5kIEJhcmJ1ZGEiLCJmaSI6IkFudGlndWEgYW5kIEJhcmJ1ZGEifSx7ImtleSI6IkFSIiwic3YiOiJBcmdlbnRpbmEiLCJmaSI6IkFyZ2VudGluYSJ9LHsia2V5IjoiQU0iLCJzdiI6IkFybWVuaWEiLCJmaSI6IkFybWVuaWEifSx7ImtleSI6IkFXIiwic3YiOiJBcnViYSIsImZpIjoiQXJ1YmEifSx7ImtleSI6IkFVIiwic3YiOiJBdXN0cmFsaWEiLCJmaSI6IkF1c3RyYWxpYSJ9LHsia2V5IjoiQVQiLCJzdiI6IkF1c3RyaWEiLCJmaSI6IkF1c3RyaWEifSx7ImtleSI6IkFaIiwic3YiOiJBemVyYmFpamFuIiwiZmkiOiJBemVyYmFpamFuIn0seyJrZXkiOiJCUyIsInN2IjoiQmFoYW1hcyIsImZpIjoiQmFoYW1hcyJ9LHsia2V5IjoiQkgiLCJzdiI6IkJhaHJhaW4iLCJmaSI6IkJhaHJhaW4ifSx7ImtleSI6IkJEIiwic3YiOiJCYW5nbGFkZXNoIiwiZmkiOiJCYW5nbGFkZXNoIn0seyJrZXkiOiJCQiIsInN2IjoiQmFyYmFkb3MiLCJmaSI6IkJhcmJhZG9zIn0seyJrZXkiOiJCWSIsInN2IjoiQmVsYXJ1cyIsImZpIjoiQmVsYXJ1cyJ9LHsia2V5IjoiQkUiLCJzdiI6IkJlbGdpdW0iLCJmaSI6IkJlbGdpdW0ifSx7ImtleSI6IkJaIiwic3YiOiJCZWxpemUiLCJmaSI6IkJlbGl6ZSJ9LHsia2V5IjoiQkoiLCJzdiI6IkJlbmluIiwiZmkiOiJCZW5pbiJ9LHsia2V5IjoiQk0iLCJzdiI6IkJlcm11ZGEiLCJmaSI6IkJlcm11ZGEifSx7ImtleSI6IkJUIiwic3YiOiJCaHV0YW4iLCJmaSI6IkJodXRhbiJ9LHsia2V5IjoiQk8iLCJzdiI6IkJvbGl2aWEgKFBsdXJpbmF0aW9uYWwgU3RhdGUgb2YpIiwiZmkiOiJCb2xpdmlhIChQbHVyaW5hdGlvbmFsIFN0YXRlIG9mKSJ9LHsia2V5IjoiQlEiLCJzdiI6IkJvbmFpcmUsIFNpbnQgRXVzdGF0aXVzIGFuZCBTYWJhIiwiZmkiOiJCb25haXJlLCBTaW50IEV1c3RhdGl1cyBhbmQgU2FiYSJ9LHsia2V5IjoiQkEiLCJzdiI6IkJvc25pYSBhbmQgSGVyemVnb3ZpbmEiLCJmaSI6IkJvc25pYSBhbmQgSGVyemVnb3ZpbmEifSx7ImtleSI6IkJXIiwic3YiOiJCb3Rzd2FuYSIsImZpIjoiQm90c3dhbmEifSx7ImtleSI6IkJWIiwic3YiOiJCb3V2ZXQgSXNsYW5kIiwiZmkiOiJCb3V2ZXQgSXNsYW5kIn0seyJrZXkiOiJCUiIsInN2IjoiQnJhemlsIiwiZmkiOiJCcmF6aWwifSx7ImtleSI6IklPIiwic3YiOiJCcml0aXNoIEluZGlhbiBPY2VhbiBUZXJyaXRvcnkiLCJmaSI6IkJyaXRpc2ggSW5kaWFuIE9jZWFuIFRlcnJpdG9yeSJ9LHsia2V5IjoiQk4iLCJzdiI6IkJydW5laSBEYXJ1c3NhbGFtIiwiZmkiOiJCcnVuZWkgRGFydXNzYWxhbSJ9LHsia2V5IjoiQkciLCJzdiI6IkJ1bGdhcmlhIiwiZmkiOiJCdWxnYXJpYSJ9LHsia2V5IjoiQkYiLCJzdiI6IkJ1cmtpbmEgRmFzbyIsImZpIjoiQnVya2luYSBGYXNvIn0seyJrZXkiOiJCSSIsInN2IjoiQnVydW5kaSIsImZpIjoiQnVydW5kaSJ9LHsia2V5IjoiQ1YiLCJzdiI6IkNhYm8gVmVyZGUiLCJmaSI6IkNhYm8gVmVyZGUifSx7ImtleSI6IktIIiwic3YiOiJDYW1ib2RpYSIsImZpIjoiQ2FtYm9kaWEifSx7ImtleSI6IkNNIiwic3YiOiJDYW1lcm9vbiIsImZpIjoiQ2FtZXJvb24ifSx7ImtleSI6IkNBIiwic3YiOiJDYW5hZGEiLCJmaSI6IkNhbmFkYSJ9LHsia2V5IjoiS1kiLCJzdiI6IkNheW1hbiBJc2xhbmRzIiwiZmkiOiJDYXltYW4gSXNsYW5kcyJ9LHsia2V5IjoiQ0YiLCJzdiI6IkNlbnRyYWwgQWZyaWNhbiBSZXB1YmxpYyIsImZpIjoiQ2VudHJhbCBBZnJpY2FuIFJlcHVibGljIn0seyJrZXkiOiJURCIsInN2IjoiQ2hhZCIsImZpIjoiQ2hhZCJ9LHsia2V5IjoiQ0wiLCJzdiI6IkNoaWxlIiwiZmkiOiJDaGlsZSJ9LHsia2V5IjoiQ04iLCJzdiI6IkNoaW5hIiwiZmkiOiJDaGluYSJ9LHsia2V5IjoiQ1giLCJzdiI6IkNocmlzdG1hcyBJc2xhbmQiLCJmaSI6IkNocmlzdG1hcyBJc2xhbmQifSx7ImtleSI6IkNDIiwic3YiOiJDb2NvcyAoS2VlbGluZykgSXNsYW5kcyIsImZpIjoiQ29jb3MgKEtlZWxpbmcpIElzbGFuZHMifSx7ImtleSI6IkNPIiwic3YiOiJDb2xvbWJpYSIsImZpIjoiQ29sb21iaWEifSx7ImtleSI6IktNIiwic3YiOiJDb21vcm9zIiwiZmkiOiJDb21vcm9zIn0seyJrZXkiOiJDRyIsInN2IjoiQ29uZ28iLCJmaSI6IkNvbmdvIn0seyJrZXkiOiJDRCIsInN2IjoiQ29uZ28gKERlbW9jcmF0aWMgUmVwdWJsaWMgb2YgdGhlKSIsImZpIjoiQ29uZ28gKERlbW9jcmF0aWMgUmVwdWJsaWMgb2YgdGhlKSJ9LHsia2V5IjoiQ0siLCJzdiI6IkNvb2sgSXNsYW5kcyIsImZpIjoiQ29vayBJc2xhbmRzIn0seyJrZXkiOiJDUiIsInN2IjoiQ29zdGEgUmljYSIsImZpIjoiQ29zdGEgUmljYSJ9LHsia2V5IjoiQ0kiLCJzdiI6IkP0dGUgZEl2b2lyZSIsImZpIjoiQ/R0ZSBkSXZvaXJlIn0seyJrZXkiOiJIUiIsInN2IjoiQ3JvYXRpYSIsImZpIjoiQ3JvYXRpYSJ9LHsia2V5IjoiQ1UiLCJzdiI6IkN1YmEiLCJmaSI6IkN1YmEifSx7ImtleSI6IkNXIiwic3YiOiJDdXJh52FvIiwiZmkiOiJDdXJh52FvIn0seyJrZXkiOiJDWSIsInN2IjoiQ3lwcnVzIiwiZmkiOiJDeXBydXMifSx7ImtleSI6IkNaIiwic3YiOiJDemVjaCBSZXB1YmxpYyIsImZpIjoiQ3plY2ggUmVwdWJsaWMifSx7ImtleSI6IkRKIiwic3YiOiJEamlib3V0aSIsImZpIjoiRGppYm91dGkifSx7ImtleSI6IkRNIiwic3YiOiJEb21pbmljYSIsImZpIjoiRG9taW5pY2EifSx7ImtleSI6IkRPIiwic3YiOiJEb21pbmljYW4gUmVwdWJsaWMiLCJmaSI6IkRvbWluaWNhbiBSZXB1YmxpYyJ9LHsia2V5IjoiRUMiLCJzdiI6IkVjdWFkb3IiLCJmaSI6IkVjdWFkb3IifSx7ImtleSI6IkVHIiwic3YiOiJFZ3lwdCIsImZpIjoiRWd5cHQifSx7ImtleSI6IlNWIiwic3YiOiJFbCBTYWx2YWRvciIsImZpIjoiRWwgU2FsdmFkb3IifSx7ImtleSI6IkdRIiwic3YiOiJFcXVhdG9yaWFsIEd1aW5lYSIsImZpIjoiRXF1YXRvcmlhbCBHdWluZWEifSx7ImtleSI6IkVSIiwic3YiOiJFcml0cmVhIiwiZmkiOiJFcml0cmVhIn0seyJrZXkiOiJFRSIsInN2IjoiRXN0b25pYSIsImZpIjoiRXN0b25pYSJ9LHsia2V5IjoiRVQiLCJzdiI6IkV0aGlvcGlhIiwiZmkiOiJFdGhpb3BpYSJ9LHsia2V5IjoiRksiLCJzdiI6IkZhbGtsYW5kIElzbGFuZHMgKE1hbHZpbmFzKSIsImZpIjoiRmFsa2xhbmQgSXNsYW5kcyAoTWFsdmluYXMpIn0seyJrZXkiOiJGTyIsInN2IjoiRmFyb2UgSXNsYW5kcyIsImZpIjoiRmFyb2UgSXNsYW5kcyJ9LHsia2V5IjoiRkoiLCJzdiI6IkZpamkiLCJmaSI6IkZpamkifSx7ImtleSI6IkZSIiwic3YiOiJGcmFuY2UiLCJmaSI6IkZyYW5jZSJ9LHsia2V5IjoiR0YiLCJzdiI6IkZyZW5jaCBHdWlhbmEiLCJmaSI6IkZyZW5jaCBHdWlhbmEifSx7ImtleSI6IlBGIiwic3YiOiJGcmVuY2ggUG9seW5lc2lhIiwiZmkiOiJGcmVuY2ggUG9seW5lc2lhIn0seyJrZXkiOiJURiIsInN2IjoiRnJlbmNoIFNvdXRoZXJuIFRlcnJpdG9yaWVzIiwiZmkiOiJGcmVuY2ggU291dGhlcm4gVGVycml0b3JpZXMifSx7ImtleSI6IkdBIiwic3YiOiJHYWJvbiIsImZpIjoiR2Fib24ifSx7ImtleSI6IkdNIiwic3YiOiJHYW1iaWEiLCJmaSI6IkdhbWJpYSJ9LHsia2V5IjoiR0UiLCJzdiI6Ikdlb3JnaWEiLCJmaSI6Ikdlb3JnaWEifSx7ImtleSI6IkRFIiwic3YiOiJHZXJtYW55IiwiZmkiOiJHZXJtYW55In0seyJrZXkiOiJHSCIsInN2IjoiR2hhbmEiLCJmaSI6IkdoYW5hIn0seyJrZXkiOiJHSSIsInN2IjoiR2licmFsdGFyIiwiZmkiOiJHaWJyYWx0YXIifSx7ImtleSI6IkdSIiwic3YiOiJHcmVlY2UiLCJmaSI6IkdyZWVjZSJ9LHsia2V5IjoiR0wiLCJzdiI6IkdyZWVubGFuZCIsImZpIjoiR3JlZW5sYW5kIn0seyJrZXkiOiJHRCIsInN2IjoiR3JlbmFkYSIsImZpIjoiR3JlbmFkYSJ9LHsia2V5IjoiR1AiLCJzdiI6Ikd1YWRlbG91cGUiLCJmaSI6Ikd1YWRlbG91cGUifSx7ImtleSI6IkdVIiwic3YiOiJHdWFtIiwiZmkiOiJHdWFtIn0seyJrZXkiOiJHVCIsInN2IjoiR3VhdGVtYWxhIiwiZmkiOiJHdWF0ZW1hbGEifSx7ImtleSI6IkdHIiwic3YiOiJHdWVybnNleSIsImZpIjoiR3Vlcm5zZXkifSx7ImtleSI6IkdOIiwic3YiOiJHdWluZWEiLCJmaSI6Ikd1aW5lYSJ9LHsia2V5IjoiR1ciLCJzdiI6Ikd1aW5lYS1CaXNzYXUiLCJmaSI6Ikd1aW5lYS1CaXNzYXUifSx7ImtleSI6IkdZIiwic3YiOiJHdXlhbmEiLCJmaSI6Ikd1eWFuYSJ9LHsia2V5IjoiSFQiLCJzdiI6IkhhaXRpIiwiZmkiOiJIYWl0aSJ9LHsia2V5IjoiSE0iLCJzdiI6IkhlYXJkIElzbGFuZCBhbmQgTWNEb25hbGQgSXNsYW5kcyIsImZpIjoiSGVhcmQgSXNsYW5kIGFuZCBNY0RvbmFsZCBJc2xhbmRzIn0seyJrZXkiOiJWQSIsInN2IjoiSG9seSBTZWUiLCJmaSI6IkhvbHkgU2VlIn0seyJrZXkiOiJITiIsInN2IjoiSG9uZHVyYXMiLCJmaSI6IkhvbmR1cmFzIn0seyJrZXkiOiJISyIsInN2IjoiSG9uZyBLb25nIiwiZmkiOiJIb25nIEtvbmcifSx7ImtleSI6IkhVIiwic3YiOiJIdW5nYXJ5IiwiZmkiOiJIdW5nYXJ5In0seyJrZXkiOiJJUyIsInN2IjoiSWNlbGFuZCIsImZpIjoiSWNlbGFuZCJ9LHsia2V5IjoiSU4iLCJzdiI6IkluZGlhIiwiZmkiOiJJbmRpYSJ9LHsia2V5IjoiSUQiLCJzdiI6IkluZG9uZXNpYSIsImZpIjoiSW5kb25lc2lhIn0seyJrZXkiOiJJUiIsInN2IjoiSXJhbiAoSXNsYW1pYyBSZXB1YmxpYyBvZikiLCJmaSI6IklyYW4gKElzbGFtaWMgUmVwdWJsaWMgb2YpIn0seyJrZXkiOiJJUSIsInN2IjoiSXJhcSIsImZpIjoiSXJhcSJ9LHsia2V5IjoiSUUiLCJzdiI6IklyZWxhbmQiLCJmaSI6IklyZWxhbmQifSx7ImtleSI6IklNIiwic3YiOiJJc2xlIG9mIE1hbiIsImZpIjoiSXNsZSBvZiBNYW4ifSx7ImtleSI6IklMIiwic3YiOiJJc3JhZWwiLCJmaSI6IklzcmFlbCJ9LHsia2V5IjoiSVQiLCJzdiI6Ikl0YWx5IiwiZmkiOiJJdGFseSJ9LHsia2V5IjoiSk0iLCJzdiI6IkphbWFpY2EiLCJmaSI6IkphbWFpY2EifSx7ImtleSI6IkpQIiwic3YiOiJKYXBhbiIsImZpIjoiSmFwYW4ifSx7ImtleSI6IkpFIiwic3YiOiJKZXJzZXkiLCJmaSI6IkplcnNleSJ9LHsia2V5IjoiSk8iLCJzdiI6IkpvcmRhbiIsImZpIjoiSm9yZGFuIn0seyJrZXkiOiJLWiIsInN2IjoiS2F6YWtoc3RhbiIsImZpIjoiS2F6YWtoc3RhbiJ9LHsia2V5IjoiS0UiLCJzdiI6IktlbnlhIiwiZmkiOiJLZW55YSJ9LHsia2V5IjoiS0kiLCJzdiI6IktpcmliYXRpIiwiZmkiOiJLaXJpYmF0aSJ9LHsia2V5IjoiS1AiLCJzdiI6IktvcmVhIChEZW1vY3JhdGljIFBlb3BsZSdzIFJlcHVibGljIG9mKSIsImZpIjoiS29yZWEgKERlbW9jcmF0aWMgUGVvcGxlJ3MgUmVwdWJsaWMgb2YpIn0seyJrZXkiOiJLUiIsInN2IjoiS29yZWEgKFJlcHVibGljIG9mKSIsImZpIjoiS29yZWEgKFJlcHVibGljIG9mKSJ9LHsia2V5IjoiS1ciLCJzdiI6Ikt1d2FpdCIsImZpIjoiS3V3YWl0In0seyJrZXkiOiJLRyIsInN2IjoiS3lyZ3l6c3RhbiIsImZpIjoiS3lyZ3l6c3RhbiJ9LHsia2V5IjoiTEEiLCJzdiI6IkxhbyBQZW9wbGUncyBEZW1vY3JhdGljIFJlcHVibGljIiwiZmkiOiJMYW8gUGVvcGxlJ3MgRGVtb2NyYXRpYyBSZXB1YmxpYyJ9LHsia2V5IjoiTFYiLCJzdiI6IkxhdHZpYSIsImZpIjoiTGF0dmlhIn0seyJrZXkiOiJMQiIsInN2IjoiTGViYW5vbiIsImZpIjoiTGViYW5vbiJ9LHsia2V5IjoiTFMiLCJzdiI6Ikxlc290aG8iLCJmaSI6Ikxlc290aG8ifSx7ImtleSI6IkxSIiwic3YiOiJMaWJlcmlhIiwiZmkiOiJMaWJlcmlhIn0seyJrZXkiOiJMWSIsInN2IjoiTGlieWEiLCJmaSI6IkxpYnlhIn0seyJrZXkiOiJMSSIsInN2IjoiTGllY2h0ZW5zdGVpbiIsImZpIjoiTGllY2h0ZW5zdGVpbiJ9LHsia2V5IjoiTFQiLCJzdiI6IkxpdGh1YW5pYSIsImZpIjoiTGl0aHVhbmlhIn0seyJrZXkiOiJMVSIsInN2IjoiTHV4ZW1ib3VyZyIsImZpIjoiTHV4ZW1ib3VyZyJ9LHsia2V5IjoiTU8iLCJzdiI6Ik1hY2FvIiwiZmkiOiJNYWNhbyJ9LHsia2V5IjoiTUsiLCJzdiI6Ik1hY2Vkb25pYSAodGhlIGZvcm1lciBZdWdvc2xhdiBSZXB1YmxpYyBvZikiLCJmaSI6Ik1hY2Vkb25pYSAodGhlIGZvcm1lciBZdWdvc2xhdiBSZXB1YmxpYyBvZikifSx7ImtleSI6Ik1HIiwic3YiOiJNYWRhZ2FzY2FyIiwiZmkiOiJNYWRhZ2FzY2FyIn0seyJrZXkiOiJNVyIsInN2IjoiTWFsYXdpIiwiZmkiOiJNYWxhd2kifSx7ImtleSI6Ik1ZIiwic3YiOiJNYWxheXNpYSIsImZpIjoiTWFsYXlzaWEifSx7ImtleSI6Ik1WIiwic3YiOiJNYWxkaXZlcyIsImZpIjoiTWFsZGl2ZXMifSx7ImtleSI6Ik1MIiwic3YiOiJNYWxpIiwiZmkiOiJNYWxpIn0seyJrZXkiOiJNVCIsInN2IjoiTWFsdGEiLCJmaSI6Ik1hbHRhIn0seyJrZXkiOiJNSCIsInN2IjoiTWFyc2hhbGwgSXNsYW5kcyIsImZpIjoiTWFyc2hhbGwgSXNsYW5kcyJ9LHsia2V5IjoiTVEiLCJzdiI6Ik1hcnRpbmlxdWUiLCJmaSI6Ik1hcnRpbmlxdWUifSx7ImtleSI6Ik1SIiwic3YiOiJNYXVyaXRhbmlhIiwiZmkiOiJNYXVyaXRhbmlhIn0seyJrZXkiOiJNVSIsInN2IjoiTWF1cml0aXVzIiwiZmkiOiJNYXVyaXRpdXMifSx7ImtleSI6IllUIiwic3YiOiJNYXlvdHRlIiwiZmkiOiJNYXlvdHRlIn0seyJrZXkiOiJNWCIsInN2IjoiTWV4aWNvIiwiZmkiOiJNZXhpY28ifSx7ImtleSI6IkZNIiwic3YiOiJNaWNyb25lc2lhIChGZWRlcmF0ZWQgU3RhdGVzIG9mKSIsImZpIjoiTWljcm9uZXNpYSAoRmVkZXJhdGVkIFN0YXRlcyBvZikifSx7ImtleSI6Ik1EIiwic3YiOiJNb2xkb3ZhIChSZXB1YmxpYyBvZikiLCJmaSI6Ik1vbGRvdmEgKFJlcHVibGljIG9mKSJ9LHsia2V5IjoiTUMiLCJzdiI6Ik1vbmFjbyIsImZpIjoiTW9uYWNvIn0seyJrZXkiOiJNTiIsInN2IjoiTW9uZ29saWEiLCJmaSI6Ik1vbmdvbGlhIn0seyJrZXkiOiJNRSIsInN2IjoiTW9udGVuZWdybyIsImZpIjoiTW9udGVuZWdybyJ9LHsia2V5IjoiTVMiLCJzdiI6Ik1vbnRzZXJyYXQiLCJmaSI6Ik1vbnRzZXJyYXQifSx7ImtleSI6Ik1BIiwic3YiOiJNb3JvY2NvIiwiZmkiOiJNb3JvY2NvIn0seyJrZXkiOiJNWiIsInN2IjoiTW96YW1iaXF1ZSIsImZpIjoiTW96YW1iaXF1ZSJ9LHsia2V5IjoiTU0iLCJzdiI6Ik15YW5tYXIiLCJmaSI6Ik15YW5tYXIifSx7ImtleSI6Ik5BIiwic3YiOiJOYW1pYmlhIiwiZmkiOiJOYW1pYmlhIn0seyJrZXkiOiJOUiIsInN2IjoiTmF1cnUiLCJmaSI6Ik5hdXJ1In0seyJrZXkiOiJOUCIsInN2IjoiTmVwYWwiLCJmaSI6Ik5lcGFsIn0seyJrZXkiOiJOTCIsInN2IjoiTmV0aGVybGFuZHMiLCJmaSI6Ik5ldGhlcmxhbmRzIn0seyJrZXkiOiJOQyIsInN2IjoiTmV3IENhbGVkb25pYSIsImZpIjoiTmV3IENhbGVkb25pYSJ9LHsia2V5IjoiTloiLCJzdiI6Ik5ldyBaZWFsYW5kIiwiZmkiOiJOZXcgWmVhbGFuZCJ9LHsia2V5IjoiTkkiLCJzdiI6Ik5pY2FyYWd1YSIsImZpIjoiTmljYXJhZ3VhIn0seyJrZXkiOiJORSIsInN2IjoiTmlnZXIiLCJmaSI6Ik5pZ2VyIn0seyJrZXkiOiJORyIsInN2IjoiTmlnZXJpYSIsImZpIjoiTmlnZXJpYSJ9LHsia2V5IjoiTlUiLCJzdiI6Ik5pdWUiLCJmaSI6Ik5pdWUifSx7ImtleSI6Ik5GIiwic3YiOiJOb3Jmb2xrIElzbGFuZCIsImZpIjoiTm9yZm9sayBJc2xhbmQifSx7ImtleSI6Ik1QIiwic3YiOiJOb3J0aGVybiBNYXJpYW5hIElzbGFuZHMiLCJmaSI6Ik5vcnRoZXJuIE1hcmlhbmEgSXNsYW5kcyJ9LHsia2V5IjoiT00iLCJzdiI6Ik9tYW4iLCJmaSI6Ik9tYW4ifSx7ImtleSI6IlBLIiwic3YiOiJQYWtpc3RhbiIsImZpIjoiUGFraXN0YW4ifSx7ImtleSI6IlBXIiwic3YiOiJQYWxhdSIsImZpIjoiUGFsYXUifSx7ImtleSI6IlBTIiwic3YiOiJQYWxlc3RpbmUsIFN0YXRlIG9mIiwiZmkiOiJQYWxlc3RpbmUsIFN0YXRlIG9mIn0seyJrZXkiOiJQQSIsInN2IjoiUGFuYW1hIiwiZmkiOiJQYW5hbWEifSx7ImtleSI6IlBHIiwic3YiOiJQYXB1YSBOZXcgR3VpbmVhIiwiZmkiOiJQYXB1YSBOZXcgR3VpbmVhIn0seyJrZXkiOiJQWSIsInN2IjoiUGFyYWd1YXkiLCJmaSI6IlBhcmFndWF5In0seyJrZXkiOiJQRSIsInN2IjoiUGVydSIsImZpIjoiUGVydSJ9LHsia2V5IjoiUEgiLCJzdiI6IlBoaWxpcHBpbmVzIiwiZmkiOiJQaGlsaXBwaW5lcyJ9LHsia2V5IjoiUE4iLCJzdiI6IlBpdGNhaXJuIiwiZmkiOiJQaXRjYWlybiJ9LHsia2V5IjoiUEwiLCJzdiI6IlBvbGFuZCIsImZpIjoiUG9sYW5kIn0seyJrZXkiOiJQVCIsInN2IjoiUG9ydHVnYWwiLCJmaSI6IlBvcnR1Z2FsIn0seyJrZXkiOiJQUiIsInN2IjoiUHVlcnRvIFJpY28iLCJmaSI6IlB1ZXJ0byBSaWNvIn0seyJrZXkiOiJRQSIsInN2IjoiUWF0YXIiLCJmaSI6IlFhdGFyIn0seyJrZXkiOiJSRSIsInN2IjoiUul1bmlvbiIsImZpIjoiUul1bmlvbiJ9LHsia2V5IjoiUk8iLCJzdiI6IlJvbWFuaWEiLCJmaSI6IlJvbWFuaWEifSx7ImtleSI6IlJVIiwic3YiOiJSdXNzaWFuIEZlZGVyYXRpb24iLCJmaSI6IlJ1c3NpYW4gRmVkZXJhdGlvbiJ9LHsia2V5IjoiUlciLCJzdiI6IlJ3YW5kYSIsImZpIjoiUndhbmRhIn0seyJrZXkiOiJCTCIsInN2IjoiU2FpbnQgQmFydGjpbGVteSIsImZpIjoiU2FpbnQgQmFydGjpbGVteSJ9LHsia2V5IjoiU0giLCJzdiI6IlNhaW50IEhlbGVuYSwgQXNjZW5zaW9uIGFuZCBUcmlzdGFuIGRhIEN1bmhhIiwiZmkiOiJTYWludCBIZWxlbmEsIEFzY2Vuc2lvbiBhbmQgVHJpc3RhbiBkYSBDdW5oYSJ9LHsia2V5IjoiS04iLCJzdiI6IlNhaW50IEtpdHRzIGFuZCBOZXZpcyIsImZpIjoiU2FpbnQgS2l0dHMgYW5kIE5ldmlzIn0seyJrZXkiOiJMQyIsInN2IjoiU2FpbnQgTHVjaWEiLCJmaSI6IlNhaW50IEx1Y2lhIn0seyJrZXkiOiJNRiIsInN2IjoiU2FpbnQgTWFydGluIChGcmVuY2ggcGFydCkiLCJmaSI6IlNhaW50IE1hcnRpbiAoRnJlbmNoIHBhcnQpIn0seyJrZXkiOiJQTSIsInN2IjoiU2FpbnQgUGllcnJlIGFuZCBNaXF1ZWxvbiIsImZpIjoiU2FpbnQgUGllcnJlIGFuZCBNaXF1ZWxvbiJ9LHsia2V5IjoiVkMiLCJzdiI6IlNhaW50IFZpbmNlbnQgYW5kIHRoZSBHcmVuYWRpbmVzIiwiZmkiOiJTYWludCBWaW5jZW50IGFuZCB0aGUgR3JlbmFkaW5lcyJ9LHsia2V5IjoiV1MiLCJzdiI6IlNhbW9hIiwiZmkiOiJTYW1vYSJ9LHsia2V5IjoiU00iLCJzdiI6IlNhbiBNYXJpbm8iLCJmaSI6IlNhbiBNYXJpbm8ifSx7ImtleSI6IlNUIiwic3YiOiJTYW8gVG9tZSBhbmQgUHJpbmNpcGUiLCJmaSI6IlNhbyBUb21lIGFuZCBQcmluY2lwZSJ9LHsia2V5IjoiU0EiLCJzdiI6IlNhdWRpIEFyYWJpYSIsImZpIjoiU2F1ZGkgQXJhYmlhIn0seyJrZXkiOiJTTiIsInN2IjoiU2VuZWdhbCIsImZpIjoiU2VuZWdhbCJ9LHsia2V5IjoiUlMiLCJzdiI6IlNlcmJpYSIsImZpIjoiU2VyYmlhIn0seyJrZXkiOiJTQyIsInN2IjoiU2V5Y2hlbGxlcyIsImZpIjoiU2V5Y2hlbGxlcyJ9LHsia2V5IjoiU0wiLCJzdiI6IlNpZXJyYSBMZW9uZSIsImZpIjoiU2llcnJhIExlb25lIn0seyJrZXkiOiJTRyIsInN2IjoiU2luZ2Fwb3JlIiwiZmkiOiJTaW5nYXBvcmUifSx7ImtleSI6IlNYIiwic3YiOiJTaW50IE1hYXJ0ZW4gKER1dGNoIHBhcnQpIiwiZmkiOiJTaW50IE1hYXJ0ZW4gKER1dGNoIHBhcnQpIn0seyJrZXkiOiJTSyIsInN2IjoiU2xvdmFraWEiLCJmaSI6IlNsb3Zha2lhIn0seyJrZXkiOiJTSSIsInN2IjoiU2xvdmVuaWEiLCJmaSI6IlNsb3ZlbmlhIn0seyJrZXkiOiJTQiIsInN2IjoiU29sb21vbiBJc2xhbmRzIiwiZmkiOiJTb2xvbW9uIElzbGFuZHMifSx7ImtleSI6IlNPIiwic3YiOiJTb21hbGlhIiwiZmkiOiJTb21hbGlhIn0seyJrZXkiOiJaQSIsInN2IjoiU291dGggQWZyaWNhIiwiZmkiOiJTb3V0aCBBZnJpY2EifSx7ImtleSI6IkdTIiwic3YiOiJTb3V0aCBHZW9yZ2lhIGFuZCB0aGUgU291dGggU2FuZHdpY2ggSXNsYW5kcyIsImZpIjoiU291dGggR2VvcmdpYSBhbmQgdGhlIFNvdXRoIFNhbmR3aWNoIElzbGFuZHMifSx7ImtleSI6IlNTIiwic3YiOiJTb3V0aCBTdWRhbiIsImZpIjoiU291dGggU3VkYW4ifSx7ImtleSI6IkVTIiwic3YiOiJTcGFpbiIsImZpIjoiU3BhaW4ifSx7ImtleSI6IkxLIiwic3YiOiJTcmkgTGFua2EiLCJmaSI6IlNyaSBMYW5rYSJ9LHsia2V5IjoiU0QiLCJzdiI6IlN1ZGFuIiwiZmkiOiJTdWRhbiJ9LHsia2V5IjoiU1IiLCJzdiI6IlN1cmluYW1lIiwiZmkiOiJTdXJpbmFtZSJ9LHsia2V5IjoiU0oiLCJzdiI6IlN2YWxiYXJkIGFuZCBKYW4gTWF5ZW4iLCJmaSI6IlN2YWxiYXJkIGFuZCBKYW4gTWF5ZW4ifSx7ImtleSI6IlNaIiwic3YiOiJTd2F6aWxhbmQiLCJmaSI6IlN3YXppbGFuZCJ9LHsia2V5IjoiQ0giLCJzdiI6IlN3aXR6ZXJsYW5kIiwiZmkiOiJTd2l0emVybGFuZCJ9LHsia2V5IjoiU1kiLCJzdiI6IlN5cmlhbiBBcmFiIFJlcHVibGljIiwiZmkiOiJTeXJpYW4gQXJhYiBSZXB1YmxpYyJ9LHsia2V5IjoiVFciLCJzdiI6IlRhaXdhbiwgUHJvdmluY2Ugb2YgQ2hpbmFbYV0iLCJmaSI6IlRhaXdhbiwgUHJvdmluY2Ugb2YgQ2hpbmFbYV0ifSx7ImtleSI6IlRKIiwic3YiOiJUYWppa2lzdGFuIiwiZmkiOiJUYWppa2lzdGFuIn0seyJrZXkiOiJUWiIsInN2IjoiVGFuemFuaWEsIFVuaXRlZCBSZXB1YmxpYyBvZiIsImZpIjoiVGFuemFuaWEsIFVuaXRlZCBSZXB1YmxpYyBvZiJ9LHsia2V5IjoiVEgiLCJzdiI6IlRoYWlsYW5kIiwiZmkiOiJUaGFpbGFuZCJ9LHsia2V5IjoiVEwiLCJzdiI6IlRpbW9yLUxlc3RlIiwiZmkiOiJUaW1vci1MZXN0ZSJ9LHsia2V5IjoiVEciLCJzdiI6IlRvZ28iLCJmaSI6IlRvZ28ifSx7ImtleSI6IlRLIiwic3YiOiJUb2tlbGF1IiwiZmkiOiJUb2tlbGF1In0seyJrZXkiOiJUTyIsInN2IjoiVG9uZ2EiLCJmaSI6IlRvbmdhIn0seyJrZXkiOiJUVCIsInN2IjoiVHJpbmlkYWQgYW5kIFRvYmFnbyIsImZpIjoiVHJpbmlkYWQgYW5kIFRvYmFnbyJ9LHsia2V5IjoiVE4iLCJzdiI6IlR1bmlzaWEiLCJmaSI6IlR1bmlzaWEifSx7ImtleSI6IlRSIiwic3YiOiJUdXJrZXkiLCJmaSI6IlR1cmtleSJ9LHsia2V5IjoiVE0iLCJzdiI6IlR1cmttZW5pc3RhbiIsImZpIjoiVHVya21lbmlzdGFuIn0seyJrZXkiOiJUQyIsInN2IjoiVHVya3MgYW5kIENhaWNvcyBJc2xhbmRzIiwiZmkiOiJUdXJrcyBhbmQgQ2FpY29zIElzbGFuZHMifSx7ImtleSI6IlRWIiwic3YiOiJUdXZhbHUiLCJmaSI6IlR1dmFsdSJ9LHsia2V5IjoiVUciLCJzdiI6IlVnYW5kYSIsImZpIjoiVWdhbmRhIn0seyJrZXkiOiJVQSIsInN2IjoiVWtyYWluZSIsImZpIjoiVWtyYWluZSJ9LHsia2V5IjoiQUUiLCJzdiI6IlVuaXRlZCBBcmFiIEVtaXJhdGVzIiwiZmkiOiJVbml0ZWQgQXJhYiBFbWlyYXRlcyJ9LHsia2V5IjoiR0IiLCJzdiI6IlVuaXRlZCBLaW5nZG9tIG9mIEdyZWF0IEJyaXRhaW4gYW5kIE5vcnRoZXJuIElyZWxhbmQiLCJmaSI6IlVuaXRlZCBLaW5nZG9tIG9mIEdyZWF0IEJyaXRhaW4gYW5kIE5vcnRoZXJuIElyZWxhbmQifSx7ImtleSI6IlVTIiwic3YiOiJVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2EiLCJmaSI6IlVuaXRlZCBTdGF0ZXMgb2YgQW1lcmljYSJ9LHsia2V5IjoiVU0iLCJzdiI6IlVuaXRlZCBTdGF0ZXMgTWlub3IgT3V0bHlpbmcgSXNsYW5kcyIsImZpIjoiVW5pdGVkIFN0YXRlcyBNaW5vciBPdXRseWluZyBJc2xhbmRzIn0seyJrZXkiOiJVWSIsInN2IjoiVXJ1Z3VheSIsImZpIjoiVXJ1Z3VheSJ9LHsia2V5IjoiVVoiLCJzdiI6IlV6YmVraXN0YW4iLCJmaSI6IlV6YmVraXN0YW4ifSx7ImtleSI6IlZVIiwic3YiOiJWYW51YXR1IiwiZmkiOiJWYW51YXR1In0seyJrZXkiOiJWRSIsInN2IjoiVmVuZXp1ZWxhIChCb2xpdmFyaWFuIFJlcHVibGljIG9mKSIsImZpIjoiVmVuZXp1ZWxhIChCb2xpdmFyaWFuIFJlcHVibGljIG9mKSJ9LHsia2V5IjoiVk4iLCJzdiI6IlZpZXQgTmFtIiwiZmkiOiJWaWV0IE5hbSJ9LHsia2V5IjoiVkciLCJzdiI6IlZpcmdpbiBJc2xhbmRzIChCcml0aXNoKSIsImZpIjoiVmlyZ2luIElzbGFuZHMgKEJyaXRpc2gpIn0seyJrZXkiOiJWSSIsInN2IjoiVmlyZ2luIElzbGFuZHMgKFUuUy4pIiwiZmkiOiJWaXJnaW4gSXNsYW5kcyAoVS5TLikifSx7ImtleSI6IldGIiwic3YiOiJXYWxsaXMgYW5kIEZ1dHVuYSIsImZpIjoiV2FsbGlzIGFuZCBGdXR1bmEifSx7ImtleSI6IkVIIiwic3YiOiJXZXN0ZXJuIFNhaGFyYSIsImZpIjoiV2VzdGVybiBTYWhhcmEifSx7ImtleSI6IllFIiwic3YiOiJZZW1lbiIsImZpIjoiWWVtZW4ifSx7ImtleSI6IlpNIiwic3YiOiJaYW1iaWEiLCJmaSI6IlphbWJpYSJ9LHsia2V5IjoiWlciLCJzdiI6IlppbWJhYndlIiwiZmkiOiJaaW1iYWJ3ZSJ9XSwia3ljUXVlc3Rpb25zWG1sIjoiPHF1ZXN0aW9ucyB4bWxuczp4c2k9XCJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZVwiPlxyXG4gIDxxPlxyXG4gICAgPHFrZXk+bG9hbl9wdXJwb3NlPC9xa2V5PlxyXG4gICAgPHF0ZXh0IGxhbmc9XCJzdlwiPlZhZCBza2EgcGVuZ2FybmEgYW525G5kYXMgdGlsbD88L3F0ZXh0PlxyXG4gICAgPHF0ZXh0IGxhbmc9XCJmaVwiPlJhaG9qZW4ga+R5dHT2dGFya29pdHVzPzwvcXRleHQ+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+Y29uc3VtcHRpb248L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5Lb25zdW10aW9uPC9hdGV4dD5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJmaVwiPkt1bHV0dXM8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PmludmVzdG1lbnQ8L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5JbnZlc3RlcmluZzwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5TaWpvaXR0YW1pbmVuPC9hdGV4dD5cclxuICAgIDwvYT5cclxuICAgIDxhPlxyXG4gICAgICA8YWtleT5yZWxhdGl2ZTwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPlRpbGwgbuRyc3TlZW5kZTwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5M5GhpbW3kaXNpbGxlPC9hdGV4dD5cclxuICAgIDwvYT5cclxuICAgIDxhPlxyXG4gICAgICA8YWtleT5vdGhlcjwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPkFubmF0PC9hdGV4dD5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJmaVwiPk11dTwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgPC9xPlxyXG4gIDxxPlxyXG4gICAgPHFrZXk+bG9hbl93aG9zbW9uZXk8L3FrZXk+XHJcbiAgICA8cXRleHQgbGFuZz1cInN2XCI+VmVtcyBwZW5nYXIga29tbWVyIGFuduRuZGFzIGb2ciDldGVyYmV0YWxuaW5nPzwvcXRleHQ+XHJcbiAgICA8cXRleHQgbGFuZz1cImZpXCI+S2VuZW4gdmFyb2phIHR1bGxhYW4ga+R5dHTkbeTkbiB0YWthaXNpbm1ha3N1c3NhPzwvcXRleHQ+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+b3duPC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+RWduYSBwZW5nYXI8L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+T21pYSByYWhvamE8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5Pm90aGVyczwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPkFubmFucyBwZW5nYXI8L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+Sm9ua3VuIG11dW4gcmFob2phPC9hdGV4dD5cclxuICAgIDwvYT5cclxuICAgIDxyPlxyXG4gICAgICA8cmtleT5vdGhlcnM8L3JrZXk+XHJcbiAgICAgIDxydGV4dCBsYW5nPVwic3ZcIj5PbSBhbm5hbiwgdmVtcz88L3J0ZXh0PlxyXG4gICAgICA8cnRleHQgbGFuZz1cImZpXCI+Sm9zIGpvbmt1biBtdXVuLCBrZW5lbj88L3J0ZXh0PlxyXG4gICAgPC9yPlxyXG4gIDwvcT5cclxuICA8cT5cclxuICAgIDxxa2V5PmxvYW5fcGF5bWVudGZyZXF1ZW5jeTwvcWtleT5cclxuICAgIDxxdGV4dCBsYW5nPVwic3ZcIj5IdXIgb2Z0YSBrb21tZXIgYXZiZXRhbG5pbmdhcm5hIGf2cmFzPzwvcXRleHQ+XHJcbiAgICA8cXRleHQgbGFuZz1cImZpXCI+S3VpbmthIHVzZWluIGx5aGVubnlrc2nkIHRlaGTk5G4/PC9xdGV4dD5cclxuICAgIDxhPlxyXG4gICAgICA8YWtleT5vbnNjaGVkdWxlPC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+RW5saWd0IGFtb3J0ZXJpbmdzcGxhbjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5MeWhlbm55c3N1dW5uaXRlbG1hbiBtdWthaXNlc3RpPC9hdGV4dD5cclxuICAgIDwvYT5cclxuICAgIDxhPlxyXG4gICAgICA8YWtleT53aXRoZXh0cmFwYXltZW50czwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPk1lZCBleHRyYWFtb3J0ZXJpbmdhcjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5ZbGlt5ORy5GlzaeQgbHloZW5ueWtzaeQ8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gIDwvcT5cclxuICA8cT5cclxuICAgIDxxa2V5PmN1c3RvbWVyX3BlcDwvcWtleT5cclxuICAgIDxxdGV4dCBsYW5nPVwic3ZcIj7EciBkdSwgbuVnb24gaSBkaW4gZmFtaWxqLCBlbGxlciBu5HJzdOVlbmRlLCBlbiBwZXJzb24gc29tIGhhciBlbGxlciBoYXIgaGFmdCBu5WdvbiBhdiBm9mxqYW5kZSByb2xsZXI/PC9xdGV4dD5cclxuICAgIDxxdGV4dCBsYW5nPVwiZmlcIj5PbGV0a28gc2lu5CwgdGFpIGzkaGVpbmVuIHBlcmhlZW5q5HNlbmVzaSwgaGVua2ls9iBqb2thIG9uIG9sbHV0IHNldXJhYXZhc3NhIGFzZW1hc3NhPzwvcXRleHQ+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+bm88L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5OZWosIHZhcmtlbiBqYWcgZWxsZXIgbuVnb24gaSBtaW4gbuRyaGV0IGhhciBlbGxlciBoYXIgaGFmdCBu5WdvbiBhdiBuZWRhbnN05WVuZGUgcm9sbGVyLjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5NaW7kLCB0YWkgbORoZWluZW4gcGVyaGVlbmrkc2VuaSwgZWkgb2xlIGVpa+Qgb2xlIG9sbHV0IGFsbGEgbWFpbml0dWlzc2EgYXNlbWlzc2EuPC9hdGV4dD5cclxuICAgIDwvYT5cclxuICAgIDxhPlxyXG4gICAgICA8YWtleT5nb3Zlcm5tZW50b2ZmaWNpYWw8L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5TdGF0cy0gZWxsZXIgcmVnZXJpbmdzY2hlZiwgbWluaXN0ZXIgZWxsZXIgdmljZS9iaXRy5GRhbmRlIG1pbmlzdGVyLjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5WYWx0aW9ucOTkbWllcywgaGFsbGl0dXN0ZW4gcOTkbWllcywgbWluaXN0ZXJpIHRhaSB2YXJhLSBqYSBhcHVsYWlzbWluaXN0ZXJpLjwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+bWVtYmVyb2ZwYXJsaWFtZW50PC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+UGFybGFtZW50c2xlZGFtb3QuPC9hdGV4dD5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJmaVwiPkthbnNhbmVkdXN0YWphLjwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+c3VwcmVtZWNvdXJ0anVkZ2U8L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5Eb21hcmUgaSBo9mdzdGEgZG9tc3RvbGVuLCBrb25zdGl0dXRpb25lbGwgZG9tc3RvbCBlbGxlciBsaWtuYW5kZSBiZWZhdHRuaW5nLjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5Lb3JrZWltbWFuIG9pa2V1ZGVuLCBwZXJ1c3R1c2xha2l0dW9taW9pc3R1aW1pZW4gdGFpIHZhc3RhYXZhbiBq5HNlbi48L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PmVjb25vbWljb2ZmaWNpYWw8L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5I9mdyZSB0auRuc3RlbWFuIHZpZCByZXZpc2lvbnNteW5kaWdoZXQgZWxsZXIgbGVkYW1vdCBpIGNlbnRyYWxiYW5rcyBzdHlyYW5kZSBvcmdhbi48L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+VGlsaW50YXJrYXN0dXN0dW9taW9pc3R1aW50ZW4gdGFpIGtlc2t1c3BhbmtraWVuIGpvaHRva3VubmFuIGrkc2VuLjwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+ZGlwbG9tYW50b3JkZWZlbnNlPC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+QW1iYXNzYWT2ciwgYmVza2lja25pbmdzY2hlZiBlbGxlciBo9mcgb2ZmaWNlciBpIGb2cnN2YXJzbWFrdGVuLjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5TdXVybORoZXR0aWzkcywgYXNpYWluaG9pdGFqYSB0YWkgcHVvbHVzdHVzdm9pbWllbiBrb3JrZWEtYXJ2b2luZW4gdXBzZWVyaS48L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PnN0YXRlb3duZWRjb21wYW55PC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+VkQgZWxsZXIgc3R5cmVsc2VsZWRhbW90IGkgc3RhdHPkZ3QgZvZyZXRhZy48L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+VmFsdGlvbiBvbWlzdGFtaWVuIHlyaXR5c3RlbiBoYWxsaW50by0sIGpvaHRvIHRhaSB2YWx2b250YWVsaW1lbiBq5HNlbi48L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PmludGVybmF0aW9uYWxhZ2VuY3k8L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5MZWRhbmRlIGJlZmF0dG5pbmcgaSBtZWxsYW5zdGF0bGlnIG9yZ2FuaXNhdGlvbiBlbGxlciBtZWRsZW0gaSBkZXNzIGj2Z3N0YSBsZWRuaW5nLjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5Kb2h0YXZhIGFzZW1hIGthbnNhaW525Gxpc2Vzc+QgauRyamVzdPZzc+QgKGVzaW0uIFlLLCBOQVRPKSB0YWkgc2Ugc2VuIGpvaHRva3VubmFuIGrkc2VuLjwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgICA8cj5cclxuICAgICAgPHJrZXk+d2hvPC9ya2V5PlxyXG4gICAgICA8cnRleHQgbGFuZz1cInN2XCI+VmVtIGVsbGVyIHZpbGthIGhhciBpIHPlIGZhbGwgaGFmdCByb2xsZXJuYT88L3J0ZXh0PlxyXG4gICAgICA8cnRleHQgbGFuZz1cImZpXCI+S3VrYSB0YWkga2V0a+Qgb3ZhdCBvbGxlZXQgbWFpbml0dXNzYSBhc2VtYXNzYT88L3J0ZXh0PlxyXG4gICAgPC9yPlxyXG4gIDwvcT5cclxuICA8cT5cclxuICAgIDxxa2V5PmN1c3RvbWVyX21haW5vY2N1cGF0aW9uPC9xa2V5PlxyXG4gICAgPHF0ZXh0IGxhbmc9XCJzdlwiPlZpbGtlbiDkciBkaW4gaHV2dWRzYWtsaWdhIHN5c3NlbHPkdHRuaW5nPzwvcXRleHQ+XHJcbiAgICA8cXRleHQgbGFuZz1cImZpXCI+TWlr5CBvbiBw5ORhc2lhbGxpbmVuIHRvaW1lbmt1dmFzaT88L3F0ZXh0PlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5Pm1hbmFnZXI8L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5DaGVmc2pvYmI8L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+Sm9odGFqYTwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+c3BlY2lhbGlzdDwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPlNwZWNpYWxpc3Rqb2JiPC9hdGV4dD5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJmaVwiPkVyaXR5aXNhc2lhbnR1bnRpamE8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PmV4cGVydDwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPkV4cGVydGpvYmI8L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+QXNpYW50dW50aWphPC9hdGV4dD5cclxuICAgIDwvYT5cclxuICAgIDxhPlxyXG4gICAgICA8YWtleT5hZG1pbmlzdHJhdGlvbjwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPkFkbWluaXN0cmF0aXZ0IGFyYmV0ZSBvY2gga3VuZHRq5G5zdDwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5Ub2ltaXN0by0gamEgYXNpYWthc3BhbHZlbHU8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PnNhbGVzPC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+U2VydmljZS0gb2NoIHPkbGphcmJldGU8L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+UGFsdmVsdS0gamEgbXl5bnRpdHn2bnRla2lq5HQ8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PmFncmljdWx0dXJlPC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+Sm9yZC0gb2NoIHNrb2dzYnJ1ayBldGMuPC9hdGV4dD5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJmaVwiPk1hYW52aWxqZWxpauR0LCBtZXRz5HR59m50ZWtpauR0IHltLjwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+Y29uc3RydWN0aW9uPC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+QnlnZy0gb2NoIHByb2R1a3Rpb25zYXJiZXRlPC9hdGV4dD5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJmaVwiPlJha2VubnVzLSwga29yamF1cy0gamEgdmFsbWlzdHVzdHn2bnRla2lq5HQ8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5PnRyYW5zcG9ydDwvYWtleT5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJzdlwiPlByb2Nlc3MtIG9jaCB0cmFuc3BvcnQ8L2F0ZXh0PlxyXG4gICAgICA8YXRleHQgbGFuZz1cImZpXCI+UHJvc2Vzc2ktIGphIGt1bGpldHVzdHn2bnRla2lq5HQ8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gICAgPGE+XHJcbiAgICAgIDxha2V5Pm1pbGl0YXJ5PC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+TWlsaXTkcjwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5Tb3RpbGFhdDwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+b3RoZXI8L2FrZXk+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwic3ZcIj5BbmRyYTwvYXRleHQ+XHJcbiAgICAgIDxhdGV4dCBsYW5nPVwiZmlcIj5NdXU8L2F0ZXh0PlxyXG4gICAgPC9hPlxyXG4gIDwvcT5cclxuICA8IS0tcT5cclxuICAgIDxxa2V5PjwvcWtleT5cclxuICAgIDxxdGV4dCBsYW5nPVwic3ZcIj48L3F0ZXh0PlxyXG4gICAgPHF0ZXh0IGxhbmc9XCJmaVwiPjwvcXRleHQ+XHJcbiAgICA8YT5cclxuICAgICAgPGFrZXk+PC9ha2V5PlxyXG4gICAgICA8YXRleHQgbGFuZz1cInN2XCI+PC9hdGV4dD5cclxuICAgICAgPGF0ZXh0IGxhbmc9XCJmaVwiPjwvYXRleHQ+XHJcbiAgICA8L2E+XHJcbiAgPC9xLS0+XHJcbjwvcXVlc3Rpb25zPiIsImt5Y1F1ZXN0aW9ucyI6eyJsb2FuX3B1cnBvc2UiOnsia2V5IjoibG9hbl9wdXJwb3NlIiwidGV4dCI6eyJzdiI6IlZhZCBza2EgcGVuZ2FybmEgYW525G5kYXMgdGlsbD8iLCJmaSI6IlJhaG9qZW4ga+R5dHT2dGFya29pdHVzPyJ9LCJhbnN3ZXJzIjpbeyJrZXkiOiJjb25zdW1wdGlvbiIsInN2IjoiS29uc3VtdGlvbiIsImZpIjoiS3VsdXR1cyJ9LHsia2V5IjoiaW52ZXN0bWVudCIsInN2IjoiSW52ZXN0ZXJpbmciLCJmaSI6IlNpam9pdHRhbWluZW4ifSx7ImtleSI6InJlbGF0aXZlIiwic3YiOiJUaWxsIG7kcnN05WVuZGUiLCJmaSI6IkzkaGltbeRpc2lsbGUifSx7ImtleSI6Im90aGVyIiwic3YiOiJBbm5hdCIsImZpIjoiTXV1In1dLCJyZXNvdXJjZXMiOnt9fSwibG9hbl93aG9zbW9uZXkiOnsia2V5IjoibG9hbl93aG9zbW9uZXkiLCJ0ZXh0Ijp7InN2IjoiVmVtcyBwZW5nYXIga29tbWVyIGFuduRuZGFzIGb2ciDldGVyYmV0YWxuaW5nPyIsImZpIjoiS2VuZW4gdmFyb2phIHR1bGxhYW4ga+R5dHTkbeTkbiB0YWthaXNpbm1ha3N1c3NhPyJ9LCJhbnN3ZXJzIjpbeyJrZXkiOiJvd24iLCJzdiI6IkVnbmEgcGVuZ2FyIiwiZmkiOiJPbWlhIHJhaG9qYSJ9LHsia2V5Ijoib3RoZXJzIiwic3YiOiJBbm5hbnMgcGVuZ2FyIiwiZmkiOiJKb25rdW4gbXV1biByYWhvamEifV0sInJlc291cmNlcyI6eyJvdGhlcnMiOnsia2V5Ijoib3RoZXJzIiwic3YiOiJPbSBhbm5hbiwgdmVtcz8iLCJmaSI6IkpvcyBqb25rdW4gbXV1biwga2VuZW4/In19fSwibG9hbl9wYXltZW50ZnJlcXVlbmN5Ijp7ImtleSI6ImxvYW5fcGF5bWVudGZyZXF1ZW5jeSIsInRleHQiOnsic3YiOiJIdXIgb2Z0YSBrb21tZXIgYXZiZXRhbG5pbmdhcm5hIGf2cmFzPyIsImZpIjoiS3VpbmthIHVzZWluIGx5aGVubnlrc2nkIHRlaGTk5G4/In0sImFuc3dlcnMiOlt7ImtleSI6Im9uc2NoZWR1bGUiLCJzdiI6IkVubGlndCBhbW9ydGVyaW5nc3BsYW4iLCJmaSI6Ikx5aGVubnlzc3V1bm5pdGVsbWFuIG11a2Fpc2VzdGkifSx7ImtleSI6IndpdGhleHRyYXBheW1lbnRzIiwic3YiOiJNZWQgZXh0cmFhbW9ydGVyaW5nYXIiLCJmaSI6IllsaW3k5HLkaXNp5CBseWhlbm55a3Np5CJ9XSwicmVzb3VyY2VzIjp7fX0sImN1c3RvbWVyX3BlcCI6eyJrZXkiOiJjdXN0b21lcl9wZXAiLCJ0ZXh0Ijp7InN2IjoixHIgZHUsIG7lZ29uIGkgZGluIGZhbWlsaiwgZWxsZXIgbuRyc3TlZW5kZSwgZW4gcGVyc29uIHNvbSBoYXIgZWxsZXIgaGFyIGhhZnQgbuVnb24gYXYgZvZsamFuZGUgcm9sbGVyPyIsImZpIjoiT2xldGtvIHNpbuQsIHRhaSBs5GhlaW5lbiBwZXJoZWVuauRzZW5lc2ksIGhlbmtpbPYgam9rYSBvbiBvbGx1dCBzZXVyYWF2YXNzYSBhc2VtYXNzYT8ifSwiYW5zd2VycyI6W3sia2V5Ijoibm8iLCJzdiI6Ik5laiwgdmFya2VuIGphZyBlbGxlciBu5WdvbiBpIG1pbiBu5HJoZXQgaGFyIGVsbGVyIGhhciBoYWZ0IG7lZ29uIGF2IG5lZGFuc3TlZW5kZSByb2xsZXIuIiwiZmkiOiJNaW7kLCB0YWkgbORoZWluZW4gcGVyaGVlbmrkc2VuaSwgZWkgb2xlIGVpa+Qgb2xlIG9sbHV0IGFsbGEgbWFpbml0dWlzc2EgYXNlbWlzc2EuIn0seyJrZXkiOiJnb3Zlcm5tZW50b2ZmaWNpYWwiLCJzdiI6IlN0YXRzLSBlbGxlciByZWdlcmluZ3NjaGVmLCBtaW5pc3RlciBlbGxlciB2aWNlL2JpdHLkZGFuZGUgbWluaXN0ZXIuIiwiZmkiOiJWYWx0aW9ucOTkbWllcywgaGFsbGl0dXN0ZW4gcOTkbWllcywgbWluaXN0ZXJpIHRhaSB2YXJhLSBqYSBhcHVsYWlzbWluaXN0ZXJpLiJ9LHsia2V5IjoibWVtYmVyb2ZwYXJsaWFtZW50Iiwic3YiOiJQYXJsYW1lbnRzbGVkYW1vdC4iLCJmaSI6IkthbnNhbmVkdXN0YWphLiJ9LHsia2V5Ijoic3VwcmVtZWNvdXJ0anVkZ2UiLCJzdiI6IkRvbWFyZSBpIGj2Z3N0YSBkb21zdG9sZW4sIGtvbnN0aXR1dGlvbmVsbCBkb21zdG9sIGVsbGVyIGxpa25hbmRlIGJlZmF0dG5pbmcuIiwiZmkiOiJLb3JrZWltbWFuIG9pa2V1ZGVuLCBwZXJ1c3R1c2xha2l0dW9taW9pc3R1aW1pZW4gdGFpIHZhc3RhYXZhbiBq5HNlbi4ifSx7ImtleSI6ImVjb25vbWljb2ZmaWNpYWwiLCJzdiI6Ikj2Z3JlIHRq5G5zdGVtYW4gdmlkIHJldmlzaW9uc215bmRpZ2hldCBlbGxlciBsZWRhbW90IGkgY2VudHJhbGJhbmtzIHN0eXJhbmRlIG9yZ2FuLiIsImZpIjoiVGlsaW50YXJrYXN0dXN0dW9taW9pc3R1aW50ZW4gdGFpIGtlc2t1c3BhbmtraWVuIGpvaHRva3VubmFuIGrkc2VuLiJ9LHsia2V5IjoiZGlwbG9tYW50b3JkZWZlbnNlIiwic3YiOiJBbWJhc3NhZPZyLCBiZXNraWNrbmluZ3NjaGVmIGVsbGVyIGj2ZyBvZmZpY2VyIGkgZvZyc3ZhcnNtYWt0ZW4uIiwiZmkiOiJTdXVybORoZXR0aWzkcywgYXNpYWluaG9pdGFqYSB0YWkgcHVvbHVzdHVzdm9pbWllbiBrb3JrZWEtYXJ2b2luZW4gdXBzZWVyaS4ifSx7ImtleSI6InN0YXRlb3duZWRjb21wYW55Iiwic3YiOiJWRCBlbGxlciBzdHlyZWxzZWxlZGFtb3QgaSBzdGF0c+RndCBm9nJldGFnLiIsImZpIjoiVmFsdGlvbiBvbWlzdGFtaWVuIHlyaXR5c3RlbiBoYWxsaW50by0sIGpvaHRvIHRhaSB2YWx2b250YWVsaW1lbiBq5HNlbi4ifSx7ImtleSI6ImludGVybmF0aW9uYWxhZ2VuY3kiLCJzdiI6IkxlZGFuZGUgYmVmYXR0bmluZyBpIG1lbGxhbnN0YXRsaWcgb3JnYW5pc2F0aW9uIGVsbGVyIG1lZGxlbSBpIGRlc3MgaPZnc3RhIGxlZG5pbmcuIiwiZmkiOiJKb2h0YXZhIGFzZW1hIGthbnNhaW525Gxpc2Vzc+QgauRyamVzdPZzc+QgKGVzaW0uIFlLLCBOQVRPKSB0YWkgc2Ugc2VuIGpvaHRva3VubmFuIGrkc2VuLiJ9XSwicmVzb3VyY2VzIjp7IndobyI6eyJrZXkiOiJ3aG8iLCJzdiI6IlZlbSBlbGxlciB2aWxrYSBoYXIgaSBz5SBmYWxsIGhhZnQgcm9sbGVybmE/IiwiZmkiOiJLdWthIHRhaSBrZXRr5CBvdmF0IG9sbGVldCBtYWluaXR1c3NhIGFzZW1hc3NhPyJ9fX0sImN1c3RvbWVyX21haW5vY2N1cGF0aW9uIjp7ImtleSI6ImN1c3RvbWVyX21haW5vY2N1cGF0aW9uIiwidGV4dCI6eyJzdiI6IlZpbGtlbiDkciBkaW4gaHV2dWRzYWtsaWdhIHN5c3NlbHPkdHRuaW5nPyIsImZpIjoiTWlr5CBvbiBw5ORhc2lhbGxpbmVuIHRvaW1lbmt1dmFzaT8ifSwiYW5zd2VycyI6W3sia2V5IjoibWFuYWdlciIsInN2IjoiQ2hlZnNqb2JiIiwiZmkiOiJKb2h0YWphIn0seyJrZXkiOiJzcGVjaWFsaXN0Iiwic3YiOiJTcGVjaWFsaXN0am9iYiIsImZpIjoiRXJpdHlpc2FzaWFudHVudGlqYSJ9LHsia2V5IjoiZXhwZXJ0Iiwic3YiOiJFeHBlcnRqb2JiIiwiZmkiOiJBc2lhbnR1bnRpamEifSx7ImtleSI6ImFkbWluaXN0cmF0aW9uIiwic3YiOiJBZG1pbmlzdHJhdGl2dCBhcmJldGUgb2NoIGt1bmR0auRuc3QiLCJmaSI6IlRvaW1pc3RvLSBqYSBhc2lha2FzcGFsdmVsdSJ9LHsia2V5Ijoic2FsZXMiLCJzdiI6IlNlcnZpY2UtIG9jaCBz5GxqYXJiZXRlIiwiZmkiOiJQYWx2ZWx1LSBqYSBteXludGl0efZudGVraWrkdCJ9LHsia2V5IjoiYWdyaWN1bHR1cmUiLCJzdiI6IkpvcmQtIG9jaCBza29nc2JydWsgZXRjLiIsImZpIjoiTWFhbnZpbGplbGlq5HQsIG1ldHPkdHn2bnRla2lq5HQgeW0uIn0seyJrZXkiOiJjb25zdHJ1Y3Rpb24iLCJzdiI6IkJ5Z2ctIG9jaCBwcm9kdWt0aW9uc2FyYmV0ZSIsImZpIjoiUmFrZW5udXMtLCBrb3JqYXVzLSBqYSB2YWxtaXN0dXN0efZudGVraWrkdCJ9LHsia2V5IjoidHJhbnNwb3J0Iiwic3YiOiJQcm9jZXNzLSBvY2ggdHJhbnNwb3J0IiwiZmkiOiJQcm9zZXNzaS0gamEga3VsamV0dXN0efZudGVraWrkdCJ9LHsia2V5IjoibWlsaXRhcnkiLCJzdiI6Ik1pbGl05HIiLCJmaSI6IlNvdGlsYWF0In0seyJrZXkiOiJvdGhlciIsInN2IjoiQW5kcmEiLCJmaSI6Ik11dSJ9XSwicmVzb3VyY2VzIjp7fX19LCJuck9mQXBwbGljYW50cyI6MiwiYXBwbGljYW50MSI6eyJmaXJzdE5hbWUiOiJTYWFyYSIsImNpdmljUmVnTnIiOiIzMDA0NTAtMDMySCJ9LCJhcHBsaWNhbnQyIjp7ImZpcnN0TmFtZSI6IlBlcmZlY3RTY29yZSIsImNpdmljUmVnTnIiOiIzMDA0NTAtMDMySCJ9LCJzdlRyYW5zbGF0aW9ucyI6eyJhbnNva2FuX2tyZWRpdGFuc29rYW4iOiJLcmVkaXRhbnP2a2FuIiwiYW5zb2thbl9zb2t0YmVsb3BwIjoiU/ZrdCBiZWxvcHAiLCJhbnNva2FuX3ZhbGoiOiJW5GxqIiwiYW5zb2thbl9hciI6IuVyIiwiYW5zb2thbl9mYWx0bWFzdGVrb3JyaWdlcmFzIjoiRGV0IGZpbm5zIGbkbHQgc29tIG3lc3RlIGtvcnJpZ2VyYXMuIiwiYW5zb2thbl9za2lja2FpbiI6IlNraWNrYSBpbiIsImFuc29rYW5fYXZicnl0IjoiQXZicnl0IiwiYW5zb2thbl9hdGVyYmV0dGlkIjoixXRlcmJldGFsbmluZ3N0aWQiLCJhbnNva2FuX2FudGFsc29rYW5kZW4iOiJBbnRhbCBz9mthbmRlbiIsImFuc29rYW5fc29rYW5kZXNhbW1hYWRyIjoiQm9yIHP2a2FuZGVuIHDlIHNhbW1hIGFkcmVzcz8iLCJhbnNva2FuX25laiI6Ik5laiIsImFuc29rYW5famEiOiJKYSIsImFuc29rYW5fbGFuc29tbG9zZXIiOiJM5W4gc29tIHNrYSBs9nNhcyBtZWQgZGV0IHP2a3RhIGzlbmV0IiwiYW5zb2thbl9rYW1wYW5qa29kIjoiS2FtcGFuamtvZCIsImFuc29rYW5fa3Vzb2thbmRlMSI6Ikt1bmR1cHBnaWZ0ZXIgb20gZvZyc3RlIHP2a2FuZGUiLCJhbnNva2FuX2t1c29rYW5kZTIiOiJLdW5kdXBwZ2lmdGVyIG9tIGFuZHJlIHP2a2FuZGUiLCJhbnNva2FuX3BlcnNvbnVwcGdpZnRlciI6IlBlcnNvbnVwcGdpZnRlciIsImFuc29rYW5fcGVyc29uYmV0ZWNrbmluZyI6IlBlcnNvbmJldGVja25pbmciLCJhbnNva2FuX2Vwb3N0IjoiRS1wb3N0YWRyZXNzIiwiYW5zb2thbl90ZWxlZm9uIjoiVGVsZWZvbm51bW1lciIsImFuc29rYW5fZWR1Y2F0aW9uX2dydW5kc2tvbGEiOiJHcnVuZHNrb2xhIiwiYW5zb2thbl9lZHVjYXRpb25feXJrZXNza29sYSI6Illya2Vzc2tvbGEiLCJhbnNva2FuX2VkdWNhdGlvbl9neW1uYXNpZSI6Ikd5bW5hc2llIiwiYW5zb2thbl9lZHVjYXRpb25faG9nc2tvbGEiOiJI9mdza29sYSIsImFuc29rYW5faG91c2luZ19lZ2VuYm9zdGFkIjoiRWdlbiBib3N0YWQiLCJhbnNva2FuX2hvdXNpbmdfYm9zdGFkc3JhdHQiOiJCb3N0YWRzcuR0dCIsImFuc29rYW5faG91c2luZ19oeXJlc2Jvc3RhZCI6Ikh5cmVzYm9zdGFkIiwiYW5zb2thbl9ob3VzaW5nX2hvc2ZvcmFsZHJhciI6IkhvcyBm9nLkbGRyYXIiLCJhbnNva2FuX2hvdXNpbmdfdGphbnN0ZWJvc3RhZCI6IlRq5G5zdGVib3N0YWQiLCJhbnNva2FuX2V1cnBlcm1hbiI6Ij8vbeVuIiwiYW5zb2thbl9la291cHBnaWZ0ZXIiOiJFa29ub21pc2thIHVwcGdpZnRlciIsImFuc29rYW5fZWR1Y2F0aW9uIjoiVXRiaWxkbmluZyIsImFuc29rYW5faG91c2luZyI6IkJvZW5kZWZvcm0iLCJhbnNva2FuX2hvdXNpbmdjb3N0IjoiSHlyYS9hdmdpZnQiLCJhbnNva2FuX2VtcGxveW1lbnRfZmFzdGFuc3RhbGxkIjoiRmFzdCBhbnN05GxsZCIsImFuc29rYW5fZW1wbG95bWVudF92aXNzdGlkc2Fuc3RhbGxkIjoiVmlzc3RpZHNhbnN05GxsZCIsImFuc29rYW5fZW1wbG95bWVudF9mb3JldGFnYXJlIjoiRvZyZXRhZ2FyZSIsImFuc29rYW5fZW1wbG95bWVudF9wZW5zaW9uYXIiOiJQZW5zaW9u5HIiLCJhbnNva2FuX2VtcGxveW1lbnRfc2p1a3BlbnNpb25hciI6IlNqdWtwZW5zaW9u5HIiLCJhbnNva2FuX2VtcGxveW1lbnRfc3R1ZGVyYW5kZSI6IlN0dWRlcmFuZGUiLCJhbnNva2FuX2VtcGxveW1lbnRfYXJiZXRzbG9zIjoiQXJiZXRzbPZzIiwiYW5zb2thbl9lbXBsb3ltZW50IjoiQW5zdORsbG5pbmdzZm9ybSIsImFuc29rYW5fbW1hYWFhIjoiKE1NLsXFxcUpIiwiYW5zb2thbl9hbnN0YWxsZHNlZGFuIjoiQW5zdORsbGQgc2VkYW4iLCJhbnNva2FuX2VtcGxveWVyIjoiQXJiZXRzZ2l2YXJlIiwiYW5zb2thbl9lbXBsb3llcnBob25lIjoiQXJiZXRzZ2l2YXJlcyB0ZWxlZm9uIiwiYW5zb2thbl9pbmtvbXN0YnJ1dHRvIjoiSW5rb21zdCAoYnJ1dHRvKSIsImFuc29rYW5fbWFycmlhZ2UiOiJDaXZpbHN05W5kIiwiYW5zb2thbl9tYXJyaWFnZV9naWZ0IjoiR2lmdCIsImFuc29rYW5fbWFycmlhZ2Vfb2dpZnQiOiJPZ2lmdCIsImFuc29rYW5fbWFycmlhZ2Vfc2FtYm8iOiJTYW1ibyIsImFuc29rYW5fYm9sYW5fYmVsb3BwIjoiQm9s5W4gYmVsb3BwIiwiYW5zb2thbl9ib2xhbl9rb3N0bmFkIjoiQm9s5W4ga29zdG5hZCIsImFuc29rYW5fYmlsYmF0bGFuX2JlbG9wcCI6IkJpbC9i5XRs5W4gYmVsb3BwIiwiYW5zb2thbl9iaWxiYXRsYW5fa29zdG5hZCI6IkJpbC9i5XRs5W4ga29zdG5hZCIsImFuc29rYW5fc3R1ZGllbGFuX2JlbG9wcCI6IlN0dWRpZWzlbiBiZWxvcHAiLCJhbnNva2FuX3N0dWRpZWxhbl9rb3N0bmFkIjoiU3R1ZGllbOVuIGtvc3RuYWQiLCJhbnNva2FuX2FuZHJhbGFuX2JlbG9wcCI6IkFuZHJhIGzlbiBiZWxvcHAiLCJhbnNva2FuX2FuZHJhbGFuX2tvc3RuYWQiOiJBbmRyYSBs5W4ga29zdG5hZCIsImFuc29rYW5fa3JlZGl0a29ydF9iZWxvcHAiOiJLcmVkaXRrb3J0IGJlbG9wcCIsImFuc29rYW5fa3JlZGl0a29ydF9rb3N0bmFkIjoiS3JlZGl0a29ydCBrb3N0bmFkIiwiYW5zb2thbl9rdW5kc2FtdHlja2UiOiJKYWcgc2FtdHlja2VyIHRpbGwgYXR0IGRlIHVwcGdpZnRlciBqYWcgYW5nZXIgaSBkZW5uYSBhbnP2a2FuIHNhbXQgbWluIGZvbGtib2tm9nJpbmdzYWRyZXNzIGFuduRuZHMgZvZyIGF0dCBpZGVudGlmaWVyYSBtaWcgc29tIGt1bmQgaSBzeXN0ZW1ldC4iLCJhbnNva2FuX2tyZWRpdHNhbXR5Y2tlIjoiSmFnIGb2cnPka3JhciBhdHQgb3ZhbnN05WVuZGUgaW5mb3JtYXRpb24gc3TkbW1lciBvY2ggZ29ka+RubmVyIGF0dCBrcmVkaXRnaXZhcmVuIHRhciBlbiBrcmVkaXR1cHBseXNuaW5nLiBLcmVkaXRnaXZhcmVuIGhhciBy5HR0ZW4gYXR0IGblIGluZm9ybWF0aW9uIG9tIG1pdHQgYXJiZXRzZvZyaOVsbGFuZGUgZnLlbiBhcmJldHNnaXZhcmVuLiIsImFuc29rYW5famFnZ29ka2FubmVyIjoiSmFnIGdvZGvkbm5lci4iLCJhbnNva2FuX25yb2ZjaGlsZHJlbiI6IkFudGFsIGb2cnP2cmpuaW5nc3BsaWt0aWdhIGJhcm4iLCJhbnNva2FuX2NpdmljUmVnTnJfdG9vbHRpcCI6IlBlcnNvbmJldGVja25pbmdlbiDkciBlbiBiZXRlY2tuaW5nIHNvbSBpZGVudGlmaWVyYXIgb3NzIG1lZCBzdPZycmUgcHJlY2lzaW9uIORuIG5hbW5ldC4gRGV0IGZpbm5zIHBlcnNvbmVyIG1lZCBzYW1tYSBuYW1uLCBtZW4gZGV0IGV4aXN0ZXJhciBpbnRlIHR25SBwZXJzb25lciBtZWQgc2FtbWEgcGVyc29uYmV0ZWNrbmluZy4iLCJhbnNva2FuX2tvbXBsZXR0ZXJhbmRlX3VwcGdpZnRlciI6IktvbXBsZXR0ZXJhbmRlIHVwcGdpZnRlciIsImFuc29rYW5fa3JlZGl0dXBwZ2lmdGVyIjoiS3JlZGl0dXBwZ2lmdGVyIiwiYW5zb2thbl9za2F0dGVoZW12aXN0IjoiVXBwZ2lmdGVyIG9tIHNrYXR0ZWhlbXZpc3QiLCJhbnNva2FuX3NrYXR0ZWhlbXZpc3RfbGFuZCI6IkxhbmQgZHUg5HIgc2thdHRlcGxpa3RpZyBpIiwiYW5zb2thbl9za2F0dGVyZWdpc3RyZXJpbmdzbnVtbWVyIjoiU2thdHRlcmVnaXN0cmVyaW5nc251bW1lciIsImFuc29rYW5fc2thdHRlcGxpa3RpZ195dHRlcmxpZ2FyZSI6Ill0dGVybGlnYXJlIGxhbmQgZHUg5HIgc2thdHRlcGxpa3RpZyBpIiwiYW5zb2thbl9sYWdndGlsbCI6IkzkZ2cgdGlsbCIsImFuc29rYW5fcGVwX2hlYWRlciI6IlBvbGl0aXNrdCBleHBvbmVyYWQgcGVyc29uIChQRVApIiwiYW5zb2thbl9vdGhlcl9pbmZvIjoi1nZyaWdhIHVwcGdpZnRlciIsImFuc29rYW5fcHJvZHVjdHNfaGVhZGVyIjoiVmlsa2EgYXYgQmFsYW56aWFzIHByb2R1a3RlciBhbnbkbmRlciBkdT8iLCJhbnNva2FuX3Byb2R1Y3RzX25vbmUiOiJJbmdhIiwiYW5zb2thbl9wcm9kdWN0c19zYXZpbmdzIjoiU3BhciIsImFuc29rYW5fcHJvZHVjdHNfbG9hbm9yY3JlZGl0IjoiTOVuIG9jaCBrcmVkaXRlciIsImFuc29rYW5faWJhbl9oZWFkZXIxIjoiVXBwZ2lmdGVyIGb2ciB1dGJldGFsbmluZyIsImFuc29rYW5faWJhbl9oZWFkZXIyIjoiS29udG9udW1tZXIgZvZyIHV0YmV0YWxuaW5nIiwiYW5zb2thbl90YWJvcnQiOiJUYSBib3J0In0sImZpVHJhbnNsYXRpb25zIjp7ImFuc29rYW5fa3JlZGl0YW5zb2thbiI6IkxhaW5haGFrZW11cyIsImFuc29rYW5fc29rdGJlbG9wcCI6IkhhZXR0dSBzdW1tYSIsImFuc29rYW5fdmFsaiI6IlZhbGl0c2UiLCJhbnNva2FuX2FyIjoidnVvdHRhIiwiYW5zb2thbl9mYWx0bWFzdGVrb3JyaWdlcmFzIjoiSm90a3V0IGtlbnTkdCBvdmF0IHZpcmhlZWxsaXNp5C4iLCJhbnNva2FuX3NraWNrYWluIjoiTORoZXTkIiwiYW5zb2thbl9hdmJyeXQiOiJLZXNrZXl05CIsImFuc29rYW5fYXRlcmJldHRpZCI6IlRha2Fpc2lubWFrc3VhaWthIiwiYW5zb2thbl9hbnRhbHNva2FuZGVuIjoiVmVsYWxsaXN0ZW4gbHVrdW3k5HLkIiwiYW5zb2thbl9zb2thbmRlc2FtbWFhZHIiOiJBc3V2YXRrbyBsYWluYW5oYWtpamF0IHNhbWFzc2Egb3NvaXR0ZWVzc2E/IiwiYW5zb2thbl9uZWoiOiJFaSIsImFuc29rYW5famEiOiJLeWxs5CIsImFuc29rYW5fbGFuc29tbG9zZXIiOiJIYWV0dGF2YWxsYSBsYWluYWxsYSBtYWtzZXR0YXZhdCBsYWluYXQiLCJhbnNva2FuX2thbXBhbmprb2QiOiJLYW1wYW5qYWtvb2RpIiwiYW5zb2thbl9rdXNva2FuZGUxIjoiUOTkaGFraWphbiB0aWVkb3QiLCJhbnNva2FuX2t1c29rYW5kZTIiOiJSaW5uYWtrYWlzaGFraWphbiB0aWVkb3QiLCJhbnNva2FuX3BlcnNvbnVwcGdpZnRlciI6IkhlbmtpbPZ0aWVkb3QiLCJhbnNva2FuX3BlcnNvbmJldGVja25pbmciOiJIZW5raWz2dHVubnVzIiwiYW5zb2thbl9lcG9zdCI6IlPkaGv2cG9zdGlvc29pdGUiLCJhbnNva2FuX3RlbGVmb24iOiJQdWhlbGlubnVtZXJvIiwiYW5zb2thbl9lZHVjYXRpb25fZ3J1bmRza29sYSI6IlBlcnVza291bHUiLCJhbnNva2FuX2VkdWNhdGlvbl95cmtlc3Nrb2xhIjoiQW1tYXR0aWtvdWx1IiwiYW5zb2thbl9lZHVjYXRpb25fZ3ltbmFzaWUiOiJMdWtpbyIsImFuc29rYW5fZWR1Y2F0aW9uX2hvZ3Nrb2xhIjoiS29ya2Vha291bHUiLCJhbnNva2FuX2hvdXNpbmdfZWdlbmJvc3RhZCI6Ik9taXN0dXNhc3VudG8iLCJhbnNva2FuX2hvdXNpbmdfYm9zdGFkc3JhdHQiOiJBc3VtaXNvaWtldXMiLCJhbnNva2FuX2hvdXNpbmdfaHlyZXNib3N0YWQiOiJWdW9rcmEtYXN1bnRvIiwiYW5zb2thbl9ob3VzaW5nX2hvc2ZvcmFsZHJhciI6IlZhbmhlbXBpZW4gbHVvbmEiLCJhbnNva2FuX2hvdXNpbmdfdGphbnN0ZWJvc3RhZCI6IlR59nN1aGRlYXN1bnRvIiwiYW5zb2thbl9ldXJwZXJtYW4iOiI/L2trIiwiYW5zb2thbl9la291cHBnaWZ0ZXIiOiJUaWV0b2EgdGFsb3VkZXN0YSIsImFuc29rYW5fZWR1Y2F0aW9uIjoiS291bHV0dXMiLCJhbnNva2FuX2hvdXNpbmciOiJBc3VtaXNtdW90byIsImFuc29rYW5faG91c2luZ2Nvc3QiOiJWdW9rcmEvdmFzdGlrZSIsImFuc29rYW5fZW1wbG95bWVudF9mYXN0YW5zdGFsbGQiOiJWYWtpdHVpbmVuIiwiYW5zb2thbl9lbXBsb3ltZW50X3Zpc3N0aWRzYW5zdGFsbGQiOiJN5ORy5GFpa2FpbmVuIiwiYW5zb2thbl9lbXBsb3ltZW50X2ZvcmV0YWdhcmUiOiJZcml0dORq5CIsImFuc29rYW5fZW1wbG95bWVudF9wZW5zaW9uYXIiOiJFbORrZWzkaW5lbiIsImFuc29rYW5fZW1wbG95bWVudF9zanVrcGVuc2lvbmFyIjoiVHn2a3l2eXR09m15eXNlbORrZSIsImFuc29rYW5fZW1wbG95bWVudF9zdHVkZXJhbmRlIjoiT3Bpc2tlbGlqYSIsImFuc29rYW5fZW1wbG95bWVudF9hcmJldHNsb3MiOiJUefZ09m4iLCJhbnNva2FuX2VtcGxveW1lbnQiOiJUefZzdWhkZSIsImFuc29rYW5fbW1hYWFhIjoiS0suVlZWViIsImFuc29rYW5fYW5zdGFsbGRzZWRhbiI6IlR59nN1aGRlL211dSBhbGthZW4iLCJhbnNva2FuX2VtcGxveWVyIjoiVHn2bmFudGFqYSIsImFuc29rYW5fZW1wbG95ZXJwaG9uZSI6IlR59m5hbnRhamFuIHB1aGVsaW5udW1lcm8iLCJhbnNva2FuX2lua29tc3RicnV0dG8iOiJLdXVrYXVzaXR1bG90IChicnV0dG8pIiwiYW5zb2thbl9tYXJyaWFnZSI6IlNpdmlpbGlz5OR0eSIsImFuc29rYW5fbWFycmlhZ2VfZ2lmdCI6Ik5haW1pc2lzc2EiLCJhbnNva2FuX21hcnJpYWdlX29naWZ0IjoiTmFpbWF0b24iLCJhbnNva2FuX21hcnJpYWdlX3NhbWJvIjoiQXZvbGlpdHRvIiwiYW5zb2thbl9ib2xhbl9iZWxvcHAiOiJBc3VudG9sYWluYSIsImFuc29rYW5fYm9sYW5fa29zdG5hZCI6IkFzdW50b2xhaW5hIGt1dWthdXNpZXLkIiwiYW5zb2thbl9iaWxiYXRsYW5fYmVsb3BwIjoiQXV0by0vdmVuZWxhaW5hIiwiYW5zb2thbl9iaWxiYXRsYW5fa29zdG5hZCI6IkF1dG8tL3ZlbmVsYWluYSBrdXVrYXVzaWVy5CIsImFuc29rYW5fc3R1ZGllbGFuX2JlbG9wcCI6Ik9waW50b2xhaW5hIiwiYW5zb2thbl9zdHVkaWVsYW5fa29zdG5hZCI6Ik9waW50b2xhaW5hIGt1dWthdXNpZXLkIiwiYW5zb2thbl9hbmRyYWxhbl9iZWxvcHAiOiJNdXUgbGFpbmEiLCJhbnNva2FuX2FuZHJhbGFuX2tvc3RuYWQiOiJNdXUgbGFpbmEga3V1a2F1c2llcuQiLCJhbnNva2FuX2tyZWRpdGtvcnRfYmVsb3BwIjoiTHVvdHRva29ydHRpIiwiYW5zb2thbl9rcmVkaXRrb3J0X2tvc3RuYWQiOiJMdW90dG9rb3J0dGkga3V1a2F1c2llcuQiLCJhbnNva2FuX2t1bmRzYW10eWNrZSI6Ikh5duRrc3luLCBldHTkIGhha2VtdWtzZXNzYSBhbnRhbWlhbmkgdGlldG9qYSBqYSB25GVzdPZyZWtpc3RlcmluIG9zb2l0ZXRpZXRvamEga+R5dGV05ORuIHR1bm5pc3RhbWlzZWtzZW5pIGrkcmplc3RlbG3kc3PkLiIsImFuc29rYW5fa3JlZGl0c2FtdHlja2UiOiJWYWt1dXRhbiwgZXR05CBoYWtlbXVrc2Vzc2EgaWxtb2l0ZXR1dCB0aWVkb3QgcGl05HbkdCBwYWlra2Fuc2EgamEgaHl25GtzeW1tZSwgZXR05CBsdW90b25hbnRhamEgdGFya2lzdGFhIGx1b3R0b3RpZXRvbW1lLiBMdW90b25hbnRhamFsbGEgb24gb2lrZXVzIHNhYWRhIHRpZXRvYSB0efZzdWh0ZWlzdGFtbWUgdHn2bmFudGFqaWx0YW1tZS4iLCJhbnNva2FuX2phZ2dvZGthbm5lciI6Ikh5duRrc3luLiIsImFuc29rYW5fbnJvZmNoaWxkcmVuIjoiS290b25hIGFzdXZpZW4gbGFzdGVuIGx1a3Vt5ORy5CIsImFuc29rYW5fa29tcGxldHRlcmFuZGVfdXBwZ2lmdGVyIjoiVOR5ZGVubmV0dOR2aeQgdGlldG9qYSBoYWtpamFsbGUiLCJhbnNva2FuX2tyZWRpdHVwcGdpZnRlciI6IkxhaW5hbiB0aWVkb3QiLCJhbnNva2FuX3NrYXR0ZWhlbXZpc3QiOiJUaWV0b2phIHZlcm90dWtzZXN0YSIsImFuc29rYW5fc2thdHRlaGVtdmlzdF9sYW5kIjoiTWFhIGpvbmthIHZlcm90dWtzZW4gcGlpcmlpbiBrdXVsdXQiLCJhbnNva2FuX3NrYXR0ZXJlZ2lzdHJlcmluZ3NudW1tZXIiOiJWZXJvdHVubmlzdGV0aWV0byIsImFuc29rYW5fc2thdHRlcGxpa3RpZ195dHRlcmxpZ2FyZSI6Ik11dSBtYWEgam9ua2EgdmVyb3R1a3NlbiBwaWlyaWluIGt1dWx1dCIsImFuc29rYW5fbGFnZ3RpbGwiOiJMaXPk5CIsImFuc29rYW5fcGVwX2hlYWRlciI6IlBvbGlpdHRpc2VzdGkgdmFpa3V0dXN2YWx0YWlzZXNzYSBhc2VtYXNzYSBvbGV2YSBoZW5raWz2IChQRVApIiwiYW5zb2thbl9vdGhlcl9pbmZvIjoiTXV1dCB0aWVkb3QiLCJhbnNva2FuX3Byb2R1Y3RzX2hlYWRlciI6Ik1pdOQgQmFsYW56aWFuIHR1b3R0ZWl0YSBr5Hl05HQ/IiwiYW5zb2thbl9wcm9kdWN0c19ub25lIjoiRW4gbWl05ORuIiwiYW5zb2thbl9wcm9kdWN0c19zYXZpbmdzIjoiVGFsbGV0dXN0aWxlauQiLCJhbnNva2FuX3Byb2R1Y3RzX2xvYW5vcmNyZWRpdCI6IkxhaW5vamEgamEgbHVvdHRvamEiLCJhbnNva2FuX2liYW5faGVhZGVyMSI6IlRpZXRvamEgbGFpbmFuIG1ha3N1dW4iLCJhbnNva2FuX2liYW5faGVhZGVyMiI6IlRpbGludW1lcm8iLCJhbnNva2FuX3RhYm9ydCI6IlBvaXN0YSIsImFuc29rYW5fY2l2aWNSZWdOcl90b29sdGlwIjoiKCopYW5zb2thbl9jaXZpY1JlZ05yX3Rvb2x0aXAifX0='))
+    </script>
+	<script src="js/jquery-1.12.4.min.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-locale_fi-fi.js"></script>
+	<script src="js/moment.min.js"></script>
+	<script src="js/ntech-forms.js"></script>
+	<script src="js/angular-cookies.min.js"></script>
+	<script src="js/angular-translate.min.js"></script>
+	<script src="js/angular-translate-storage-cookie.min.js"></script>
+	<script src="js/angular-translate-storage-local.min.js"></script>
+	<script src="js/angular-translate-loader-url.min.js"></script>
+	<script src="js/country-functions-fi.js"></script>
+	<script src="js/additionalquestions.js"></script>
+</body>
+</html>

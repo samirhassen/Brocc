@@ -1,0 +1,177 @@
+<credit-menu activeMenuItemCode="settlement" [creditNr]="m?.creditNr" *ngIf="m">
+    <div current-item-content>
+        <div *ngIf="!(m.creditStatus === 'Normal')">
+            <p>Credit is not active</p>
+        </div>
+
+        <div *ngIf="m.creditStatus === 'Normal'">
+            <div class="row">
+                <div class="col-xs-10 col-sm-offset-1">
+                    <!--Calculate settlement-->
+                    <div class="editblock" *ngIf="m.calculateModel">
+                        <form name="calculateform" [formGroup]="m.calculateForm.form">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Date of settlement</label>
+                                    <div class="col-xs-4">
+                                        <input formControlName="settlementDate" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group" *ngIf="m.calculateForm.hasFormControl(null, 'swedishRseInterestRatePercent')">
+                                    <label class="control-label col-xs-6">RSE jmf. ränta (%)</label>
+                                    <div class="col-xs-4">
+                                        <input formControlName="swedishRseInterestRatePercent" type="text" class="form-control" />
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="form-horizontal" *ngIf="m.calculateModel.allowNotify">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Notify</label>
+                                    <div class="col-xs-4">
+                                        <div class="checkbox">
+                                            <input style="margin-left: 0px" formControlName="notify" type="checkbox" />
+                                        </div>
+                                        <br />
+                                        <input formControlName="notifiedEmail"
+                                            *ngIf="m.calculateForm.getValue('notify')" type="email"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center pt-2">
+                                <button class="n-direct-btn n-blue-btn" [disabled]="m.calculateForm.invalid()"
+                                    (click)="calculate($event)">
+                                    Calculate <span class="glyphicon glyphicon-refresh"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!--end calculate new terms-->
+                    <!--väntar på svar-->
+                    <div class="frame" *ngIf="m.pendingOffer">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">To pay</label>
+                                        <p class="form-control-static col-xs-6">
+                                            {{ m.pendingOffer.settlementAmount | currency }}
+                                        </p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">Expected date of settlement</label>
+                                        <p class="form-control-static col-xs-6">
+                                            {{ m.pendingOffer.settlementDate | date }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="form-group text-right">
+                                        <button class="n-main-btn n-white-btn" (click)="cancel($event)">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--slut i väntan på svar-->
+                </div>
+            </div>
+
+            <!--erbjudandet-->
+
+            <div class="pt-3" *ngIf="m.suggestionModel">
+                <div class="frame">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-sm-offset-1 col-xs-10">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="table-summery">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr *ngIf="m.rseEdit">
+                                                        <td class="col-xs-6 text-right">
+                                                            <a [href]="m.rseEdit.rseReportUrl" target="_blank">Ränteskillnadsersättning (kr)</a>
+                                                        </td>
+                                                        <td class="col-xs-6 bold" [class.has-error]="m.rseEdit.form.invalid && m.rseEdit.form.dirty">
+                                                            <form [formGroup]="m.rseEdit.form">
+                                                                <input formControlName="swedishRseEstimatedAmount" type="text" class="form-control" />
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">Capital</td>
+                                                        <td class="col-xs-6 bold">
+                                                            {{
+                                                            m.suggestionModel.totalCapitalBalance | currency
+                                                            }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">Interest</td>
+                                                        <td class="col-xs-6 bold">
+                                                            {{
+                                                            m.suggestionModel.totalInterestBalance
+                                                            | currency
+                                                            }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">Fees</td>
+                                                        <td class="col-xs-6 bold">
+                                                            {{
+                                                            m.suggestionModel.totalOtherBalance | currency
+                                                            }}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td class="col-xs-6 text-right">To pay</td>
+                                                        <td class="col-xs-6 bold">
+                                                            {{getSuggestedTotalSettlementBalance()
+                                                            | currency
+                                                            }}
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Date of settlement</label>
+                                            <p class="form-control-static col-xs-6">
+                                                {{ m.suggestionModel.settlementDate | date }}
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Reference</label>
+                                            <p class="form-control-static col-xs-6">
+                                                {{ m.suggestionModel.ocrPaymentReference }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pt-2 text-center">
+                            <button class="n-main-btn n-green-btn" (click)="createAndSendSuggestion($event)"
+                                [disabled]="m.rseEdit?.form?.invalid === true">
+                                <ng-container *ngIf="m.suggestionModel.willSendSuggestion === true && isNotificationEmailBeingSent()">
+                                    Send copy <span class="glyphicon glyphicon-envelope"></span>
+                                </ng-container>
+                                <ng-container *ngIf="!(m.suggestionModel.willSendSuggestion === true && isNotificationEmailBeingSent())">
+                                    Flag for settlement
+                                </ng-container>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--slut på erbjudandet-->
+        </div>
+    </div>
+</credit-menu>

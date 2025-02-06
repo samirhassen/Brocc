@@ -1,0 +1,20 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="documentcheckstatus.html">
+    <div ng-show="$ctrl.status">
+        <div class="text-right"><a ng-href="{{$ctrl.getViewUrl()}}" class="n-anchor">View details</a></div>
+        <div class="form-horizontal pb-2">
+            <div class="form-group">
+                <label class="control-label col-xs-2">{{$ctrl.status.isRejected ? 'Reason' : 'Status'}}</label>
+                <div class="col-xs-10 form-control-static" ng-show="$ctrl.status.isRejected"><span class="comma" ng-repeat="r in $ctrl.status.rejectionReasons">{{r}}</span></div>
+                <div class="col-xs-10 form-control-static" ng-show="!$ctrl.status.isRejected">{{$ctrl.getStatusText()}}</div>
+            </div>
+        </div>
+        <div class="pt-3">
+            <a ng-show="$ctrl.status.isApplicationActive && !$ctrl.status.isApplicationPartiallyApproved" ng-href="{{$ctrl.getNewUrl()}}" class="n-main-btn n-blue-btn">New document check <span class="glyphicon glyphicon-arrow-right"></span></a>
+        </div>
+    </div>
+
+</script>

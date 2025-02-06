@@ -1,0 +1,17 @@
+<div class="frame" *ngIf="result">
+  <ul>
+    <ng-content select="[extra-listitems]"></ng-content>
+    <li *ngIf="result.totalMilliseconds">
+      Time taken:
+      {{ result.totalMilliseconds / 1000 | number: "1.0-0" }} seconds
+    </li>
+  </ul>
+  <h3 *ngIf="result.errors && result.errors.length > 0">Errors</h3>
+  <ul *ngIf="result.errors && result.errors.length > 0">
+    <li *ngFor="let e of result.errors">{{ e }}</li>
+  </ul>
+  <h3 *ngIf="result.warnings && result.warnings.length > 0">Warnings</h3>
+  <ul *ngIf="result.warnings && result.warnings.length > 0">
+    <li *ngFor="let e of result.warnings">{{ e }}</li>
+  </ul>
+</div>

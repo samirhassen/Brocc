@@ -1,0 +1,85 @@
+<ng-container *ngIf="m">
+    <div class="row" *ngIf="!m.candidateFile">
+        <div class="col-xs-10 col-sm-offset-1">
+            <div class="editblock">
+                <form [formGroup]="m.fileForm.form">
+                    <div class="col-sm-offset-2 col-xs-8">
+                        <label>File format</label>
+                        <div class="row">
+                            <div class="col-xs-7">
+                                <select name="fileformat" formControlName="fileFormatName" class="form-control">
+                                    <option *ngFor="let fileFormat of m.fileFormats" [value]="fileFormat.value">{{fileFormat.text}}</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-5" style="margin-top: 7px;">
+                                <span class="n-main-btn n-blue-btn" (click)="selectFile($event)">
+                                    Select file <span class="glyphicon glyphicon-paperclip"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+                <form #fileInputForm name="fileinputform" style="display: none">
+                    <input #fileInput type="file" id="file" name="file" style="display: none" (change)="onFileAttached($event)" />
+                  </form>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="m.candidateFile">
+        <form [formGroup]="m.candidateFile.form.form">
+            <div class="col-xs-8 col-sm-offset-2">
+                <div class="frame">
+                    <div class="row">
+                        <div class="col-xs-6 text-right">File</div>
+                        <div class="col-xs-6"><b>{{m.candidateFile.filename}}</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 text-right">Created</div>
+                        <div class="col-xs-6"><b>{{m.candidateFile.data.fileCreationDate | date:'short'}}</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 text-right">External id</div>
+                        <div class="col-xs-6"><b>{{m.candidateFile.data.externalId}}</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 text-right">Accounts</div>
+                        <div class="col-xs-6"><b>{{m.candidateFile.data.includedBankAccountNrs}}</b></div>
+                    </div>
+                    <div class="row" *ngIf="m.candidateFile.data.hasUnexpectedBankAccountNrs">
+                        <div class="col-xs-6 text-right">Expected account</div>
+                        <div class="col-xs-6"><b>{{m.candidateFile.data.expectedBankAccountNr}}</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 text-right">Payment count</div>
+                        <div class="col-xs-6"><b>{{m.candidateFile.data.totalPaymentCount}}</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 text-right">Payment sum</div>
+                        <div class="col-xs-6"><b>{{m.candidateFile.data.totalPaymentSum | currency}}</b></div>
+                    </div>
+                    <div class="pt-3">
+                        <div class="text-center pb-2" *ngIf="m.candidateFile.data.hasBeenImported">
+                            <label class="col-xs-12">Warning! This file has been imported before. Allow it to be imported again?</label>
+                            <input class="col-xs-12" type="checkbox" formControlName="forceImport" />
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="text-center pb-2" *ngIf="m.candidateFile.data.hasUnexpectedBankAccountNrs">
+                            <label class="col-xs-12">Warning! This file has unexpected accounts. Allow it to be imported anyway?</label>
+                            <input class="col-xs-12" type="checkbox" formControlName="forceImportIban" />
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="text-center mt-2">
+                            <button class="n-main-btn n-green-btn" (click)="importFile($event)" 
+                                [disabled]="!isImportAllowed()">Import</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>        
+    </div>
+    <div class="no-hits text-center pt-3" *ngIf="m.successMessage">
+        <p>{{m.successMessage}}</p>
+    </div>
+</ng-container>

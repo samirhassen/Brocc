@@ -1,0 +1,88 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="add-customer.html">
+    <div class="pt-1 pb-2">
+        <div class="pull-left"><a class="n-back" href="#" ng-click="$ctrl.onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+        <h1 class="adjusted" ng-class="">New Customer</h1>
+    </div>
+
+    <div class="row pb-3">
+        <form name="searchform" novalidate>
+            <div class="col-md-4">
+                <div class="relative">
+
+                    <span class="glyphicon glyphicon-search"></span>
+
+                    <input class="search form-control" id="searchCivicRegNr" type="text" ng-model="$ctrl.m.SearchCivicNr" placeholder="YYYYMMDD-XXXX" ng-keyup="$event.keyCode == 13 && searchform.$valid && $ctrl.searchCivicNr($ctrl.m.SearchCivicNr)" custom-validate="$ctrl.isValidCivicRegNr" required />
+                </div>
+            </div>
+            <div class="col-md-8">
+                <!-- Span since enter clicks will trigger reset otherwise since it's the first button in the form -->
+                <span class="n-icon-btn n-white-btn" ng-show="$ctrl.m.SearchCivicNr" ng-click="$ctrl.resetSearch()"><span class="glyphicon glyphicon-remove"></span></span>
+                <button ng-show="$ctrl.m.SearchCivicNr" ng-click="$ctrl.searchCivicNr($ctrl.m.SearchCivicNr)" ng-disabled="!searchform.$valid"
+                        class="n-main-btn n-blue-btn">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="row" ng-if="$ctrl.m.Mode === 'new'">
+        <div class="col-xs-8 col-sm-offset-2">
+            <div class="editblock">
+                <form novalidate name="applicationForm">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Civic Nr</label>
+                            <div class="col-xs-4"><p class="form-control-static">{{$ctrl.m.CivicNr}}</p></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">FirstName</label>
+                            <div class="col-xs-4"><input class="form-control" required ng-model="$ctrl.m.FirstName" type="text" autocomplete="off" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">LastName</label>
+                            <div class="col-xs-4"><input class="form-control" required ng-model="$ctrl.m.LastName" type="text" autocomplete="off" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">BirthDate</label>
+                            <div class="col-xs-4"><input class="form-control" required ng-model="$ctrl.m.BirthDate" type="text" autocomplete="off" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Street</label>
+                            <div class="col-xs-4"><input class="form-control" required ng-model="$ctrl.m.Street" type="text" autocomplete="off" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">ZipCode</label>
+                            <div class="col-xs-4"><input class="form-control" required ng-model="$ctrl.m.ZipCode" type="text" autocomplete="off" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">City</label>
+                            <div class="col-xs-4"><input class="form-control" required ng-model="$ctrl.m.City" type="text" autocomplete="off" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Country</label>
+                            <div class="col-xs-4"><input class="form-control" required ng-model="$ctrl.m.Country" type="text" autocomplete="off" /></div>
+                        </div>
+                        <ntech-input label="'Email'" label-classes="'col-xs-6'" required="true" input-classes="'col-xs-4'" model="$ctrl.m.Email" t="'email'"></ntech-input>
+                        <ntech-input label="'Phone'" label-classes="'col-xs-6'" required="true" input-classes="'col-xs-4'" model="$ctrl.m.Phone" t="'phonenr'"></ntech-input>
+                    </div>
+                    <div class="text-center pt-3">
+                        <button ng-click="$ctrl.saveNewCustomer($event)" ng-disabled="!applicationForm.$valid" class="n-main-btn n-green-btn">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="$ctrl.m.Mode === 'view'">
+        <hr class="dotted" />
+        <div class="row">
+            <div class="col-xs-6">
+                <customer-info initial-data="$ctrl.m.CustomerInfoInitialData"></customer-info>
+            </div>
+        </div>
+        <hr class="dotted" />
+    </div>
+</script>

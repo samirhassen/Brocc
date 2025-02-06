@@ -1,0 +1,114 @@
+<toggle-block
+  [initialData]="{
+    headerText: 'Current ruleset',
+    isInitiallyExpanded: true,
+    useTransparentBackground: true
+  }"
+  *ngIf="ruleSet"
+>
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col-sm-1">Phase</th>
+        <th class="col-sm-3">Rule</th>
+        <th class="col-sm-4">Description</th>
+        <th class="col-sm-3">Static parameters</th>
+        <th class="col-sm-1"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container
+        *ngFor="
+          let phase of [
+            ruleSet.internal,
+            ruleSet.external,
+            ruleSet.manualControl
+          ]
+        "
+      >
+        <tr style="font-weight: bold; background-color: #d5e3e5">
+          <td>{{ phase.displayName }}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr *ngIf="phase.rules.length === 0">
+          <td></td>
+          <td colspan="4">-</td>
+        </tr>
+        <tr *ngFor="let rule of phase.rules">
+          <td></td>
+          <td>
+            {{ rule.hasActiveRejectionReason ? "(*)" : ""
+            }}{{ rule.display.RuleDisplayName }}
+          </td>
+          <td>{{ rule.display.Description }}</td>
+          <td>{{ rule.display.StaticParametersDisplayWithNames }}</td>
+          <td>
+            <a
+              href="#"
+              class="n-direct-btn n-red-btn"
+              *ngIf="inEditMode"
+              (click)="onRemoveRule(rule, $event)"
+              >Remove</a
+            >
+          </td>
+        </tr>
+        <ng-container
+          *ngIf="
+            !inEditMode &&
+            phase.rules.length > 0 &&
+            phase.rejectionReasonNames?.length > 0
+          "
+        >
+          <tr>
+            <td colspan="5">&nbsp;</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="text-right"><b>Rejection reasons:</b></td>
+            <td colspan="3">
+              <ng-container
+                *ngFor="
+                  let rejectionReasonName of phase.rejectionReasonNames;
+                  let index = index
+                "
+              >
+                <span
+                  *ngIf="index > 0"
+                  style="color: #82c6ff; margin-right: 3px"
+                  >,</span
+                >
+                <span>
+                  <a
+                    (click)="
+                      toggleRejectionReasonDisplay(
+                        phase,
+                        rejectionReasonName,
+                        $event
+                      )
+                    "
+                    class="n-anchor"
+                    [style.text-decoration]="
+                      phase.activeRejectionReasonName === rejectionReasonName
+                        ? 'underline'
+                        : 'none'
+                    "
+                    ><span
+                      *ngIf="
+                        phase.activeRejectionReasonName === rejectionReasonName
+                      "
+                      style="color: #82c6ff"
+                      >(*)</span
+                    >{{ getRejectionReasonDisplayName(rejectionReasonName) }}</a
+                  >
+                </span>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+</toggle-block>

@@ -1,0 +1,140 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Company loan application";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"companyLoanCreateApplicationCtr as c\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"c.isLoading===true\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-companyloan-create-application")
+}
+<div class="pb-2"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nTest"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+<div class="row">
+    <div class="col-sm-7">
+        <div ng-if="c.state=='initial'">
+            <h1>Custom application <button type="submit" class="btn btn-default pull-right" ng-click="c.submitInitial($event)">Next>></button><span class="clearfix"></span></h1>
+
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Company</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" ng-model="c.a.companyMode">
+                            <option value="New">New</option>
+                            <option value="Existing">Existing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Applicant</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" ng-model="c.a.applicantMode">
+                            <option value="New">New</option>
+                            <option value="Existing">Existing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Scoring</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" ng-model="c.a.scoringMode">
+                            <option value="Accepted">Accepted</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Skip scoring automation</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" ng-model="c.a.skipInitialScoring">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">To account type</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" ng-model="c.a.bankAccountType">
+                            <option ng-if="c.initialDataTyped.baseCountry === 'FI'" value="">Regular</option>
+                            <option ng-if="c.initialDataTyped.baseCountry === 'SE'" value="">Regular</option>
+                            <option ng-if="c.initialDataTyped.baseCountry === 'SE'" value="BankGiroSe">Bankgiro</option>
+                            <option ng-if="c.initialDataTyped.baseCountry === 'SE'" value="PlusGiroSe">Plusgiro</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div ng-if="c.state=='applicants'">
+            <h1>Applicants<button type="submit" class="btn btn-default pull-right" ng-click="c.submitApplicants($event)">Next>></button><span class="clearfix"></span></h1>
+            <div ng-if="c.a.companyMode === 'New'">
+                <h2>Company</h2>
+                <angular-jsoneditor ng-model="c.a.newCompanyEditorData" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 800px;"></angular-jsoneditor>
+            </div>
+            <div ng-if="c.a.companyMode === 'Existing'">
+                <h2>Existing Company</h2>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Orgnr</label>
+                        <div class="col-sm-8">
+                            <input type="text" ng-model="c.a.companyOrgnr" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div ng-if="c.a.applicantMode === 'New'">
+                <h2>Applicant</h2>
+                <angular-jsoneditor ng-model="c.a.newApplicantEditorData" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 800px;"></angular-jsoneditor>
+            </div>
+            <div ng-if="c.a.applicantMode === 'Existing'">
+                <h2>Existing Applicant</h2>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">CivicRegNr</label>
+                        <div class="col-sm-8">
+                            <input type="text" ng-model="c.a.applicantCivicRegNr" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="c.state === 'application'">
+            <h1>Application<button type="submit" class="btn btn-primary pull-right" ng-click="c.submitApplication($event)">Send application</button><span class="clearfix"></span></h1>
+
+            <div>
+                <angular-jsoneditor ng-model="c.a.applicationEditorData" options="{mode : 'tree', modes: ['code', 'tree']}" style="width: 100%; height: 400px;"></angular-jsoneditor>
+            </div>
+        </div>
+
+        <div ng-if="c.state=='done'">
+            <h2>Application created</h2>
+            <p>
+                <a target="_blank" ng-href="{{c.initialDataTyped.applicationUrlPrefix + c.createResult.ApplicationNr}}">{{c.createResult.ApplicationNr}}</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="col-sm-5">
+        <div ng-if="c.historyItems && c.historyItems.length > 0">
+            <h1>History</h1>
+            <div ng-repeat="h in c.historyItems | orderBy:'+':true track by $index" style="border: dashed 1px black; margin-bottom: 5px; padding:3px">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="min-height:35px">
+                        <span><a ng-show="h.applicationNr" ng-href="{{c.initialDataTyped.applicationUrlPrefix + h.applicationNr}}" target="_blank">Application {{h.applicationNr}}</a></span>
+                        <span class="pull-right">{{h.date}}</span>
+                    </div>
+                    <div class="panel-body">
+                        <ul style="clear:both">
+                            <li>Company: {{h.companyOrgNr}}</li>
+                            <li>Applicant: {{h.applicantCivicRegNr}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

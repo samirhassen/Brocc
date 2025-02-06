@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+    <div class="page">
+        <div class="blackborder">
+            
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Årsbesked {{statementForYear}}, <br>Sparas till deklarationen</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Utskriftsdatum</td>
+                                <td class="text-right">{{printDate}}</td>
+                            </tr>
+                            <tr>
+                                <td>Personnummer</td>
+                                <td class="text-right">{{customerCivicRegNr}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column2 greenborder">
+                    <p>{{customerFullName}}</p>
+                    <p>{{customerStreetAddress}}</p>
+                    <p>{{customerZipCodeAndArea}}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        <div class="area pt-5">
+            <h2>Lån</h2>
+            <p>Under {{statementForYear}} har vi mottagit nedanstående ränteinbetalningar från dig. Om det är fler låntagare på lånet redovisas din ränteandel separat, är du ensam låntagare är din ränteandel 100 %. Önskas annan fördelning av räntan kan du yrka det i din självdeklaration. Inbetald ränta är beräknad enligt kontantprincipen, vilket innebär att ränta som varit oss tillhanda sista bankdagen före året ingår.</p>
+            <p>Kapitalskulden är angiven per {{lastDateOfYear}}</p>
+        </div>
+        <div class="area pt-2">
+            <table class="spec">
+                <thead>
+                    <tr>
+                        <td>Lånenummer</td>
+                        <td class="text-right">Total kapitalskuld</td>
+                        <td class="text-right">Total inbetald ränta</td>
+                        <td class="text-right">Din skattemässiga andel, ränta</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{creditNr}}</td>
+                        <td class="text-right">{{endOfYearCapitalDebt}}</td>
+                        <td class="text-right">{{totalPaidInterestDuringYear}}</td>
+                        <td class="text-right">{{customerPaidInterestDuringYear}}</td>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_footerAddress}}</p>
+    </div>

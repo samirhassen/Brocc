@@ -1,0 +1,67 @@
+<credit-decision-editor-tabs [initialData]="m?.tabsInitialData" *ngIf="m">
+  <ng-container reject-area>
+    <credit-decision-rejection-editor
+      [initialData]="m.rejectionEditorInitialData"
+    >
+    </credit-decision-rejection-editor>
+  </ng-container>
+  <ng-container accept-area>
+    <form [formGroup]="m.offer.form.form" class="form-horizontal decision-form">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="row pt-3">
+            <div class="col-sm-6 col-md-6">
+              <div class="form-group">
+                <label class="control-label col-xs-6">New purchase?</label>
+                <div class="col-xs-6">
+                  <p class="form-control-static">
+                    {{ m.offer.isPurchase ? "Yes" : "No" }}
+                  </p>
+                </div>
+              </div>
+              <div class="form-group" *ngIf="!m.offer.isPurchase">
+                <label class="control-label col-xs-6">Settlement amount</label>
+                <div class="col-xs-6">
+                  <p class="form-control-static">
+                    {{ m.offer.settlementAmount | number }}
+                  </p>
+                </div>
+              </div>
+              <editblock-form-field
+                [model]="m.offer.editFields['objectPriceAmount']"
+              ></editblock-form-field>
+              <editblock-form-field
+                [model]="m.offer.editFields['paidToCustomerAmount']"
+              ></editblock-form-field>
+              <editblock-form-field
+                [model]="m.offer.editFields['ownSavingsAmount']"
+              ></editblock-form-field>
+              <div class="form-group">
+                <label class="control-label col-xs-6">Total amount</label>
+                <div class="col-xs-6">
+                  <p class="form-control-static">
+                    {{ getTotalAmount() | number }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group text-center pt-3">
+        <button
+          type="button"
+          class="n-main-btn n-green-btn"
+          [disabled]="m.offer.form.invalid() || !isAcceptAllowed()"
+          (click)="accept($event)"
+        >
+          Accept
+          <send-email-logo
+            [emailSettingName]="m.emailSettingName"
+          ></send-email-logo>
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</credit-decision-editor-tabs>

@@ -1,0 +1,29 @@
+﻿<script type="text/ng-template" id="accountdocuments.html">
+    @Html.Partial("TitleAndBack", TitleAndBackModel.Translated("sao_accountdocuments_h", "backUrl"))
+       
+    <div class="pt-1">
+        <div class="list-item" ng-repeat="t in d.Documents">
+            <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_accountdocuments_t">Typ</label>
+            <div class="col-md-10 col-sm-8 col-xs-7">
+                <p>
+                    <b>
+                        <span ng-switch="t.DocumentType">
+                            <span ng-switch-when="InitialAgreement" translate="sao_accountdocuments_dt_InitialAgreement">Avtal och villkor</span>
+                            <span ng-switch-when="AdditionalLoanAgreement" translate="sao_accountdocuments_dt_AdditionalLoanAgreement">Tilläggslån och villkor</span>
+                            <span ng-switch-when="ChangeTermAgreement" translate="sao_accountdocuments_dt_ChangeTermAgreement">Villkorsändrings avtal</span>                            
+                            <span ng-switch-default>{{t.DocumentType}}</span>
+                        </span>
+                    </b>
+                </p>
+            </div>
+            <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_accountdocuments_d">Datum</label>
+            <div class="col-md-10 col-sm-8 col-xs-7"><p><b>{{t.DocumentDate | date}}</b></p></div>
+            <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="loanNumber">Lånnr</label>
+            <div class="col-md-10 col-sm-8 col-xs-7"><p><b>{{t.CreditNr}}</b></p></div>
+            <label class="col-md-2 col-sm-4 col-xs-5 text-right" translate="sao_accountdocuments_do">Dokument</label>
+            <div class="col-md-10 col-sm-8 col-xs-7"><a ng-href="{{t.DownloadUrl}}" target="_blank" class="n-download-anchor"><span translate="sao_accountdocuments_dl">Ladda ner</span>&nbsp;<span class="glyphicon glyphicon-save"></span></a></div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+        
+</script>

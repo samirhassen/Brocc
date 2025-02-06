@@ -1,0 +1,504 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="../bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/magellan.css" rel="stylesheet" />          
+    <title>Komponenter</title>      
+    <style>   
+        body{
+            background-color: #fff;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+    </style>
+</head>
+<body> 
+    
+    <table border="1" style="margin: 20px; background-color: #fff;">
+        <tr>
+            <td style="padding: 10px;">Edit button</td>
+            <td style="padding: 10px;"><button class="n-icon-btn n-turquoise-btn"><span class="glyphicon glyphicon-pencil"></span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-turquoise-btn"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-pencil"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>            
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Edit button disabled</td>
+            <td style="padding: 10px;"><button class="n-icon-btn n-turquoise-btn" disabled="disabled"><span class="glyphicon glyphicon-pencil"></span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-turquoise-btn"</span> <span style="color:#4f9fcf;">disabled</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-pencil"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Edit as anchor</td>
+            <td style="padding: 10px;"><a href="#" class="n-icon-btn n-turquoise-btn"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;a href=""</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-turquoise-btn"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-pencil"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Add</td>
+            <td style="padding: 10px;"><button class="n-icon-btn n-turquoise-btn"><span class="glyphicon glyphicon-plus"> </span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-turquoise-btn"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-plus"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Remove</td>
+            <td style="padding: 10px;"><button class="n-icon-btn n-red-btn"><span class="glyphicon glyphicon-remove"></span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-red-btn"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-remove"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Cancel</td>
+            <td style="padding: 10px;"><button class="n-icon-btn n-white-btn"><span class="glyphicon glyphicon-remove"></span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-white-btn"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-remove"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Open popup</td>
+            <td style="padding: 10px;"><button class="n-popup-btn n-turquoise-btn">Amortization plan<span class="glyphicon glyphicon-resize-full"></span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-popup-btn n-turquoise-btn"</span> <span style="color:#4f9fcf;">disabled</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-resize-full"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Close popup</td>
+            <td style="padding: 10px;">
+               <!-- <button class="n-icon-btn n-white-btn"><span class="glyphicon glyphicon-resize-small"></span></button>-->
+                <button class="n-icon-btn n-white-btn transition"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-white-btn transition"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-remove"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Save</td>
+            <td style="padding: 10px;"><button class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-ok"> </span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-icon-btn n-green-btn"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-ok"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Back navigation</td>
+            <td style="padding: 10px;"><a href="#" class="n-back"><span class="glyphicon glyphicon-arrow-left"></span></a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;a href=""</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-back"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-arrow-left"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Main button</td>
+            <td style="padding: 10px;"><button class="n-main-btn n-blue-btn">Button</button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9; color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-blue-btn"</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Main button as anchor</td>
+            <td style="padding: 10px;"><a class="n-main-btn n-blue-btn">Anchor</a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9; color: #000;">
+                    <span style="color: #2f6f9f;">&lt;a href=""</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-blue-btn"</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Main button disabled</td>
+            <td style="padding: 10px;"><a class="n-main-btn n-blue-btn" disabled>Disabled</a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9; color:#000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-blue-btn"</span> <span style="color:#4f9fcf;">disabled</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Main button disabled</td>
+            <td style="padding: 10px;"><a class="n-main-btn n-blue-btn disabled">Anchor disabled</a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9; color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-blue-btn disabled"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Main buttons</td>
+            <td style="padding: 10px;"><button class="n-main-btn n-red-btn">Reject</button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9; color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-red-btn"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Main buttons</td>
+            <td style="padding: 10px;"><button class="n-main-btn n-green-btn">Accept</button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-green-btn"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Main buttons</td>
+            <td style="padding: 10px;"><button class="n-main-btn n-darkblue-btn">Notify</button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-darkblue-btn"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Main buttons</td>
+            <td style="padding: 10px;"><button class="n-main-btn n-white-btn">Cancel</button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-main-btn n-white-btn"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Download</td>
+            <td style="padding: 10px;"><button class="n-direct-btn n-purple-btn">PDF <span class="glyphicon glyphicon-save"></span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-direct-btn n-purple-btn"</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-save"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Download</td>
+            <td style="padding: 10px;"><button class="n-direct-btn n-purple-btn" disabled>PDF <span class="glyphicon glyphicon-save"></span></button></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;button</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-direct-btn n-purple-btn"</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-save"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/button></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Update</td>
+            <td style="padding: 10px;"><a href="" class="n-direct-btn n-purple-btn">SAT <span class="glyphicon glyphicon-refresh"></span></a> </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;a href</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-direct-btn n-purple-btn"</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-refresh"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 10px;">Toggle checked</td>
+            <td style="padding: 10px;">
+                <label class="n-toggle">
+                    <input type="checkbox" checked="checked" />
+                    <span class="n-slider"></span>
+                </label>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;label</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-toggle"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                        <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">type=</span>"checkbox" <span style="color:#4f9fcf;">checked=</span>"checked"<span style="color: #2f6f9f;">/></span>
+                    <br />
+                        <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"n-slider"</span>
+                    <span style="color: #2f6f9f;">&gt;&lt;/span><br />&lt;/label></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Toggle not checked</td>
+            <td style="padding: 10px;">
+                <label class="n-toggle">
+                    <input type="checkbox" />
+                    <span class="n-slider"></span>
+                </label>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;label</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-toggle"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">type=</span>"checkbox"<span style="color: #2f6f9f;">/></span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"n-slider"</span>
+                    <span style="color: #2f6f9f;">&gt;&lt;/span><br />&lt;/label></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Toggle disabled</td>
+            <td style="padding: 10px;">
+                <label class="n-toggle disabled">
+                    <input type="checkbox" checked="checked"/>
+                    <span class="n-slider"></span>
+                </label>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;label</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-toggle disabled"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">type=</span>"checkbox" <span style="color:#4f9fcf;">checked=</span>"checked"<span style="color: #2f6f9f;">/></span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"n-slider"</span>
+                    <span style="color: #2f6f9f;">&gt;&lt;/span><br />&lt;/label></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Toggle disabled not checked</td>
+            <td style="padding: 10px;">
+                <label class="n-toggle disabled">
+                    <input type="checkbox" />
+                    <span class="n-slider"></span>
+                </label>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;label</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-toggle disabled"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">type=</span>"checkbox"<span style="color: #2f6f9f;">/></span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"n-slider"</span>
+                    <span style="color: #2f6f9f;">&gt;&lt;/span><br />&lt;/label></span>
+                </code>
+
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Unlock</td>
+            <td style="padding: 10px;">
+                <span class="n-unlock">
+                    <a href="#"><span class="glyphicon glyphicon-lock"></span></a>
+                </span>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;span</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-unlock"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">a </span><span style="color: #4f9fcf;">href=</span><span style="color: #d44950;">"#"</span>
+                    <span style="color: #2f6f9f;">&gt; &lt;</span><span style="color: #2f6f9f;">span </span><span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-lock"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/a><br />&lt;/span></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Unlock on a whole section</td>
+            <td style="padding: 10px;">
+                <span class="n-unlock">
+                    <a href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a>
+                </span>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;span</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-unlock"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">a </span><span style="color: #4f9fcf;">href=</span><span style="color: #d44950;">"#"</span>
+                    <span style="color: #2f6f9f;">&gt;&lt;</span><span style="color: #2f6f9f;">span </span><span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-chevron-right"</span><span style="color: #2f6f9f;">&gt;&lt;/span> &lt;</span><span style="color: #2f6f9f;">span </span><span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-lock"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/a><br />&lt;/span></span>
+                </code>
+
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Unlock disabled</td>
+            <td style="padding: 10px;">
+                <span class="n-unlock disabled">
+                    <a href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a>
+                </span>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;span</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-unlock disabled"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">a </span><span style="color: #4f9fcf;">href=</span><span style="color: #d44950;">"#"</span>
+                    <span style="color: #2f6f9f;">&gt;&lt;</span><span style="color: #2f6f9f;">span </span><span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-chevron-right"</span><span style="color: #2f6f9f;">&gt;&lt;/span> &lt;</span><span style="color: #2f6f9f;">span </span><span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-lock"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/a><br />&lt;/span></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Closed element disabled</td>
+            <td style="padding: 10px;">
+                <span class="chevron-bg glyphicon glyphicon-chevron-right disabled"></span>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;span</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-chevron-right chevron-bg disabled"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;/span></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Closed element</td>
+            <td style="padding: 10px;">
+                <span class="glyphicon glyphicon-chevron-right chevron-bg glyphicon"></span>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;span</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-chevron-down chevron-bg"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;/span></span>
+                </code>
+
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Opend element</td>
+            <td style="padding: 10px;">
+                <span class="glyphicon glyphicon-chevron-down chevron-bg glyphicon"></span>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;span</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-chevron-down chevron-bg"</span><span style="color: #2f6f9f;">&gt;</span><span style="color: #2f6f9f;">&lt;/span></span>
+                </code>
+
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Links</td>
+            <td style="padding: 10px;"><a href="" class="n-anchor">View details</a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;a href</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-anchor"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Links</td>
+            <td style="padding: 10px;"><a href="" class="n-anchor inactive">CA10433</a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;a href</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-anchor inactive"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Links that opens new window</td>
+            <td style="padding: 10px;"><a href="" class="n-anchor">View details <span class="glyphicon glyphicon-new-window"></span></a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;a href</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-anchor"</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"glyphicon glyphicon-new-window"</span><span style="color: #2f6f9f;">&gt;&lt;/span>&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Longer links</td>
+            <td style="padding: 10px;"><a href="" class="n-anchor n-longer">länk <span class="pull-right n-star">*</span></a></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;a href</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"n-anchor n-longer"</span><span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">span </span> <span style="color: #4f9fcf;">class=</span><span style="color: #d44950;">"pull-right n-star"</span><span style="color: #2f6f9f;">&gt;*&lt;/span>&lt;/a></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Input standard</td>
+            <td style="padding: 10px;"><input class="form-control" placeholder="placeholder" /></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"form-control"</span> <span style="color:#4f9fcf;">placeholder=</span><span style="color: #d44950;">"placeholder"</span> <span style="color: #2f6f9f;"> /></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Input ok</td>
+            <td style="padding: 10px;"><div class="has-success"><input class="form-control" placeholder="placeholder" /></div></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"form-control"</span> <span style="color:#4f9fcf;">placeholder=</span><span style="color: #d44950;">"placeholder"</span> <span style="color: #2f6f9f;"> /></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Input error</td>
+            <td style="padding: 10px;"><div class="has-error"><input class="form-control" placeholder="placeholder" /></div></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"form-control"</span> <span style="color:#4f9fcf;">placeholder=</span><span style="color: #d44950;">"placeholder"</span> <span style="color: #2f6f9f;"> /></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Input disabled</td>
+            <td style="padding: 10px;"><input class="form-control" placeholder="placeholder" disabled /></td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;input</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"form-control"</span> <span style="color:#4f9fcf;">placeholder=</span><span style="color: #d44950;">"placeholder"</span> <span style="color: #2f6f9f;"> disabled /></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Select</td>
+            <td style="padding: 10px;">
+                <select class="form-control">
+                    <option>1231</option>
+                    <option>1231</option>
+                    <option>1231</option>
+                </select>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;">
+                    <span style="color: #2f6f9f;">&lt;select</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"form-control"</span><span style="color: #2f6f9f;">&gt;</span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;option</span><span style="color: #2f6f9f;">&gt;&lt;/option></span>
+                    <br />
+                    <span style="color: #2f6f9f;">&lt;</span><span style="color: #2f6f9f;">option</span>
+                    <span style="color: #2f6f9f;">&gt;&lt;/option><br />&lt;/select></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Frame</td>
+            <td style="padding: 10px;">
+                <div class="frame">
+                    text
+                </div>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;div</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"frame"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/div></span>
+                </code>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;">Editblock</td>
+            <td style="padding: 10px;">
+                <div class="editblock">
+                    text
+                </div>
+            </td>
+            <td style="padding: 10px;">
+                <code class="language-html" data-lang="html" style="background-color: #f7f7f9;color: #000;">
+                    <span style="color: #2f6f9f;">&lt;div</span> <span style="color:#4f9fcf;">class=</span><span style="color: #d44950;">"editblock"</span> <span style="color: #2f6f9f;">&gt;</span>Text<span style="color: #2f6f9f;">&lt;/div></span>
+                </code>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

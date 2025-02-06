@@ -1,0 +1,19 @@
+<div *ngIf="m" class="flex-content-area">
+    <div class="content-area pt-5 pb-2">
+        <div class="pb-2" *ngIf="m.backUrl && (!m.hideBackUntilAnswered || !m.isUpdateRequired)">
+            <a class="n-anchor" [href]="m.backUrl">{{getStaticTranslation('back')}}</a>            
+        </div>        
+        <h1>{{getStaticTranslation('kyc')}}</h1>
+        <p class="pb-2 explanation-text" [ngClass]="{ 'update-text': m.isUpdateRequired }">
+            {{getStaticTranslation(m.isUpdateRequired ? 'explanationTextUpdate' : 'explanationText')}}
+        </p>        
+        <div *ngFor="let productType of m.productTypes; let first = first" [ngClass]="{ 'pt-2': !first }">
+            <h2 class="pt-2">{{getStaticTranslation(productType.titleTranslationKey)}}</h2>
+            <hr class="hr-section" />
+            <div *ngFor="let relation of productType.relations; let first = first" [ngClass]="{ 'pt-2': !first }">
+                <kyc-answers-view *ngIf="!relation.edit" [initialData]="relation.answersViewData"></kyc-answers-view>
+                <kyc-answers-editor *ngIf="relation.edit" [initialData]="relation?.edit?.data"></kyc-answers-editor>
+            </div>
+        </div>
+    </div>    
+</div>

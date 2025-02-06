@@ -1,0 +1,7 @@
+﻿<div ng-if="!state.ActiveState.DocumentSourceData.HasApplicant1ChosenDataSource">
+    @Html.Partial("Index_DocumentSource_Applicant", new { n = "1" })
+</div>
+
+<div ng-if="hasCo() && state.ActiveState.DocumentSourceData.HasApplicant1ChosenDataSource">
+    @Html.Partial("Index_DocumentSource_Applicant", new { n = "2" })
+</div>

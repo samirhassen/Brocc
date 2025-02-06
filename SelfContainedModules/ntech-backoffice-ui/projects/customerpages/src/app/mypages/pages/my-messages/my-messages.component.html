@@ -1,0 +1,29 @@
+<mypages-shell [initialData]="m?.shellInitialData" *ngIf="m">
+  <div active-tab>
+    <h1 class="header-light pt-2">Meddelanden</h1>
+    <div class="task-toggle">
+      <div>
+        <div class="col-xs4">
+          <form [formGroup]="m.messageForm.form">
+            <select class="form-control" formControlName="channelUiId">
+              <option
+                *ngIf="!m.messageForm.getValue('channelUiId')"
+                [ngValue]="''"
+              ></option>
+              <option
+                *ngFor="let channel of m.channels"
+                [ngValue]="channel.uiId"
+              >
+                {{ channel.uiText }}
+              </option>
+            </select>
+          </form>
+        </div>
+      </div>
+      <div class="mt-1 pb-2">
+        <secure-messages-edit-list [initialData]="messageListInitialData">
+        </secure-messages-edit-list>
+      </div>
+    </div>
+  </div>
+</mypages-shell>

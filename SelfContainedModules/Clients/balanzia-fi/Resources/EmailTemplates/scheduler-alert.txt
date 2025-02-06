@@ -1,0 +1,16 @@
+﻿Warnings/Errors during scheduled jobs - {{TimeslotName}}
+There were warnings and/or errors while executing {{TimeslotName}} at {{TimeslotStartTime}}
+
+{{#TimeslotItems}}
+***
+# Job: {{Name}}
+Status: {{Status}}
+
+{{#HasWarnings}}
+## Warnings/Errors
+
+{{#Warnings}}
+- {{Text}}
+{{/Warnings}}
+{{/HasWarnings}}
+{{/TimeslotItems}}

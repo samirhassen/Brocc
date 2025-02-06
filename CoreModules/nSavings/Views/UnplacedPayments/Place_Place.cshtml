@@ -1,0 +1,45 @@
+﻿<div ng-controller="place" ng-show="uiMode=='place'">
+    <div class="frame">
+        <div class="form-horizontal">
+            <form name="placementform" novalidate>
+                <div class="row">
+                    <div class="col-sm-offset-1 col-sm-4">
+                        <div class="pt-2">                         
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Place amount</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.placeAmount | number:2}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Leave unplaced</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.unplacedAmountAfter | number:2}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-2 col-sm-4">
+                        <div class="frame">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Place against</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.savingsAccountNr}}</p>
+                                </div>
+                                <label class="col-sm-6 control-label">New balance</label>
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{d.customerBalanceAfter | number:2}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-3">
+                    <div class="text-center">
+                        <button class="n-main-btn n-green-btn" ng-click="place($event)" ng-disabled="placementform.$invalid">Place</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<mypages-shell [initialData]="m?.shellInitialData" *ngIf="m">
+  <div active-tab>
+    <h1 class="header-light pt-2">{{ m.title }}</h1>
+
+    <ng-container *ngFor="let block of m.loanBlocks">
+      <p *ngIf="m.isMl">Fastighet</p>
+      <p *ngIf="m.isMl">{{ block.propertyId }}</p>
+      <table class="lined-table table pt-1">
+        <tbody>
+          <tr
+            class="active-task-row"
+            *ngFor="let loan of block.loans"
+            [routerLink]="['/my/sl/loan', loan.creditNr]"
+          >
+            <td class="col-xs-6">{{ loan.creditNr }}</td>
+            <td class="col-xs-5 text-right">
+              {{ loan.capitalBalanceAmount | number: "1.0-2" }} kr
+            </td>
+            <td class="text-right col-xs-1">
+              <span class="glyphicon glyphicon-play"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <ng-container *ngFor="let block of m.inactiveLoans">
+      <table class="lined-table table pt-1">
+        <tbody>
+          <tr *ngFor="let loan of block.loans">
+            <td class="col-xs-11">
+              {{ loan.creditNr }} - {{ getInactiveCreditText(loan) }}
+            </td>
+            <td class="col-xs-1 text-right"></td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <table
+      class="lined-table table pt-1"
+      *ngIf="m && m.loanBlocks.length === 0 && m.inactiveLoans?.length === 0"
+    >
+      <tbody>
+        <tr>
+          <td colspan="3">-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</mypages-shell>

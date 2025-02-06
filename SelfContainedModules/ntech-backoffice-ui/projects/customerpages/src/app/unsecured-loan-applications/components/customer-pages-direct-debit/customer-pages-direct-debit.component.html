@@ -1,0 +1,228 @@
+<div *ngIf="model && !model.isDirectDebitAccountConfirmed" class="pt-2">
+  <div class="pb-1">
+    <h2>Ange konto för autogirodragning</h2>
+    <hr class="hr-section" />
+    <div class="row">
+      <div class="col-sm-10 col-xs-12">
+        <p>
+          Ange kontonummer för autogirodragning för betalning av lånet.
+          Låntagaren måste vara ägare av kontot.
+        </p>
+      </div>
+      <div class="col-sm-2 col-xs-12">
+        <div class="text-right">
+          <div *ngIf="!model.editForm">
+            <button
+              class="n-icon-btn n-blue-btn"
+              (click)="beginEditAccount($event)"
+            >
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+          </div>
+          <div *ngIf="model.editForm">
+            <button
+              (click)="onCancelAccount($event)"
+              class="n-icon-btn n-white-btn"
+              style="margin-right: 5px"
+            >
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button
+              (click)="onSaveAccount($event)"
+              [disabled]="model.editForm?.invalid()"
+              class="n-icon-btn n-green-btn"
+            >
+              <span class="glyphicon glyphicon-ok"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pb-3" *ngIf="!model.editForm">
+    <div class="row pb-2">
+      <div class="col-sm-8 col-xs-12">
+        <div class="form-group">
+          <label class="control-label"
+            >Kontonummer inklusive clearingnummer</label
+          >
+        </div>
+        <div class="form-group">
+          <p class="form-control-static copyable bb-1">
+            {{ model.view.selectedAccountNrDisplay }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-2">
+      <div class="col-sm-8 col-xs-12">
+        <div class="form-group">
+          <label class="control-label">Kontoägare</label>
+        </div>
+        <div class="form-group">
+          <p class="form-control-static copyable bb-1">
+            {{ model.view.selectedAccountOwnerDisplayName }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pb-3" *ngIf="model.editForm">
+    <form [formGroup]="model.editForm.form">
+      <div class="row pb-2">
+        <div class="col-sm-8 col-xs-12">
+          <div class="form-group">
+            <label class="control-label"
+              >Kontonummer inklusive clearingnummer</label
+            >
+          </div>
+          <div
+            class="form-group"
+            *ngIf="model.editForm"
+            [ngClass]="{
+              'has-error': model.editForm.hasError('bankAccountNr')
+            }"
+          >
+            <input
+              formControlName="bankAccountNr"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row pb-2">
+        <div class="col-sm-8 col-xs-12">
+          <div class="form-group">
+            <label class="control-label">Kontoägare</label>
+          </div>
+          <div
+            class="form-group"
+            *ngIf="model.editForm"
+            [ngClass]="{ 'has-error': model.editForm.hasError('accountOwner') }"
+          >
+            <select formControlName="accountOwner" class="form-control">
+              <option *ngFor="let a of model.applicants" [ngValue]="a.Code">
+                {{ a.DisplayName }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div
+    class="text-center pt-3"
+    *ngIf="!model.isDirectDebitAccountConfirmed && !model.editForm"
+  >
+    <button
+      type="button"
+      class="n-main-btn n-green-btn"
+      [disabled]="!model.isPossibleToConfirmAccount"
+      (click)="confirmDirectDebitAccountAndOwner()"
+    >
+      Godkänn
+    </button>
+  </div>
+</div>
+
+<div *ngIf="model && model.isDirectDebitAccountConfirmed" class="pt-2">
+  <div class="pb-1">
+    <h2>Medgivande av autogiro</h2>
+    <hr class="hr-section" />
+    <div class="row">
+      <div class="col-sm-10 col-xs-12">
+        <p>Läs igenom medgivande av autogiro och signera dokumentet.</p>
+      </div>
+    </div>
+  </div>
+  <div class="pb-2">
+    <div class="col-xs-6">
+      <div
+        class="form-horizontal"
+        *ngIf="
+          model.unsignedDirectDebitConsentFileArchiveKey &&
+          !model.signedDirectDebitConsentFileArchiveKey
+        "
+      >
+        <div class="form-group">
+          <label class="col-xs-12 control-label text-left"
+            >Förhandsgranska autogiro-medgivande</label
+          >
+        </div>
+        <div class="form-group">
+          <p class="col-xs-12 form-control-static">
+            <a
+              [href]="
+                getDocumentUrl(model.unsignedDirectDebitConsentFileArchiveKey)
+              "
+              target="_blank"
+              class="n-direct-btn n-purple-btn"
+              >Ladda ned <span class="glyphicon glyphicon-save"></span
+            ></a>
+          </p>
+        </div>
+      </div>
+      <div
+        class="form-horizontal"
+        *ngIf="model.signedDirectDebitConsentFileArchiveKey"
+      >
+        <div class="form-group">
+          <label class="col-xs-12 control-label text-left"
+            >Signerat medgivande</label
+          >
+        </div>
+        <div class="form-group">
+          <p class="col-xs-12 form-control-static">
+            <a
+              [href]="
+                getDocumentUrl(model.signedDirectDebitConsentFileArchiveKey)
+              "
+              target="_blank"
+              class="n-direct-btn n-purple-btn"
+              >Ladda ned <span class="glyphicon glyphicon-save"></span
+            ></a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">&nbsp;</div>
+    <div class="clearfix"></div>
+  </div>
+  <table class="table table-separate pt-2">
+    <thead>
+      <tr>
+        <th class="col-xs-4">Sökande</th>
+        <th class="col-xs-6"></th>
+        <th class="col-xs-2">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ model.accountOwner }}</td>
+        <td>
+          <a
+            *ngIf="!model.signedDirectDebitConsentFileArchiveKey"
+            [href]="model.signatureSessionUrl"
+            class="n-direct-btn n-white-btn"
+            >Signera</a
+          >
+        </td>
+        <td>
+          <span
+            [ngClass]="
+              getIconClass(
+                model.signedDirectDebitConsentFileArchiveKey !== undefined,
+                false
+              )
+            "
+            class="form-control-static-icon custom-glyph ntech-status-icon"
+          ></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

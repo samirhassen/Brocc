@@ -1,0 +1,94 @@
+<ng-container *ngIf="m">
+  <table class="table">
+    <tbody>
+      <tr>
+        <td class="col-xs-2">Valuation</td>
+        <td class="col-xs-8">{{ m.valuation.valuationAmount | number }}</td>
+      </tr>
+      <tr *ngIf="m.valuation.valuationPdfArchiveKey">
+        <td class="col-xs-2">Valuation preview</td>
+        <td class="col-xs-8">
+          <a
+            [href]="getArchiveDocumentUrl(m.valuation.valuationPdfArchiveKey)"
+            target="_blank"
+            >Download (PDF)</a
+          >
+        </td>
+      </tr>
+      <ng-container *ngIf="m.valuation.apartment">
+        <tr>
+          <td class="col-xs-2">Förening</td>
+          <td class="col-xs-8">{{ m.valuation.entityName }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-2">Lghnr</td>
+          <td class="col-xs-8">{{ m.valuation.apartment.apartmentNr }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-2">Yta</td>
+          <td class="col-xs-8">{{ m.valuation.apartment.apartmentArea }}</td>
+        </tr>
+        <tr *ngIf="m.valuation.apartment.arsredovisningPdfArchiveKey">
+          <td class="col-xs-2">Årsredovisning</td>
+          <td class="col-xs-8">
+            <a
+              [href]="
+                getArchiveDocumentUrl(
+                  m.valuation.apartment.arsredovisningPdfArchiveKey
+                )
+              "
+              target="_blank"
+              >Download (PDF)</a
+            >
+          </td>
+        </tr>
+        <tr *ngIf="m?.brfSignal">
+          <td class="col-xs-2">Brf signal ({{ m?.brfSignal?.year }})</td>
+          <td class="col-xs-8">{{ joinStrings(m?.brfSignal.warnings) }}</td>
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="!m.valuation.apartment">
+        <tr>
+          <td class="col-xs-2">Fastighet</td>
+          <td class="col-xs-8">{{ m.valuation.entityName }}</td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+  <ng-container *ngIf="!m.valuation.apartment">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Ägare</th>
+          <th>Typ</th>
+          <th>Person/orgnr</th>
+          <th>Adress</th>
+          <th>Andel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let agare of m.inskrivningAgare">
+          <td>{{ agare.namn }}</td>
+          <td>{{ agare.isPerson ? "Person" : "Företag" }}</td>
+          <td>{{ agare.orgOrCivicNr }}</td>
+          <td>{{ agare.address }}</td>
+          <td>{{ agare.andelTaljare }}/{{ agare.andelNamnare }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <div class="pt-2">
+    <toggle-block
+      *ngIf="m.valuationData"
+      [initialData]="{ headerText: 'Värdering - rådata' }"
+    >
+      <pre>{{ m.valuationData | json }}</pre>
+    </toggle-block>
+    <toggle-block
+      *ngIf="m.inskrivningData"
+      [initialData]="{ headerText: 'Inskrivning - rådata' }"
+    >
+      <pre>{{ m.inskrivningData | json }}</pre>
+    </toggle-block>
+  </div>
+</ng-container>

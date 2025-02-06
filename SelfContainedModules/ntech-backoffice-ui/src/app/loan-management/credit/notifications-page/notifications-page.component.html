@@ -1,0 +1,173 @@
+<credit-menu
+  activeMenuItemCode="notifications"
+  [creditNr]="m?.creditNr"
+  *ngIf="m"
+>
+  <div current-item-content>
+    <div class="row pb-3">
+      <div class="col-xs-6 pt-2">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-xs-6">Total unpaid</label>
+            <p class="form-control-static col-xs-6">
+              {{ m.totalUnpaidAmount | currency }}
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-6">Total overdue</label>
+            <p class="form-control-static col-xs-6">
+              {{ m.totalOverDueUnpaidAmount | currency }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="editblock" *ngIf="m.creditStatus === 'Normal'">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <div
+                *ngIf="
+                  !(
+                    m.promisedToPayDate ||
+                    m.isPromisedToPayDateEditMode ||
+                    m.creditStatus !== 'Normal'
+                  )
+                "
+              >
+                <label class="control-label col-xs-3">Promise to pay</label>
+                <div class="col-xs-6">
+                  <a
+                    class="n-icon-btn n-blue-btn"
+                    (click)="beginEditPromisedToPayDate($event)"
+                    ><span class="glyphicon glyphicon-plus"></span
+                  ></a>
+                </div>
+              </div>
+              <div
+                *ngIf="m.isPromisedToPayDateEditMode"
+                [class.has-error]="!isPromisedToPayDateEditValid(true)"
+              >
+                <label class="control-label col-xs-3">Promise to pay</label>
+                <div class="col-xs-6">
+                  <input
+                    [(ngModel)]="m.promisedToPayDateEdit"
+                    #promisedToPayDateInput
+                    type="text"
+                    placeholder="YYYY-MM-DD"
+                    autocomplete="off"
+                    class="form-control has-error"
+                    name="promisedToPayDateEdit"
+                    id="promisedToPayDateEdit"
+                  />
+                </div>
+                <div class="col-xs-3">
+                  <button
+                    class="n-icon-btn n-white-btn"
+                    (click)="cancelAddPromisedToPayDate($event)"
+                  >
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </button>
+                  <button
+                    class="n-icon-btn n-green-btn"
+                    style="margin-left: 5px"
+                    [disabled]="!isPromisedToPayDateEditValid(false)"
+                    (click)="addPromisedToPayDate($event)"
+                  >
+                    <span class="glyphicon glyphicon-ok"></span>
+                  </button>
+                </div>
+              </div>
+              <div
+                *ngIf="m.promisedToPayDate && !m.isPromisedToPayDateEditMode"
+              >
+                <label class="control-label col-xs-3">Promise to pay</label>
+                <div class="col-xs-6">
+                  <p class="form-control-static">
+                    {{ m.promisedToPayDate | date: "shortDate" }}
+                  </p>
+                </div>
+                <div class="col-xs-3">
+                  <button
+                    *ngIf="m.creditStatus === 'Normal'"
+                    class="n-icon-btn n-red-btn"
+                    (click)="removePromisedToPayDate($event)"
+                  >
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-horizontal" style="border-top:1px dashed black;margin-top:20px;padding-top:10px" *ngIf="m.inactivateTerminationLetters">
+            <div class="form-group" *ngIf="!m.inactivateTerminationLetters.isEditing">
+                <label class="control-label col-xs-3">&nbsp;</label>
+                <div class="col-xs-9">
+                  <button (click)="beginEditTerminationLetters($event)" 
+                    style="float:right" class="n-icon-btn n-blue-btn"><span class="glyphicon glyphicon-pencil"></span></button>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="m.inactivateTerminationLetters.isEditing">
+                <label class="control-label col-xs-3">&nbsp;</label>
+                <div class="col-xs-9">                    
+                    <button (click)="commitEditTerminationLetters($event)" [disabled]="!m.inactivateTerminationLetters.isPendingInactivate"
+                        style="float:right;margin-left:5px" class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button (click)="cancelEditTerminationLetters($event)" 
+                        style="float:right" class="n-icon-btn n-white-btn"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-5">Status</label>
+                <div class="col-xs-6">
+                    <p class="form-control-static">Termination due {{m.inactivateTerminationLetters.dueDate | date:'shortDate'}}</p>
+                </div>
+            </div>
+            <ng-container *ngIf="m.inactivateTerminationLetters?.documents">                
+              <div class="form-group" *ngFor="let r of m.inactivateTerminationLetters?.documents">
+                  <label class="control-label col-xs-5">Termination letter</label>
+                  <p class="form-control-static col-xs-6">
+                      <a class="n-anchor" target="_blank" [href]="getArchiveDocumentUrl(r.archiveKey)">
+                          PDF
+                          <span *ngIf="r.coTerminationCreditNrs && r.coTerminationCreditNrs.length > 0">
+                              (<span *ngFor="let creditNr of r.coTerminationCreditNrs" class="comma">{{ creditNr }}</span>)
+                          </span>
+                          <span class="glyphicon glyphicon-save"></span>
+                      </a>
+                  </p>
+                </div>                
+            </ng-container>
+            <div class="text-center pt-1" *ngIf="!m.inactivateTerminationLetters.isPendingInactivate">
+              <button class="n-main-btn n-blue-btn" (click)="beginInactivateTerminationLetters($event)" 
+              [disabled]="!m.inactivateTerminationLetters.isEditing">Lift termination</button>
+            </div>
+            <div class="text-center pt-2" *ngIf="m.inactivateTerminationLetters.isPendingInactivate">
+              <p>Pending inactivation of termination letter</p>
+            </div>            
+        </div>
+        <ng-container *ngIf="isAlternatePaymentPlansActive()">
+            <alt-paymentplan [initialData]="{ creditNr: m.creditNr }">
+
+            </alt-paymentplan>
+        </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-3">
+      <h2 class="custom-header">Unpaid</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <notifications-list
+        [notifications]="m.unpaidNotifications"
+      ></notifications-list>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="pt-3">
+      <h2 class="custom-header">Paid</h2>
+      <hr class="hr-section custom-line mt-0" />
+      <notifications-list
+        [notifications]="m.paidNotifications"
+      ></notifications-list>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</credit-menu>

@@ -1,0 +1,42 @@
+﻿<h2>Time machine</h2>
+<div ng-hide="isTimeEditMode">
+    <div class="row">
+        <div class="col-xs-2">
+            Current date: <span class="copyable">{{currentTime | date:'yyyy-MM-dd'}}</span>
+        </div>
+        <div class="col-xs-2">
+            Current time: {{currentTime | date:'HH:mm:ss'}}
+        </div>
+        <div class="col-xs-4" ng-show="hasEmailProvider">
+            Email provider: {{isEmailProviderDown ? 'Down' : 'Working'}}
+        </div>
+    </div>
+    <div class="row pt-2">
+        <div class="col-xs-1">
+            <button ng-click="addDaysToTime(-1)" class="btn">&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
+        </div>
+        <div class="col-xs-1">
+            <button ng-click="addDaysToTime(1)" class="btn">&nbsp;<span class="glyphicon glyphicon-plus"></span></button>
+        </div>
+        <div class="col-xs-2">
+            <button class="btn" ng-disabled="jobId" ng-click="isTimeEditMode=true;currentTimeTmp = currentTime">Edit date and time</button>
+        </div>
+        <div class="col-xs-4" ng-show="hasEmailProvider">
+            <button class="btn" ng-click="toggleEmailProviderDown($event)">Change to: {{isEmailProviderDown ? 'Working' : 'Down'}}</button>
+        </div>
+    </div>
+</div>
+
+<div ng-show="isTimeEditMode">
+    <div class="row">
+        <div class="col-xs-3">
+            <input type="text" class="form-control" ng-model="currentTimeTmp" />
+        </div>
+    </div>
+    <div class="row pt-1">
+        <div class="col-xs-3">
+            <button class="btn" ng-click="updateTime(currentTimeTmp)" ng-disabled="jobId">Save</button>
+            <button class="btn" ng-click="isTimeEditMode=false" ng-disabled="jobId">Cancel</button>
+        </div>
+    </div>
+</div>

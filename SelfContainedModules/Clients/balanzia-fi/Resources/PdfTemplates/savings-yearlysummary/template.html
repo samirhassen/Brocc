@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+</head>
+<body>
+
+    <div id="header">
+        <img class="balanzia_logo" src="[[[skinning:img/pdf-logo.png|img/logo.png]]]" alt="Logo">
+    </div>
+    <div class="page">
+        <div class="header">
+            <h1>Korkotodistus {{year}}</h1>
+            <p>{{printDate}}</p>
+        </div>
+        <div class="clear"></div>
+
+        <div class="content">
+            <br /><br />
+            <div class="parties">
+                <div class="column">
+                    <h3>Tilinomistaja</h3>
+                    <p>{{fullName}}</p>
+                    <p>{{civicRegNr}}</p>
+                    <p>{{addressStreet}}</p>
+                    <p>{{addressZipAndCity}}</p>
+                </div>
+            </div>
+            <br /><br />
+            <div class="area">
+                <h2>Tilin tiedot</h2>
+                <table>
+                    <tr>
+                        <td>Tilinumero</td>
+                        <td>{{savingsAccountNr}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tämänhetkinen korko</td>
+                        <td> {{interestRatePercent}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vastatili</td>
+                        <td>{{withdrawalIban}}</td>
+                    </tr>
+                </table>
+            </div>
+            <br /><br />
+            <div class="area">
+                <h2>Yhteenveto {{summaryDate}}</h2>
+                <table>
+                    <tr>
+                        <td>Saldo</td>
+                        <td>{{balanceAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Kertynyt korko</td>
+                        <td>{{interestAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Pidätetty vero</td>
+                        <td>-{{withheldTaxAmount}}</td>
+                    </tr>
+                </table>
+            </div>
+            <br /><br /><br /><br />
+            <div class="area">
+                <p>Brocc on tilittänyt pidätetyn lähdeveron verottajalle. Jos sinulla on kysyttävää korkotodistuksesta tai Brocc Säästötilistäsi, otathan yhteyttä asiakaspalveluumme numeroon 010 524 8410 tai sähköpostitse talletukset@brocc.fi.</p>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p>{{documentClientData_name}}, PL 359, 00101 Helsinki | Puh: 010 524 8410 | Sähköposti: talletukset@brocc.fi <span class="counter"></span></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+﻿<div class="pt-3">
+    <h2 class="custom-header"><span class="glyphicon chevron-bg" ng-class="{ 'glyphicon-chevron-down' : isHistoryOpen, ' glyphicon-chevron-right': !isHistoryOpen }" ng-click="isHistoryOpen = !isHistoryOpen"></span> View history</h2>
+    <hr class="hr-section">
+</div>
+<table class="table" ng-show="isHistoryOpen">
+    <thead>
+        <tr>
+            <th class="col-xs-3">Date</th>
+            <th class="col-xs-7">External IBAN</th>
+            <th class="col-xs-2 text-right">Letter of attorney</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat-start="a in d.HistoricalWithdrawalAccounts" ng-hide="a.IsPending" ng-class="{ 'removedhistoryitem' : a.IsCancelled }">
+            <td><span class="glyphicon chevron-bg mr-1" ng-click="a.ShowDetails = !a.ShowDetails" ng-class="{ 'glyphicon-chevron-down' : a.ShowDetails, ' glyphicon-chevron-right': !a.ShowDetails }"></span>{{a.InitiatedTransactionDate | date}}</td>
+            <td>{{a.WithdrawalAccount.Formatted}} ({{a.WithdrawalAccount.BankName}})</td>
+            <td class="text-right">
+                <a target="_blank" ng-show="a.PowerOfAttorneyDocumentArchiveLink" ng-href="{{a.PowerOfAttorneyDocumentArchiveLink}}" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a>
+                <span ng-hide="a.PowerOfAttorneyDocumentArchiveLink">-</span>
+            </td>
+        </tr>
+        <!--detaljer-->
+        <tr class="opend" ng-repeat-end="" ng-show="a.ShowDetails">
+            <td colspan="4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-6 text-right">Initiated by</label>
+                            <div class="col-md-6"><p><b>{{a.InitiatedByUserDisplayName}}</b></p></div>
+                        </div>
+                        <div class="row" ng-show="a.CommitedByUserDisplayName">
+                            <label class="col-md-6 text-right">Approved by</label>
+                            <div class="col-md-6"><p><b>{{a.CommitedByUserDisplayName}}</b></p></div>
+                        </div>
+                        <div class="row" ng-show="a.CancelledByUserDisplayName">
+                            <label class="col-md-6 text-right">Cancelled by</label>
+                            <div class="col-md-6"><p><b>{{a.CancelledByUserDisplayName}}</b></p></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-6 text-right">Initiated</label>
+                            <div class="col-md-6"><p><b>{{a.InitiatedTransactionDate | date}}</b></p></div>
+                        </div>
+                        <div class="row" ng-show="a.CommitedTransactionDate">
+                            <label class="col-md-6 text-right">Approved</label>
+                            <div class="col-md-6"><p><b>{{a.CommitedTransactionDate | date}}</b></p></div>
+                        </div>
+                        <div class="row" ng-show="a.CancelledTransactionDate">
+                            <label class="col-md-6 text-right">Cancelled</label>
+                            <div class="col-md-6"><p><b>{{a.CancelledTransactionDate | date}}</b></p></div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <!--slut på detaljer-->
+    </tbody>
+</table>

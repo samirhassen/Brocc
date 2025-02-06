@@ -1,0 +1,10 @@
+<div class="form-group" *ngIf="model && (!model.conditional || model.conditional.shouldExist())" [ngClass]="{ 'has-error': hasError() }">
+    <label class="control-label {{getLabelSizeClass()}}">{{model.labelText}}</label>
+    <div class="{{getValueSizeClass()}}">
+        <p class="form-control-static copyable bb-1" *ngIf="!showEditControls()">{{getDisplayValue()}}</p>
+        <select *ngIf="isDropdown() && showEditControls()" class="form-control" [formControl]="formControl()">
+            <option *ngFor="let option of model.dropdownOptions" [ngValue]="option.Code">{{option.DisplayName}}</option>
+        </select>
+        <input *ngIf="isRegularInput() && showEditControls()" type="text" class="form-control" [formControl]="formControl()" autocomplete="turned-off" />
+    </div>
+</div>

@@ -1,0 +1,99 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Create Admin";
+}
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bundle-basewithangular")
+
+    <!-- TODO: Get rid of this thing, a text field is just way better in every way-->
+    <script type="text/javascript" src="~/Content/js/ngComboDatePicker.min.js"></script>
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+
+        var app = angular.module('app', ['remoteValidation', 'ngComboDatePicker']);
+        app.controller("ctr", function ($scope, $http, $window) {
+            $scope.products = [{ n: 'Consumer Credit', v: 'ConsumerCredit' }]
+
+            $scope.minDate1 = moment().startOf('day').format('YYYY-MM-DD')
+            $scope.maxDate1 = moment().startOf('day').add(6, 'years').format('YYYY-MM-DD')
+            $scope.minDate2 = moment().startOf('day').add(1, 'days').format('YYYY-MM-DD')
+            $scope.maxDate2 = moment().startOf('day').add(10, 'years').format('YYYY-MM-DD')
+
+            var c = []
+            for(var i=0; i<initialData.allUsers.length; i++) {
+                var u = initialData.allUsers[i]
+                if(u.Id !== initialData.userId) {
+                    c.push(u)
+                }
+            }
+            $scope.candidateUsers = c
+
+            $scope.addAdminMembership = function () {
+                $http({
+                    method: 'POST',
+                    url: '@Url.Action("CreateAdminMembership", "High")',
+                    data: {
+                        UserId: $scope.selectedUser.Id,
+                        StartDate: $scope.startDate,
+                        EndDate: $scope.endDate,
+                        Product: $scope.selectedProduct.v
+                    }
+                }).then(function successCallback(response) {
+                    toastr.info("New admin added")
+                    document.location.href = '@Url.Action("Index", "High")'
+                }, function errorCallback(response) {
+                    toastr.error(response.data.message, "Error");
+                });
+            }
+        });
+    </script>
+}
+
+<div ng-app="app">
+    <div ng-controller="ctr">
+        <div class="pb-2 pt-1">
+            <div class="pull-left"><a class="n-back" href="/High/Index"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+            <h1 class="adjusted">Create administrator</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="editblock">
+                    <form name="addAdminMembershipForm" ng-submit="addAdminMembership()" novalidate>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="selectedUser">New Admin user</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" ng-model="selectedUser" ng-options="u.Name for u in candidateUsers" required></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="startDate">Start date</label>
+                                <div class="col-sm-4">
+                                    <ng-combo-date-picker class="form-control" ng-min-date="{{ minDate1 }}" ng-max-date="{{ maxDate1 }}" ng-model="startDate" ng-order="ymd"></ng-combo-date-picker>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="endDate">End date</label>
+                                <div class="col-sm-4">
+                                    <ng-combo-date-picker class="form-control" ng-min-date="{{ minDate2 }}" ng-max-date="{{ maxDate2 }}" ng-model="endDate" ng-order="ymd"></ng-combo-date-picker>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="selectedProduct">Product</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" ng-model="selectedProduct" ng-options="p.n for p in products" required></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center pt-2">
+                            <button class="n-main-btn n-green-btn" type="submit" ng-disabled="addAdminMembershipForm.$invalid || addAdminMembershipForm.$pending">
+                                Add admin membership
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

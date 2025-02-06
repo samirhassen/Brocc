@@ -1,0 +1,55 @@
+.pending-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .unchanged-rate {
+    color: grey;
+  }
+  .new-rate {
+    color: green;
+  }
+  .rate-lowered {
+    color: red;
+  }
+  .rate-raised {
+    color: green;
+  }
+  .cancel-row {
+    display: flex;
+    height: 50px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .change-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    .change-table {
+      flex-grow: 1;
+    }
+    .change-by {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 300px;
+      .change-by-item {
+        display: flex;
+        gap: 10px;
+        .change-by-item-label {
+          display: flex;
+          justify-content: flex-end;
+          width: 100px;
+        }
+        .change-by-item-value {
+          flex-grow: 1;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  .commit-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

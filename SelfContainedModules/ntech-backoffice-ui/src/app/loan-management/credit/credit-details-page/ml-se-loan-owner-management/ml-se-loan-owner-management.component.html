@@ -1,0 +1,38 @@
+<div *ngIf="m">
+        <div class="editblock">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div *ngIf="!m.isLoanOwnerManagementEditMode">
+                        <label class="control-label col-xs-3">Owner</label>
+                        <div class="col-xs-7">
+                            <p class="form-control-static">
+                                {{m.loanOwnerName}}
+                            </p>
+                        </div>
+                        <div class="col-xs-2">
+                            <a class="n-icon-btn n-blue-btn" (click)="beginEditLoanOwnerManagement($event)"><span
+                                    class="glyphicon glyphicon-pencil"></span></a>
+                        </div>
+                    </div>
+                    <div *ngIf="m.isLoanOwnerManagementEditMode">
+                        <label class="control-label col-xs-3">Owner</label>
+                        <div class="col-xs-6">
+                        <select [(ngModel)]="m.loanOwnerEdit" class="form-control">
+                            <option value="[none]"></option>
+                            <option *ngFor="let owner of m.availableLoanOwnerOptions" value="{{owner}}">{{owner}}</option>
+                        </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="n-icon-btn n-white-btn mr-1" (click)="cancelEditLoanOwner($event)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                            <button class="n-icon-btn n-green-btn"
+                             (click)="confirmLoanOwner($event)">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

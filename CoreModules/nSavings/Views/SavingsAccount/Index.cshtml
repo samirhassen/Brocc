@@ -1,0 +1,88 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Savings account";
+    ViewBag.AngularDeclaration = "ng-controller=\"mainCtr\" ng-app=\"app\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-savingsaccount")
+}
+
+@section Styles {
+    <style>
+        .removedhistoryitem {
+            text-decoration: line-through
+        }
+    </style>
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Savings: Account search</h1>
+</div>
+
+@Html.Partial("Index_Search")
+<div ng-show="$route.current">
+    <div class="row pt-3">
+        <div class="col-xs-2" ng-show="currentCtr()">
+            <div class="custom-submenu">
+                <ul class="nav nav-pills nav-stacked">
+                    <li ng-class="{ 'active' : currentCtr() === 'detailsCtr' }"><a ng-href="#!/Details/{{$route.current.params.savingsAccountNr}}">Account details</a></li>
+                    <li ng-class="{ 'active' : currentCtr() === 'withdrawalsCtr' }"><a ng-href="#!/Withdrawals/{{$route.current.params.savingsAccountNr}}">Withdrawals</a></li>
+                    <li ng-class="{ 'active' : currentCtr() === 'withdrawalaccountCtr' || currentCtr() === 'withdrawalaccountchangeCtr' }"><a ng-href="#!/WithdrawalAccount/{{$route.current.params.savingsAccountNr}}">External account</a></li>
+                    <li ng-class="{ 'active' : currentCtr() === 'accountclosureCtr' }"><a ng-href="#!/AccountClosure/{{$route.current.params.savingsAccountNr}}">Close account</a></li>
+                    <li ng-class="{ 'active' : currentCtr() === 'documents' }"><a ng-href="#!/Documents/{{$route.current.params.savingsAccountNr}}">Documents</a></li>
+                    <li ng-class="{ 'active' : currentCtr() === 'customerCtr' }"><a ng-href="#!/Customer/{{$route.current.params.savingsAccountNr}}">Customer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-10">
+            <!-- NOTE: Details, customer ... are rendered in ng-view -->
+            <div ng-view>
+            </div>
+        </div>
+    </div>
+    <div>
+        @Html.Partial("SavingsAccountComments")
+    </div>
+</div>
+
+@if (!NEnv.IsProduction)
+{
+    <div class="pt-3">
+        <div class="col-xs-4 frame">
+            <h4>Test only functions</h4>
+            <ul>
+                <li><a style="cursor: pointer" ng-click="gotoRandomSavingsAccount({ mustHaveStatus : 'Active' }, $event)">Goto random account - active</a></li>
+                <li><a style="cursor: pointer" ng-click="gotoRandomSavingsAccount({ mustHaveStatus : 'Active', mustContainBusinessEventType : 'IncomingPaymentFileImport' }, $event)">Goto random account - active with deposits</a></li>
+                <li><a style="cursor: pointer" ng-click="gotoRandomSavingsAccount({ mustHaveStatus : 'Active', mustContainBusinessEventType : 'YearlyInterestCapitalization' }, $event)">Goto random account - active with capitalized interest</a></li>
+                <li><a style="cursor: pointer" ng-click="gotoRandomSavingsAccount({ mustHaveStatus : 'FrozenBeforeActive' }, $event)">Goto random account - frozen with remark</a></li>
+                <li><a style="cursor: pointer" ng-click="gotoRandomSavingsAccount({ mustHaveStatus : 'Closed' }, $event)">Goto random account - closed</a></li>
+                <li><a href="/Ui/TestLatestEmails/List" target="_blank">Test emails&nbsp;<span class="glyphicon glyphicon-new-window"></span></a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+}
+
+@Html.Partial("Index_Details")
+@Html.Partial("Index_Customer")
+@Html.Partial("Index_Withdrawals")
+@Html.Partial("Index_AccountClosure")
+@Html.Partial("Index_WithdrawalAccount")
+@Html.Partial("Index_WithdrawalAccountChange")
+@Html.Partial("Component_CustomerInfo")
+<script type="text/ng-template" id="error.html">
+    <h3>Error</h3>
+    <hr class="hr-section">
+    <div>
+        <p>Something went wrong</p>
+    </div>
+</script>
+<script type="text/ng-template" id="searchonly.html">
+</script>
+@Html.Partial("Components")

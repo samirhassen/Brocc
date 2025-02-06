@@ -1,0 +1,54 @@
+<div class="application">
+
+    <div class="bg" *ngIf="!isIdependent">
+        <div
+            style="padding-top:15px;padding-bottom:15px;margin-bottom:30px;box-shadow: 0px 2px 5px 0px rgba(51, 51, 51,0.2);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-offset-2 col-sm-8">
+                        <div class="d-flex flex-row">
+                            <div class="align-self-center pr-2">
+                                <button class="custom-link" *ngIf="forwardBackService.isBackAllowed.value"
+                                    (click)="back($event)"><img src="assets/img/back.png" style="height:35px;"></button>
+                            </div>
+                            <div class="align-self-center flex-grow-1">
+                                <div class="progress" style="height: 2px;">
+                                    <div class="progress-bar" role="progressbar"
+                                        [style.width]="isFinalStep ? '100%' : (progressPercent == null ? null : (progressPercent + '%'))">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container pt-2">
+            <div class="row">
+                <div class="col-xs-12 col-sm-offset-2 col-sm-8">
+                    <div class="d-flex movein min-height-70 mobile-no-vh">
+                        <div class="align-self-center flex-grow-1">
+                            <ng-content></ng-content>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg" *ngIf="isIdependent">
+        <div class="container pt-2">
+            <div class="row">
+                <div class="col-xs-12 col-sm-offset-2 col-sm-8">
+                    <div class="d-flex movein min-height-70 mobile-no-vh">
+                        <div class="align-self-center flex-grow-1">
+                            <ng-content select="[independent-body]"></ng-content>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+<div *ngIf="forwardBackService.isLoading.value" class="loading"></div>

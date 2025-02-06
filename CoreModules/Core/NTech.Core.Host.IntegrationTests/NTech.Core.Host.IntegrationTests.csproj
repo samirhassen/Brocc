@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MlStandard-BookkeepingAccountPlan.xml" />
+    <EmbeddedResource Include="Resources\MlStandard-BookkeepingRules.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
+    <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    <PackageReference Include="Stubble.Core" Version="1.10.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NTech.Core.Credit\NTech.Core.Credit.csproj" />
+    <ProjectReference Include="..\NTech.Core.Customer\NTech.Core.Customer.csproj" />
+    <ProjectReference Include="..\NTech.Core.PreCredit\NTech.Core.PreCredit.csproj" />
+    <ProjectReference Include="..\NTech.Core.Savings\NTech.Core.Savings.csproj" />
+    <ProjectReference Include="..\NTech.Core.TestSupport\NTech.Core.TestSupport.csproj" />
+    <ProjectReference Include="..\NTech.Core.User\NTech.Core.User.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.local.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

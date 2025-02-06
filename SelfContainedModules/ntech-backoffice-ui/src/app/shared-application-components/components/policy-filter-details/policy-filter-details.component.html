@@ -1,0 +1,33 @@
+<ng-container *ngIf="detailPhases">
+  <div *ngFor="let phase of detailPhases; let phaseIndex = index">
+    <h2 style="text-decoration: underline">
+      {{ phaseIndex + 1 }}.&nbsp;{{ phase.phaseDisplayName }}
+    </h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-sm-4">Rule</th>
+          <th class="col-sm-1">Applicant</th>
+          <th class="col-sm-3">Policy</th>
+          <th class="col-sm-1">Result</th>
+          <th class="col-sm-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of phase.items">
+          <td>{{ item.RuleDisplayName }}</td>
+          <td>
+            {{ item.ForApplicantNr ? item.ForApplicantNr.toString() : "-" }}
+          </td>
+          <td>{{ item.StaticParametersDisplayText }}</td>
+          <td>
+            <policy-filter-icon
+              [statusCode]="getPolicyItemDisplayCode(item)"
+            ></policy-filter-icon>
+          </td>
+          <td>{{ item.VariablesDisplayText }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>

@@ -1,0 +1,96 @@
+<div *ngIf="m">
+    <h2>Amorteringsgrund per {{m.balanceDate | date:'shortDate'}}</h2>
+    <h3>Objektet: {{m.propertyIdWithLabel}}</h3>
+
+    <div class="pt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-1">Lån</th>
+                    <th class="col-xs-3 text-right">Aktuell skuld / max</th>
+                    <th class="col-xs-5">Regel</th>
+                    <th class="col-xs-2 text-right">Amortering</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let loan of m.basis.loans">
+                    <tr >
+                        <td>{{loan.creditNr}} <span *ngIf="m.highlightCreditNr === loan.creditNr">(*)</span></td>
+                        <td class="text-right">{{loan.currentCapitalBalanceAmount | currency}}</td>
+                        <td>{{getRuleDescription(loan)}}</td>
+                        <td class="text-right">{{loan.monthlyAmortizationAmount | currency}}</td>
+                    </tr>
+                    <tr *ngIf="isSecondLoanRowNeeded(loan)">
+                        <td></td>
+                        <td class="text-right">{{loan.maxCapitalBalanceAmount | currency}}</td>
+                        <td></td>
+                        <td class="text-right"></td>
+                    </tr>                
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pt-3">
+        <table class="table table-striped">
+            <thead>
+                <th class="col-sm-8"></th>
+                <th class="col-sm-4"></th>
+            </thead>
+            <tbody>         
+                <tr>
+                    <td>Värdering</td>
+                    <td>{{m.basis.objectValue | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Värderingsdatum</td>
+                    <td>{{m.basis.objectValueDate | date:'shortDate'}}</td>
+                </tr>
+                <tr>
+                    <td>Årsinkomst</td>
+                    <td>{{m.basis.currentCombinedYearlyIncomeAmount | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Bolån på andra säkerheter</td>
+                    <td>{{m.basis.otherMortageLoansAmount | currency}}</td>
+                </tr>
+                <tr>
+                    <td>LTV (belåningsgrad)</td>
+                    <td>{{m.basis.ltvFraction | percent}}</td>
+                </tr>
+                <tr>
+                    <td>LTI (skuldkvot)</td>
+                    <td>{{m.basis.ltiFraction | number}}</td>
+                </tr>
+                <tr>
+                    <td>Skuld som inte omfattas av amorteringskrav</td>
+                    <td>{{m.underlag.skuldEjOmfattasAmorteringskrav | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Skuld som omfattas av amorteringskrav</td>
+                    <td>{{m.underlag.skuldOmfattasAmorteringskrav | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Skuld som omfattas av skärpt amorteringskrav</td>
+                    <td>{{m.underlag.skuldOmfattasSkarptAmorteringskrav | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Varav alternativregeln</td>
+                    <td>{{m.underlag.varavOvanAlternativRegeln | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Total amortering på objektet</td>
+                    <td>{{m.underlag.totalAmorteringObjektet | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Totalt amorteringskrav enl. huvudregeln</td>
+                    <td>{{m.underlag.totalAmorteringKravObjektetBankenHuvud | currency}}</td>
+                </tr>
+                <tr>
+                    <td>Totalt amorteringskrav enl. alternativregeln</td>
+                    <td>{{m.underlag.totalAmorteringKravObjektetBankenAlternativ | currency}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

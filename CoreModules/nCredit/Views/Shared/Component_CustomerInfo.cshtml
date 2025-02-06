@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="customerinfo.html">
+    <div ng-if="$ctrl.isReady">
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="pt-1">
+                    <a class="n-anchor" ng-href="{{$ctrl.customer.customerCardUrl}}" target="_self">View details</a>
+                </div>
+                <div ng-hide="$ctrl.isCompany()" class="pt-1" ng-if="$ctrl.customer.pepKycCustomerUrl">
+                    <a class="n-anchor" ng-href="{{$ctrl.customer.pepKycCustomerUrl}}" target="_self">Pep/Sanction</a>
+                </div>
+                <div ng-hide="$ctrl.isCompany()" class="pt-1" ng-if="$ctrl.customer.customerFatcaCrsUrl">
+                    <a class="n-anchor" ng-href="{{$ctrl.customer.customerFatcaCrsUrl}}" target="_self">Fatca/Crs</a>
+                </div>
+            </div>
+            <div class="col-xs-10">
+                <div class="form-horizontal">
+                    <div class="form-group" ng-hide="$ctrl.isCompany()">
+                        <label class="col-xs-2 control-label">Name</label>
+                        <div class="col-xs-10 form-control-static"><b><span class="copyable">{{$ctrl.formatmissing($ctrl.customer.firstName)}}</span>, <span class="copyable">{{$ctrl.customer.birthDate}}</span></b></div>
+                    </div>
+                    <div class="form-group" ng-show="$ctrl.isCompany()">
+                        <label class="col-xs-2 control-label">Name</label>
+                        <div class="col-xs-10 form-control-static"><b><span class="copyable">{{$ctrl.formatmissing($ctrl.customer.companyName)}}</span></b></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">{{$ctrl.isCompany() ? 'Orgnr' : 'Civic nr'}}</label>
+                        <p ng-hide="$ctrl.civicRegNrOrOrgnr" class="form-control-static col-xs-10">
+                            <span class="n-unlock">
+                                <a href="#" ng-click="$ctrl.unlockCivicRegNrOrOrgnr($event)"><span class="glyphicon glyphicon-lock"></span></a>
+                            </span>
+                        </p>
+                        <p ng-show="$ctrl.civicRegNrOrOrgnr" class="form-control-static col-xs-10 copyable">{{$ctrl.civicRegNrOrOrgnr}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">AML risk</label>
+                        <p ng-hide="$ctrl.amlRiskClass" class="form-control-static col-xs-10">
+                            <span class="n-unlock">
+                                <a href="#" ng-click="$ctrl.unlockAmlRiskClass($event)"><span class="glyphicon glyphicon-lock"></span></a>
+                            </span>
+                        </p>
+                        <p ng-show="$ctrl.amlRiskClass" class="form-control-static col-xs-10">{{$ctrl.amlRiskClass}}</p>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 control-label">
+                            <span ng-hide="$ctrl.contactInfo" class="n-unlock" ng-click="$ctrl.toggleContactInfo($event)"><a href="#"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-lock"></span></a></span>
+                            <a ng-show="$ctrl.contactInfo && $ctrl.contactInfo.isOpen" href="" ng-click="$ctrl.toggleContactInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-down"></span></a>
+                            <a ng-show="$ctrl.contactInfo && !$ctrl.contactInfo.isOpen" href="" ng-click="$ctrl.toggleContactInfo($event)"><span class="glyphicon chevron-bg glyphicon-chevron-right"></span></a>
+                        </div>
+                        <p class="form-control-static col-xs-10">Contact information</p>
+                    </div>
+                    <div ng-if="$ctrl.contactInfo && $ctrl.contactInfo.isOpen">
+                        <div class="form-group" ng-hide="$ctrl.isCompany()">
+                            <label class="control-label col-xs-2">Fullname</label>
+                            <p ng-show="$ctrl.contactInfo.firstName || $ctrl.contactInfo.lastName" class="form-control-static col-sm-10 copyable">{{$ctrl.contactInfo.firstName}}&nbsp;{{$ctrl.contactInfo.lastName}}
+                        </p>
+                            <p ng-hide="$ctrl.contactInfo.firstName || $ctrl.contactInfo.lastName" class="form-control-static col-sm-10 copyable"></p>
+                        </div>
+                        <div class="form-group" ng-show="$ctrl.isCompany()">
+                            <label class="control-label col-xs-2">Company name</label>
+                            <p class="form-control-static col-sm-10 copyable">{{$ctrl.contactInfo.companyName}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Street</label>
+                            <p class="form-control-static col-xs-10 copyable">{{$ctrl.contactInfo.addressStreet}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Zip</label>
+                            <p class="form-control-static col-xs-10 copyable">{{$ctrl.contactInfo.addressZipcode}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">City</label>
+                            <p class="form-control-static col-xs-10 copyable">{{$ctrl.contactInfo.addressCity}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Country</label>
+                            <p class="form-control-static col-xs-10 copyable">{{$ctrl.contactInfo.addressCountry}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Email</label>
+                            <p class="form-control-static col-xs-10 copyable">{{$ctrl.contactInfo.email}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Phone</label>
+                            <p class="form-control-static col-xs-10 copyable">{{$ctrl.formatPhoneNr($ctrl.contactInfo.phone)}}</p>
+                        </div>
+                    </div>
+                    <div ng-transclude>
+                    </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,88 @@
+<scheduled-tasks-menu [currentTaskName]="'DebtCollection'">
+  <ng-container task-area *ngIf="m">
+    <toggle-block
+      [initialData]="{
+        headerText: 'Trigger job manually',
+        useFixedBorder: true
+      }"
+    >
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="frame">
+          <div class="row">
+            <div class="col-sm-6 text-right">
+              <p>Pending export</p>
+            </div>
+            <div class="col-sm-4">
+              <p>
+                <b>{{ m.eligableForDebtCollectionCount }}</b>
+              </p>
+            </div>
+          </div>
+          <div class="text-center pt-3">
+            <button
+              class="n-main-btn n-green-btn"
+              (click)="startExport($event)"
+            >
+              Create export
+            </button>
+          </div>
+        </div>
+      </div>
+    </toggle-block>
+
+    <div *ngIf="m.result" class="row pt-3">
+      <div class="col-sm-8 col-sm-offset-2">
+        <jobrunner-task-result [result]="m.result">
+          <ng-container extra-listitems>
+            <li>Exported: {{ m.result.exportedCount }}</li>
+          </ng-container>
+        </jobrunner-task-result>
+      </div>
+    </div>
+
+    <div
+      class="pt-3 no-hits text-center"
+      *ngIf="m?.files?.TotalNrOfPages === 0"
+    >
+      <p>There are no debt collection files yet.</p>
+    </div>
+    <div class="pt-3" *ngIf="m?.files?.TotalNrOfPages > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th class="text-right">Number of credits</th>
+            <th class="text-right">Download file</th>
+            <th class="text-right">By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of m.files.Page">
+            <td>{{ f.TransactionDate | date: "shortDate" }}</td>
+            <td class="text-right">{{ f.CreditsCount }}</td>
+            <td class="text-right">
+              <a
+                class="n-anchor mr-1"
+                *ngIf="f.FileArchiveKey"
+                target="_blank"
+                [href]="getDocumentUrl(f.FileArchiveKey)"
+                >Export <span class="glyphicon glyphicon-save"></span></a
+              ><a
+                class="n-anchor"
+                *ngIf="f.XlsFileArchiveKey"
+                target="_blank"
+                [href]="getDocumentUrl(f.XlsFileArchiveKey)"
+                >Excel <span class="glyphicon glyphicon-save"></span
+              ></a>
+            </td>
+            <td class="text-right">{{ f.UserDisplayName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <table-pager
+      *ngIf="m.filesPagingData"
+      [initialData]="m.filesPagingData"
+    ></table-pager>
+  </ng-container>
+</scheduled-tasks-menu>

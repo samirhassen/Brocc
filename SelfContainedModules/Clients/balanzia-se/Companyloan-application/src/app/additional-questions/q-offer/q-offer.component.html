@@ -1,0 +1,57 @@
+<application-template>
+    <form [formGroup]="form">
+        <p class="text-center lead ">Indikativt erbjudande innan kompletterande uppgifter</p>
+        <p class="text-center">{{questions.companyInformation.Name}}</p>
+        <p class="text-center pb-5">{{questions.companyInformation.Orgnr}}</p>
+        <table class="table custom-table">
+            <tbody>
+                <tr>
+                    <td>Lånebelopp</td>
+                    <td class="text-right">{{questions.offer.LoanAmount | number}} kr</td>
+                </tr>
+                <tr>
+                    <td>Återbetalningstid</td>
+                    <td class="text-right">{{questions.offer.RepaymentTimeInMonths | number}} månader</td>
+                </tr>
+                <tr>
+                    <td>Månadsbelopp</td>
+                    <td class="text-right">{{questions.offer.AnnuityAmount | number : '1.0-0'}} kr</td>
+                </tr>
+                <tr>
+                    <td>Referensränta</td>
+                    <td class="text-right">{{toMonthlyInterest(questions.offer.ReferenceInterestRatePercent) | number}} % per månad</td>
+                </tr>
+                <tr>
+                    <td>Marginalränta</td>
+                    <td class="text-right">{{toMonthlyInterest(questions.offer.NominalInterestRatePercent) | number}} % per månad</td>
+                </tr>
+                <tr>
+                    <td>Total ränta</td>
+                    <td class="text-right">{{toMonthlyInterest(questions.offer.TotalInterestRatePercent) | number}} % per månad</td>
+                </tr>
+                <tr>
+                    <td>Uppläggningsavgift</td>
+                    <td class="text-right">{{questions.offer.InitialFeeAmount | number}} kr</td>
+                </tr>
+                <tr>
+                    <td>Aviavgift</td>
+                    <td class="text-right">{{questions.offer.MonthlyFeeAmount | number}} kr</td>
+                </tr>
+                <tr>
+                    <td>Borgen</td>
+                    <td class="text-right">Ja</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <forward-back-buttons></forward-back-buttons>
+            <small class="pt-2">
+                För att vi ska kunna gå vidare med din ansökan behöver du svara på några kompletterande frågor. 
+                Vi har, precis som banker, en lagstadgad skyldighet att identifiera och känna våra kunder. 
+                Utöver personuppgifterna krävs tillräckliga uppgifter om bl.a. kundens verksamhet och ekonomiska ställning.
+            </small>
+        </div>
+        
+        
+    </form>
+</application-template>

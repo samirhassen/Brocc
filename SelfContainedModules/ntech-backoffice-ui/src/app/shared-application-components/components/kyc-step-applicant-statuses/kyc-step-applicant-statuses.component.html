@@ -1,0 +1,63 @@
+<ng-container *ngIf="m">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col-xs-3">Control</th>
+        <th class="col-xs-1">Status</th>
+        <th class="col-xs-6"></th>
+        <th class="col-xs-3 text-right">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>List screening</td>
+        <td>
+          <status-icon [isAccepted]="m.hasBeenScreened"></status-icon>
+        </td>
+        <td></td>
+        <td class="text-right">
+          <button
+            *ngIf="m.isPossibleToScreen"
+            class="n-direct-btn n-green-btn"
+            (click)="screen($event)"
+          >
+            Screen now
+          </button>
+        </td>
+      </tr>
+      <tr *ngFor="let status of initialData.customerStatuses">
+        <td>PEP & Sanction</td>
+        <td>
+          <status-icon
+            [isAccepted]="
+              status.IsSanction === false &&
+              (status.IsPep === true || status.IsPep === false)
+            "
+            [isRejected]="status.IsSanction === true"
+          ></status-icon>
+        </td>
+        <td>{{ status.CustomerShortName }}, {{ status.CustomerBirthDate }}</td>
+        <td class="text-right">
+          <a class="n-anchor" [href]="getKycCardUrl(status.CustomerId)"
+            >View details</a
+          >
+        </td>
+      </tr>
+      <tr *ngFor="let status of initialData.customerStatuses">
+        <td>Name, email and address</td>
+        <td>
+          <status-icon [isAccepted]="status.HasNameAndAddress"></status-icon>
+        </td>
+        <td>
+          {{ status.CustomerShortName }}, {{ status.CustomerBirthDate
+          }}{{ getRolesDisplayText(status) }}
+        </td>
+        <td class="text-right">
+          <a class="n-anchor" [href]="getCustomerCardUrl(status.CustomerId)"
+            >View details</a
+          >
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>

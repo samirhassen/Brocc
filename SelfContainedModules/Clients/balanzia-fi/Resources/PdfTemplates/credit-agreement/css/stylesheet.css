@@ -1,0 +1,215 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td { margin:0;padding:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent; }
+body { line-height:1; }
+ol,ul { list-style:none; }
+blockquote,q { quotes:none; }
+blockquote:before,blockquote:after,q:before,q:after { content:'';content:none; }
+ins { text-decoration:none; }
+del { text-decoration:line-through; }
+table { border-collapse:collapse;border-spacing:0; }
+
+@page { 
+	size: A4;
+	margin-top: 15mm;
+	margin-bottom: 5mm;
+	margin-left: 20mm;
+	margin-right: 15mm;
+
+	@top{
+	 	margin-top: 32.5mm;
+        margin-left: 0mm;
+        content: flow(header);  
+    }
+    @bottom  { 
+        content: flow(footer);
+        margin-bottom: 30mm;
+
+    }
+}
+
+.page{
+    page-break-before: always;
+}
+
+#header{
+	prince-flow: static(header);   
+    width: 25mm;
+    height: 17.5mm;
+}
+
+#header img{
+    max-width: 25mm;
+    max-height: 17.5mm;
+}
+
+#header h1{
+	font-family: Arial;
+	font-size: 20pt;
+	font-weight: bold;
+}
+
+
+#footer{
+   prince-flow: static(footer);
+   border-top: 1px solid #000000;
+   padding-top: 5mm;
+   font-size: 12px;
+}
+
+
+.counter{
+	content: counter(page) "("counter(pages)") ";
+    float: right;
+}
+
+/*retur och destination area K*/
+
+
+
+.extra-padding-top{
+    padding-top: 25mm;
+}
+
+.addressArea{
+    width: 87mm;
+    height: 47mm;
+    position: relative;
+    float: left;
+}
+
+.returnaAdress{
+     padding-left: 25mm;
+}
+
+.destinationAddress{
+    width: 69mm;
+    position: absolute;
+    bottom: 0px;
+    height: 22.5mm;
+}
+
+.header{
+    float: right;    
+    text-align:right;
+}
+
+.header h1{
+    font-family: Arial;
+	font-size: 20pt;
+	font-weight: bold;
+}
+
+.content{
+    width: 175mm;
+    margin-top: 5mm;
+}
+
+.parties {
+	margin-top:5mm;	
+    height: 60mm;
+}
+
+.parties .column{
+	float:left;
+	width:48%;
+    height: 30mm;  
+    margin-top: 5mm;
+}
+
+.parties .column:last-child{
+	float:left;
+	width:48%;
+    margin-left: 4%;
+}
+
+.area{
+	padding-bottom: 5mm;
+}
+
+table{
+    width: 100%;
+}
+
+tr{    
+	border-bottom: 1px solid #000000;
+}
+
+tr:first-child{
+    border-top: 1px solid #000000;
+}
+
+td{
+	font-family: Arial;
+	font-size: 12px;
+	margin-top: 10px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    width: 50%;
+}
+
+td:last-child{
+    text-align: right;
+}
+
+
+.clear{
+    clear: both;
+}
+/**/
+
+
+h1 {
+	font-family: Arial;
+	font-size: 20px;
+	margin-bottom: 2mm;
+}
+    
+h2 { 
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: bold;
+    margin-bottom: 1mm;
+}
+
+h3 {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+    margin-bottom: 1mm;
+    margin-top: 3mm;
+}
+
+p {
+	font-family: Arial;
+	font-size: 12px;
+}
+
+.boxed_table table {
+	border-collapse: collapse;
+	width:100%;
+}
+
+.boxed_table td {
+	width: 50%;
+	border-bottom: none;
+	border: 1px solid black;
+}
+
+.boxed_table p {
+	margin:5px;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.column1{
+    float: left;
+    width: 49%;
+    margin-right: 1%;
+}
+
+.column2{
+    float: left;
+    width: 49%;
+    margin-left: 1%;
+}

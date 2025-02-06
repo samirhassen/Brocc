@@ -1,0 +1,145 @@
+﻿<script type="text/ng-template" id="withdrawals.html">
+    @Html.Partial("TitleAndBack", TitleAndBackModel.Translated("sao_withdrawals_h", "backUrl"))
+    
+    <p ng-show="!d.Accounts || d.Accounts.length === 0" class="pt-2" translate="sao_withdrawals_noact">
+        Du har inga aktiva sparkonton.
+    </p>
+    <!--Uttag-->
+    <div ng-hide="!d.Accounts || d.Accounts.length === 0" class="pb-3">
+        <div ng-hide="d && d.AreWithdrawalsSuspended">
+            <div class="status pt-3">
+                <div class="col-sm-offset-2 col-sm-8 col-xs-12">
+                    <div class="item" ng-class="{ 'active' : step.current === 1, 'done' : step.current > 1 }">
+                        <p translate="sao_withdrawals_hk">Konto</p>
+                    </div>
+                    <div class="item" ng-class="{ 'active' : step.current === 2, 'done' : step.current > 1 }">
+                        <p translate="sao_withdrawals_hb">Belopp</p>
+                    </div>
+                    <div class="item" ng-class="{ 'active' : step.current === 3, 'done' : step.current > 2 }">
+                        <p translate="sao_withdrawals_hg">Godkänn</p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <p class="text-center pt-2" translate="sao_withdrawals_text1">Du gör ditt uttag till ett registrerat mottagarkonto, utbetalningen sker nästkommande bankdag.</p>
+
+            <div class="row pt-2" ng-if="w">
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="editblock">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-5 col-sm-5" translate="sao_withdrawals_fk">Från konto</label>
+                                <div class="col-md-5 col-sm-5">
+                                    <select ng-model="w.savingsAccountNr" class="form-control">
+                                        <option value="" ng-hide="w.savingsAccountNr" translate="sao_withdrawals_vk">Välj konto</option>
+                                        <option value="{{a.SavingsAccountNr}}" ng-repeat="a in d.Accounts">{{a.SavingsAccountNr}} ({{a.WithdrawableAmount | number:'2'}})</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div ng-show="w.savingsAccountNr && selectedSourceAccount().ToIban">
+                                <form novalidate name="w.withdrawalsform">
+                                    <div class="form-group pb-3">
+                                        <label class="control-label col-md-5 col-sm-5" translate="sao_withdrawals_tk">Till konto</label>
+                                        <div class="col-md-5 col-sm-5">
+                                            <p class="form-control-static">{{selectedSourceAccount().ToIbanFormatted.ReadableIban}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error' : w.withdrawalsform.withdrawalAmount.$invalid && w.withdrawalsform.withdrawalAmount.$touched }">
+                                        <label class="control-label col-md-5 col-sm-5" translate="sao_withdrawals_amt">Belopp</label>
+                                        <div class="col-md-5 col-sm-5">
+                                            <input ng-model="w.withdrawalAmount" autocomplete="off" name="withdrawalAmount" custom-validate="isValidWithWithdrawalAmount" required type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5 col-sm-5" translate="sao_withdrawals_cmt">Meddelande till mottagaren</label>
+                                        <div class="col-md-5 col-sm-5">
+                                            <input ng-model="w.customCustomerMessageText" autocomplete="off" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5 col-sm-5" translate="sao_withdrawals_egn">Egen notering</label>
+                                        <div class="col-md-5 col-sm-5">
+                                            <input ng-model="w.customTransactionText" autocomplete="off" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="text-center pt-2">
+                                        <button class="n-main-btn n-green-btn" ng-disabled="w.withdrawalsform.$invalid" ng-click="addToPending($event)" translate="sao_withdrawals_add">Lägg till</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div ng-if="w.savingsAccountNr && !selectedSourceAccount().ToIban">
+                                <div class="form-group pb-3">
+                                    <label class="control-label col-md-5 col-sm-5" translate="sao_withdrawals_tk">Till konto</label>
+                                    <div class="col-md-5 col-sm-5">
+                                        <p translate="sao_withdrawals_text2" class="form-control-static">Du behöver lägga till ett mottagarkonto för att kunna göra ett uttag.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-2" ng-if="pendingWithdrawal">
+                <div class="col-md-offset-1 col-md-10">
+                    <div class="frame">
+                        <div class="pb-1">
+                            <div class="pull-right"><button class="n-main-btn n-white-btn" ng-click="cancel($event)" translate="sao_withdrawals_cancel">Avbryt</button></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-6" translate="sao_withdrawals_amt">Belopp</label>
+                                        <p class="form-control-static col-md-6 ng-binding">{{pendingWithdrawal.withdrawalAmount | number:'2'}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-6" translate="sao_withdrawals_cmt">Meddelande till mottagare</label>
+                                        <p class="form-control-static col-md-6 ng-binding">{{pendingWithdrawal.customCustomerMessageText}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-6" translate="sao_withdrawals_egn">Egen notering</label>
+                                        <p class="form-control-static col-md-6 ng-binding">{{pendingWithdrawal.customTransactionText}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4" translate="sao_withdrawals_iban">IBAN</label>
+                                        <p class="form-control-static col-md-8 ng-binding">{{pendingWithdrawal.expectedToIbanFormatted.ReadableIban}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4" translate="sao_withdrawals_bank">Bank</label>
+                                        <p class="form-control-static col-md-8 ng-binding">{{pendingWithdrawal.expectedToIbanFormatted.BankName}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2 text-center">
+                            <button class="n-main-btn n-green-btn" ng-click="withdraw($event)" translate="sao_withdrawals_appr">Godkänn</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-2" ng-if="showEndMessage">
+                <div class="col-md-offset-1 col-md-10">
+                    <div class="frame">
+                        <p class="pt-3 pbt-3 text-center" translate="sao_withdrawals_text3">Din utbetalning genomfördes.</p>
+                        <p class="text-center pt-3"><a href="#" class="n-anchor turqoise" ng-click="restart($event)" translate="sao_withdrawals_wagain">Gör en till utbetalning</a></p>
+                    </div>
+                </div>
+            </div><!--end done-->
+        </div>
+
+        <div class="row pt-2" ng-if="d && d.AreWithdrawalsSuspended">
+            <div class="col-md-offset-1 col-md-10">
+                <div class="frame">
+                    <p class="pt-3 pbt-3 text-center" translate="sao_withdrawals_suspended">Withdrawals suspended.</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!--end uttag-->
+</script>

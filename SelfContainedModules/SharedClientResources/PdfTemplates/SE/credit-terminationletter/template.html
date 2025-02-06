@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />
+</head>
+<body>
+     <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+    <div class="page">
+        <div class="blackborder">
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Uppsägning</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1-fixed-height blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Utskriftsdatum</td>
+                                <td class="text-right">{{printDate}}</td>
+                            </tr>
+                            <tr>
+                                <td>Lånenummer</td>
+                                <td class="text-right">{{creditNr}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column2-fixed-height greenborder">
+                    <p>{{fullName}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area">
+                <div class="column1">
+
+                    <p>{{documentClientData_name}} säger härmed upp rubricerad kredit till förtidsbetalning med hänvising till 33§ konsumentkreditlagen och enligt Allmänna villkor.</p>
+                    <p class="pt-1">Enligt 34§ konsumentkreditlagen kan ni förhindra förtidsbetalning om Ni till oss inom 28 dagar betalar de förfallna aviseringarna.</p>
+
+                </div>
+            </div>
+            <div class="column2 ">
+                <table class="summery">
+                    <tbody>
+                        <tr>
+                            <td>Bankgiro</td>
+                            <td class="text-right">{{paymentBankGiroNr}}</td>
+                        </tr>
+                        <tr>
+                            <td>OCR</td>
+                            <td class="text-right">{{ocrPaymentReference}}</td>
+                        </tr>
+                        <tr>
+                            <td class="greenborder pt-2">Betala förfallna avier</td>
+                            <td class="text-right greenborder" style="padding-top: 20px;">{{notifiedOverdueDebt}}</td>
+                        </tr>
+                        <tr>
+                            <td class="greenborder pt-2">Förfallodatum</td>
+                            <td class="text-right greenborder" style="padding-top: 20px;">{{dueDate}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear"></div>
+
+
+            <div class="area">
+                <p>Om ni inte betalar de förfallna aviseringarna kommer vi att ansöka om betalningsförläggande hos Kronofogdemyndigheten eller ansöka om stämning hos tingsrätten.</p>
+                <p class="pt-1">{{documentClientData_contactText}}</p>
+            </div>
+
+
+            <div class="area pt-2">
+                <h3 class="pb-1">Kvarvarande förfallet på obetalda avier</h3>
+                <table class="spec">
+                    <tbody>
+                        <tr>
+                            <td class="border">Totalt förfallet obetalt</td>
+                            <td class="text-right border">{{notifiedOverdueDebt}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="pt-1">Se specifikation nästa sida.</p>
+            <div class="area pt-2">
+                {{#unpaidNonOverdueAmountPerType}}
+                <h3 class="pb-1">Förtidsbetalning, ej förfallet per {{printDate}}</h3>
+
+                <table class="spec">
+                    <tbody>
+                        {{#nonOverdueCapitalAmountNonZero}}
+                        <tr>
+                            <td class="border">Aviserad obetald kapitalskuld</td>
+                            <td class="text-right border">{{nonOverdueCapitalAmount}}</td>
+                        </tr>
+                        {{/nonOverdueCapitalAmountNonZero}}
+                        {{#nonOverdueInterestAmountNonZero}}
+                        <tr>
+                            <td class="border">Aviserad obetald ränta</td>
+                            <td class="text-right border">{{nonOverdueInterestAmount}}</td>
+                        </tr>
+                        {{/nonOverdueInterestAmountNonZero}}
+                        {{#nonOverdueNotificationFeeAmountNonZero}}
+                        <tr>
+                            <td class="border">Aviavgifter</td>
+                            <td class="text-right border">{{nonOverdueNotificationFeeAmount}}</td>
+                        </tr>
+                        {{/nonOverdueNotificationFeeAmountNonZero}}
+                        {{#nonOverdueReminderFeeAmountNonZero}}
+                        <tr>
+                            <td class="border">Påminnelseavgift</td>
+                            <td class="text-right border">{{nonOverdueReminderFeeAmount}}</td>
+                        </tr>
+                        {{/nonOverdueReminderFeeAmountNonZero}}
+                        {{#nonOverdueCustomCostAmountsList}}
+                        {{#nonZero}}
+                        <tr>
+                            <td class="border">{{text}}</td>
+                            <td class="text-right border">{{amount}}</td>
+                        </tr>
+                        {{/nonZero}}
+                        {{/nonOverdueCustomCostAmountsList}}
+                        {{#notNotifiedCapitalDebtNonZero}}
+                        <tr>
+                            <td class="border">Ej aviserad kapitalskuld</td>
+                            <td class="text-right border">{{notNotifiedCapitalDebt}}</td>
+                        </tr>
+                        {{/notNotifiedCapitalDebtNonZero}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Totalt</td>
+                            <td class="text-right">{{nonOverdueTotalAmount}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                {{/unpaidNonOverdueAmountPerType}}
+                <p class="pt-2">Har inte ovanstående förfallna avier betalats inom 28 dagar förfaller hela lånet till betalning. Därmed tillkommer även ovanstående förtidsbetalning till det totala belopp att betala. Totalt belopp: {{totalDebt}}</p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="page">
+        <div class="content pt-5">
+            <div class="area">
+                <h3>Specifikation kvarvarande förfallet på obetalda avier</h3>
+                <div class="pt-2">
+                    {{#overdueNotifications}}
+                    <p class="pt-1"><b>Avi förfallodatum {{dueDate}}</b></p>
+                    <table>
+                        <tbody>
+                            {{#amountsList}}
+                            {{#nonZero}}
+                            <tr>
+                                <td>[[[include:amountTypes.html]]]</td>
+                                <td class="text-right border">{{amount}}</td>
+                            </tr>
+                            {{/nonZero}}
+                            {{/amountsList}}
+                        </tbody>
+                    </table>
+                    {{/overdueNotifications}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="footer">
+        <p>{{documentClientData_footerAddress}}</p>
+    </div>

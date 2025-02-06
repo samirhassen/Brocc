@@ -1,0 +1,86 @@
+<div *ngIf="m">
+    <div class="editblock f-container">
+        <div>
+            <div class="text-right">
+                <button class="n-icon-btn n-blue-btn" *ngIf="!m.edit" (click)="edit($event)" >
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button *ngIf="m.edit" class="n-icon-btn n-white-btn f-cancel-btn" (click)="cancel($event)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button *ngIf="m.edit" [disabled]="m.edit.form.invalid()" (click)="commit($event)" class="n-icon-btn n-green-btn">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </button>                
+            </div>
+        </div>
+        <div>
+            <ng-container *ngIf="!m.edit">
+                <div class="col-sm-6 f-risk-container">
+                    <div class="f-header-row">
+                        Risk
+                    </div>
+                    <div class="f-row">
+                        <div class="f-readonly-value">Default</div>
+                    </div>
+                    <div class="f-row" *ngFor="let customValue of m.current.customValues">
+                        <div class="f-readonly-value">{{customValue.riskClass}}</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 f-monthcount-container">
+                    <div class="f-header-row">
+                        KYC frequency (months)
+                    </div>
+                    <div class="f-row">
+                        <div class="f-readonly-value">{{m.current.defaultMonthCount}}</div>
+                    </div>
+                    <div class="f-row" *ngFor="let customValue of m.current.customValues">
+                        <div class="f-readonly-value">{{customValue.monthCount}}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="m.edit">
+                <form [formGroup]="m.edit.form.form">
+                    <div class="col-sm-6 f-risk-container">
+                        <div class="f-header-row">
+                            Risk
+                        </div>
+                        <div class="f-row">
+                            <div class="f-readonly-value">Default</div>
+                        </div>
+                        <div class="f-row" *ngFor="let customRow of m.edit.customRows" [formGroupName]="customRow.groupName" 
+                            [ngClass]="{ 'has-error':  m.edit.form.form.touched && (hasDuplicateRiskClass() || customRow.group.get('riskClass').errors) }">
+                            <input class="form-control" type="text"  formControlName="riskClass" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6 f-monthcount-container">
+                        <div class="f-header-row">
+                            KYC frequency (months)
+                        </div>
+                        <div class="f-row">
+                            <input class="form-control" type="text" formControlName="defaultMonthCount" />
+                        </div>
+                        <div class="f-row" *ngFor="let customRow of m.edit.customRows" [formGroupName]="customRow.groupName"
+                            [ngClass]="{ 'has-error': m.edit.form.form.touched && customRow.group.get('monthCount').errors }">
+                            <div class="f-input-and-button">
+                                <input class="form-control" type="text" formControlName="monthCount" />
+                                <button class="n-icon-btn n-red-btn" (click)="removeRow(customRow.groupName, $event)">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="f-row">
+                            <button (click)="addRow($event)" class="n-main-btn n-green-btn f-add-button">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mt-2" *ngIf="m.edit.form.form.touched && hasDuplicateRiskClass()">
+                        <p class="text-center text-danger">
+                            Duplicate risk classes are not allowed
+                        </p>
+                    </div>
+                </form>
+            </ng-container>            
+        </div>
+    </div>
+</div>

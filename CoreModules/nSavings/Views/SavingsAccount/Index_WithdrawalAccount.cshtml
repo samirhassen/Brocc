@@ -1,0 +1,38 @@
+﻿<script type="text/ng-template" id="withdrawalaccount.html">
+    <!--current iban-->
+    <div class="pb-2">
+        <div class="form-horizontal pb-2">
+            <div class="form-group">
+                <label class="control-label col-xs-2">IBAN</label>
+                <p class="form-control-static col-xs-10">
+                    <span ng-show="d.Current && d.Current.WithdrawalAccount">{{d.Current.WithdrawalAccount.Formatted}}</span>
+                    <span ng-hide="d.Current && d.Current.WithdrawalAccount">-</span>
+                </p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-2">BANK</label>
+                <p class="form-control-static col-xs-10">
+                    <span ng-show="d.Current && d.Current.WithdrawalAccount">{{d.Current.WithdrawalAccount.BankName}}</span>
+                    <span ng-hide="d.Current && d.Current.WithdrawalAccount">-</span>
+                </p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-2">Letter of attorney</label>
+                <p class="form-control-static col-xs-10">
+                    <a ng-show="d.Current && d.Current.PowerOfAttorneyDocumentArchiveLink" ng-href="{{d.Current.PowerOfAttorneyDocumentArchiveLink}}" class="n-direct-btn n-purple-btn">Download</a>
+                    <span ng-hide="d.Current && d.Current.PowerOfAttorneyDocumentArchiveLink">-</span>
+                </p>
+            </div>
+            <div class="form-group pt-3" ng-show="d.Status === 'Active' || d.Status === 'FrozenBeforeActive'">
+                <label class="control-label col-xs-2"> </label>
+                <p class="form-control-static col-xs-10"><a ng-href="{{'#!/WithdrawalAccountChange/' + d.SavingsAccountNr}}" class="n-anchor">Change external account</a></p>
+            </div>
+        </div>
+    </div>
+    <!--slut på current-->
+    <!--historik-->
+    <div class="pt-3">
+        @Html.Partial("Index_WithdrawalAccount_History")
+    </div>    
+    <!--slut på historik-->
+</script>

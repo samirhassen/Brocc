@@ -1,0 +1,212 @@
+{
+    "terms" : {
+        "yes" : "Kyllä",
+        "no" : "Ei",
+        "one": "Yksi",
+        "two": "Kaksi",
+        "coApplicant": "Rinnakkaishakija",
+        "selectMonth": "Kuukausi",
+        "selectYear": "Vuosi"
+    },
+    "concept" : {
+        "month" : {
+            "jan" : "Tammikuu",
+            "feb" : "Helmikuu",
+            "mar": "Maaliskuu",
+            "apr": "Huhtikuu",
+            "may": "Toukokuu",
+            "jun": "Kesäkuu",
+            "jul": "Heinäkuu",
+            "aug": "Elokuu",
+            "sep": "Syyskuu",
+            "okt": "Lokakuu",
+            "nov": "Marraskuu",
+            "dec": "Joulukuu"
+        }
+    },    
+    "msg":{
+        "success_header":"Kiitos hakemuksestasi!",
+        "success_text1":"Käsittelemme hakemuksesi mahdollisimman pian ja saat lainapäätöksen sähköpostiisi.",
+        "success_text2":"Jos sinulla on kysyttävää, ilmoita ystävällisesti hakemusnumerosi ",
+        "failed_header":"Tapahtui virhe!",
+        "failed_text1":"Voit yrittää myöhemmin uudelleen tai ottaa yhteyttä asiakaspalveluumme.",
+        "contact_text1":"Ystävällisin terveisin, Brocc Asiakaspalvelu",
+        "contact_text2":"Puh. 010 524 8410, lainat@brocc.fi"
+    },
+    "channel_header" : "Mistä olet kuullut meistä?",
+    "channel" : {
+        "brevhem": "Kirje kotiin",
+        "internet": "Internet",
+        "rekommendation": "Suosittelu",
+        "tidning": "Mainos lehdessä",
+        "tvradio": "TV/Radio",
+        "annat": "Muu"
+    },
+    "marriage" : {
+        "marriage_gift" : "Naimisissa",
+        "marriage_ogift" : "Naimaton",
+        "marriage_sambo": "Avoliitossa"
+    },
+    "housing" : {
+        "housing_egenbostad": "Omistusasunto",
+        "housing_bostadsratt": "Asumisoikeus",
+        "housing_hyresbostad": "Vuokra-asunto",
+        "housing_hosforaldrar": "Vanhempien luona",
+        "housing_tjanstebostad": "Työsuhdeasunto"
+    },
+    "employment" : {
+        "employment_fastanstalld": "Vakituinen",
+        "employment_visstidsanstalld" : "Määräaikainen",
+        "employment_foretagare" : "Yrittäjä",
+        "employment_pensionar" : "Eläkeläinen",
+        "employment_sjukpensionar" : "Työkyvyttömyyseläke",
+        "employment_studerande" : "Opiskelija",
+        "employment_arbetslos" : "Työtön"
+    },
+    "loanTypes": {
+        "mortgageLoan": {
+            "type": "Asuntolaina",
+            "amount": "Asuntolaina",
+            "cost": "Asuntolaina kuukausierä",
+            "totalAmountQuestion": "Kuinka paljon asuntolainaa sinulla on?",
+            "monthAmountQuestion": "Kuinka paljon asuntolainasi kuukausierä on?",
+            "totalAmountExample": "esim. 100 000",
+            "monthAmountExample": "esim. 300"
+        },
+        "carOrBoatLoan": {
+            "type": "Auto-/venelaina",
+            "amount": "Auto-/venelaina",
+            "cost" : "Auto-/venelaina kuukausierä",
+            "totalAmountQuestion": "Kuinka paljon auto-/venelainaa sinulla on?",
+            "monthAmountQuestion": "Kuinka paljon auto-/venelainasi kuukausierä on?",
+            "totalAmountExample": "esim. 2500",            
+            "monthAmountExample": "esim. 100"              
+        },
+        "creditCard": {
+            "type": "Luottokortti",
+            "amount": "Luottokortti",
+            "cost": "Luottokortti kuukausierä",
+            "totalAmountQuestion": "Kuinka paljon luottokorttivelkaa sinulla on?",
+            "monthAmountQuestion": "Kuinka paljon luottokorttiesi kuukausierä on?",
+            "totalAmountExample": "esim. 2500",            
+            "monthAmountExample": "esim. 100"              
+        },
+        "otherLoan": {
+            "type": "Muita lainoja",
+            "amount": "Muita lainoja",
+            "cost": "Muita lainoja kuukausierä",
+            "totalAmountQuestion": "Kuinka paljon muita lainoja sinulla on?",
+            "monthAmountQuestion": "Kuinka paljon muiden lainojesi kuukausierä on?",
+            "totalAmountExample": "esim. 2500",            
+            "monthAmountExample": "esim. 100"              
+        }                  
+    }, "steps" : {
+        "forwardBackButtons" : {
+            "forward": "Seuraava",
+            "apply": "Lähetä hakemus",
+            "start": "Hae lainaa"
+        },
+        "calculator":{
+            "header":"Yksityislaina joka sopii sinun tarpeisiisi",
+            "loanAmount":"Kuinka paljon haluat lainata?",
+            "repayment":"Kuinka pitkän takaisinmaksuajan haluat?",
+            "monthlyCost":"kuukaudessa",
+            "interest":"korolla",
+            "year":"vuotta",
+            "offerText": "Laskuesimerkki perustuu {{loanAmount}} € lainasummaan, {{repaymentTimeInYears}} vuoden takaisinmaksuajalla ja {{nominalInterestRatePercent}} % nimelliskorolla. Todellinen vuosikorko  {{effectiveInterstRatePercent}} %, jossa huomioidaan lainan avausmaksu 49,00 € - 169,00 € ja tilinhoitomaksu 5,00 €. Lainan kuukausierä {{monthlyCostIncludingFeesAmount}} €/kk. Maksettava kokonaissumma kulut mukaan lukien: {{totalPaidAmount}} €",
+            "offerText2": "Laskuesimerkki perustuu {{loanAmount}} € lainasummaan, {{repaymentTimeInYears}} vuoden takaisinmaksuajalla ja {{nominalInterestRatePercent}} % nimelliskorolla. Todellinen vuosikorko  {{effectiveInterstRatePercent}} %, jossa huomioidaan lainan avausmaksu 0,00 €, ja tilinhoitomaksu 8,00 €. Lainan kuukausierä {{monthlyCostIncludingFeesAmount}} €/kk. Maksettava kokonaissumma kulut mukaan lukien: {{totalPaidAmount}} €",
+            "warningText": "Hei! Balanzia on vaihtanut nimensä Brocciksi. Toistaiseksi tämä sivu käyttää edelleen Balanzian domainia."
+        },
+        "calculator_footer":{
+            "about_header1":"Brocc Yksityislaina",
+            "about_text1":"Brocc Yksityislainalla voit lainata jopa 50.000 euroa ilman vakuuksia. Laina soveltuu hyvin esimerkiksi kalliimpien lainojen yhdistämiseen. Saat aina asiakaskohtaisen tarjouksen. Lainan voi maksaa pois koska tahansa ilman ylimääräisiä kuluja. Asiakaskohtainen korko ja muut kulut käyvät ilmi lainasopimuksesta jonka saat haettuasi. Hakemus ei ole sitova ja lainoillamme on 14 päivän peruutusoikeus.",
+            "about_link1":"Yleiset ehdot",
+            "about_link2":"Vakiomuotoiset eurooppalaiset kuluttajaluottotiedot",
+            "about_link3":"Rekisteriseloste",
+            "about_link4":"Tietosuoja",
+            "contact_header1":"Ota yhteyttä",
+            "contact_text1":"Voit aina olla yhteydessä meihin jos sinulla on kysyttävää hakemuksestasi tai lainastasi.",
+            "contact_text2":"Puhelin: 010 524 8410 (ppm)",
+            "contact_text3":"Sähköposti: lainat@brocc.fi",
+            "contact_text4":"Asiakaspalvelumme on avoinna arkisin 09.00 - 11.30 ja 12.30 - 16.00.",
+            "gcc_header1":"Tietoa meistä",
+            "gcc_text1":"Brocc Finance AB, filial i Finland, on ruotsalaisen Brocc Finance AB:n sivuliike Suomessa. Yhtiön pääkonttori sijaitsee Ruotsissa ja toimintaa valvoo Ruotsin finanssivalvonta. Suomessa olemme toimineet jo vuodesta 2016.",
+            "gcc_link1":"Lue lisää Brocc Finance AB:sta"
+        }, 
+        "nrOfApplicants" : {
+            "header": "Kuinka monta hakijaa lainalla on?"
+        },
+        "campaignCode": {
+            "header": "Onko sinulla kampanjakoodia?",
+            "yes": "Kyllä, minulla on kampanjakoodi",
+            "no": "Ei, minulla ei ole kampanjakoodia"
+        },
+        "campaignCodeCode": {
+            "header": "Syötä kampanjakoodisi",
+            "placeHolder": "esim. C113331"
+        },
+        "ssn": {
+            "header": "Mikä on henkilötunnuksesi?",
+            "placeHolder": "esim. ppkkvv-xxxx",
+            "duplicateText": "Olet käyttänyt samaa henkilötunnusta molemmille hakijoille."
+        },
+        "email": {
+            "header": "Mikä on sähköpostiosoitteesi?",
+            "placeHolder": "firstname.lastname@example.org"
+        },
+        "phone": {
+            "header": "Mikä on puhelinnumerosi?",
+            "placeHolder": "04x 123 45 67"
+        },
+        "housing": {
+            "header": "Mikä on asumismuotosi?"
+        },
+        "costOfLiving": {
+            "header": "Mikä on asumiskustannuksesi kuukaudessa (esim. vuokra tai vastike)?",
+            "placeHolder": "esim. 550"
+        },
+        "marriage": {
+            "header": "Mikä on siviilisäätysi?"
+        },
+        "nrOfChildren": {
+            "header": "Taloudessa asuvien alle 18-v lasten lukumäärä?",
+            "placeHolder": "esim. 1"
+        },
+        "employment": {
+            "header": "Mikä on työsuhteesi?"
+        },
+        "employmentDetails": {
+            "headerDate": "Koska nykyinen työsuhde/muu on alkanut?",
+            "placeHolderDate": "esim. 05.2014",
+            "headerEmployer": "Mikä on työnantajasi?",
+            "placeHolderEmployer": "esim. Yritys Oy"
+        },
+        "income": {
+            "header": "Paljonko bruttotulosi ovat kuukaudessa?",
+            "placeHolder": "esim. 2500"
+        },
+        "hasOtherLoans": {
+            "header": "Onko sinulla muita lainoja?"
+        },
+        "otherLoansOptions": {
+            "header": "Mitä muita lainoja sinulla on?"
+        },
+        "consolidationOptions": {
+            "header": "Maksetaanko haettavalla lainalla muita lainoja?"
+        },
+        "consolidationAmount": {
+            "header": "Summa jolla maksetaan muita lainoja?",
+            "placeHolder": "esim. 2500"
+        },
+        "consent" : {
+            "header1": "Suostumukseni",
+            "header2": "Rinnakkaishakijan suostumus",
+            "satConsentHeader": "Hyväksyn että lainanantajat, jotka ovat mukana Suomen Asiakastieto Oy:n ylläpitämässä teknisessä tietojärjestelmässä, toimittavat tietoja nykyisistä luotoistani Brocc Finance AB, filial i Finland:lle. Hyväksyn myös, että Brocc Finance AB, filial i Finland luovuttaa edellä mainittuja tietoja minusta muille tietojärjestelmässä mukana oleville luottolaitoksille. Brocc Finance AB, filial i Finland kysyy näitä tietoja Suomen Asiakastieto Oy:n ylläpitämän teknisen tietojärjestelmän avulla tietojärjestelmässä mukana olevilta luottolaitoksilta.",
+            "customerConsentHeader": "Vakuutan, että olen lukenut yllä olevat tiedot ja lukenut Brocc Finance AB, filial i Finland: n tiedot siitä, miten Brocc Finance AB, filial i Finland käsittelee henkilötietojani.",
+            "informationConsentHeader": "Vakuutan, että ilmoittamani tiedot pitävät paikkansa.",
+            "commonText": "Luottohakemuksesi käsittelemiseksi Brocc Finance AB, filial i Finland kerää ja analysoi tietoja lainoistasi muilta lainanantajilta ja muilta ulkopuolisilta tahoilta voidakseen arvioida luottohakemuksesi myöntämisen tai hylkäämisen. Tämän käsittelyn tuloksena luottohakemuksesi joko hyväksytään tai hylätään. Käsittely on osittain automatisoitua ja päätöksen perustana olevia parametrejä ovat muun muassa ikä, muut lainat ja luotot, tulot, työsuhteen muoto ja mahdolliset maksuhäiriömerkinnät.",
+            "linkText": "Tiedot siitä, miten Brocc Finance AB, filial i Finland käsittelee henkilötietojani.",
+            "linkUri": "https://assets.ctfassets.net/6efv05ymvl3z/2i5j9akoOBeAmlpcWr8BBe/3f8962039d668b924832919d7f3bdbb5/Brocc_-_Tietosuojaka__yta__nto___-_Fi_-2022-09-16.pdf"
+        }
+    }
+}

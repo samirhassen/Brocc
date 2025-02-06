@@ -1,0 +1,20 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label">Finns det fysiska personer som direkt eller indirekt (via bolag) äger 25 % eller mer av företaget?</label>    
+            <div>
+                <label class="custom-radio">
+                    <input type="radio" formControlName="ownerOption" value="yes">
+                    Ja
+                </label>
+            </div>
+            <div>
+                <label class="custom-radio">
+                    <input type="radio" formControlName="ownerOption" value="no">
+                    Nej
+                </label>
+            </div>    
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

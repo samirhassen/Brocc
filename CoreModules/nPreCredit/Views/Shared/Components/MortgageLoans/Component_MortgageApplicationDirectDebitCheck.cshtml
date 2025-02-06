@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/ng-template" id="mortgage-application-direct-debit-check.html">
+    <div ng-if="$ctrl.m">
+        <div class="row pb-3" ng-show="$ctrl.m.ro">
+            <div class="col-xs-6">
+                <div class="form-horizontal">
+                    <div class="form-group" ng-show="$ctrl.m.dd.DirectDebitCheckStatus == 'Initial'">
+                        <label class="control-label col-xs-6">Account owner</label>
+                        <p class="form-control-static col-xs-6" ng-show="$ctrl.m.ro.AdditionalQuestionAccountOwner">{{$ctrl.m.ro.AdditionalQuestionAccountOwner.FirstName}} <br />{{$ctrl.m.ro.AdditionalQuestionAccountOwner.BirthDate | date:'yyyyMMdd'}}</p>
+                        <p class="form-control-static col-xs-6" ng-show="!$ctrl.m.ro.AdditionalQuestionAccountOwner">-</p>
+                    </div>
+                    <div class="form-group" ng-show="$ctrl.m.dd.DirectDebitCheckStatus === 'Initial'">
+                        <label class="control-label col-xs-6">Bank account</label>
+                        <p class="form-control-static col-xs-6" ng-show="$ctrl.m.ro.AdditionalQuestionsBankAccountNr"> <span class="copyable">{{$ctrl.m.ro.AdditionalQuestionsBankAccountNr}}</span><br />{{$ctrl.m.ro.AdditionalQuestionsBankName}}</p>
+                        <p class="form-control-static col-xs-6" ng-show="!$ctrl.m.ro.AdditionalQuestionsBankAccountNr">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-horizontal">
+                    <div class="form-group" ng-show="$ctrl.m.dd.DirectDebitCheckStatus === 'Initial'">
+                        <label class="control-label col-xs-6">Payment number</label>
+                        <p class="form-control-static col-xs-6 ng-binding" ng-show="$ctrl.m.ro.AdditionalQuestionPaymentNumber">{{$ctrl.m.ro.AdditionalQuestionPaymentNumber}}</p>
+                        <p class="form-control-static col-xs-6 ng-binding" ng-show="!$ctrl.m.ro.AdditionalQuestionPaymentNumber">-</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Direct debit consent</label>
+                        <p class="form-control-static col-xs-6 ng-binding" ng-show="$ctrl.m.ro.SignedDirectDebitConsentDocumentDownloadUrl"><a ng-href="{{$ctrl.m.ro.SignedDirectDebitConsentDocumentDownloadUrl}}" target="_blank" class="n-direct-btn n-purple-btn">Download <span class="glyphicon glyphicon-save"></span></a></p>
+                        <p class="form-control-static col-xs-6 ng-binding" ng-show="!$ctrl.m.ro.SignedDirectDebitConsentDocumentDownloadUrl">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="editblock" ng-show="$ctrl.m.dd && !$ctrl.m.edit">
+            <form novalidate class="form-horizontal">
+                <div class="pull-right p1-3">
+                    <button class="n-icon-btn n-turquoise-btn" ng-show="$ctrl.m.dd.IsEditAllowed" ng-click="$ctrl.beginEdit($event)"><span class="glyphicon glyphicon-pencil"></span></button>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Direct debit activated</label>
+                        <p class="form-control-static col-xs-6" ng-switch="$ctrl.m.dd.DirectDebitCheckStatus">
+                            <span ng-switch-when="Initial">No</span>
+                            <span ng-switch-when="Pending">Pending since {{$ctrl.m.dd.DirectDebitCheckStatusDate | date:'yyyy-MM-dd HH:mm'}}</span>
+                            <span ng-switch-when="Accepted">Since {{$ctrl.m.dd.DirectDebitCheckStatusDate | date:'yyyy-MM-dd HH:mm'}}</span>
+                            <span ng-switch-default>-</span>
+                        </p>
+                    </div>
+                    <div class="form-group pt-2" ng-hide="$ctrl.m.dd.DirectDebitCheckStatus === 'Initial'">
+                        <label class="control-label col-xs-6">Bank account</label>
+                        <p class="form-control-static col-xs-6" ng-show="$ctrl.m.dd.BankAccountNr"><span class="copyable">{{$ctrl.m.dd.BankAccountNr}}</span>, {{$ctrl.m.dd.BankName}}</p>
+                        <p class="form-control-static col-xs-6" ng-show="!$ctrl.m.dd.BankAccountNr">-</p>
+                    </div>
+                    <div class="form-group" ng-hide="$ctrl.m.dd.DirectDebitCheckStatus === 'Initial'">
+                        <label class="control-label col-xs-6">Account owner</label>
+                        <p class="form-control-static col-xs-6" ng-show="$ctrl.m.dd.AccountOwner">{{$ctrl.m.dd.AccountOwner.FirstName}}, {{$ctrl.m.dd.AccountOwner.BirthDate | date:'yyyyMMdd'}}</p>
+                        <p class="form-control-static col-xs-6" ng-show="!$ctrl.m.dd.AccountOwner">-</p>
+                    </div>
+                    <div class="form-group" ng-hide="$ctrl.m.dd.DirectDebitCheckStatus === 'Initial'">
+                        <label class="control-label col-xs-6">Payment number</label>
+                        <p class="form-control-static col-xs-6 copyable" ng-show="$ctrl.m.dd.PaymentNumber">{{$ctrl.m.dd.PaymentNumber}}</p>
+                        <p class="form-control-static col-xs-6" ng-show="!$ctrl.m.dd.PaymentNumber">-</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="editblock" ng-show="$ctrl.m.edit">
+            <form novalidate class="form-horizontal">
+                <div class="pull-right p1-3">
+                    <button class="n-icon-btn n-white-btn" ng-click="$ctrl.cancelEdit($event)"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button class="n-icon-btn n-green-btn" ng-click="$ctrl.commitEdit($event)"><span class="glyphicon glyphicon-ok"></span></button>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="form-horizontal">
+                    <div class="">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Not active</label>
+                            <div class="col-xs-4 checkbox"><input type="radio" name="status" value="Initial" ng-model="$ctrl.m.edit.Status"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Pending activation</label>
+                            <div class="col-xs-4 checkbox"><input type="radio" name="status" value="Pending" ng-model="$ctrl.m.edit.Status"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Activated</label>
+                            <div class="col-xs-4 checkbox"><input type="radio" name="status" value="Accepted" ng-model="$ctrl.m.edit.Status"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group pt-2" ng-class="{ 'has-error' : $ctrl.m.edit.BankAccountValidationResult && !$ctrl.m.edit.BankAccountValidationResult.isValid }">
+                        <label class="control-label col-xs-4">Bank account</label>
+                        <div class="col-xs-5">
+                            <input type="text" class="form-control"
+                                   ng-model="$ctrl.m.edit.BankAccountNr"
+                                   ng-model-options='{ debounce: 200 }'
+                                   ng-change='$ctrl.onBankAccountEdited()'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Account owner</label>
+                        <div class="col-xs-5">
+                            <select class="form-control" ng-model="$ctrl.m.edit.AccountOwnerApplicantNr" ng-change="$ctrl.onAccountOwnerApplicantNrEdited()">
+                                <option value="" ng-hide="$ctrl.m.edit.AccountOwnerApplicantNr"></option>
+                                <option value="{{a.ApplicantNr}}" ng-repeat="a in $ctrl.m.allOwners">{{a.FirstName}}, {{a.BirthDate | date:'yyyyMMdd'}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-xs-8 col-sm-offset-2">
+                            <hr style="border-color: #fff;" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Payment number</label>
+                        <p class="form-control-static col-xs-6" ng-if="$ctrl.m.edit.AccountOwnerApplicantNr && !$ctrl.m.edit.WasAccountOwnerApplicantNrRecentlyChanged" ng-switch="$ctrl.m.edit.AccountOwnerApplicantNr">
+                            <span class="copyable" ng-switch-when="1">{{$ctrl.m.latestResult.Applicant1.StandardPaymentNumber}}</span>
+                            <span class="copyable" ng-switch-when="2">{{$ctrl.m.latestResult.Applicant2.StandardPaymentNumber}}</span>
+                            <span ng-switch-default>-</span>
+                        </p>
+                        <p class="form-control-static col-xs-6" ng-if="!$ctrl.m.edit.AccountOwnerApplicantNr && !$ctrl.m.edit.WasAccountOwnerApplicantNrRecentlyChanged">-</p>
+                        <p class="form-control-static col-xs-6" ng-if="$ctrl.m.edit.WasAccountOwnerApplicantNrRecentlyChanged ">...</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div ng-show="$ctrl.m && !$ctrl.m.ro">
+            <p>Possible when previous steps are completed.</p>
+        </div>
+    </div>
+</script>

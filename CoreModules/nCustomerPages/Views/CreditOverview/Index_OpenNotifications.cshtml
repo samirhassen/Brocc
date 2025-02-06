@@ -1,0 +1,60 @@
+﻿<script type="text/ng-template" id="opennotifications.html">
+    @Html.Partial("TitleAndBack", TitleAndBackModel.Translated("cao_openn_h", "backUrl"))
+    
+    <div ng-repeat="g in NotificationGroups ">
+
+        <h2 ng-show="g.IsOpen" translate="cao_openn_UnPayed"> Obetalda </h2>
+
+        <div ng-show="g.IsOpen  && g.Notifications.length==0">
+            <p translate="cao_openn_none"></p>
+        </div>
+
+        <br ng-show="!g.IsOpen" />
+        <h2 ng-show="!g.IsOpen" translate="cao_openn_Payed"> Betalda </h2>
+        <div ng-show="!g.IsOpen && g.Notifications.length==0">
+            <p translate="cao_openn_Payednone">Du har inga betalda avier</p>
+        </div>
+        <div class="row" style="padding-bottom:50px;">
+            <div class="col-sm-8" ng-show="g.Notifications && g.Notifications.length > 0">
+                <div class="list-details list-hover">
+                    <div class="list-item" ng-class="{ 'active' : n.ShowDetails }" ng-repeat-start="n in g.Notifications" ng-click="n.ShowDetails=!n.ShowDetails">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <b>{{n.CreditNr}}</b>
+                                <span class="subinfo" ng-class="{ 'attention' : n.IsOverdue }">{{n.DueDate | date}}</span>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <p><b>{{n.TotalUnpaidNotifiedAmount | currency}}</b></p>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <span class="glyphicon glyphicon-chevron-right custom"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-item details" ng-show="n.ShowDetails" ng-repeat-end>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-xs-6 text-right">IBAN</label>
+                                <div class="col-xs-6"><p><b>{{n.PaymentIban}}</b></p></div>
+                                <label class="col-xs-6 text-right" translate="cao_openn_ref">Referens</label>
+                                <div class="col-xs-6"><p><b>{{n.OcrPaymentReference}}</b></p></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-xs-6 text-right" translate="cao_openn_ffd">Förfallodag</label>
+                                <div class="col-xs-6"><p><b>{{n.DueDate | date}}</b></p></div>
+                                <label class="col-xs-6 text-right" translate="cao_openn_OriginalAmount">Ursprungligt belopp</label>
+                                <div class="col-xs-6"><p><b>{{n.InitialNotifiedAmount | currency}}</b></p></div>
+                                <label class="col-xs-6 text-right" translate="cao_openn_InitialNotifiedAmount">Kvarvarande belopp </label>
+                                <div class="col-xs-6"><p><b>{{n.TotalUnpaidNotifiedAmount | currency}}</b></p></div>
+                                <label class="col-xs-6 text-right" translate="cao_openn_LatestPaymentDate">Senast betaldatum</label>
+                                <div class="col-xs-6"><p><b>{{n.LatestPaymentDate | date}}</b></p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</script>

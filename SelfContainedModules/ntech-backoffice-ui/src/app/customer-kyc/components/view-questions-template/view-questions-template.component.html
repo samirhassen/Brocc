@@ -1,0 +1,9 @@
+<div *ngIf="modelJson">
+    <ng-container *ngIf="modelJson">
+        <hr class="hr-section" />
+        <div *ngFor="let q of m.questions">
+            <p>{{q.headerTranslations[getUiLanguage() == 'FI' ? 'fi' : 'sv']}}</p>
+            <hr class="hr-section" />
+        </div>
+    </ng-container>
+</div>

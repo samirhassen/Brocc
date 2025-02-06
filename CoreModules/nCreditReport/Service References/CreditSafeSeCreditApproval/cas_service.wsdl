@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="https://webservice.creditsafe.se/CAS/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="https://webservice.creditsafe.se/CAS/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="https://webservice.creditsafe.se/CAS/">
+      <s:element name="CasPersonService">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cas_person" type="tns:CAS_PERSON_REQUEST" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CAS_PERSON_REQUEST">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:Account" />
+          <s:element minOccurs="0" maxOccurs="1" name="SearchNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Town" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Templates" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LODCustFreeText" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Account">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionId" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Language" type="tns:LANGUAGE" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="LANGUAGE">
+        <s:restriction base="s:string">
+          <s:enumeration value="EN" />
+          <s:enumeration value="SWE" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="CasPersonServiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CasPersonServiceResult" type="tns:CAS_PERSON_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CAS_PERSON_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Personnr" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TemplateNames" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Status_Text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorList" type="tns:ArrayOfERROR" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GivenName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CoAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RegisteredAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Town" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfERROR">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ERROR" nillable="true" type="tns:ERROR" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ERROR">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Cause_of_Reject" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reject_text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reject_comment" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CasCompanyService">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cas_company" type="tns:CAS_COMPANY_REQUEST" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CAS_COMPANY_REQUEST">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:Account" />
+          <s:element minOccurs="0" maxOccurs="1" name="SearchNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Town" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Templates" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LODCustFreeText" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CasCompanyServiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CasCompanyServiceResult" type="tns:CAS_COMPANY_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CAS_COMPANY_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Org_nr" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TemplateNames" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Status_Text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorList" type="tns:ArrayOfERROR" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Town" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTemplateList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cas_service" type="tns:CAS_SERVICE_REQUEST" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CAS_SERVICE_REQUEST">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Account" type="tns:Account" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReportType" type="tns:SERVICE_REPORTTYPE" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SERVICE_REPORTTYPE">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet" />
+          <s:enumeration value="Company" />
+          <s:enumeration value="Consumer" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetTemplateListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTemplateListResult" type="tns:CAS_SERVICE_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CAS_SERVICE_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="error" type="tns:ERROR" />
+          <s:element minOccurs="0" maxOccurs="1" name="templates" type="tns:ArrayOfTemplate" />
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionId" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTemplate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Template" nillable="true" type="tns:Template" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Template">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TemplateName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReportType" type="tns:SERVICE_REPORTTYPE" />
+          <s:element minOccurs="1" maxOccurs="1" name="ValidateAddress" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CasPersonServiceSoapIn">
+    <wsdl:part name="parameters" element="tns:CasPersonService" />
+  </wsdl:message>
+  <wsdl:message name="CasPersonServiceSoapOut">
+    <wsdl:part name="parameters" element="tns:CasPersonServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="CasCompanyServiceSoapIn">
+    <wsdl:part name="parameters" element="tns:CasCompanyService" />
+  </wsdl:message>
+  <wsdl:message name="CasCompanyServiceSoapOut">
+    <wsdl:part name="parameters" element="tns:CasCompanyServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTemplateListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTemplateList" />
+  </wsdl:message>
+  <wsdl:message name="GetTemplateListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTemplateListResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Cas_ServiceSoap">
+    <wsdl:operation name="CasPersonService">
+      <wsdl:input message="tns:CasPersonServiceSoapIn" />
+      <wsdl:output message="tns:CasPersonServiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CasCompanyService">
+      <wsdl:input message="tns:CasCompanyServiceSoapIn" />
+      <wsdl:output message="tns:CasCompanyServiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTemplateList">
+      <wsdl:input message="tns:GetTemplateListSoapIn" />
+      <wsdl:output message="tns:GetTemplateListSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Cas_ServiceSoap" type="tns:Cas_ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CasPersonService">
+      <soap:operation soapAction="https://webservice.creditsafe.se/CAS/CasPersonService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CasCompanyService">
+      <soap:operation soapAction="https://webservice.creditsafe.se/CAS/CasCompanyService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTemplateList">
+      <soap:operation soapAction="https://webservice.creditsafe.se/CAS/GetTemplateList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Cas_ServiceSoap12" type="tns:Cas_ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CasPersonService">
+      <soap12:operation soapAction="https://webservice.creditsafe.se/CAS/CasPersonService" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CasCompanyService">
+      <soap12:operation soapAction="https://webservice.creditsafe.se/CAS/CasCompanyService" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTemplateList">
+      <soap12:operation soapAction="https://webservice.creditsafe.se/CAS/GetTemplateList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Cas_Service">
+    <wsdl:port name="Cas_ServiceSoap" binding="tns:Cas_ServiceSoap">
+      <soap:address location="http://testwebservice.creditsafe.se/CAS/cas_service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Cas_ServiceSoap12" binding="tns:Cas_ServiceSoap12">
+      <soap12:address location="http://testwebservice.creditsafe.se/CAS/cas_service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,78 @@
+<div *ngIf="m">
+  <form [formGroup]="m.form.form">
+    <div class="col-xs-12 col-sm-7 col-md-7">
+      <label>Search</label>
+      <div class="row">
+        <div class="col-sm-7 col-md-7">
+          <div class="relative">
+            <span class="glyphicon glyphicon-search"></span>
+            <input
+              type="text"
+              class="form-control search"
+              (keydown.enter)="search()"
+              (onClick)="search()"
+              formControlName="omniSearchValue"
+              placeholder="Civic regnr/email/full name/application nr"
+            />
+          </div>
+        </div>
+        <div class="col-sm-5 col-md-5" *ngIf="isSpecialSearchMode()">
+          <button class="n-icon-btn n-white-btn mr-1" (click)="reset($event)">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button class="n-main-btn n-blue-btn" (click)="search($event)">
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div
+    class="pt-3"
+    *ngIf="m.searchResult.items && m.searchResult.items.length > 0"
+    style="padding-top: 5%"
+  >
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-xs-1">Number</th>
+          <th class="col-xs-2">Request date</th>
+          <th class="col-xs-2">Req. amount</th>
+          <th class="col-xs-5">System comment</th>
+          <th class="col-xs-2 text-right">Provider</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of m.searchResult.items">
+          <td>
+            <a
+              [routerLink]="[getRouterNavigationString(), i.ApplicationNr]"
+              [queryParams]="{ backTarget: m.targetToHere.getCode() }"
+              class="n-anchor"
+              [ngClass]="{ inactive: !i.IsActive }"
+              >{{ i.ApplicationNr }}</a
+            >
+          </td>
+          <td>{{ i.ApplicationDate | date: "yyyy-MM-dd" }}</td>
+          <td>{{ (i.RequestedAmount | number) || "-" }}</td>
+          <td>{{ i.LatestSystemCommentText }}</td>
+          <td class="text-right">{{ i.ProviderName }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table-pager
+      *ngIf="m.searchResult"
+      [initialData]="m.searchResult.pagingInitialData"
+    ></table-pager>
+  </div>
+
+  <div
+    class="no-hits"
+    *ngIf="m.searchResult.items && m.searchResult.items.length === 0"
+    style="padding-top: 5%"
+  >
+    <p>No hit</p>
+  </div>
+</div>

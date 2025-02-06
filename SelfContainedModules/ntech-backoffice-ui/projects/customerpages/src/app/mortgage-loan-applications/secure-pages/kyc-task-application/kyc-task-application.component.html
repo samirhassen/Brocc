@@ -1,0 +1,14 @@
+<ml-shell>
+  <div shell-body>
+    <task-page
+      headerText="Kundkännedom"
+      (onClose)="closeTask()"
+      [isStandalonePage]="true"
+    >
+      <ng-container *ngIf="m?.kycInitialData">
+        <task-kyc-questions [initialData]="m.kycInitialData">
+        </task-kyc-questions>
+      </ng-container>
+    </task-page>
+  </div>
+</ml-shell>

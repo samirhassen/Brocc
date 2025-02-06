@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="application-checkpoints.html">
+    <div ng-if="$ctrl.checkpoints && $ctrl.checkpoints.length > 0" class="pb-2">
+        <div ng-repeat="c in $ctrl.checkpoints" class="pb-1 pb-1">
+            <div class="alertarea bg-yellow" ng-if="c.isExpanded">
+                <div class="row">
+                    <div class="col-sm-4 text-center"><div style="padding-top: 6px;"><span class="glyphicon glyphicon-flag"></span> <b><span ng-repeat="r in c.allCustomerRoleCodes" class="comma">{{$ctrl.getRoleDisplayName(r)}}</span> checkpoint</b></div></div>
+                    <div class="col-sm-8">
+                        <div class="alert-white">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div style="padding-top: 8px; padding-bottom: 6px;">
+                                        <span class="n-unlock" ng-if="!c.isReasonTextLoaded" ng-click="$ctrl.unlockCheckpointReasonText(c, $event)">
+                                            <a href="#"><span class="glyphicon glyphicon-lock"></span></a>
+                                        </span>
+                                        <span ng-if="c.isReasonTextLoaded">{{c.reasonText}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-sm-10" style="padding-top: 8px;"><a ng-href="{{c.checkpointUrl}}" target="_blank" class="n-anchor pull-right">View or edit <span class="glyphicon glyphicon-new-window"></span></a></div>
+                                        <div class="col-sm-2"><button class="n-icon-btn n-yellow pull-right" ng-click="c.isExpanded = false"><span class="glyphicon glyphicon-resize-small"></span></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="!c.isExpanded" class="clearfix">
+                <button class="n-icon-btn n-yellow pull-right" ng-click="c.isExpanded = true"><span class="glyphicon glyphicon-flag"></span></button>
+            </div>
+        </div>
+    </div>
+</script>

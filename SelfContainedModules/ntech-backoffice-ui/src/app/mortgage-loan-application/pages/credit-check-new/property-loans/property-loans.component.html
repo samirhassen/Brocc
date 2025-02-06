@@ -1,0 +1,57 @@
+<div class="connected-loans" *ngIf="m">
+  <div class="c-header">
+    <h2>Other loans</h2>
+  </div>
+  <ng-container
+    *ngFor="let collateral of m.collaterals; let isFirstCollateral = first"
+  >
+    <div
+      class="c-name mt-2"
+      [ngClass]="{
+        connected: collateral.isConnected,
+        'mt-1': isFirstCollateral,
+        'mt-2': !isFirstCollateral
+      }"
+    >
+      <span>{{ collateral.name }}</span>
+    </div>
+    <div class="c-button" *ngIf="!initialData.isReadOnly">
+      <button
+        class="n-direct-btn"
+        [ngClass]="{
+          'n-green-btn': !collateral.isConnected,
+          'n-white-btn': collateral.isConnected
+        }"
+        (click)="toggleCollateralConnected(collateral, $event)"
+        [disabled]="isAnyOtherCollateralConnected(collateral)"
+      >
+        {{ collateral.isConnected ? "Disconnect" : "Connect" }}
+        <span
+          class="glyphicon"
+          [ngClass]="{
+            'glyphicon-resize-full': collateral.isConnected,
+            'glyphicon-resize-small': !collateral.isConnected
+          }"
+        ></span>
+      </button>
+    </div>
+    <div class="c-table" *ngFor="let loan of collateral.loans">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              <a [href]="loan.url" class="n-anchor">{{ loan.creditNr }}</a>
+            </th>
+            <th>{{ loan.capitalBalance | number }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of loan.customers">
+            <td>{{ customer.firstName }},{{ customer.birthDate }}</td>
+            <td>{{ customer.roles }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</div>

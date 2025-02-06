@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    <div>
+        <div class="addressArea">
+            <div class="">
+                <div class="senderlogo">
+                    <img class="balanzia_logo" src="img/balanzia_logo.png" alt="Balanzia Logo">
+                </div>
+                <div class="returnaAdress">
+                    <p>Balanzia</p>
+                    <p>Box 7790</p>
+                    <p>SE-103 96 Stockholm</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>   
+        
+        <div class="right-area">
+            
+            <div class="print-info">
+                <table>
+                    <tr>
+                        <td>Utskriftsdatum</td> <!--Print date-->
+                        <td>{{printDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Lånenummer</td> <!-- Credit number-->
+                        <td>{{creditNr}}</td>
+                    </tr>
+                </table>
+            </div>     
+            <div class="summation">
+                <table>
+                    <tr>
+                        <td>Antal kvarvarande betalningar</td><!--Remaining amount of payments-->
+                        <td>{{nrOfRemainingPayments}}</td>
+                    </tr>
+                    <tr>
+                        <td>Aviseringstäthet</td><!--Notification frequency-->
+                        <td>månadsvis</td><!--monthly-->
+                    </tr>
+                    <tr>
+                        <td>Annuitet</td><!--Annuity-->
+                        <td>{{annuityAmount}}</td>
+                    </tr>
+                </table>
+            </div>      
+            
+        </div>
+        <div class="clear"></div>
+    </div>
+			
+    <div class="conditions">
+        <h1>Amorteringsplan</h1> <!--Amortization plan-->
+
+        <br /><br />
+        <div class="amortizationhistory">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Datum</td><!--Date-->
+                        <td class="text-right">Kapitalskuld</td><!--Capital debt-->
+                        <td class="text-center"></td>
+                        <td class="text-right">Kapital</td><!--Capital-->
+                        <td class="text-right">Ränta</td><!--Interest-->
+                        <td class="text-right">Totalt</td><!--Total amount-->
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#historicTransactions}}
+                    [[[include:transactionItem.html]]]
+                    {{/historicTransactions}}
+                </tbody>
+            </table>
+        </div>
+        <div class="amortizationfuture">
+            <table>
+                {{#futureTransactions}}
+                [[[include:transactionItem.html]]]
+                {{/futureTransactions}}
+            </table>
+        </div>
+
+    </div>
+</body>
+    
+</html>

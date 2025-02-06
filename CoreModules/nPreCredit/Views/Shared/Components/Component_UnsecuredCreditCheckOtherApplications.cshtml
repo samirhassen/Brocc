@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="unsecured-credit-check-other-applications.html">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Credit Decision</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-show="$ctrl.otherApplications.length === 0">
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr ng-repeat="a in $ctrl.otherApplications">
+                <td ng-if="a.ApplicationType !== 'companyLoan'"><a ng-href="{{'/CreditManagement/CreditApplication?applicationNr=' + a.ApplicationNr }}" class="n-anchor" target="_blank">{{a.ApplicationDate | date:'yyyy-MM-dd'}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                <td ng-if="a.ApplicationType === 'companyLoan'"><a ng-href="{{'/Ui/CompanyLoan/Application?applicationNr=' + a.ApplicationNr }}" class="n-anchor" target="_blank">{{a.ApplicationDate | date:'yyyy-MM-dd'}} <span class="glyphicon glyphicon-new-window"></span></a></td>                
+                <td ng-if="!a.ArchivedDate">{{a.IsActive ? 'Active' : 'Inactive'}}</td>
+                <td ng-if="!a.ArchivedDate">{{a.CreditCheckStatus}}</td>
+                <td colspan="2" ng-if="a.ArchivedDate">Archived {{a.ArchivedDate | date: 'yyyy-MM-dd'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</script>

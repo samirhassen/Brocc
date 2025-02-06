@@ -1,0 +1,101 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit Decision";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-creditdecision-creditapplicationsToApprove")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Approve applications</h1>
+</div>
+
+<div class="row pb-3">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div class="frame">
+            <div class="row">
+                <div class="col-sm-4 text-right">
+                    <p>New loans</p>
+                    <p>Additional loans</p>
+                    <p>Total</p>
+                </div>
+                <div class="col-sm-4">
+                    <p>{{newLoanCountToApprove()}}</p>
+                    <p>{{additionalLoanCountToApprove()}}</p>
+                    <p>{{totalCountToApprove()}}</p>
+                </div>
+                <div class="col-sm-4">
+                    <p>{{newLoanAmountToApprove() | currency}}</p>
+                    <p>{{additionalLoanAmountToApprove() | currency}}</p>
+                    <p>{{totalAmountToApprove() | currency}}</p>
+                </div>
+                <div class="text-center pt-3">
+                    <button ng-hide="totalCountToApprove() == 0" class="n-main-btn n-green-btn" ng-click="createCredits($event)">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="no-hits text-center" ng-if="applications.length == 0">
+    <p>
+        No applications to approve
+    </p>
+</div>
+
+<div class="pt-3 pb-3">
+    <table class="table" ng-if="applications.length > 0">
+        <thead>
+            <tr>
+                <th class="col-sm-1">Application</th>
+                <th class="col-sm-2">Type</th>
+                <th class="col-sm-1">Amount</th>
+                <th class="col-sm-5">Attention</th>
+                <th class="col-sm-2">Handler</th>
+                <th class="col-sm-1 text-right"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="n in applications">
+                <td>
+                    <a ng-href="{{n.applicationUrl}}" class="n-anchor" target="_blank">{{n.applicationNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                </td>
+                <td>
+                    <span ng-if="n.typeName == 'NewLoan'">
+                        New Loan
+                    </span>
+                    <span ng-if="n.typeName == 'AdditionalLoan'">
+                        Additional Loan: <a ng-href="{{n.loanUrl}}" class="n-anchor" target="_blank">{{n.creditNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                    </span>
+                </td>
+                <td>{{n.amount | currency}}</td>
+                <td class="attention-text">
+                    <ng-switch on="i.code" ng-repeat="i in n.overrides" class="override">
+                        <span ng-switch-when="systemRecommendation">Override{{$last ? '' : ','}}</span>
+                        <span ng-switch-when="handlerLimit">Handler limit{{$last ? '' : ','}}</span>
+                        <span ng-switch-when="globalLimit">Global limit{{$last ? '' : ','}}</span>
+                        <span ng-switch-when="oneApplication">Shares applicants with: {{i.applicationNrs.join(', ')}}{{$last ? '' : ','}}</span>
+                        <span ng-switch-when="checkpoint">Checkpoint{{$last ? '' : ','}}</span>
+                        <span ng-switch-when="decisionBasisEdited">Decision basis edited{{$last ? '' : ','}}</span>
+                    </ng-switch>
+                </td>
+                <td>{{n.handlerDisplayName}}</td>
+                <td class="text-right">
+                    <label class="n-toggle">
+                        <input type="checkbox" ng-model="n.isApproved" />
+                        <span class="n-slider"></span>
+                    </label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@Html.Partial("CreditApplicationsToApprove_History")

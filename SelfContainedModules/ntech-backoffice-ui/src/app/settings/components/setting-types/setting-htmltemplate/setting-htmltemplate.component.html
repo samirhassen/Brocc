@@ -1,0 +1,82 @@
+<div class="editblock" *ngIf="m">
+  <div class="form-horizontal">
+    <form *ngIf="!m.isEditing">
+      <!-- view mode-->
+      <div class="text-right pb-1">
+        <button class="n-icon-btn n-blue-btn" (click)="beginEdit($event)">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+      </div>
+      <div
+        class="form-group pb-2"
+        *ngFor="let field of m.viewFields; let idx = index"
+      >
+        <p>Page {{ idx + 1 }}</p>
+        <html-preview
+          class="col-xs-11 editor-background"
+          [content]="field"
+        ></html-preview>
+        <div class="col-xs-1"></div>
+      </div>
+    </form>
+
+    <form *ngIf="m.isEditing && m.edit" [formGroup]="m.edit.form.form">
+      <!-- edit mode -->
+      <div class="text-right pb-1">
+        <button
+          class="n-icon-btn n-white-btn mr5px"
+          (click)="rollbackEdit($event)"
+        >
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <button
+          class="n-icon-btn n-green-btn"
+          (click)="commitEdit($event)"
+          [disabled]="m.edit.form.invalid()"
+        >
+          <span class="glyphicon glyphicon-ok"></span>
+        </button>
+      </div>
+
+      <ng-container *ngFor="let control of m.edit.editorNames; let idx = index">
+        <p>Page {{ idx + 1 }}</p>
+        <div class="form-group pb-2">
+          <div class="col-xs-10">
+            <div class="fix-quill-width">
+                <quill-editor
+                formControlName="{{ control }}"
+                [modules]="quillEditorOptions"
+                [formats]="quillEditorFormats"
+                [styles]="{ height: '200px', backgroundColor: '#f9f9f9' }"
+              ></quill-editor>
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <button
+              (click)="deleteEditor(control, $event)"
+              *ngIf="m.edit.editorNames?.length > 1"
+              title="Remove page"
+              class="n-icon-btn n-red-btn"
+            >
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </div>
+          <div class="col-xs-1"></div>
+        </div>
+      </ng-container>
+      <div class="form-group pt-2">
+        <div class="col-xs-10">
+          <div class="text-right pb-1">
+            <button
+              (click)="appendEditor($event)"
+              class="n-main-btn n-green-btn"
+            >
+              Add page
+            </button>
+          </div>
+        </div>
+        <div class="col-xs-2"></div>
+      </div>
+    </form>
+  </div>
+</div>

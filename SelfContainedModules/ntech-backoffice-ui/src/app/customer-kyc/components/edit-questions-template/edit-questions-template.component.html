@@ -1,0 +1,175 @@
+<div *ngIf="m" class="editblock f-container">
+    <div class="pb-1">
+        <button (click)="cancelEdit($event)" class="n-main-btn n-white-btn" style="margin-right: 5px; float:right">
+            Cancel
+        </button>
+        <div class="clearfix"></div>
+    </div>
+
+    <ng-container *ngIf="!m.isEditOrderMode">
+        <div *ngFor="let q of m.questions; let i = index">
+
+            <!--Yes / no question-->
+            <div class="pt-1 pb-2" *ngIf="q.type === 'yesNo'">
+                <button style="float:right" (click)="removeQuestion(q)" title="Remove question" class="n-direct-btn n-red-btn">Remove question</button>
+                <p class="form-control-static copyable">Yes / no question</p>
+                <div class="row text-center">
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-3">Key / Value</div>
+                    <div class="col-xs-3" *ngIf="m.isFi">Fi</div>
+                    <div [ngClass]="col()">Sv</div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-xs-2">Question</div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="q.key" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.sv" /></div>
+                </div>
+            </div>
+
+            <!--Yes / no question with options-->
+            <div class="pt-1 pb-2" *ngIf="q.type === 'yesNoWithOptions'">
+                <button style="float:right" (click)="removeQuestion(q)" title="Remove question" class="n-direct-btn n-red-btn">
+                    Remove question
+                </button>
+                <p class="form-control-static copyable">Yes / no question with checkbox options</p>
+                <div class="row text-center">
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-3">Key / Value</div>
+                    <div class="col-xs-3" *ngIf="m.isFi">Fi</div>
+                    <div [ngClass]="col()">Sv</div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">Question</div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="q.key" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.sv" /></div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-xs-2">If yes, question</div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="q.optionsKey" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="q.optionsHeaderTranslations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="q.optionsHeaderTranslations.sv" /></div>
+                </div>
+                <div class="row pt-1" *ngFor="let option of q.options; let oi = index">
+                    <div class="col-xs-2">
+                        <div *ngIf="oi === 0">Checkbox options</div>
+                    </div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="option.value" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="option.translations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="option.translations.sv" /></div>
+                    <div class="col-xs-1"><button (click)="deleteOption(q, oi)" class="n-icon-btn n-red-btn"><span class="glyphicon glyphicon-minus"></span></button></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-2 pt-1">
+                        <button (click)="addOption(q)" class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!--Yes / no question with country options-->
+            <div class="pt-1 pb-2" *ngIf="q.type === 'yesNoWithCountryOptions'">
+                <button style="float:right" (click)="removeQuestion(q)" title="Remove question" class="n-direct-btn n-red-btn">
+                    Remove question
+                </button>
+                <p class="form-control-static copyable">Yes / no question with country options</p>
+                <div class="row text-center">
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-3">Key / Value</div>
+                    <div class="col-xs-3" *ngIf="m.isFi">Fi</div>
+                    <div [ngClass]="col()">Sv</div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">Question</div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="q.key" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.sv" /></div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-xs-2">If yes, question</div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="q.optionsKey" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="q.optionsHeaderTranslations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="q.optionsHeaderTranslations.sv" /></div>
+                </div>
+            </div>
+
+            <!--Dropdown question-->
+            <div class="pt-1 pb-2" *ngIf="q.type === 'dropdown'">
+                <button style="float:right" (click)="removeQuestion(q)" title="Remove question" class="n-direct-btn n-red-btn">
+                    Remove question
+                </button>
+                <p class="form-control-static copyable">Dropdown question</p>
+                <div class="row text-center">
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-3">Key / Value</div>
+                    <div class="col-xs-3" *ngIf="m.isFi">Fi</div>
+                    <div [ngClass]="col()">Sv</div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">Question</div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="q.key" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="q.headerTranslations.sv" /></div>
+                </div>
+                <div class="row pt-1" *ngFor="let option of q.options; let oi = index">
+                    <div class="col-xs-2"><div *ngIf="oi === 0">Dropdown options</div></div>
+                    <div class="col-xs-3"><input type="text" class="form-control" [(ngModel)]="option.value" /></div>
+                    <div class="col-xs-3" *ngIf="m.isFi"><input type="text" class="form-control" [(ngModel)]="option.translations.fi" /></div>
+                    <div [ngClass]="col()"><input type="text" class="form-control" [(ngModel)]="option.translations.sv" /></div>
+                    <div class="col-xs-1"><button (click)="deleteOption(q, oi)" class="n-icon-btn n-red-btn"><span class="glyphicon glyphicon-minus"></span></button></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-3 pt-1">
+                        <button (click)="addOption(q)" class="n-icon-btn n-green-btn"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr-section" />
+        </div>
+
+        <!--Add new question-->
+        <div class="row pt-1 pb-3">
+            <div class="col-xs-4">
+                <select class="form-control col-xs-2" name="selectedTypeToAdd" [(ngModel)]="m.selectedTypeToAdd">
+                    <option ngDefaultControl *ngFor="let type of supportedQuestionTypes" [value]="type.name">{{type.displayName}}</option>
+                </select>
+            </div>
+            <div class="col-xs-2">
+                <button type="button" class="n-main-btn n-green-btn" (click)="onAddNewQuestion($event)">Add new question</button>
+            </div>
+        </div>
+        <div class="row pt-3">
+            <div class="text-center">
+                <button class="n-main-btn n-blue-btn" (click)="onContinueToChangeQuestionOrder($event)">Continue to change question order</button>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="m.isEditOrderMode">
+        <div *ngFor="let q of m.questions" class="col-xs-12">
+            <div class="col-xs-2 text-right">
+                <button class="n-icon-btn n-white-btn mr-1" *ngIf="showUpButton(q) && !isLastQuestion(q)" (click)="onChangeOrder(q, true)">
+                    <span class="glyphicon glyphicon-arrow-up"></span>
+                </button>
+                <button class="n-icon-btn n-white-btn last-button" *ngIf="showUpButton(q) && isLastQuestion(q)"
+                    (click)="onChangeOrder(q, true)">
+                    <span class="glyphicon glyphicon-arrow-up"></span>
+                </button>
+                <button class="n-icon-btn n-white-btn" *ngIf="showDownButton(q)" (click)="onChangeOrder(q, false)">
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                </button>
+            </div>
+            <div class="col-xs-10">
+                <p>{{q.headerTranslations[m.isFi ? 'fi' : 'sv']}}</p>
+                <hr class="hr-section" />
+            </div>
+        </div>
+        <div class="text-center">
+            <button (click)="commitEdit($event)" class="n-main-btn n-green-btn">
+                Update
+            </button>
+        </div>
+    </ng-container>
+</div>

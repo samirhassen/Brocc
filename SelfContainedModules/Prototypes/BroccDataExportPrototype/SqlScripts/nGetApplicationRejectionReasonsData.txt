@@ -1,0 +1,141 @@
+---Gets Application Rejection Reasons
+---One row per rejection reason 
+---Date parameters filter Rejection Date (ReferenceDateTime)
+---
+---Execute query in [NtechProdPreCredit] (nPreCredit database)
+---Example query: 
+---
+---exec nGetApplicationRejectionReasons @DateFrom ='2018-05-01', @DateTo = '2022-11-05'
+---
+
+CREATE OR ALTER PROCEDURE nGetApplicationRejectionReasons
+@DateFrom DateTime, 
+@DateTo DateTime
+
+AS
+
+BEGIN
+
+DECLARE @RejectionReasons TABLE (Reason NVARCHAR(50), ReasonCategory NVARCHAR(50))
+--PaymentRemark
+INSERT INTO @RejectionReasons VALUES ('PaymentRemark', 'PaymentRemark')
+INSERT INTO @RejectionReasons VALUES ('ApplicantPaymentRemark', 'PaymentRemark')
+
+--Minimum Demands 
+INSERT INTO @RejectionReasons VALUES ('MinimumDemands', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('ApplicantAgeMinor', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('ApplicantAge', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('ApplicantEmployment', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('CombinedIncome', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('ApplicantOwnCompanyAge', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('ApplicantCreditOnDebtCollection', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('MissingCreditReport', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('MissingSatConsent', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('ApplicantRecentlyImmigrated', 'MinimumDemands')
+INSERT INTO @RejectionReasons VALUES ('ApplicantMissingHousing', 'MinimumDemands')
+
+--Score
+INSERT INTO @RejectionReasons VALUES ('RiskTooHigh', 'Score')
+INSERT INTO @RejectionReasons VALUES ('ScoreCutoff', 'Score')
+INSERT INTO @RejectionReasons VALUES ('InterestRateCutoff', 'Score')
+
+--PriorHistory 
+INSERT INTO @RejectionReasons VALUES ('HistoricalLateLoans', 'PriorHistory')
+INSERT INTO @RejectionReasons VALUES ('HistoricalDebtCollection', 'PriorHistory')
+INSERT INTO @RejectionReasons VALUES ('HistoricalLateNotifications', 'PriorHistory')
+INSERT INTO @RejectionReasons VALUES ('CurrentBalanceTooHigh', 'PriorHistory')
+INSERT INTO @RejectionReasons VALUES ('CustomersHaveSeparateLoans', 'PriorHistory')
+
+--SatLoans
+INSERT INTO @RejectionReasons VALUES ('SatHighNrOfLoans', 'SatLoans')
+INSERT INTO @RejectionReasons VALUES ('SatDbrHighAndSatLtlLow', 'SatLoans')
+INSERT INTO @RejectionReasons VALUES ('SatCreditBalance', 'SatLoans')
+
+--Address
+INSERT INTO @RejectionReasons VALUES ('ApplicantDomesticAddress', 'Address')
+INSERT INTO @RejectionReasons VALUES ('ApplicantPostboxAddress', 'Address')
+INSERT INTO @RejectionReasons VALUES ('ApplicantDomesticAddressAge', 'Address')
+
+--Others
+INSERT INTO @RejectionReasons VALUES ('ImmigratedRecently', 'SocialStatus')
+INSERT INTO @RejectionReasons VALUES ('DbrOrLtl', 'DbrOrLtl')
+INSERT INTO @RejectionReasons VALUES ('Dbr', 'Dbr')
+INSERT INTO @RejectionReasons VALUES ('Ltl', 'Ltl')
+INSERT INTO @RejectionReasons VALUES ('LeftToLiveOn', 'LeftToLiveOn')
+INSERT INTO @RejectionReasons VALUES ('negativeCompanyConnection', 'NegativeCompanyConnection')
+INSERT INTO @RejectionReasons VALUES ('ActivePendingApplication', 'AlreadyApplied')
+INSERT INTO @RejectionReasons VALUES ('PausedByPriorApplication', 'Paused')
+INSERT INTO @RejectionReasons VALUES ('ApplicantAddressesDiffer', 'DifferentAddress')
+INSERT INTO @RejectionReasons VALUES ('SatOverdueBalance', 'Sat60')
+INSERT INTO @RejectionReasons VALUES ('ActiveLoansPaymentCount', 'AdditionalLoan')
+INSERT INTO @RejectionReasons VALUES ('RequestedVsOfferedAmountDiff', 'RequestedVsOfferedDifference')
+INSERT INTO @RejectionReasons VALUES ('Other', 'Other');
+
+with Pre1
+as
+(
+select	d.Id,
+        d.DecisionDate, 
+		d.Discriminator, 
+		d.RejectedDecisionModel,
+		SUBSTRING(d.RejectedDecisionModel, PATINDEX('%"rejectionReasons"%', d.RejectedDecisionModel), PATINDEX('%,"recommendation"%', d.RejectedDecisionModel)) as SourceTextRejectionReasons,
+		RIGHT(d.RejectedDecisionModel, LEN(d.RejectedDecisionModel) - PATINDEX('%"recommendation":%', d.RejectedDecisionModel)) as SourceTextPre1
+from	CreditApplicationHeader h
+join    CreditDecision d
+on h.ApplicationNr = d.ApplicationNr
+where	(d.Discriminator = 'RejectedCreditDecision' or h.RejectedDate is not null)
+and	(d.RejectedDecisionModel is null or (not d.RejectedDecisionModel like '%"HasOffer": true%')) --Make sure the recommendation is a rejection
+and     d.DecisionDate between @DateFrom and @DateTo
+),
+Pre2
+as
+(
+select	p1.*,
+		RIGHT(p1.SourceTextPre1, LEN(p1.SourceTextPre1) - PATINDEX('%"Rejections":%', p1.SourceTextPre1)) as SourceTextPre2
+from	Pre1 p1
+),
+Pre
+as
+(
+select	p2.Id,
+        p2.DecisionDate, 
+		p2.Discriminator, 
+		p2.SourceTextRejectionReasons, 
+		p2.RejectedDecisionModel, 
+
+		--Format as JSON
+		CONCAT('{', p2.SourceTextRejectionReasons, LEFT(p2.SourceTextPre2, PATINDEX('%,"RejectionsDebugItems"%', p2.SourceTextPre2) - 1), '}') as SourceRawData 
+
+from	Pre2 p2
+)
+select	p.DecisionDate as ReferenceDateTime, 
+		h.ApplicationNr,
+
+		--RejectGroup 
+		CASE
+			WHEN 
+				p.SourceTextRejectionReasons LIKE '%paused%'  
+			THEN 'Paused'
+			WHEN  
+				(SELECT TOP 1 p.DecisionDate WHERE p.Discriminator = 'RejectedCreditDecision') IS NOT NULL
+			THEN 'PreRejected'
+			ELSE 'PostRejected'
+		END AS RejectGroup,
+
+		ISNULL(r.ReasonCategory, 'Other') as RejectionCategory,
+		ISNULL(r.Reason, 'Other') as RejectionReason,
+		p.SourceRawData
+
+from	CreditApplicationHeader h
+join	Pre p on p.Id = h.CurrentCreditDecisionId
+left join  @RejectionReasons r on p.SourceRawData like '%"' + r.Reason + '"%'
+where p.DecisionDate between @DateFrom and @DateTo
+order by h.ApplicationNr, p.DecisionDate
+
+END
+
+GO
+
+
+
+

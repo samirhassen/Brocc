@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Secure Messages";
+    ViewBag.AngularDeclaration = "ng-controller=\"ctr\" ng-app=\"app\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-secureMessages")
+    @Scripts.Render("~/Content/jsexternal/angular-sanitize.js")
+}
+<div class="fixed">
+    <div class="miniture mobile" ng-click="showMenu=!showMenu">
+        <a ng-hide="showMenu" href="" class="item"><img src="~/Content/img/icons-menu.png" /></a>
+        <a ng-show="showMenu" href="" class="item"><img src="~/Content/img/icons-close-menu.png" /></a>
+    </div>
+    <div class="order">
+        <div class="submenu mobile" ng-show="showMenu">
+            @Html.Partial("Index_Menu")
+        </div>
+        <div class="desktopmenu desktop">
+            @Html.Partial("Index_Menu")
+        </div>
+    </div>
+</div>
+<div class="content" style="">
+    @Html.Partial("TitleAndBack", TitleAndBackModel.Translated("coi_message", "productOverviewUrl"))
+
+
+    <p translate="cao_tellQuestions">Här kan du ställa frågor om dina produkter eller annat som du behöver hjälp med. Vi svarar dig inom en arbetsdag.</p>
+
+    <div class="pt-3 pb-3" ng-hide="showMessageInput===true">
+        <button translate="coi_writenewmessage" class="n-main-btn n-green-btn" ng-click="beginSendMessage()">Skriv nytt meddelande</button>
+    </div>
+
+    <div ng-show="showMessageInput">
+        <div class="row pt-3 pb-3">
+            <div class="col-md-6 col-xs-6">
+                <div class="form-group" ng-show="showContext">
+                    <label translate="coi_context">Välj kontext</label>
+                    <select id="contextSelect" class="form-control" ng-model="selectedContext">
+                        <option translate="coi_context" value="">Choose context to add</option>
+                        <option value="{{c.ChannelType+'|'+c.ChannelId}}" ng-repeat="c in ci.CustomerChannels" ng-show="c.IsRelation">{{c.ChannelId}}</option>
+                    </select>
+                </div>
+                <div class="form-group pt-2">
+                    <label translate="coi_message">Meddelande</label>
+                    <textarea class="form-control text-left" rows="3" required ng-model="messageText" type="text" autocomplete="off"></textarea>
+                </div>
+                <form novalidate id="secureform">
+                    <div class="pt-1">
+                        <div class="custom-upload-wrapper pull-left">
+                            <button ng-disabled="!messageText" ng-click="selectFileToAttach($event)" class="n-direct-btn n-white-btn">Attach <span class="glyphicon glyphicon-paperclip"></span></button>
+                        </div>
+                    </div>
+                    <div class="pull-left" ng-show="messageText">
+                        <span ng-show="attachedFileName" class="custom-uploaded-preview">
+                            {{attachedFileName}}
+                            <span ng-show="attachedFileName" ng-click="removeDocument($event)" class="glyphicon glyphicon-remove" style="margin-left:10px;"></span>
+                        </span>
+                    </div>
+                    <input type="file" id="file" name="file" style="display:none" />
+                </form>
+                <div class="clearfix"></div>
+                <div class="pt-3">
+                    <label translate="coi_emailNotification">Du kommer att få ett meddelande via epost när det finns svar att läsa.</label>
+                </div>
+                <div class="pt-3">
+                    <button translate="coi_sendmessage" class="n-main-btn n-green-btn" ng-disabled="isSendMessageAllowed()" ng-click="sendMessage()">Skicka</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-8 col-sm-offset-2">
+        <div class="list-details">
+            <div class="list-item" ng-repeat="t in ci.Messages">
+                <div class="row">
+                    <p class="subinfo text-center col-xs-12">{{formatDate(t.CreationDate)}}</p>
+                    <div ng-class="t.IsFromCustomer ? 'col-xs-8 pull-right':'col-xs-8 pull-left'">
+                        <div ng-class="t.IsFromCustomer ? 'pull-right direction-customer':'pull-left direction-client'">
+                            <div ng-if="t.TextFormat === 'html'">
+                                <p ng-bind-html="t.Text"></p>
+                            </div>
+                            <div ng-if="t.TextFormat !== 'html'">
+                                <p>{{t.Text}}</p>
+                            </div>
+                            <p>
+                                <a target="_blank" ng-show="t.CustomerMessageAttachedDocuments.length>0" ng-href="/Api/CustomerMessage/GetFile?archiveKey={{t.CustomerMessageAttachedDocuments[0].ArchiveKey}}" class="n-download-anchor"><span translate="coi_attachment"></span> <span class="glyphicon glyphicon-save"></span></a>
+                            </p>
+                            <span class="subinfo" style="">{{t.ChannelId}}</span>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <p ng-show="areMoreTransactions()" class="text-center pt-3"><a href="#" class="n-anchor turqoise" ng-click="loadMoreTransactions($event)" translate="cao_details_trs_load">Ladda fler</a></p>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+
+
+

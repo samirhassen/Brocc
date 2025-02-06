@@ -1,0 +1,30 @@
+<div [class]="mainClass()">
+    <label class="col-xs-6 col-sm-6 col-md-6 control-label">{{labelText}}</label>
+    <div class="col-xs-6 col-sm-6 col-md-6"> 
+        <p class="form-control-static" *ngIf="isEditAllowed()">
+            <a *ngIf="!isValueMissing()" [href]="changeUrl(false)" class="n-anchor n-longer">
+                <ng-container *ngTemplateOutlet="itemValue"></ng-container>
+                <ng-container *ngTemplateOutlet="itemChangedMarker"></ng-container>
+            </a>
+            <a *ngIf="isValueMissing()" [href]="changeUrl(true)" class="n-anchor n-longer">
+                + 
+                <ng-container *ngTemplateOutlet="itemChangedMarker"></ng-container>
+            </a>
+        </p>
+        <p class="form-control-static" *ngIf="!isEditAllowed()">
+   
+            <span class="n-longer-always">
+                <ng-container *ngTemplateOutlet="itemValue"></ng-container>
+                <ng-container *ngTemplateOutlet="itemChangedMarker"></ng-container>         
+            </span>
+        </p>        
+    </div>
+</div>
+
+<ng-template #itemValue>
+    {{type === "enum" ? translate(currentValue()) : currentValue()}}
+</ng-template>
+
+<ng-template #itemChangedMarker>
+    <span *ngIf="isValueChanged()" class="pull-right {{isEditAllowed() ? 'n-star' : 'n-star-always'}}">*</span>
+</ng-template>

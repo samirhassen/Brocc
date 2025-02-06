@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-additional-questions.html">
+    <div>
+        <div class="form-horizontal">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Sent</label>
+                    <div class="col-xs-6 form-control-static">{{$ctrl.m.SentDate | date}}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Customer link</label>
+                    <p class="form-control-static col-sm-5 copyable overflowhidden">{{$ctrl.m.AdditionalQuestionsLink}}</p>
+                    <p class="form-control-static col-sm-1">...</p>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Answered</label>
+                    <div class="col-xs-6 form-control-static">{{$ctrl.m.AnsweredDate | date}}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-6 control-label">Answers</label>
+                    <div class="col-xs-6 form-control-static"><a ng-if="$ctrl.m.AnswersDocumentKey" class="n-direct-btn n-turquoise-btn" href="#" ng-click="$ctrl.showAnswers($ctrl.m.AnswersDocumentKey, $event)">Show <span class="glyphicon glyphicon-resize-full"></span></a></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <modal-dialog dialog-title="'Answers'" dialog-id="$ctrl.answersDialogId">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                            <th>Applicant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="i in $ctrl.a.answersDocument.Items">
+                            <td>{{i.QuestionText}}</td>
+                            <td>{{i.AnswerText}}</td>
+                            <td>{{i.ApplicantNr}}</td>
+                        </tr>
+                        <tr ng-if="$ctrl.a.currentLoansModel">
+                            <td>Hur mycket skulle du vilja amortera totalt per månad?</td>
+                            <td>{{$ctrl.a.currentLoansModel.RequestedAmortizationAmount | currency}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-if="$ctrl.a.currentLoansModel">
+                    <h2>Loans</h2>
+                    <hr class="hr-section" />
+                    <table class="table" >
+                        <thead>
+                            <tr>
+                                <th>Bank</th>
+                                <th>Amortization</th>
+                                <th>Balance</th>
+                                <th>Loannr</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="loan in $ctrl.a.currentLoansModel.Loans">
+                                <td>{{loan.BankName}}</td>
+                                <td>{{loan.MonthlyAmortizationAmount | currency}}</td>
+                                <td>{{loan.CurrentBalance | currency}}</td>
+                                <td>{{loan.LoanNr}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </modal-dialog>
+        </div>
+        <div class="pt-2">
+            <application-documents initial-data="$ctrl.documentsInitialData" on-documents-added-or-removed="$ctrl.onDocumentsAddedOrRemoved()"></application-documents>
+        </div>
+    </div>
+</script>

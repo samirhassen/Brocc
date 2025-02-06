@@ -1,0 +1,92 @@
+
+<ng-container *ngIf="m">
+    <div class="row">
+        <form name="terminationLetterSearchForm">
+          <div class="col-xs-12 col-sm-7 col-md-7">
+              <div class="row">
+                  <div class="col-sm-7 col-md-7">
+                      <div class="relative">
+                          <span class="glyphicon glyphicon-search"></span>
+                          <input type="text" name="terminationLetterSearch" class="form-control search" [(ngModel)]="m.searchValue"
+                              placeholder="Civic regnr/credit nr" />
+                      </div>
+                  </div>
+                  <div class="col-sm-5 col-md-5" *ngIf="m.searchValue">
+                      <button type="button" class="n-icon-btn n-white-btn" (click)="clearSearch($event)">
+                          <span class="glyphicon glyphicon-remove"></span>
+                      </button>
+                      <button type="submit" class="n-main-btn n-blue-btn" (click)="gotoPage(0, m.searchValue)">
+                          Search
+                      </button>
+                  </div>
+              </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="row pt-3" *ngIf="m.totalNrOfPages === 0">
+          <div class="col-xs-2 no-hits">
+              <p>No hits.</p>
+          </div>
+      </div>
+      <div class="pt-3" *ngIf="m.totalNrOfPages > 0">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th class="col-xs-1">Loan nr</th>
+                      <th class="col-xs-1 text-center"><span class="perferi">Overdue</span> count</th>
+                      <th class="col-xs-1 text-center"><span class="perferi">Overdue</span> # days</th>
+                      <th class="col-xs-2"><span class="perferi">Overdue</span> balance</th>
+                      <th class="col-xs-3">Attention</th>
+                      <th class="col-xs-3">State</th>
+                      <th class="col-xs-1 text-right"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let letter of m.terminationLetters">
+                      <td><a class="n-anchor" [href]="letter.CreditUrl" target="_blank">{{letter.CreditNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                      <td class="text-center">{{letter.NrUnpaidOverdueNotifications}}</td>
+                      <td class="text-center">{{letter.NrOfDaysOverdue}}</td>
+                      <td>{{letter.BalanceUnpaidOverdueNotifications | number: '1.2-2'}} / {{letter.InitialUnpaidOverdueNotifications | number: '1.2-2'}} ({{(100 * letter.FractionBalanceUnpaidOverdueNotifications) | number: '1.0-0'}}%)</td>
+                      <td>
+                          <span *ngIf="letter.AttentionHasRecentOverdueTerminationLetter">Had recent terminationletter due {{letter.AttentionHasRecentOverdueTerminationLetter | date:'shortDate'}}.&nbsp;</span>
+                          <span *ngIf="letter.AttentionNotificationLowBalanceAmount">Low balance notification {{letter.AttentionNotificationLowBalanceAmount| currency}}.&nbsp;</span>
+                          <span *ngIf="letter.AttentionWasPostponedUntilDate">Was recently postponed {{letter.AttentionWasPostponedUntilDate | date:'shortDate'}}.&nbsp;</span>
+                          <span *ngIf="letter.AttentionPromisedToPayDateRecentOrFuture">Promised to pay by {{letter.AttentionPromisedToPayDateRecentOrFuture | date:'shortDate'}}.&nbsp;</span>
+                          <span *ngIf="letter.AttentionSettlementOfferDate">Expected settlement date {{letter.AttentionSettlementOfferDate | date:'shortDate'}}.&nbsp;</span>
+                      </td>
+                      <td class="space-between-spans">
+                          <span *ngFor="let stateText of letter.stateTexts">{{stateText}}</span>
+                      </td>
+                      <td class="text-right">
+                          <label class="n-toggle" *ngIf="letter.IsEligableForTerminationLetterExpectDate">
+                              <input type="checkbox" checked="checked" (click)="postponeOrResume(letter, true, $event)" />
+                              <span class="n-slider"></span>
+                          </label>
+                          <label class="n-toggle" *ngIf="!letter.IsEligableForTerminationLetterExpectDate && letter.ActivePostponedUntilDate">
+                              <input type="checkbox" (click)="postponeOrResume(letter, false, $event)" />
+                              <span class="n-slider"></span>
+                          </label>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+
+      </div>
+      <div *ngIf="m.totalNrOfPages > 1">
+          <div class="dataTables_paginate paging_simple_numbers custom-pagination">
+            <ul class="pagination">
+                <li class="paginate_button previous" *ngIf="m.currentPageNr > 0"><a (click)="gotoPage(m.currentPageNr - 1)">Previous</a></li>
+                <li class="paginate_button previous disabled" *ngIf="m.currentPageNr <= 0"><a (click)="$event.preventDefault()">Previous</a></li>
+
+                <li *ngFor="let item of [].constructor(m.totalNrOfPages); let pageNr = index" class="paginate_button" [class]="{ 'active' : m.currentPageNr === pageNr }">
+                    <a (click)="gotoPage(pageNr)" *ngIf="m.currentPageNr !== pageNr">{{pageNr + 1}}</a>
+                    <a *ngIf="m.currentPageNr === pageNr">{{pageNr + 1}}</a>
+                </li>
+
+                <li class="paginate_button next" *ngIf="m.totalNrOfPages > (m.currentPageNr + 1)"><a (click)="gotoPage(m.currentPageNr + 1)">Next</a></li>
+                <li class="paginate_button next disabled" *ngIf="m.totalNrOfPages === (m.currentPageNr + 1)"><a (click)="$event.preventDefault()">Next</a></li>
+            </ul>
+          </div>
+      </div>
+</ng-container>

@@ -1,0 +1,35 @@
+﻿@{
+    var showCredit = NEnv.IsCreditOverviewActive && this.User.IsInRole(LoginProvider.CreditCustomerRoleName);
+    var showSavings = NEnv.IsSavingsOverviewActive && this.User.IsInRole(LoginProvider.SavingsCustomerRoleName);
+    var showContactInfo = showCredit || showSavings;
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-angular-translateonly")
+}
+<div class="content">
+    <div>
+        @if (showSavings)
+        {
+            <div class="text-center">
+                <div><a href="@Url.Action("Index", "SavingsOverview")"><div class="product-box"><span class="product-icon"><img src="~/Content/img/icons-get-cash.png" /></span><span translate="global_m_spar"> Spar</span></div></a></div>
+            </div>            
+        }
+        @if (showCredit)
+        {
+            <div class="text-center">
+                <div><a href="@Url.Action("Index", "CreditOverview")"><div class="product-box"><span class="product-icon"><img src="~/Content/img/icons-company.png" /></span><span translate="global_m_lan"> Lån</span></div></a></div>
+            </div>            
+        }
+        @if (showContactInfo)
+        {
+            <div class="text-center">
+                <div><a href="@Url.Action("Index", "ContactInfo")"><div class="product-box"><span class="product-icon"><img src="~/Content/img/icons-account.png" /></span><span translate="global_m_contactinfo"> Mina kunduppgifter</span></div></a></div>
+            </div>            
+        }        
+    </div>  
+</div>

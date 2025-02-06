@@ -1,0 +1,248 @@
+<ng-container *ngIf="m">
+  <form [formGroup]="m.form.form">
+    <h2>Bostaden</h2>
+    <label>Vilken adress har bostaden?</label>
+    <div class="row">
+      <div class="col-sm-6 col-xs-12">
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.form.hasError('objectAddressStreet') }"
+        >
+          <label>Gata</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="objectAddressStreet"
+          />
+        </div>
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.form.hasError('objectAddressZipcode') }"
+        >
+          <label>Postnummer</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="objectAddressZipcode"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6 col-xs-12">
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.form.hasError('objectAddressCity') }"
+        >
+          <label>Ort</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="objectAddressCity"
+          />
+        </div>
+        <div
+          class="form-group pb-1"
+          [ngClass]="{
+            'has-error': m.form.hasError('objectAddressMunicipality')
+          }"
+        >
+          <label>Kommun</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="objectAddressMunicipality"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.form.hasError('isObjectApartment') }"
+        >
+          <p>Är bostaden en bostadsrättsförening?</p>
+          <div class="radio-inline">
+            <label
+              ><input
+                type="radio"
+                formControlName="isObjectApartment"
+                value="true"
+              />
+              Ja</label
+            >
+          </div>
+          <div class="radio-inline">
+            <label
+              ><input
+                type="radio"
+                formControlName="isObjectApartment"
+                value="false"
+              />
+              Nej</label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="m.form.hasFormControl(null, 'apartmentNr')">
+      <div class="col-sm-6 col-xs-12">
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.form.hasError('apartmentNr') }"
+        >
+          <label>Vilket lägenhetsnummer har bostaden?</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="apartmentNr"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6 col-xs-12">
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.form.hasError('objectMonthlyFeeAmount') }"
+        >
+          <label>Vad är månadskostnaden?</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="objectMonthlyFeeAmount"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 col-xs-12">
+        <div
+          class="form-group pb-1"
+          [ngClass]="{
+            'has-error': m.form.hasError('objectOtherMonthlyCostsAmount')
+          }"
+        >
+          <label>Vad är driftskostnaden per månad för bostaden?</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="objectOtherMonthlyCostsAmount"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6 col-xs-12">
+        <div
+          class="form-group pb-1"
+          [ngClass]="{ 'has-error': m.form.hasError('objectLivingArea') }"
+        >
+          <label>Hur stor är boytan?</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="objectLivingArea"
+          />
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!m.isPurchase">
+      <h2 class="pt-3">Befintliga lån på bostaden</h2>
+      <div class="row" *ngFor="let suffix of m.loanSuffixes">
+        <div class="col-sm-11 col-xs-10">
+          <div class="row">
+            <div class="col-sm-5 col-xs-12">
+              <div
+                class="form-group pb-1"
+                [ngClass]="{
+                  'has-error': m.form.hasError('bankName' + suffix)
+                }"
+              >
+                <label>Bank</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [formControlName]="'bankName' + suffix"
+                />
+              </div>
+            </div>
+            <div class="col-sm-2 col-xs-12">
+              <div
+                class="form-group pb-1"
+                [ngClass]="{
+                  'has-error': m.form.hasError(
+                    'currentMonthlyAmortizationAmount' + suffix
+                  )
+                }"
+              >
+                <label>Amortering</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [formControlName]="
+                    'currentMonthlyAmortizationAmount' + suffix
+                  "
+                />
+              </div>
+            </div>
+            <div class="col-sm-2 col-xs-12">
+              <div
+                class="form-group pb-1"
+                [ngClass]="{
+                  'has-error': m.form.hasError('interestRatePercent' + suffix)
+                }"
+              >
+                <label>Ränta</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [formControlName]="'interestRatePercent' + suffix"
+                />
+              </div>
+            </div>
+            <div class="col-sm-3 col-xs-12">
+              <div
+                class="form-group pb-1"
+                [ngClass]="{
+                  'has-error': m.form.hasError('currentDebtAmount' + suffix)
+                }"
+              >
+                <label>Lånebelopp</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [formControlName]="'currentDebtAmount' + suffix"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-1 col-xs-2">
+          <div class="pt-2">
+            <button
+              class="n-icon-btn n-blue-btn"
+              (click)="m.removeLoan(suffix, $event)"
+            >
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-1">
+        <button class="n-icon-btn n-blue-btn" (click)="m.addLoan(null, $event)">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+      </div>
+    </ng-container>
+
+    <div class="text-right pt-5">
+      <button
+        class="n-main-btn n-green-btn"
+        [disabled]="m.form.invalid()"
+        (click)="apply($event)"
+      >
+        Gå vidare
+      </button>
+    </div>
+  </form>
+</ng-container>

@@ -1,0 +1,54 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="application-fraud-check.html">
+    <div>
+        <form novalidate class="form-horizontal">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <p class="col-xs-4 control-label">Fraud Control</p>
+                    <p class="col-xs-8 form-control-static"><b>{{$ctrl.m.applicant1.status}}</b></p>
+                </div>
+                <br />
+                <div class="form-group">
+                    <div class="col-xs-5 text-right">
+                        <a class="n-anchor" ng-href="{{$ctrl.m.applicant1.viewUrl}}" ng-show="$ctrl.m.applicant1.status == 'Approved' || $ctrl.m.applicant1.status == 'Rejected'">
+                            View details
+                        </a>
+                        <a class="n-main-btn n-blue-btn" href="{{$ctrl.m.applicant1.continueUrl}}" ng-show="$ctrl.m.isApplicationActive === true && $ctrl.m.applicant1.status ==='Unresolved'" ng-disabled="$ctrl.m.isApplicationWaitingForAdditionalInformation">
+                            Continue <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div class="col-xs-7 text-right">
+                        <a class="n-main-btn n-blue-btn" ng-href="{{$ctrl.m.applicant1.newUrl}}" ng-show="$ctrl.m.isApplicationActive === true && $ctrl.m.isApplicationPartiallyApproved !== true" ng-disabled="$ctrl.m.isApplicationWaitingForAdditionalInformation || $ctrl.m.agreementStatus != 'Accepted'">
+                            New fraud check <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group pb-3" ng-show="$ctrl.initialData.applicationInfo.NrOfApplicants > 1">
+                    <p class="col-xs-4 control-label">Fraud Control</p>
+                    <p class="col-xs-8 form-control-static"><b>{{$ctrl.m.applicant2.status}}</b></p>
+                </div>
+                <div class="form-group" ng-show="$ctrl.initialData.applicationInfo.NrOfApplicants > 1">
+                    <div class="col-xs-5 text-right">
+                        <a class="n-anchor" ng-href="{{$ctrl.m.applicant2.viewUrl}}" ng-show="$ctrl.m.applicant2.status == 'Approved' || $ctrl.m.applicant2.status == 'Rejected'">
+                            View details
+                        </a>
+                        <a class="n-main-btn n-blue-btn" href="{{$ctrl.m.applicant2.continueUrl}}" ng-show="$ctrl.m.isApplicationActive === true && $ctrl.m.applicant2.status ==='Unresolved'" ng-disabled="$ctrl.m.isApplicationWaitingForAdditionalInformation">
+                            Continue <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div class="col-xs-7 text-right">
+                        <a class="n-main-btn n-blue-btn" ng-href="{{$ctrl.m.applicant2.newUrl}}" ng-show="$ctrl.m.isApplicationActive === true && $ctrl.m.isApplicationPartiallyApproved !== true" ng-disabled="$ctrl.m.isApplicationWaitingForAdditionalInformation || $ctrl.m.agreementStatus != 'Accepted'">
+                            New fraud check <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+    </div>
+</script>

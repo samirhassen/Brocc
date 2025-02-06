@@ -1,0 +1,149 @@
+<credit-menu activeMenuItemCode="changeTerms" [creditNr]="m?.creditNr" *ngIf="m">
+    <div current-item-content>
+        <div *ngIf="m.disabledMessage">
+            <p>{{m.disabledMessage}}</p>
+        </div>
+        <div *ngIf="!m.disabledMessage">
+            <div class="row">
+                <div class="col-xs-10 col-sm-offset-1">
+                    <div class="row pb-3">
+                        <div class="col-xs-4">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Margin interest</label>
+                                    <p class="form-control-static col-xs-6">{{m.currentTerms.marginInterestRatePercent | number:'1.0-4'}}%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Repayment time</label>
+                                    <p *ngIf="!m.currentTerms.amortizationPlanFailedMessage" class="form-control-static col-xs-6">{{m.currentTerms.nrOfRemainingPayments}} months</p>
+                                    <p *ngIf="m.currentTerms.amortizationPlanFailedMessage" class="form-control-static col-xs-6">{{m.currentTerms.amortizationPlanFailedMessage}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Annuity</label>
+                                    <p class="form-control-static col-xs-6">{{m.currentTerms.annuityAmount | currency}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="editblock" *ngIf="!m.pendingTerms">
+                        <form name="calcform" [formGroup]="m.calculateForm.form">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Margin interest rate</label>
+                                    <div class="col-xs-4"><input formControlName="calcMarginInterestRatePercent" type="text" class="form-control"  /></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-6">Repayment time</label>
+                                    <div class="col-xs-4">
+                                        <input formControlName="calcNrOfRemainingPayments" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="pt-2 text-center">
+                                    <button class="n-direct-btn n-blue-btn" (click)="computeNewTerms($event)" [disabled]="m.calculateForm.invalid()">Calculate <span class="glyphicon glyphicon-refresh"></span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="frame" *ngIf="m.pendingTerms">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">Margin interest rate</label>
+                                        <p class="form-control-static col-xs-6">{{m.pendingTerms.MarginInterestRatePercent | number:'1.0-4'}}%</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">Repayment time</label>
+                                        <p class="form-control-static col-xs-6">{{m.pendingTerms.NrOfRemainingPayments}} months</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-6">Annuity</label>
+                                        <p class="form-control-static col-xs-6">{{m.pendingTerms.AnnuityAmount | currency}}</p>
+                                    </div>
+                                    <div class="form-group pb-2">
+                                        <label class="control-label col-xs-6">Sent date</label>
+                                        <p class="form-control-static col-xs-6">{{m.pendingTerms.SentDate | date}}</p>
+                                    </div>
+                                    <div class="form-group" *ngFor="let s of m.pendingTerms.Signatures">
+                                        <label class="control-label col-xs-3">Signed by applicant {{s.ApplicantNr}}</label>
+                                        <p *ngIf="!s.SignatureDate" class="form-control-static col-xs-3">-</p>
+                                        <p *ngIf="s.SignatureDate" class="form-control-static col-xs-3">{{s.SignatureDate | date}}</p>
+                                        <div *ngIf="s.UnsignedDocumentKey && !s.SignedDocumentKey" class="form-control-static col-xs-3">
+                                            <a [href]="getArchiveDocumentUrl(s.UnsignedDocumentKey)" target="_blank" class="n-direct-btn n-purple-btn">PDF <span class="glyphicon glyphicon-save"></span></a>
+                                        </div>
+                                        <div *ngIf="s.SignedDocumentKey" class="form-control-static col-xs-3">
+                                            <a [href]="getArchiveDocumentUrl(s.SignedDocumentKey)" target="_blank" class="n-direct-btn n-purple-btn">PDF <span class="glyphicon glyphicon-save"></span></a>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <!-- This copies to the clipboard so href is just here as fallback if the browser prevents clipboard access. The user can then at least right click and get the link. -->
+                                            <a *ngIf="!s.SignatureDate" class="n-direct-btn n-white-btn" [href]="s.SignatureUrl" (click)="copySignatureLink(s, $event)">Copy signature link<span class="glyphicon glyphicon-plus"></span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="form-group text-right">
+                                        <button class="n-main-btn n-white-btn" (click)="cancelPendingTermsChange($event)">Cancel offer</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center pt-3"><button class="n-main-btn n-green-btn" [disabled]="!isAcceptPendingChangeAllowed()" (click)="acceptPendingTermsChange($event)">Accept</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3" *ngIf="m.computedNewTerms">
+                <div class="frame">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-sm-offset-1 col-xs-10">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Annuity</label>
+                                            <p class="form-control-static col-xs-6">{{m.computedNewTerms.AnnuityAmount | currency}}</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Monthly amount</label>
+                                            <p class="form-control-static col-xs-6">{{m.computedNewTerms.MonthlyAmount | currency}}</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Repayment time</label>
+                                            <p class="form-control-static col-xs-6">{{m.computedNewTerms.NrOfRemainingPayments}} months</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Margin interest rate</label>
+                                            <p class="form-control-static col-xs-6">{{m.computedNewTerms.MarginInterestRatePercent | number:'1.0-4'}}%</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Total interest rate</label>
+                                            <p class="form-control-static col-xs-6">{{m.computedNewTerms.TotalInterestRatePercent | number:'1.0-4'}}%</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-6">Effective interest rate</label>
+                                            <p class="form-control-static col-xs-6">{{m.computedNewTerms.EffectiveInterestRatePercent | number:'1.0-4'}}%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2 text-center">
+                            <button class="n-main-btn n-green-btn" (click)="sendNewTerms($event)">{{m.hasEmailProvider ? 'Send new terms' : 'Create new terms' }}<send-email-logo></send-email-logo></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</credit-menu>

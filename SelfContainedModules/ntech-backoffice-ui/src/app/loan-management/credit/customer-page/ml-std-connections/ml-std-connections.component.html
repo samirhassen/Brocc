@@ -1,0 +1,23 @@
+<div class="pt-3" *ngIf="m">
+  <h2>Parties</h2>
+  <hr class="hr-section custom-line mt-0" />
+
+  <div *ngFor="let p of m.mortgageLoanStandardParties" class="pb-1">
+    <h3>{{ p.partyTypeDisplayName }}</h3>
+    <table class="table">
+      <tbody>
+        <tr *ngFor="let c of p.customers">
+          <td>
+            <a [href]="c.customerCardUrl" class="n-anchor"
+              >{{ c.firstName }}, {{ c.birthDate }}</a
+            >
+          </td>
+          <td></td>
+        </tr>
+        <tr *ngIf="p.customers.length === 0">
+          <td>-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

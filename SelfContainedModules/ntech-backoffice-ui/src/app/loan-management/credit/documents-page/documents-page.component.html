@@ -1,0 +1,27 @@
+<credit-menu activeMenuItemCode="documents" [creditNr]="m?.creditNr" *ngIf="m">
+  <div current-item-content>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-xs-3">Document type</th>
+          <th class="text-right col-xs-4">Creation date</th>
+          <th class="text-right col-xs-5"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of m.documents">
+          <td>{{ d.getDisplayName() }}</td>
+          <td class="text-right">{{ d.document.CreationDate | date }}</td>
+          <td class="text-right">
+            <a
+              [href]="d.downloadUrl"
+              target="_blank"
+              class="n-anchor"
+              >Download <span class="glyphicon glyphicon-save"></span
+            ></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</credit-menu>

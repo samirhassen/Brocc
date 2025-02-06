@@ -1,0 +1,300 @@
+﻿@model ApplicantPartialViewModel
+    @{ 
+        Func<string, IHtmlString> f = n => string.IsNullOrWhiteSpace(n) ? Html.Raw(string.Format("app.{0}", Model.Name)) : Html.Raw(string.Format("app.{0}.{1}", Model.Name, n));
+        var isA1 = Model.Name == "applicant1";
+        Func<string, IHtmlString> q = n =>
+        {
+            var fieldName = isA1 ? string.Format("q{0}1", n) : string.Format("q{0}2", n);
+            return Html.Raw(string.Format("$event.preventDefault();{0}=!{0}", fieldName));
+        };
+        Func<string, IHtmlString> qn = n =>
+        {
+            var fieldName = isA1 ? string.Format("q{0}1", n) : string.Format("q{0}2", n);
+            return Html.Raw(fieldName);
+        };
+    }
+
+<div class="the_key"><h3 translate="@Model.HeaderKey">Kunduppgifter sökande</h3></div>
+<div class="key_value">
+    <div class="the_key"><h4 translate="ansokan_personuppgifter">Personuppgifter</h4></div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_personbeteckning">Personbeteckning</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="(DDMMYYSNNNK)"
+                custom-validate="@Html.Raw("isValidCivicNr_" + Model.Name)"
+                ng-model="@f("civicRegNr")"
+                required
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_epost">E-postadress</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                custom-validate="isValidEmail"
+                ng-model="@f("email")"
+                required
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_telefon">Telefonnummer</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                ng-model="@f("phone")"
+               required
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key"><h4 translate="ansokan_ekouppgifter">Ekonomiska uppgifter</h4></div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_education">Utbildning</div>
+    <div class="the_value">
+        <select class="constant_width" ng-model="@f("education")" required>
+            <option value="" ng-hide="@f("education")" translate="ansokan_valj">Välj</option>
+            <option value="{{e}}" ng-repeat="e in educationCodes">{{'ansokan_' + e | translate}}</option>
+        </select>
+    </div>
+</div>
+<div class="key_value" ng-hide="@Html.Raw(isA1 ? "false" : "app.applicantsHaveSameAddress === 'true'")">
+    <div class="the_key" translate="ansokan_housing">Boendeform</div>
+    <div class="the_value">
+        <select class="constant_width" ng-model="@f("housing")" 
+                ng-hide="@Html.Raw(isA1 ? "false" : "app.applicantsHaveSameAddress === 'true'")" 
+                ng-required="@Html.Raw(isA1 ? "true" : "app.applicantsHaveSameAddress === 'false'")">
+            <option value="" ng-hide="@f("housing")" translate="ansokan_valj">Välj</option>
+            <option value="{{e}}" ng-repeat="e in housingCodes">{{'ansokan_' + e | translate}}</option>
+        </select>
+    </div>
+</div>
+<div class="key_value" ng-hide="@Html.Raw(isA1 ? "false" : "app.applicantsHaveSameAddress === 'true'")">
+    <div class="the_key" translate="ansokan_housingcost">Hyra/avgift</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_eurperman' | translate}}"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("housingCostPerMonthAmount")"
+                ng-required="@Html.Raw(isA1 ? "true" : "app.applicantsHaveSameAddress === 'false'")"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_employment">Anställningsform</div>
+    <div class="the_value">
+        <select class="constant_width" ng-model="@f("employment")" required>
+            <option value="" ng-hide="@f("employment")" translate="ansokan_valj">Välj</option>
+            <option value="{{e}}" ng-repeat="e in employmentCodes">{{'ansokan_' + e | translate}}</option>
+        </select>
+    </div>
+
+</div>
+<div class="key_value" ng-show="isEmployedSinceRequired(@f(""))">
+    <div class="the_key" translate="ansokan_anstalldsedan">Anställd sedan</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_mmaaaa' | translate}}"
+                custom-validate="isValidMonthFi"
+                ng-model="@f("employedSinceMonth")"
+                ng-required="isEmployedSinceRequired(@f(""))"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value" ng-show="areEmploymentExtrasRequired(@f(""))">
+    <div class="the_key" translate="ansokan_employer">Arbetsgivare</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                ng-model="@f("employer")"
+                ng-required="areEmploymentExtrasRequired(@f(""))"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value" ng-show="areEmploymentExtrasRequired(@f(""))">
+    <div class="the_key" translate="ansokan_employerphone">Arbetsgivares telefon</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                ng-model="@f("employerPhone")"
+                ng-required="areEmploymentExtrasRequired(@f(""))"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_inkomstbrutto">Inkomst (brutto)</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_eurperman' | translate}}"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("incomePerMonthAmount")"
+                required
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_marriage">Civilstånd</div>
+    <div class="the_value">
+        <select class="constant_width" ng-model="@f("marriage")" required>
+            <option value="" ng-hide="@f("marriage")" translate="ansokan_valj">Välj</option>
+            <option value="{{e}}" ng-repeat="e in marriageCodes">{{'ansokan_' + e | translate}}</option>
+        </select>
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_nrofchildren" >Antal försörjningspliktiga barn</div>
+    <div class="the_value">
+        <select class="constant_width" ng-model="@f("nrOfChildren")" required>
+            <option value="" translate="ansokan_valj">Välj</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+        </select>
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_bolan_belopp">Bolån belopp</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("mortgageLoanAmount")"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value" ng-show="@f("mortgageLoanAmount") && @f("mortgageLoanAmount") > 0">
+    <div class="the_key" translate="ansokan_bolan_kostnad">Bolån kostnad</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_eurperman' | translate}}"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("mortgageLoanCostPerMonthAmount")"
+                ng-required="@f("mortgageLoanAmount") && @f("mortgageLoanAmount") > 0"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_bilbatlan_belopp">Bil/båtlån belopp</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("carOrBoatLoanAmount")"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value" ng-show="@f("carOrBoatLoanAmount") && @f("carOrBoatLoanAmount") > 0">
+    <div class="the_key" translate="ansokan_bilbatlan_kostnad">Bil/båtlån kostnad</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_eurperman' | translate}}"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("carOrBoatLoanCostPerMonthAmount")"
+                ng-required="@f("carOrBoatLoanAmount") && @f("carOrBoatLoanAmount") > 0"
+                class="constant_width" />
+    </div>
+</div>
+
+<div class="key_value">
+    <div class="the_key" translate="ansokan_studielan_belopp">Studielån belopp</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("studentLoanAmount")"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value" ng-show="@f("studentLoanAmount") && @f("studentLoanAmount") > 0">
+    <div class="the_key" translate="ansokan_studielan_kostnad">Studielån kostnad</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_eurperman' | translate}}"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("studentLoanCostPerMonthAmount")"
+                ng-required="@f("studentLoanAmount") && @f("studentLoanAmount") > 0"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_andralan_belopp">Andra lån belopp</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("otherLoanAmount")"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value" ng-show="@f("otherLoanAmount") && @f("otherLoanAmount") > 0">
+    <div class="the_key" translate="ansokan_andralan_kostnad">Andra lån kostnad</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_eurperman' | translate}}"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("otherLoanCostPerMonthAmount")"
+                ng-required="@f("otherLoanAmount") && @f("otherLoanAmount") > 0"
+                class="constant_width" />
+    </div>
+</div>
+<div class="key_value">
+    <div class="the_key" translate="ansokan_kreditkort_belopp">Kreditkort belopp</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("creditCardAmount")"
+                class="constant_width" />                
+    </div>
+</div>
+<div class="key_value" ng-show="@f("creditCardAmount") && @f("creditCardAmount") > 0">
+    <div class="the_key" translate="ansokan_kreditkort_kostnad">Kreditkort kostnad</div>
+    <div class="the_value">
+        <input type="text"
+                autocomplete="off"
+                placeholder="{{'ansokan_eurperman' | translate}}"
+                custom-validate="isValidPositiveInt"
+                ng-model="@f("creditCardCostPerMonthAmount")"
+                ng-required="@f("creditCardAmount") && @f("creditCardAmount") > 0"
+                class="constant_width" />
+    </div>
+</div>
+<div class="consent">
+    <div class="key_value">
+        <div class="the_key" translate="ansokan_sat_question">Jag ger GCC Capital AB i uppdrag att samla in och behandla information om mina utestående krediter från andra kreditgivare för att kunna behandla min kreditansökan. Jag samtycker till att kreditgivarna överlåter nämnda uppgifter om mina krediter till GCC Capital AB. GCC Capital AB kommer att göra denna förfrågan via det tekniska upplysningssystem som upprätthålls av Suomen Asiakastieto Oy och förfrågan ställs till de företag som deltar i systemet.</div>
+        <div class="the_value">
+            <input class="check_box" type="checkbox" name="approvedSat" ng-model="@f("approvedSat")" />&nbsp;{{'ansokan_jaggodkanner' | translate }}
+        </div>
+    </div>
+    <div class="key_value">
+        <div class="the_key" translate="ansokan_kundsamtycke">Jag samtycker till att de uppgifter jag anger i denna ansökan samt min folkbokföringsadress används för att identifiera mig som kund i systemet.</div>
+        <div class="the_value" ng-class="{ 'invalid_checkbox': @Html.Raw(string.Format("showInvalid({0}.customerConsent)", Model.FormName)) }">
+            <input class="check_box" type="checkbox" name="customerConsent" ng-model="@f("customerConsent")" required />&nbsp;{{'ansokan_jaggodkanner' | translate }}            
+        </div>
+    </div>
+    <div class="key_value">
+        <div class="the_key" translate="ansokan_kreditsamtycke">Jag försäkrar att ovanstående information stämmer och godkänner att kreditgivaren tar en kreditupplysning.</div>
+        <div class="the_value" ng-class="{ 'invalid_checkbox': @Html.Raw(string.Format("showInvalid({0}.creditReportConsent)", Model.FormName)) }">
+            <input class="check_box" type="checkbox" name="creditReportConsent" ng-model="@f("creditReportConsent")" required />&nbsp;{{'ansokan_jaggodkanner' | translate }}
+        </div>
+    </div>
+
+    <div class="key_value">
+        <div class="the_key"><span translate="ansokan_integritetspolicy_text">Vill ni veta hur vi behandlar dina personuppgifter finns det i vår</span> <a href="https://www.balanzia.fi/tietosuoja" class="link" target="_blank" translate="ansokan_integritet_lank">integritetspolicy.</a></div>
+    </div>
+</div>

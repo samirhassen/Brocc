@@ -1,0 +1,105 @@
+<div *ngIf="m && !m.isWorking">
+    
+    <!--Active-->
+    <div class="pt-3">
+      <h2>Active</h2>
+      <hr class="hr-section" />
+      <table class="table"> 
+        <thead>
+            <tr>
+                <th>Ruleset name</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of m.activeItems">
+                <td class="col-sm-6">{{item.ruleSetItem.RuleSetName}} ({{item.slotName}})</td>
+                <td class="col-sm-3"><a class="n-anchor" href="#" (click)="edit(item, $event)">View details</a></td>
+                <td class="col-sm-3 text-right"><button class="n-direct-btn n-white-btn" (click)="copyRuleset(item.ruleSetItem)">Copy this ruleset <span class="glyphicon glyphicon-plus"></span></button></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!--Pending-->
+    <div class="pt-3">
+        <h2>Pending</h2>
+        <hr class="hr-section" />
+        <table class="table"> 
+          <thead>
+              <tr>
+                  <th>Ruleset name</th>
+                  <th></th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngIf="m.pendingItem.ruleSetItem">
+                  <td class="col-sm-6">{{m.pendingItem.ruleSetItem.RuleSetName}}</td>
+                  <td class="col-sm-3"><a class="n-anchor" href="#" (click)="edit(m.pendingItem, $event)">Edit</a></td>
+                  <td class="col-sm-3 text-right"><button class="n-direct-btn n-blue-btn" (click)="changeSlot(m.pendingItem, $event)">Change status</button></td>
+              </tr>
+          </tbody>
+        </table>
+        <button class="n-direct-btn n-blue-btn" [disabled]="m.pendingItem.functionName !=='addNew'" (click)="addNew($event)">Create new ruleset template</button>
+      </div>
+      <br />
+
+      <!--Inactive-->
+      <div class="pt-3">
+        <toggle-block [initialData]="{ headerText: 'Inactive', isInitiallyExpanded: false, useTransparentBackground: true }">
+            <table class="table"> 
+            <thead>
+                <tr>
+                    <th>Ruleset name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let inactiveItem of m.inactiveItems">
+                    <td class="col-sm-6">{{inactiveItem.ruleSetItem.RuleSetName}}</td>
+                    <td class="col-sm-3"><a class="n-anchor" href="#" (click)="edit(inactiveItem, $event)">View details</a></td>
+                    <td class="col-sm-3 text-right"><button class="n-direct-btn n-blue-btn" (click)="changeSlot(inactiveItem, $event)">Change status</button></td>
+                </tr>  
+            </tbody>
+            </table>
+        </toggle-block>
+      </div>
+</div>
+
+<ng-template #changeSlotModalTemplate>
+    <div class="modal-header">
+        <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="changeSlotModalRef.hide()">
+            <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span>
+        </button>
+        <h1>Change status</h1>
+    </div>
+    <div class="modal-body" *ngIf="m?.changeSlot">
+        <div class="form-horizontal" style="padding:10px">
+            <div class="form-group">
+                <label class="control-label col-xs-6">Move to</label>
+                <div class="col-xs-6">
+                    <select class="form-control" [(ngModel)]="m.changeSlot.selectedTarget">
+                        <option *ngFor="let target of m.changeSlot.possibleTargets" [ngValue]="target">
+                            {{getSlotDisplayName(target.slotName)}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="m.changeSlot.selectedTarget?.warningText">
+                <label class="control-label col-xs-6">&nbsp;</label>
+                <div class="col-xs-6">
+                    <p class="form-control-static">{{m.changeSlot.selectedTarget.warningText}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-6">&nbsp;</label>
+                <div class="col-sm-offset-4 col-sm-2">
+                    <button style="float:right" class="btn n-green-btn" (click)="move($event)" [disabled]="!m.changeSlot.selectedTarget">Move</button>
+                </div>
+            </div> 
+        </div>
+    </div>
+  </ng-template>

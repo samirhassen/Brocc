@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "outDir": "Content/js",
+    "rootDir": "./Content/ts",
+    "allowJs": true,
+    "noImplicitAny": false,
+    "module": "none",
+    "typeRoots": [ "../SharedTsTypings" ]
+  },
+  "compileOnSave": true,
+  "include": [
+    "Content/ts"
+  ]
+  /* Add typings to [solution}\node_modules and make sure they are checked in to make the team build not take a million years */
+}

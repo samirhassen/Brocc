@@ -1,0 +1,100 @@
+<ng-container *ngIf="m">
+  <div class="row pt-3 pb-3" *ngIf="showSendMessageForm()">
+    <div class="col-sm-9 col-xs-12 pb-3">
+      <form [formGroup]="m.messageForm.form">
+        <div class="fix-quill-width">
+            <quill-editor
+            formControlName="message"
+            [modules]="quillEditorOptions"
+            [formats]="quillEditorFormats"
+            [styles]="{ height: '200px' }"
+          ></quill-editor>
+        </div>
+      </form>
+      <form
+        #fileInputForm
+        novalidate
+        class="form-inline"
+        name="attachFileForm"
+        id="attachFileForm"
+      >
+        <div class="pt-1 pull-right">
+          <button
+            [disabled]="invalid()"
+            (click)="selectFileToAttach($event)"
+            class="n-direct-btn n-white-btn"
+          >
+            Bifoga <span class="glyphicon glyphicon-paperclip"></span>
+          </button>
+        </div>
+        <div class="pt-1 pull-right" *ngIf="m.attachedFile">
+          <span class="mypages-fileupload-preview">
+            {{ m.attachedFile.name }}
+            <span
+              (click)="removeDocument($event)"
+              class="glyphicon glyphicon-remove remove-document-icon"
+            ></span>
+          </span>
+        </div>
+        <input
+          #fileInput
+          type="file"
+          id="file"
+          name="file"
+          style="display: none"
+          (change)="onFileAttached($event)"
+        />
+
+        <div class="clearfix"></div>
+      </form>
+    </div>
+    <div class="col-sm-3 col-xs-12">
+      <button
+        [disabled]="invalid()"
+        (click)="sendMessage($event)"
+        class="n-main-btn n-white-btn"
+      >
+        Skicka
+      </button>
+    </div>
+  </div>
+
+  <div class="message-list pt-3">
+    <div class="message-item" *ngFor="let message of m.messages">
+      <div class="row">
+        <p class="date-time text-center col-xs-12">
+          <span>{{ message.CreationDate | date: "yyyy-MM-dd HH:mm" }}</span>
+          <small
+            class="channel-id-label"
+            *ngIf="message.ChannelId != 'General'"
+            >{{ message.ChannelId }}</small
+          >
+        </p>
+        <div
+          class="col-sm-8 col-xs-10"
+          [ngClass]="getMessageClass(message.IsFromCustomer)"
+        >
+          <div [ngClass]="getMessageClass(message.IsFromCustomer, true)">
+            <p *ngIf="!isHtml(message)">{{ message.Text }}</p>
+            <div class="iframe-container" *ngIf="isHtml(message)">
+              <div [innerHTML]="sanitizeHtml(message.Text)"></div>
+            </div>
+            <ng-container
+              *ngFor="let a of message.CustomerMessageAttachedDocuments"
+            >
+              <a
+                class="n-direct-btn n-white-btn"
+                [href]="getAttachmentUrl(a)"
+                target="_blank"
+                >Dokument <span class="glyphicon glyphicon-save"></span
+              ></a>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center pt-3" *ngIf="m.hasMoreMessages">
+    <a (click)="loadMoreMessages($event)" href="" class="n-anchor">Visa fler</a>
+  </div>
+</ng-container>

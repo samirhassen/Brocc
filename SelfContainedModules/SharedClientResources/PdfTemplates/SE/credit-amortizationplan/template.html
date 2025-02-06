@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+    
+
+    <div class="page">
+        <div class="blackborder">
+            <div class="addressArea">
+                <div id="header">
+                   <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+                </div>
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Amorteringsplan</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Utskriftsdatum</td>
+                                <td class="text-right">{{printDate}}</td>
+                            </tr>
+                            <tr>
+                                <td>Lånenummer</td>
+                                <td class="text-right">{{creditNr}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column2 greenborder">
+
+                    <p>Antal kvarvarande betalningar: <b>{{nrOfRemainingPayments}}</b></p>
+                    <p>Betalningsfrekevens: <b>månadsvis</b></p>
+                    <p>Annuitet: <b>{{annuityAmount}}</b></p>
+                   
+                </div>
+                <div class="clear"></div>
+            </div>            
+            <div class="clear"></div>
+        </div>
+
+
+        <div class="area pt-5">
+            <div class="conditions">                
+                <div class="amortizationhistory">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Datum</td>
+                                <td class="text-right">Kapitalskuld</td>
+                                <td class="text-center"></td>
+                                <td class="text-right">Kapital</td>
+                                <td class="text-right">Ränta</td>
+                                <td class="text-right">Totalt</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#historicTransactions}}
+                            [[[include:transactionItem.html]]]
+                            {{/historicTransactions}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="amortizationfuture">
+                    <table>
+                        {{#futureTransactions}}
+                        [[[include:transactionItem.html]]]
+                        {{/futureTransactions}}
+                    </table>
+                </div>
+        
+            </div>
+        </div>
+
+    </div>
+</body>
+    
+</html>

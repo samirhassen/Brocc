@@ -1,0 +1,32 @@
+<div class="row text-center pt-3">
+  <div class="col-sm-12">
+    <p>Hur mycket vill du låna?</p>
+    <h2>{{ m.form.getValue("paidToCustomerAmount") | number: "1.0-2" }} kr</h2>
+  </div>
+</div>
+
+<calculator-slider
+  [initialData]="m.paidToCustomerAmountSliderData"
+></calculator-slider>
+
+<div class="row text-center pt-3">
+  <div class="col-sm-12">
+    <p>Hur mycket har du i befintliga bolån?</p>
+    <h2>{{ m.form.getValue("currentDebtAmount") | number: "1.0-2" }} kr</h2>
+  </div>
+</div>
+
+<calculator-slider
+  [initialData]="m.currentDebtAmountSliderData"
+></calculator-slider>
+
+<div class="row text-center pt-3">
+  <div class="col-sm-12">
+    <p>Vad är det uppskattade värdet på bostaden?</p>
+    <h2>{{ m.form.getValue("objectValueAmount") | number: "1.0-2" }} kr</h2>
+  </div>
+</div>
+
+<calculator-slider
+  [initialData]="m.objectValueAmountSliderData"
+></calculator-slider>

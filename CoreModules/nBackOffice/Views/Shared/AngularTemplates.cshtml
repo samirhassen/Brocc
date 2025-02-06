@@ -1,0 +1,9 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+<!-- NOTE: Stick this inside the angular applicaton tag or it will not be found -->
+<script type="text/ng-template" id="encryptedBlock" @Html.CspScriptNonce()>
+    <div>
+        <button ng-click="decrypt()" ng-if="!hideUi && !isDecrypted() && !isDecrypting()" ng-disabled="isAnyDecrypting()">Visa</button>
+        <div ng-transclude ng-if="isDecrypted() && !isDecrypting()"></div>
+        <img ng-show="!hideUi && isDecrypting()" style="height:1em;width:1em" src="@Url.Content("~/Content/img/loading.gif")" />
+    </div>
+</script>

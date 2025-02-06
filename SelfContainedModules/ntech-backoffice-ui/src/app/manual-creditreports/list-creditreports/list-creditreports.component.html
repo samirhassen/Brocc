@@ -1,0 +1,102 @@
+<div *ngIf="m">
+    <div class="form-horizontal col-sm-12" >
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Entity type</label>
+            <div class="col-sm-4">
+                <p class="form-control-static">{{m.isCompany ? 'Company' : 'Person'}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{m.isCompany ? 'Orgnr' : 'Civic regnr'}}</label>
+            <div class="col-sm-4">
+                <p class="form-control-static copyable">{{m.civicRegNrOrOrgnr}}</p>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-default" (click)="reset($event)">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix pb-2"></div>
+    <hr class="hr-section" />
+
+    <form [formGroup]="m?.buyForm?.form" class="form-horizontal col-sm-12 pb-2" *ngIf="m?.buyForm">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Provider</label>
+            <div class="col-sm-4">
+                <select class="form-control" formControlName="providerName">
+                    <option *ngFor="let provider of m.providers" [value]="provider.displayName">{{provider.displayName}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" [ngClass]="{ 'has-error': m.buyForm.hasError('reason') }">
+            <label class="col-sm-2 control-label">Reason</label>
+            <div class="col-sm-4">
+                <input type="text" formControlName="reason" class="form-control" autocomplete="off" />
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-default" [disabled]="m.buyForm.invalid()" (click)="buyReport($event)">Buy new report</button>
+            </div>
+        </div>
+    </form>
+    <div *ngIf="m?.buyForm" class="clearfix"></div>
+
+    <table class="table table-responsive col-sm-12">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Provider</th>
+                <th>Preview</th>
+                <th>Raw data</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let r of m.creditReports">
+                <td>{{parseRequestDate(r) | date:'short'}}</td>
+                <td>{{r.CreditReportProviderName}}</td>
+                <td><a href="#" (click)="showPreview(r, preview, $event)" *ngIf="hasPreview(r)">Show</a><span *ngIf="!hasPreview(r)">-</span></td>
+                <td><a href="#" (click)="showRawXml(r, preview, $event)" *ngIf="r.RawXmlArchiveKey">Show</a><span *ngIf="!r.RawXmlArchiveKey">-</span></td>
+                <td>
+                    <span *ngIf="!r.LocalReasonText"  class="n-unlock">
+                        <a href="#" (click)="showReason(r, $event)"><span class="glyphicon glyphicon-lock"></span></a>
+                    </span>
+                    <span *ngIf="r.LocalReasonText" class="form-control-static col-sm-6 copyable">{{r.LocalReasonText}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #preview>
+    <div class="modal-header">
+        <button type="button" class="n-icon-btn n-white-btn pull-right" (click)="modalRef.hide()">
+            <span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span>
+        </button>
+        <h1>{{m?.preview?.title}}</h1>
+    </div>
+    <div class="modal-body">
+        <html-preview *ngIf="m?.preview?.html" [content]="m.preview.html"></html-preview>
+        <pre *ngIf="m?.preview?.pre">{{m?.preview?.pre}}</pre>
+        <table *ngIf="m?.preview?.table" class="table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of m?.preview?.table">
+                    <ng-container *ngIf="row.headerLevel === 1">
+                        <td style="padding-left:0px;background-color: lightgray;" colspan="2"><b>{{row.title}}</b></td>
+                    </ng-container>
+                    <ng-container *ngIf="row.headerLevel === 2">
+                        <td style="padding-left:4px;" colspan="2"><b>{{row.title}}</b></td>
+                    </ng-container>
+                    <ng-container *ngIf="!row.headerLevel">
+                        <td style="padding-left:8px;">{{row.title}}</td>
+                        <td>{{row.value}}</td>
+                    </ng-container>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  </ng-template>
+</div>

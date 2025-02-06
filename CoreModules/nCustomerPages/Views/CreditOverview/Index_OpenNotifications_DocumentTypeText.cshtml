@@ -1,0 +1,8 @@
+﻿<span ng-switch="d.DocumentType">
+    <span ng-switch-when="Notification" translate="cao_openn_dt_Notification">Avi</span>
+    <span ng-switch-when="Reminder1" translate="cao_openn_dt_Reminder1">Påminnelse 1</span>
+    <span ng-switch-when="Reminder2" translate="cao_openn_dt_Reminder2">Påminnelse 2</span>
+    <span ng-switch-default>
+        {{d.DocumentType}}
+    </span>
+</span>

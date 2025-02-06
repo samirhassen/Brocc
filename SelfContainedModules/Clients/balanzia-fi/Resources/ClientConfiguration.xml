@@ -1,0 +1,72 @@
+<ClientConfiguration clientName="balanzia">
+  <Settings>
+    <Setting key="ntech.credit.termination.duedays" value="14" />
+    <Setting key="ntech.automation.creditcheck.enabled" value="true" />
+    <Setting key="ntech.automation.creditcheck.followaccepted" value="true" />
+    <Setting key="ntech.dashboard.enabled" value="true" />
+    <Setting key="ntech.handlerlimits.levelamounts" value="10000,20000,50000" />
+    <Setting key="ntech.credit.staticinitialfee" value="150"/>
+    <Setting key="ntech.credit.staticnotificationfee" value="5"/>
+    <Setting key="ntech.precredit.scoringversion" value="2018"/>
+    <Setting key="ntech.credit.notification.lowbalancelimit" value="10" />
+    <Setting key="ntech.precredit.balanzia.scoringinterestcutoff" value="11"/>
+    <Setting key="ntech.savings.ledgerreport.standardaccountproductname" value="Balanzia Säästötili" />
+    <Setting key="ntech.customerpages.favicon" value="~/Skinning/img/customerpages-favicon.png" />
+    <Setting key="ntech.credit.annuity.maxrepaymenttimeinmonths" value="240" />
+  </Settings>
+  <ActiveFeatures>
+    <Feature name="ntech.feature.credit.amortizationplan.v1"/>
+    <Feature name="ntech.feature.datawarehouse.v1"/>
+    <Feature name="ntech.feature.handlerlimits.v1"/>
+    <Feature name="ntech.feature.customerpages.alloweidsignaturelogin" />
+    <Feature name="feature.customerpages.kyc" />
+    <Feature name="ntech.feature.customerpages.savingsoverview" />
+    <Feature name="ntech.feature.customerpages.savingsapplication" />
+    <Feature name="ntech.feature.customerpages.creditoverview" />
+    <Feature name="ntech.feature.unsecuredloans"/>
+    <Feature name="ntech.feature.ullegacy"/>
+    <Feature name="ntech.feature.Treasuryaml.v1"/>
+    <Feature name="ntech.feature.Cm1aml.v1"/>
+    <Feature name="ntech.feature.kycbatchscreening"/>
+    <Feature name="ntech.feature.credit.allowbacktobackpaymentfreemonths"/>
+    <Feature name="ntech.feature.savingsCustomsAccountsExport.v1" />
+    <Feature name="ntech.precredit.manualsignatures" />
+    <Feature name="ntech.feature.bankAccountDataSharing" />
+    <Feature name="ntech.feature.sendemailonsettledloan" />
+    <Feature name="ntech.feature.securemessages" />
+    <Feature name="ntech.feature.manualCreditReports" />
+    <Feature name="ntech.customerpages.allowdirecteidlogin" />
+    <Feature name="ntech.feature.creditsearchcore" />
+    <Feature name="ntech.feature.customercheckpoints" />
+    <Feature name="ntech.feature.precredit"/>
+    <Feature name="ntech.feature.recalculateannuityoninterestchange" />
+    <Feature name="ntech.feature.savings" />
+    <Feature name="ntech.feature.isForcedBankAccountDataSharing" />
+    <Feature name="ntech.feature.positivecreditregister" />
+  </ActiveFeatures>
+  <CreditCm1AmlConfiguration>
+    <ProductType>11</ProductType>
+    <TransactionTypeIncomingPayment>3</TransactionTypeIncomingPayment>
+    <TransactionTypeOutgoingPayment>22</TransactionTypeOutgoingPayment>
+  </CreditCm1AmlConfiguration>
+  <SavingsCm1AmlConfiguration>
+    <ProductType>1</ProductType>
+    <TransactionTypeIncomingPayment>1</TransactionTypeIncomingPayment>
+    <TransactionTypeOutgoingPayment>2</TransactionTypeOutgoingPayment>
+  </SavingsCm1AmlConfiguration>
+  <SavingsRiksgalden>
+    <DepositorGuaranteeInstituteName>GCC Capital AB</DepositorGuaranteeInstituteName>
+    <DepositorGuaranteeOrgnr>165560588740</DepositorGuaranteeOrgnr>
+  </SavingsRiksgalden>
+  <DocumentClientData>
+    <Orgnr>2760357-3</Orgnr>
+    <Name>Brocc Finance AB, filial i Finland</Name>
+    <StreetAddress>PL 359</StreetAddress>
+    <ZipCode>00101</ZipCode>
+    <PostalArea>Helsinki</PostalArea>
+    <FooterAddress>PL 359, 00101 Helsinki | Y-tunnus: 2760357-3</FooterAddress>
+    <ContactText>Sähköposti: lainat@brocc.fi.</ContactText>
+    <Email>lainat@brocc.fi</Email>
+    <Website>www.brocc.fi</Website>
+  </DocumentClientData>
+</ClientConfiguration>

@@ -1,0 +1,36 @@
+<div class="task-toggle" *ngIf="m">
+  <div
+    class="task-toggle-header-row"
+    [ngClass]="{
+      'task-toggle-expanded': m.isExpanded,
+      'task-toggle-contracted': !m.isExpanded
+    }"
+    (click)="toggleExpanded($event)"
+  >
+    <div class="task-toggle-icon">
+      <span
+        class="glyphicon"
+        [ngClass]="{
+          'glyphicon-minus': m.status === 'initial',
+          'glyphicon-remove': m.status === 'rejected',
+          'glyphicon-ok': m.status === 'accepted'
+        }"
+      ></span>
+    </div>
+    <div class="task-toggle-header-text">
+      <p>{{ m.headerText }}</p>
+    </div>
+    <div class="text-right task-toggle-openclose">
+      <span
+        class="glyphicon"
+        [ngClass]="{
+          'glyphicon-triangle-bottom': m.isExpanded,
+          'glyphicon-plus': !m.isExpanded
+        }"
+      ></span>
+    </div>
+  </div>
+  <div *ngIf="m.isExpanded" style="padding-bottom: 20px; margin-top: 1px">
+    <ng-content></ng-content>
+  </div>
+</div>

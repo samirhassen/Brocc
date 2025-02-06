@@ -1,0 +1,11 @@
+.rates-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  .rates-block {
+    min-width: 800px;
+    max-width: 1024px;
+  }
+}

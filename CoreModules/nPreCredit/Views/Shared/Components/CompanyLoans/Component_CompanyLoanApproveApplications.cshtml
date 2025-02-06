@@ -1,0 +1,202 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-approve-applications.html">
+    <div>
+        <div class="pt-1 pb-2">
+            <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+            <h1 class="adjusted">Approve company loan applications</h1>
+        </div>
+
+        <div class="row pb-3">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="frame">
+                    <div class="row">
+                        <div class="col-sm-4 text-right">
+                            <p>New loans</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <p>{{$ctrl.newLoanCountToApprove()}}</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <p>{{$ctrl.newLoanAmountToApprove() | currency}}</p>
+                        </div>
+                        <div class="text-center pt-3">
+                            <button ng-hide="$ctrl.newLoanCountToApprove() == 0" class="n-main-btn n-green-btn" ng-click="$ctrl.createCredits($event)">Approve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-hits text-center" ng-if="$ctrl.m.applications.length == 0">
+            <p>
+                No applications to approve
+            </p>
+        </div>
+
+        <div class="pt-3 pb-3">
+            <table class="table" ng-if="$ctrl.m.applications.length > 0">
+                <thead>
+                    <tr>
+                        <th class="col-sm-1">Application</th>
+                        <th class="col-sm-2">Type</th>
+                        <th class="col-sm-1">Amount</th>
+                        <th class="col-sm-2">Handler</th>
+                        <th class="col-sm-6 text-right"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="n in $ctrl.m.applications">
+                        <td>
+                            <a ng-href="{{n.applicationUrl}}" class="n-anchor" target="_blank">{{n.applicationNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                        </td>
+                        <td>New Loan</td>
+                        <td>{{n.amount | currency}}</td>
+                        <td>{{n.handlerDisplayName}}</td>
+                        <td class="text-right">
+                            <label class="n-toggle">
+                                <input type="checkbox" ng-model="n.isApproved" />
+                                <span class="n-slider"></span>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class=" pt-3">
+            <h2 class="custom-header">
+                <span class="glyphicon chevron-bg" ng-class="{ 'glyphicon-chevron-down' : showHistoryBlock, 'glyphicon-chevron-right' : !showHistoryBlock }" ng-click="showHistoryBlock = !showHistoryBlock"></span>
+                View history
+            </h2>
+            <hr class="hr-section" />
+        </div>
+        <div ng-show="showHistoryBlock">
+            <form name="filterform" bootstrap-validation class="" novalidate>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="control-label">From Date</label>
+                            <input type="text" class="form-control" custom-validate="isValidDate" placeholder="YYYY-MM-DD" ng-model="$ctrl.m.historyFromDate" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="control-label">To Date</label>
+                            <input type="text" class="form-control" custom-validate="isValidDate" placeholder="YYYY-MM-DD" ng-model="$ctrl.m.historyToDate" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label class="control-label col-sm-12">&nbsp;</label>
+                            <button class="n-main-btn n-blue-btn" ng-click="$ctrl.filterHistory($event)" ng-disabled="filterform.$invalid">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <table class="table" ng-show="$ctrl.m.historyBatches" style="margin-top:50px">
+                <thead>
+                    <tr>
+                        <th class="col-sm-3">Date</th>
+                        <th class="col-sm-3">Count</th>
+                        <th class="col-sm-3">Total amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="b in $ctrl.m.historyBatches" ng-class="{ 'active-chevron' : b.details }">
+                        <td>
+                            <span class="glyphicon chevron-bg mr-1" ng-class="{ 'glyphicon-chevron-down' : b.details, 'glyphicon-chevron-right' : !b.details }" ng-click="$ctrl.loadBatchDetails(b, $event)"></span>
+                            {{b.ApprovedDate | date:'short'}}
+                        </td>
+                        <td>{{b.TotalCount}}</td>
+                        <td>{{b.TotalAmount | currency}}</td>
+                    </tr>
+                    <tr ng-repeat-end ng-show="b.batchDetails" class="nested-table-parent">
+                        <td colspan="4">
+                            <div class="nested-table-child">
+                                <table class="col-sm-offset-1 col-sm-11">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-2">Application</th>
+                                            <th class="col-sm-2">Type</th>
+                                            <th class="col-sm-1">Amount</th>
+                                            <th class="col-sm-2">Handler</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="n in b.batchDetails">
+                                            <td>
+                                                <a ng-href="{{n.ApplicationUrl}}" class="n-anchor" target="_blank">{{n.ApplicationNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                                            </td>
+                                            <td>
+                                                <span ng-if="n.TypeName == 'NewLoan'">
+                                                    New Loan
+                                                </span>
+                                                <span ng-if="n.TypeName == 'AdditionalLoan'">
+                                                    Additional Loan: <a ng-href="{{n.loanUrl}}" class="n-anchor" target="_blank">{{n.CreditNr}} <span class="glyphicon glyphicon-new-window"></span></a>
+                                                </span>
+                                            </td>
+                                            <td>{{n.Amount | currency}}</td>
+                                            <td>{{n.HandlerDisplayName}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="clearfix"></div>
+                            </div>                    
+                        </td>
+                    <tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+</script>

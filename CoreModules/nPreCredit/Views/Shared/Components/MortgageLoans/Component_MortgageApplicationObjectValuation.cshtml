@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-object-valuation.html">
+    <div ng-if="$ctrl.m" ng-show="$ctrl.m.valuation.ValuationItems">
+        <div class="form-horizontal">
+            <div class="row">
+                <div ng-class="{ 'col-xs-6' : $ctrl.m.twoColumns, 'col-xs-12' : !$ctrl.m.twoColumns }" class="pb-3">
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Valuation</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.valuation.ValuationItems.brfLghVarde | currency}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Fraction of brf debt</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.valuation.ValuationItems.brfLghDebtAmount | currency}}</div>
+                    </div>
+                </div>
+                <div ng-class="{ 'col-xs-6' : $ctrl.m.twoColumns, 'col-xs-12' : !$ctrl.m.twoColumns }">
+                    <div class="form-group text-center">
+                        <label>Brf signaler</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">År</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.valuation.ValuationItems.brfSignalAr}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Belåning</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.valuation.ValuationItems.brfSignalBelaning}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Likviditet</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.valuation.ValuationItems.brfSignalLikviditet}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Självförsörjandegrad</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.valuation.ValuationItems.brfSignalSjalvforsorjningsgrad}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-6 control-label">Räntekänslighet</label>
+                        <div class="col-xs-6 form-control-static">{{$ctrl.m.ValuationItems.brfSignalRantekanslighet}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pt-3" ng-if="$ctrl.m.isNewMortgageApplicationValuationPossible">
+        <a class="n-main-btn n-blue-btn" ng-href="{{$ctrl.m.valuation.NewMortgageApplicationValuationUrl}}">
+            New valuation <span class="glyphicon glyphicon-arrow-right"></span>
+        </a>
+    </div>
+    <div ng-if="!$ctrl.m.isNewMortgageApplicationValuationPossible && $ctrl.m.stepStatus === 'Initial'">
+        <p>Previous steps need to be completed first</p>
+    </div>    
+</script>

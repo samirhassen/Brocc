@@ -1,0 +1,14 @@
+<ng-container *ngIf="m">
+  <div class="row pt-3 pb-3">
+    <div class="col-sm-12">
+      <label>Lån</label>
+      <a [routerLink]="[getLoanLink()]" class="big-link"
+        ><h1>{{ m.totalBalanceAmount | number: "1.0-2" }} kr</h1></a
+      >
+    </div>
+  </div>
+  <h2 class="header-light pt-3">Att betala</h2>
+  <unpaid-notifications
+    [initialData]="m.unpaidNotificationsInitialData"
+  ></unpaid-notifications>
+</ng-container>

@@ -1,0 +1,71 @@
+<div *ngIf="m" class="edit-container"> 
+    <div *ngIf="m.titleText" class="relation-header">
+        <h3>{{m.titleText}}</h3>
+    </div>
+    <div class="editblock">
+        <ng-content select="[kyc-answers-header-content]"></ng-content>
+        <form [formGroup]="m.relation.form">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pb-3">
+                        <div class="text-right">                    
+                            <button *ngIf="m.isSubmitEnabled" class="n-icon-btn n-green-btn commit-btn" [disabled]="m.relation.form.invalid" 
+                                (click)="submitAnswers($event)"><span class="glyphicon glyphicon-ok"></span></button>
+                            <button *ngIf="m.isCancelEnabled" class="n-icon-btn n-white-btn cancel-btn"
+                                (click)="cancel($event)"><span class="glyphicon glyphicon-remove"></span></button>
+                            <div class="clearfix"></div>
+                        </div>                    
+                        <ng-container *ngFor="let question of m.relation.questions">
+                            <div class="form-group pb-1" *ngIf="question.type === 'dropdown'">
+                                <label>{{getTranslation(question.headerTranslations)}}</label>
+                                <select class="form-control" [formControlName]="question.key">
+                                    <option value=""></option>
+                                    <option *ngFor="let option of question.options" [ngValue]="option.value">
+                                        {{getTranslation(option.translations)}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group pb-1" *ngIf="isYesNoQuestion(question)">
+                                <label>{{getTranslation(question.headerTranslations)}}</label>
+                                <select class="form-control" [formControlName]="question.key">
+                                    <option value=""></option>
+                                    <option value="yes">{{getStaticTranslation('yes')}}</option>
+                                    <option value="no">{{getStaticTranslation('no')}}</option>
+                                </select>
+                            </div>
+                            <ng-container *ngIf="m.relation.form.value[question.key] === 'yes' && question.type === 'yesNoWithCountryOptions'">                                
+                                <p>{{getTranslation(question.optionsHeaderTranslations)}}</p>
+                                <div class="pb-2">
+                                    <div class="pb-1">
+                                        <p class="form-control-static copyable bb-1" *ngFor="let countryCode of m.relation.form.value[question.optionsKey]">
+                                            {{getCountryDisplayName(countryCode)}}
+                                            <button (click)="removeCountryOption(question, countryCode, $event)" class="n-icon-btn n-red-btn table-button">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </button>
+                                        </p>
+                                    </div>
+                                    <select class="form-control" #country (change)="onCountryOptionChanged(question, country.value)" [formControlName]="'__country_select__'+ question.optionsKey">
+                                        <option value="">{{getStaticTranslation('selectCountry')}}</option>
+                                        <ng-container *ngFor="let opt of countriesExceptChosen(question, m.countryOptions)">
+                                            <option [value]="opt.code">{{opt.displayName}}</option>
+                                        </ng-container>
+                                    </select>
+                                </div>                                                                
+                            </ng-container>                            
+                            <ng-container *ngIf="m.relation.form.value[question.key] === 'yes' && question.type === 'yesNoWithOptions'">
+                                <div class="pb-2">
+                                    <p>{{getTranslation(question.optionsHeaderTranslations)}}</p>
+                                    <div class="checkbox" *ngFor="let option of question.options">
+                                        <label>
+                                            <input type="checkbox" [formControlName]="getQuestionOptionFormKey(question, option)"> {{getTranslation(option.translations)}}
+                                        </label>
+                                    </div>
+                                </div>                                
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ng-content select="[kyc-answers-footer-content]"></ng-content>
+    </div>
+</div>

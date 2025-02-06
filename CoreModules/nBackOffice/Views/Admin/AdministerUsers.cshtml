@@ -1,0 +1,128 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Administer Users";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+}
+
+@section Scripts {
+    @Scripts.Render("~/Content/js/bundle-administerusers")
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+}
+
+<div class="pb-2 pt-1">
+    <div class="pull-left"><a class="n-back" href="@Url.Action("Index", "Admin")"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">User administration</h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-3">
+        <div class="text-center">
+            <p>Create new user</p>
+            <button type="button" class="n-main-btn n-blue-btn" data-toggle="modal" data-target="#createUserDialog" ng-click="onCreateUserStarted()">
+                Create <span class="glyphicon glyphicon-resize-full"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="col-sm-9">
+        <span style="float: right;">
+            <label for="showDeactivated"><input type="checkbox" id="showDeactivated" ng-model="value" ng-change="loadUserList(value)" /> Show deactivated users</label>
+        </span>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-1">Id</th>
+                    <th class="col-sm-2">Creation date</th>
+                    <th class="col-sm-2">Created by ID</th>
+                    <th class="col-sm-4">Display name</th>
+                    <th class="text-right col-sm-3"></th>
+                </tr>
+            </thead>
+            <tr ng-repeat="x in users">
+                <td>{{ x.Id }}</td>
+                <td>{{ x.CreationDate | date: 'yyyy-MM-dd' }}</td>
+                <td>{{ x.CreatedById }}</td>
+                <td>{{ x.Name }}</td>
+                <td class="text-right" ng-if="x.DeletionDate === null">
+                    <button type="button" class="n-anchor" ng-click="administerUser(x.Id)">
+                        View details
+                    </button>
+                </td>
+                <td class="text-right" ng-if="x.DeletionDate">
+                    <div style="padding-right: 6px;"><i>Deactivated {{ x.DeletionDate | date: 'yyyy-MM-dd' }} <br /> by {{ x.DeletedBy }}</i></div>
+                    <button type="button" class="n-anchor" ng-click="reactivateUser(x.Id)">Reactivate</button>
+                </td>
+            </tr>
+        </table>
+
+        <div ng-show="users.length == 0">
+            <p>There are no users</p>
+        </div>
+    </div>
+</div>
+
+<div id="createUserDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="n-icon-btn n-white-btn pull-right" data-dismiss="modal" id="closeCreateUser"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <h1>Create user</h1>
+            </div>
+            <div class="modal-body">
+                <div class="editblock">
+                    <form name="createUserForm" role="form" bootstrap-validation novalidate>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" ng-model="createUserData.userType" name="userType" required value="user">
+                                Regular user
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" ng-model="createUserData.userType" name="userType" required value="provider">
+                                Provider
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" ng-model="createUserData.userType" name="userType" required value="systemUser">
+                                System User
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" ng-model="createUserData.userType" name="userType" required value="admin">
+                                Admin
+                            </label>
+                        </div>
+                        <br />
+                        <div class="form-group" ng-show="createUserData.userType">
+                            <label ng-hide="createUserData.userType=='provider'">Display Name</label>
+                            <label ng-show="createUserData.userType=='provider'">Provider name</label>
+                            <input type="text" class="form-control" name="displayName" ng-model="createUserData.displayName" username-validator placeholder="{{createUserData.userType == 'provider' ? '' : 'Firstname Lastname' }}" required />
+                        </div>
+                        <div class="form-group" ng-show="createUserData.userType == 'admin'">
+                            <label>Admin start date</label>
+                            <input type="text" class="form-control" ng-model="createUserData.adminStartDate" placeholder="YYYY-MM-DD" custom-validate="isValidDate" ng-required="createUserData.userType == 'admin'" />
+                        </div>
+                        <div class="form-group" ng-show="createUserData.userType == 'admin'">
+                            <label>Admin end date</label>
+                            <input type="text" class="form-control" ng-model="createUserData.adminEndDate" placeholder="YYYY-MM-DD" custom-validate="isValidDate" ng-required="createUserData.userType == 'admin'" />
+                        </div>
+
+                        <div class="form-group text-center" ng-show="createUserForm.displayName.$error.username">
+                            <div class="form-control-static" style="color:#b94a48">
+                                There is already  a user with that name!
+                            </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="n-main-btn n-green-btn" ng-disabled="createUserIsWorking || createUserForm.$pending" ng-click="$event.preventDefault();createUser()">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

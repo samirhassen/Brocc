@@ -1,0 +1,36 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="mortgage-application-search-wrapper.html">
+    <div>
+        <div class="pt-1 pb-2">
+            <div class="pull-left ng-scope"><a href="#" ng-click="$ctrl.onBack($event)" class="n-back"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+            <h1 class="adjusted">Mortgage loan applications</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="custom-submenu">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li ng-class="{ 'active' : $ctrl.m.currentTabName === 'workList'}" ng-click="$ctrl.setMode('workList', $event)"><a href="#">Applications</a></li>
+                        <li ng-class="{ 'active' : $ctrl.m.currentTabName === 'createWorkList'}" ng-click="$ctrl.setMode('createWorkList', $event)"><a href="#">Create worklist</a></li>
+                        <li ng-class="{ 'active' : $ctrl.m.currentTabName === 'search'}" ng-click="$ctrl.setMode('search', $event)"><a href="#">Search</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div ng-switch="$ctrl.m.currentTabName">
+                <div class="col-xs-10" ng-switch-when="search">
+                    <mortgage-application-search initial-data="$ctrl.m.searchInitialData"></mortgage-application-search>
+                </div>
+                <div class="col-xs-10" ng-switch-when="createWorkList">
+                    <mortgage-loan-application-create-work-list initial-data="$ctrl.m.createWorkListInitialData"></mortgage-loan-application-create-work-list>
+                </div>
+                <div class="col-xs-10" ng-switch-when="workList">
+                    <mortgage-loan-application-work-list initial-data="$ctrl.m.workListInitialData"></mortgage-loan-application-work-list>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

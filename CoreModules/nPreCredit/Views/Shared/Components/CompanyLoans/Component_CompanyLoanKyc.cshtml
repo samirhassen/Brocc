@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="company-loan-kyc.html">
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-5">Control</th>
+                    <th class="col-xs-1">Status</th>
+                    <th class="col-xs-5"></th>
+                    <th class="col-xs-2 text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Additional questions are answered</td>
+                    <td><span class="glyphicon {{$ctrl.getGlyphIconClass('AdditionalQuestions')}}"></span></td>
+                    <td></td>
+                    <td class="text-right"><span ng-if="!$ctrl.isStepComplete('AdditionalQuestions')"> Send out additional questions</span></td>
+                </tr>
+                <tr>
+                    <td>Websearches done manually</td>
+                    <td><span class="glyphicon {{$ctrl.getGlyphIconClass('CompanyLoanLexPressScreen')}}"></span></td>
+                    <td></td>
+                    <td class="text-right">
+                        <button ng-if="!$ctrl.isStepComplete('CompanyLoanLexPressScreen') && $ctrl.isEditAllowed()" class="n-direct-btn n-green-btn" ng-click="$ctrl.approveLexPress($event)">Approve</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>List screening</td>
+                    <td><span class="glyphicon {{$ctrl.getGlyphIconClass('CompanyLoanPepSanctionScreen')}}"></span></td>
+                    <td></td>
+                    <td class="text-right">
+                        <button ng-if="!$ctrl.isStepComplete('CompanyLoanPepSanctionScreen') && $ctrl.isEditAllowed()" ng-disabled="$ctrl.CheckScreenDisable()" ng-click="$ctrl.screenNow($event)" class="n-direct-btn n-green-btn">Screen now</button>
+                    </td>
+               </tr> 
+               <tr ng-repeat="c in $ctrl.m.Customers">
+                    <td>PEP & Sanction</td>
+                    <td><span class="glyphicon {{$ctrl.glyphIconClassFromBoolean(c.IsPepSanctionDone)}}"></span></td>
+                    <td>{{c.FirstName}}, {{c.BirthDate}} (<span ng-repeat="r in c.MemberOfListNames" class="comma">{{$ctrl.getListDisplayName(r)}}</span>)</td>
+                    <td class="text-right">
+                        <a class="n-anchor" ng-href="{{$ctrl.getCustomerKycManagementUrl(c.CustomerId)}}">View details</a>
+                    </td>
+                </tr>                
+                <tr>
+                    <td>Name, email and adress on company</td>
+                    <td><span class="glyphicon {{$ctrl.m.IsCompanyCustomerOk ? 'glyphicon-ok' : 'glyphicon-minus'}}"></span></td>
+                    <td></td>
+                    <td class="text-right"><span ng-if="!$ctrl.m.IsCompanyCustomerOk">Update company details</span></td>
+                </tr>
+                <tr>
+                    <td>Name, email, phone and adress on collateral</td>
+                    <td><span class="glyphicon {{$ctrl.getGlyphIconClass('CompanyLoanCollateralCheck')}}"></span></td>
+                    <td></td>
+                    <td class="text-right"><span ng-if="!$ctrl.isStepComplete('CompanyLoanCollateralCheck')">Update collateral details</span></td>
+                </tr>
+                <tr>
+                    <td>Name, email and phone on authorized signatory</td>
+                    <td><span class="glyphicon {{$ctrl.getGlyphIconClass('CompanyLoanAuthorizedSignatoryCheck')}}"></span></td>
+                    <td></td>
+                    <td class="text-right"><span ng-if="!$ctrl.isStepComplete('CompanyLoanAuthorizedSignatoryCheck')">Update authorized signatory details</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <div ng-if="$ctrl.isEditAllowed() && $ctrl.areAllStepsDone() && !$ctrl.isStepComplete('CompanyLoanKycCheck')">
+            <p>All steps are complete but the application seems to remain in the kyc list for some reason. You force the step to complete using this.</p>
+            <button ng-click="$ctrl.onStatusChanged($event)" class="n-direct-btn n-green-btn">Update status</button>
+        </div>
+        <div ng-if="$ctrl.isToggleCompanyLoanCollateralCheckStatusAllowed() && !$ctrl.isStepComplete('CompanyLoanKycCheck')">
+            <label class="pr-2">KYC control done</label>
+            <button ng-click="$ctrl.OverrideKYC($event)" class="n-direct-btn n-green-btn">Approve</button>
+        </div>
+    </div>
+</script>

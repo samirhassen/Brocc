@@ -1,0 +1,14 @@
+﻿@{
+    var applicantNr = (ViewData.Eval("applicantNr") ?? "").ToString();
+}
+
+<h4 class="custom-header text-center">Applicant @applicantNr</h4>
+<hr class="hr-section" />
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="control-label col-xs-6">Confirmed income per month</label>
+        <div class="col-xs-6" ng-show="c.incomeEdit"><input ng-model="c.incomeEdit.confirmedIncome@(applicantNr)" required custom-validate="c.isValidPositiveDecimal" class="form-control"></div>
+        <div class="col-xs-6 form-control-static" ng-hide="c.incomeEdit">{{c.formatIncomeForDisplay(c.incomeView.confirmedIncome@(applicantNr))}}</div>
+    </div>
+</div>

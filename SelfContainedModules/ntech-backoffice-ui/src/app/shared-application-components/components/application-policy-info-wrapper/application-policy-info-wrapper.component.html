@@ -1,0 +1,35 @@
+<div class="frame" *ngIf="isVisible">
+  <div class="text-right">
+    <button
+      type="button"
+      class="n-popup-btn n-turquoise-btn"
+      (click)="showDetails(detailsModal, $event)"
+    >
+      Details<span class="glyphicon glyphicon-resize-full"></span>
+    </button>
+  </div>
+  <div class="row pt-3">
+    <ng-content select="[main-upper]"> </ng-content>
+  </div>
+  <hr class="hr-section custom-line" />
+  <ng-content select="[main-lower]"> </ng-content>
+</div>
+
+<ng-template #detailsModal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="n-icon-btn n-white-btn pull-right"
+      (click)="detailsModalRef.hide()"
+    >
+      <span class="arrows-close"
+        ><span class="glyphicon glyphicon-arrow-down"></span
+        ><span class="glyphicon glyphicon-arrow-up"></span
+      ></span>
+    </button>
+    <h1>Details</h1>
+  </div>
+  <div class="modal-body">
+    <ng-content select="[details]"> </ng-content>
+  </div>
+</ng-template>

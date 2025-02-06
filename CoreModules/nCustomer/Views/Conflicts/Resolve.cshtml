@@ -1,0 +1,68 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Resolve Conflicts";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-customercard-conflicts")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 ng-class="" class="adjusted">Resolve Conflicts</h1>
+</div>
+
+<div class="row" ng-show="app.conflicts.length > 0">
+    <div class="col-sm-offset-1 col-sm-10">
+        <div class="editblock">
+            <div>
+                <form novalidate name="f">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2">Property</th>
+                                <th class="col-sm-3">Current value</th>
+                                <th class="col-sm-3">New value</th>
+                                <th class="col-sm-3 text-right"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="c in app.conflicts">
+                                <td>{{c.Name}}</td>
+                                <td>
+                                    <span ng-hide="c.action === 'approve'">{{c.FriendlyCurrentValue}}</span>
+                                    <del ng-show="c.action === 'approve'">{{c.FriendlyCurrentValue}}</del>
+                                </td>
+                                <td>
+                                    <span ng-hide="c.action === 'discard'">{{c.FriendlyNewValue}}</span>
+                                    <del ng-show="c.action === 'discard'">{{c.FriendlyNewValue}}</del>
+                                </td>
+                                <td class="text-right">
+                                    <button ng-hide="c.action" type="button" class="n-direct-btn n-red-btn mr-1" ng-click="discard(c, $event)">Discard</button>
+                                    <button ng-hide="c.action" type="button" class="n-direct-btn n-green-btn" ng-click="approve(c, $event)">Approve</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div ng-show="app.conflicts.length > 0 && hasActions()" class="pb-2">
+                <div class="form-group">
+                    <div class="col-sm-6 text-right">
+                        <button class="n-main-btn n-white-btn" ng-click="cancel($event)">Cancel</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="n-main-btn n-green-btn" ng-click="save($event)">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-show="app.conflicts.length === 0">
+    <p>All conflicts resolved!</p>
+</div>

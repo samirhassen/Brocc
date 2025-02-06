@@ -1,0 +1,116 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Credit Decision - Application";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-fraudcheck-new")
+    @Scripts.Render("~/Content/js/libphonenumber")
+}
+
+<div class="pt-1 pb-2">
+    <div class="pull-left"><a class="n-back" href="#" ng-click="onBack($event)"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Fraud control</h1>
+</div>
+<div class="row">
+    <div class="col-sm-offset-1 col-sm-10 pb-3">
+        <table class="table">
+            <tr ng-repeat="item in app.fraudControlViewItems">
+                <td class="col-sm-3">{{item.FriendlyKey}}</td>
+                <td class="col-sm-2">
+                    <span class="copyable" ng-show="!item.RefUrl">{{formatValue(item)}}</span>
+                    <span ng-show="item.RefUrl"><a class="n-anchor" target="_blank" ng-href="{{item.RefUrl}}">{{item.Value}}</a></span>
+                </td>
+                <td class="col-sm-1">
+                    <button ng-show="item.Status === 'Initial'" class="n-direct-btn n-red-btn" ng-click="reject($event, item, app.applicationNr, app.applicantNr)">Reject</button>
+                    <span ng-show="item.Status === 'Rejected'" class="glyphicon glyphicon-remove"></span>
+                </td>
+                <td class="col-sm-1">
+                    <button ng-show="item.Status === 'Initial'" class="n-direct-btn n-yellow-btn" ng-click="approve($event, item, app.applicationNr, app.applicantNr)">Approve</button>
+                    <span ng-show="item.Status === 'Approved'" class="glyphicon glyphicon-ok yellow"></span>
+                </td>
+                <td class="col-sm-1">
+                    <button ng-show="item.Status === 'Initial'" class="n-direct-btn n-green-btn" ng-click="verify($event, item, app.applicationNr, app.applicantNr)">Verify</button>
+                    <span ng-show="item.Status === 'Verified'" class="glyphicon glyphicon-ok"></span>
+                </td>
+                <td class="col-sm-3">
+                    <span ng-show="item.Status != 'Initial'">{{item.DecisionByName}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+        <div class="editblock">
+            <form class="form-horizontal pb-3">
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">First Name</label>
+                    <div class="col-sm-6">
+                        <p class="form-control-static">{{app.customerModel.insensitive.firstName}}</p>
+                    </div>
+                </div>
+                <div class="form-group" ng-repeat="item in app.customerModel.sensitive">
+                    <label class="col-sm-6 control-label">{{item.FriendlyName}}</label>
+                    <div class="col-sm-6">
+                        <p ng-show="!item.Locked" class="form-control-static">{{item.Value}}</p>
+                        <p ng-show="item.Locked" class="form-control-static"><span class="n-unlock" ng-click="unlock($event, item)"><a href="#"><span class="glyphicon glyphicon-lock"></span></a></span></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Phone number</label>
+                    <div class="col-sm-6">
+                        <p class="form-control-static copyable">{{formatPhoneNr(app.customerModel.insensitive.phone)}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">E-mail</label>
+                    <div class="col-sm-6">
+                        <p class="form-control-static copyable">{{app.customerModel.insensitive.email}}</p>
+                    </div>
+                </div>
+            </form>
+            <div style="border: 2px solid #fff; margin-top: 20px;">
+                <form class="form-horizontal pt-1 pb-3">
+                    <div class="col-sm-6 col-sm-offset-3 text-center">
+                        <h2 class="custom-header">Latest kyc questions</h2>
+                        <hr class="hr-section" />
+                    </div>
+                    <div class="form-group" ng-repeat="kycAnswer in app.latestKycAnswers">
+                        <label class="col-sm-6 control-label">{{kycAnswer.QuestionText}}</label>
+                        <div class="col-sm-4">
+                            <p class="form-control-static">
+                                {{kycAnswer.AnswerText}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-sm-offset-3 text-center pt-3">
+                        <h2 class="custom-header">Account Number</h2>
+                        <hr class="hr-section" />
+                    </div>
+                    <div class="form-group" ng-if="app.iban">
+                        <label class="col-sm-6 control-label">IBAN</label>
+                        <div class="col-sm-4">
+                            <p class="form-control-static">
+                                {{app.iban}} <span style="font-size:smaller">({{app.ibanReadable}})</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="app.bankAccountNr">
+                        <label class="col-sm-6 control-label">Bank account</label>
+                        <div class="col-sm-4">
+                            <p class="form-control-static">
+                                {{app.bankAccountNr}} <span style="font-size:smaller">({{app.bankAccountNrReadable}})</span>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>NTech.Styles.Shared</id>
+        <version>1.0.0</version>
+        <title>NTech.Styles.Shared</title>
+        <authors>Näktergal AB</authors>
+        <owners>Näktergal AB</owners>
+        <projectUrl>http://example.org/</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>NTech.Styles.Shared</description>
+        <summary>NTech.Styles.Shared</summary>
+        <language>en-US</language>
+        <tags>ntech styles</tags>
+    </metadata>
+    <files>
+      <file src="css\*.css" target="Content\content\css" />
+    </files>    
+</package>

@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="css/stylesheet.css" media="screen, projection, print" />				
+</head>
+<body>
+
+    <div id="header">
+        <img src="[[[skinning:img/pdf-header-logo.png|img/menu-header-logo.png|img/logo.png]]]">
+    </div>
+    <div class="page">
+
+        <div class="blackborder">
+            <div class="addressArea">
+                <div class="returnaAdress">
+                    <p>{{documentClientData_name}}</p>
+                    <p>{{documentClientData_streetAddress}}</p>
+                    <p>{{documentClientData_zipCode}} {{documentClientData_postalArea}}</p>
+                </div>
+            </div>
+            <div class="header">
+                <h1>Avi</h1>
+            </div>
+            <div class="clear"></div>
+        </div>
+        
+        <div class="content">
+            <div class="area">
+                <div class="column1 blackborder">
+                    <table class="printinfo">
+                        <tbody>
+                            <tr>
+                                <td>Avimånad</td>
+                                <td>{{dueMonth}}</td>
+                            </tr>
+                            {{#mortgageLoanAgreementNr}}
+                            <tr>
+                                <td>Avtalsnummer</td>
+                                <td>{{mortgageLoanAgreementNr}}</td>
+                            </tr>
+                            {{/mortgageLoanAgreementNr}}
+                            <tr>
+                                <td>Aviseringsdatum</td>
+                                <td>{{notificationDate}}</td>
+                            </tr>
+                            {{#mortgageLoanPropertyId}}
+                            <tr>
+                                <td>Säkerhet</td>
+                                <td>{{mortgageLoanPropertyId}}</td>
+                            </tr>
+                            {{/mortgageLoanPropertyId}}                              
+                        </tbody>                        
+                    </table>
+                </div>
+                <div class="column2 greenborder">
+                    <p>{{fullName}}</p>
+                    <p>{{streetAddress}}</p>
+                    <p>{{areaAndZipcode}}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area pb-2">
+                <div class="column1">
+                    <p>{{documentClientData_contactText}}</p>
+
+                    <div class="pt-1">
+                        <p><b>Aktuell kapitalskuld</b></p>
+                        {{#allCredits}}
+                        <table class="printinfo">
+                            <tbody>                              
+                                <tr>
+                                    <td>{{creditNr}}</td>
+                                    <td>{{totalUnpaidcreditCapitalAmount}} kr</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {{/allCredits}}
+                    </div>
+                </div>
+                <div class="column2 ">
+                    <table class="summery">
+                        <tbody>
+                            <tr>
+                                <td>Bankgiro</td>
+                                <td class="text-right">{{paymentBankGiroNr}}</td>
+                            </tr>
+                            <tr>
+                                <td>OCR</td>
+                                <td class="text-right">{{sharedOcrPaymentReference}}</td>
+                            </tr>
+                            <tr>
+                                <td class="greenborder" style="padding-top: 20px;">Att betala{{#willUseDirectDebit}}, <i>dras med autogiro</i>{{/willUseDirectDebit}}</td>
+                                <td class="text-right greenborder" style="padding-top: 20px;">{{sharedTotalAmountIncludingOtherNotifications}}</td>
+                            </tr>
+                            <tr>
+                                <td class="greenborder">Förfallodatum</td>
+                                <td class="text-right greenborder">{{dueDate}}</td>
+                            </tr>
+                            
+                           <!--todo: ska endast synas om det finns förfallet, ska inkludera allt förfallet över alla lån som samaviseras                           
+                            <tr>
+                                <td class="greenborder" style="padding-top: 20px;">Förfallet, betalas omgående</td>
+                                <td class="text-right greenborder" style="padding-top: 20px;">XXXX,XX kr</td>
+                            </tr>
+                            -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area pt-10">
+                <h2 class="pb-1">Sammanfattning</h2>               
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lånedel</th>
+                            <th class="text-right">Att betala</th>
+                        </tr>
+                    </thead>               
+                    <tbody>
+                        {{#allCredits}}
+                        <tr>
+                            <td>{{creditNr}}</td>
+                            <td class="text-right">{{totalAmountIncludingOtherNotifications}}</td>
+                        </tr>
+                        {{/allCredits}}
+                    </tbody>
+                    <tfoot>
+                        <tr>                        
+                            <td colspan="2" class="text-right">{{sharedTotalAmountIncludingOtherNotifications}}</td>
+                        </tr>
+                    </tfoot>                    
+                </table>
+            
+                <p class="pt-5">Se specifikation på nästa sida.</p>
+            </div>
+
+        </div>
+    
+    </div>
+    <div class="page">
+        <div class="content">   
+            <div class="area pt-5">
+                <h1>Specifikation</h1>
+                {{#allCredits}}
+                <div class="pb-2">
+                    <div class="area">
+                        <h3>{{creditNr}} avser {{dueMonth}}</h3>
+                        <table>
+                            <tbody>
+                                {{#currentNotificationAmountsList}}
+                                [[[include:currentAmountTypes.html]]]
+                                {{/currentNotificationAmountsList}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{#overdue}}
+                    <div class="area">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Totalt förfallet, betalas omgående</td>
+                                    <td class="text-right">{{totalOverDueAmount}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/overdue}}
+                </div>
+                {{/allCredits}}
+            </div>          
+
+        </div>
+    </div>
+    <div id="footer">
+        <p>Postadress: {{documentClientData_footerAddress}}</p>
+    </div>    
+</body>
+</html>

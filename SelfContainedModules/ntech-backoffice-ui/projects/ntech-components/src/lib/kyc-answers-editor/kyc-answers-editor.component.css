@@ -1,0 +1,33 @@
+.edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.commit-btn {
+    float: right;
+    margin-left: 5px;
+}
+
+.cancel-btn {
+    float: right
+}
+
+.relation-header h3 {
+    width: fit-content;
+    margin-top: 0px;
+    border-bottom: 2px solid rgb(60, 60, 60);
+}
+
+.table-button {
+    height: 25px;
+    width: 28px;
+    float: right;
+    margin-right: 3px;
+}
+.table-button span {
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

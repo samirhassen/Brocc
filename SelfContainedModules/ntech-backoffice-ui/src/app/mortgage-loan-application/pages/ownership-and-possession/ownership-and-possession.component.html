@@ -1,0 +1,95 @@
+<div *ngIf="m">
+  <form>
+    <div class="col-xs-6 editblock">
+      <h2 class="custom-header">Applicants</h2>
+      <hr class="hr-section" />
+      <table class="table row-lined">
+        <thead>
+          <tr>
+            <th class="col-xs-7"></th>
+            <th class="col-xs-3">Property owner</th>
+            <th class="col-xs-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let applicant of m.applicantPropertyOwners">
+            <td>
+              <a
+                [href]="getCustomerCardUrl(applicant.customerId)"
+                class="n-anchor"
+                >{{ applicant.firstName }}, {{ applicant.birthDate }}</a
+              >
+            </td>
+            <td>
+              <select
+                class="form-control"
+                (change)="onApplicantOwnerChanged(applicant, $event)"
+                *ngIf="!m.isReadonly"
+              >
+                <option value="true" [selected]="applicant.isOwner">Yes</option>
+                <option value="false" [selected]="!applicant.isOwner">
+                  No
+                </option>
+              </select>
+              <p *ngIf="m.isReadonly">{{ applicant.isOwner ? "Yes" : "No" }}</p>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ownership-customerlist [initialData]="m.ownerListInitialData">
+      </ownership-customerlist>
+
+      <ownership-customerlist [initialData]="m.consentingPartyListInitialData">
+      </ownership-customerlist>
+
+      <div class="pt-3 approve-container">
+        <div *ngIf="m.isPossibleToApprove">
+          <div>
+            <label class="pr-2">Not approved</label>
+            <ntech-toggle (requestToggle)="approve()"></ntech-toggle>
+          </div>
+        </div>
+        <div *ngIf="m.isPossibleToRevert">
+          <div>
+            <label class="pr-2">Approved</label>
+            <ntech-toggle
+              [isToggled]="true"
+              (requestToggle)="revert()"
+            ></ntech-toggle>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-1"></div>
+    <div class="col-xs-5">
+      <div class="form-horizontal">
+        <div class="form-group" *ngFor="let f of m.propertyFields">
+          <label class="col-xs-6 control-label">{{ f.label }}</label>
+          <div class="col-xs-6 form-control-static">{{ f.value }}</div>
+        </div>
+      </div>
+      <div class="mt-3">
+        <h2 class="custom-header">Other connecting loans</h2>
+        <hr class="hr-section" />
+        <table class="table" *ngFor="let loan of m.connectedPropertyLoans">
+          <thead>
+            <tr>
+              <th>
+                <a [href]="loan.creditCollateralTabUrl">{{ loan.creditNr }}</a>
+              </th>
+              <th>{{ loan.capitalBalance | number }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of loan.customers">
+              <td>{{ customer.firstName }},{{ customer.birthDate }}</td>
+              <td>{{ customer.rolesText }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</div>

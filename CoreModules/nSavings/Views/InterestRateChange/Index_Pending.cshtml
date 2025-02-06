@@ -1,0 +1,78 @@
+﻿<div class="row pb-3" ng-if="c.pending">
+    <div class="col-sm-offset-1 col-xs-10">
+        <h2 class="text-center" ng-if="c.pending.isInitiatedByCurrentUser">Pending approval of interest rate change</h2>
+        <h2 class="text-center" ng-if="!c.pending.isInitiatedByCurrentUser">Approve interest rate change</h2>
+        <div class="frame">
+            <div class="text-right pb-1">
+                <button class="n-main-btn n-white-btn" ng-click="c.cancelChange($event)">Cancel</button>
+            </div>
+            <div class="row pb-3">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">New interest</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.newInterestRatePercent | number:'2'}}%</p>
+                        </div>
+                        <div class="form-group" ng-if="!c.pending.isRegularChange">
+                            <label class="control-label col-xs-6">Existing accounts</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.allAccountsValidFromDate.toDate() | date}}</p>
+                        </div>
+                        <div class="form-group" ng-if="!c.pending.isRegularChange">
+                            <label class="control-label col-xs-6">New accounts</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.newAccountsValidFromDate.toDate() | date}}</p>
+                        </div>
+                        <div class="form-group" ng-if="c.pending.isRegularChange">
+                            <label class="control-label col-xs-6">All accounts</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.allAccountsValidFromDate.toDate() | date}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Initiated date</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.initiatedDate.toDate() | date}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Created by</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.initiatedByUserDisplayName}}</p>
+                        </div>
+                        <div class="form-group" ng-if="c.pending.verifiedByUserDisplayName && c.pending.isInitiatedByCurrentUser">
+                            <label class="control-label col-xs-6">Approved by</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.verifiedByUserDisplayName}}</p>
+                        </div>
+                        <div class="form-group" ng-if="c.pending.rejectedByUserDisplayName && c.pending.isInitiatedByCurrentUser">
+                            <label class="control-label col-xs-6">Rejected by</label>
+                            <p class="form-control-static col-xs-6">{{c.pending.rejectedByUserDisplayName}}</p>
+                        </div>
+                        <div class="form-group" ng-if="!(c.pending.verifiedByUserDisplayName || c.pending.rejectedByUserDisplayName) && c.pending.isInitiatedByCurrentUser">
+                            <label class="control-label col-xs-6">Approved by</label>
+                            <p class="form-control-static col-xs-6"><i>Pending</i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="c.pending.showSplitChangeLoweringTwoMonthWarning || c.pending.showSplitChangeSameDateWarning || c.pending.showRegularChangeLoweringTwoMonthWarning">
+                <div class="col-xs-6 text-center">
+                    <h2 class="text-center">Warnings</h2>
+                    <hr class="hr-section" />
+                    <p ng-if="c.pending.showSplitChangeLoweringTwoMonthWarning">You are lowering the interest rate but the date for existing accounts does not wait the required two months.</p>
+                    <p ng-if="c.pending.showSplitChangeSameDateWarning">You put the same date for new and existing accounts.</p>
+                    <p ng-if="c.pending.showRegularChangeLoweringTwoMonthWarning">You are lowering the interest rate without waiting the required two months.</p>
+                </div>
+            </div>
+            <div class="pt-3 text-center" ng-if="c.pending.isInitiatedByCurrentUser">
+                <button class="n-main-btn n-green-btn" ng-disabled="!c.pending.verifiedByUserDisplayName" ng-click="c.carryOutChange($event)">Change interest</button>
+            </div>
+
+            <div class="pt-3 row" ng-if="!c.pending.isInitiatedByCurrentUser && !(c.pending.rejectedByUserDisplayName || c.pending.verifiedByUserDisplayName)">
+                <div class="col-xs-6 text-right"><button class="n-main-btn n-red-btn" ng-click="c.rejectChange($event)">Reject</button></div>
+                <div class="col-xs-6"><button class="n-main-btn n-green-btn" ng-click="c.verifyChange($event)">Approve</button></div>
+            </div>
+            <div class="pt-3 row text-center" ng-if="!c.pending.isInitiatedByCurrentUser && (c.pending.rejectedByUserDisplayName || c.pending.verifiedByUserDisplayName)">
+                <p ng-if="c.pending.verifiedByUserDisplayName"><i>Approved by {{c.pending.verifiedByUserDisplayName}}</i></p>
+                <p ng-if="c.pending.rejectedByUserDisplayName"><i>Rejected by {{c.pending.rejectedByUserDisplayName}}</i></p>
+            </div>
+        </div>
+    </div>
+</div>

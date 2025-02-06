@@ -1,0 +1,130 @@
+<ng-container *ngIf="m">
+    <div class="row pb-3">
+        <div class="col-xs-6 col-sm-offset-3">
+            <div class="frame">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">Remaining amount of payments</label>
+                        <p class="col-xs-6 form-control-static">{{m.nrOfRemainingPayments}}</p>
+                    </div>
+                    <ng-container *ngIf="!m.singlePaymentLoanRepaymentDays">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Notification frequency</label>
+                            <p class="col-xs-6 form-control-static">Monthly</p>
+                        </div>
+                        <div class="form-group" *ngIf="m.annuity">
+                            <label class="control-label col-xs-6">Annuity</label>
+                            <p class="col-xs-6 form-control-static">{{m.annuity | currency}}</p>
+                        </div>
+                        <div class="form-group" *ngIf="m.monthlyFixedCapitalAmount">
+                            <label class="control-label col-xs-6">Monthly amortization</label>
+                            <p class="col-xs-6 form-control-static">{{m.monthlyFixedCapitalAmount | currency}}</p>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="m.singlePaymentLoanRepaymentDays">
+                        <div class="form-group" *ngIf="m.singlePaymentLoanRepaymentDays">
+                            <label class="control-label col-xs-6">Notification frequency</label>
+                            <p class="col-xs-6 form-control-static">One payment after {{m.singlePaymentLoanRepaymentDays}} days</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-6">Loan amount amortization</label>
+                            <p class="col-xs-6 form-control-static">{{m.monthlyFixedCapitalAmount | currency}}</p>
+                        </div>
+                    </ng-container>
+                    <div class="form-group" *ngIf="m.firstNotificationCostsAmount > 0">
+                        <label class="control-label col-xs-6">Initial fee on first notification</label>
+                        <p class="col-xs-6 form-control-static">{{m.firstNotificationCostsAmount | currency}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3 text-center" *ngIf="!m.singlePaymentLoanRepaymentDays">
+            <ng-container>
+                <p>Download amortization plan</p>
+                <a [href]="getAmortizationPlanPdfUrl(creditNr)" target="_blank" class="n-anchor">Pdf <span class="glyphicon glyphicon-download-alt"></span></a>
+            </ng-container>
+        </div>
+    </div>
+    <div class="amortizationhistory">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-1">Date</th>
+                    <th class="col-xs-1">Capital debt</th>
+                    <th class="col-xs-2 text-center"> </th>
+                    <th class="col-xs-2 text-right">Capital</th>
+                    <th class="col-xs-2 text-right">Interest</th>
+                    <th class="col-xs-2 text-right">Total amount</th>
+                    <th class="col-xs-2 text-right">Paymentfree month</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let t of getItems(false)">
+                    <td class="col-xs-1">
+                        {{ t.eventTransactionDate | date: "shortDate" }}
+                    </td>
+                    <td class="col-xs-1">{{ t.capitalBefore | number: "1.0-2" }}</td>
+                    <td class="col-xs-2 text-center">{{ getAmortizationItemDesc(t) }}</td>
+                    <ng-container *ngIf="!isAmountLessEvent(t)">
+                      <td class="col-xs-2 text-right">
+                          {{ t.capitalTransaction | number: "1.0-2" }}
+                        </td>
+                        <td class="col-xs-2 text-right">
+                          {{ t.interestTransaction | number: "1.0-2" }}
+                        </td>
+                        <td class="col-xs-2 text-right">
+                          {{ t.totalTransaction | number: "1.0-2" }}
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="isAmountLessEvent(t)">
+                        <td class="col-xs-6 text-right" colspan="3">
+
+                        </td>
+                    </ng-container>
+                    <td class="col-xs-2 text-right"></td>
+                  </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="amortizationfuture">
+        <table class="table">
+            <tbody>
+                <tr *ngIf="m.activeAlternatePaymentPlan" class="text-center">
+                    <td colspan="7">Alternate payment plan of {{m.activeAlternatePaymentPlan.expectedAmount | number:'1.0-2'}} active until {{m.activeAlternatePaymentPlan.untilDate | date:'shortDate'}}. Total paid currently: {{m.activeAlternatePaymentPlan.paidAmount | number:'1.0-2'}}</td>
+                </tr>
+                <tr *ngFor="let t of getItems(true)">
+                    <td class="col-xs-1">
+                        <ng-container *ngIf="!m.activeAlternatePaymentPlan">
+                            {{t.eventTransactionDate | date:'shortDate'}}
+                        </ng-container>
+                    </td>
+                    <td class="col-xs-1">{{t.capitalBefore | number:'1.0-2' }}</td>
+                    <td class="col-xs-2 text-center">{{getAmortizationItemDesc(t)}}</td>
+                    <td class="col-xs-2 text-right">{{t.capitalTransaction | number:'1.0-2'}}</td>
+                    <td class="col-xs-2 text-right">{{t.interestTransaction | number:'1.0-2'}}</td>
+                    <td class="col-xs-2 text-right">{{t.totalTransaction | number:'1.0-2'}}</td>
+                    <td class="col-xs-2 text-right">
+                        <label class="n-toggle disabled" *ngIf="t.isPaymentFreeMonthAllowed === false">
+                            <input type="checkbox" disabled="disabled" />
+                            <span class="n-slider"></span>
+                        </label>
+                        <label class="n-toggle" *ngIf="t.isPaymentFreeMonthAllowed === true">
+                            <input type="checkbox" (click)="addFuturePaymentFreeMonth(t, $event)" />
+                            <span class="n-slider"></span>
+                        </label>
+                        <label class="n-toggle" *ngIf="t.eventTypeCode === 'PaymentFreeMonth'">
+                            <input type="checkbox" checked="checked" (click)="cancelFuturePaymentFreeMonth(t, $event)" />
+                            <span class="n-slider"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="4" class="col-xs-6 text-right"></th>
+                    <th class="col-xs-2 text-right">{{m.totalInterestAmount | number:'1.0-2'}}</th>
+                    <th class="col-xs-2 text-right"></th>
+                    <th class="col-xs-2 text-right"></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-container>

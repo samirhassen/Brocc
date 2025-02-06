@@ -1,0 +1,212 @@
+{
+    "terms" : {
+        "yes" : "Ja",
+        "no" : "Nej",
+        "one": "En",
+        "two": "Två",
+        "coApplicant": "Medsökande",
+        "selectMonth": "Månad",
+        "selectYear": "År"        
+    },
+    "concept" : {
+        "month" : {
+            "jan" : "Januari",
+            "feb" : "Februari",
+            "mar": "Mars",
+            "apr": "April",
+            "may": "Maj",
+            "jun": "Juni",
+            "jul": "Juli",
+            "aug": "Augusti",
+            "sep": "September",
+            "okt": "Oktober",
+            "nov": "Novermber",
+            "dec": " December"
+        }
+    },
+    "msg":{
+        "success_header":"Tack för din ansökan!",
+        "success_text1":"Vi behandlar din ansökan och du kommer att få ett besked per e-post inom kort.",
+        "success_text2":"Vid frågor uppge ansökan ",
+        "failed_header":"Något gick fel!",
+        "failed_text1":"Du kan försöka igen senare eller kontakta vår kundtjänst för att få hjälp.",
+        "contact_text1":"Med vänlig hälsning, Brocc Finance AB, filial i Finland Kundtjänst",
+        "contact_text2":"Tel. 010 524 8410, lainat@brocc.fi"
+    },
+    "channel_header" : "Hur har du hört talas om oss?",
+    "channel" : {
+        "brevhem": "Brev hem",
+        "internet": "Internet",
+        "rekommendation": "Rekommendation",
+        "tidning": "Reklam i tidning",
+        "tvradio": "TV/Radio",
+        "annat": "Annat"
+    },
+    "marriage" : {
+        "marriage_gift" : "Gift",
+        "marriage_ogift" : "Ogift",
+        "marriage_sambo": "Sambo"
+    },
+    "housing" : {
+        "housing_egenbostad": "Egen bostad",
+        "housing_bostadsratt": "Bostadsrätt",
+        "housing_hyresbostad": "Hyresbostad",
+        "housing_hosforaldrar": "Hos föräldrar",
+        "housing_tjanstebostad": "Tjänstebostad"
+    },
+    "employment" : {
+        "employment_fastanstalld": "Fast anställd",
+        "employment_visstidsanstalld" : "Visstidsanställd",
+        "employment_foretagare" : "Företagare",
+        "employment_pensionar" : "Pensionär",
+        "employment_sjukpensionar" : "Sjukpensionär",
+        "employment_studerande" : "Studerande",
+        "employment_arbetslos" : "Arbetslös"
+    },
+    "loanTypes": {
+        "mortgageLoan": {
+            "type": "Bolån",
+            "amount": "Bolån belopp",
+            "cost": "Bolån kostnad",
+            "totalAmountQuestion": "Vad har du totalt i låneskuld på ditt bolån?",
+            "monthAmountQuestion": "Vad betalar du i genomsnitt i månaden på ditt bolån?",
+            "totalAmountExample": "ex 100 000",            
+            "monthAmountExample": "ex 300"
+        },
+        "carOrBoatLoan": {
+            "type": "Bil/båtlån",
+            "amount": "Bil/båtlån belopp",
+            "cost" : "Bil/båtlån kostnad",
+            "totalAmountQuestion": "Vad har du totalt i låneskuld på ditt bil/båtlån?",
+            "monthAmountQuestion": "Vad betalar du i genomsnitt i månaden på ditt bil/båtlån?",
+            "totalAmountExample": "ex. 2500",            
+            "monthAmountExample": "ex. 100"            
+        },
+        "creditCard": {
+            "type": "Kreditkort",
+            "amount": "Kreditkort belopp",
+            "cost": "Kreditkort kostnad",
+            "totalAmountQuestion": "Vad har du totalt i låneskuld på ditt kreditkort?",
+            "monthAmountQuestion": "Vad betalar du i genomsnitt i månaden på ditt kreditkort?",
+            "totalAmountExample": "ex. 2500",
+            "monthAmountExample": "ex. 100"              
+        },
+        "otherLoan": {
+            "type": "Andra lån",
+            "amount": "Andra lån belopp",
+            "cost": "Andra lån kostnad",
+            "totalAmountQuestion": "Vad har du totalt i låneskuld på dina andra lån som inte är bolån, bil/båt eller kreditkort?",
+            "monthAmountQuestion": "Vad betalar du i genomsnitt i månaden på dina andra lån?",
+            "totalAmountExample": "ex. 2500",            
+            "monthAmountExample": "ex. 100"              
+        }                  
+    }, "steps" : {
+        "forwardBackButtons" : {
+            "forward": "Fortsätt",
+            "apply": "Skicka in",
+            "start": "Ansök om ett lån"
+        },
+        "calculator":{
+            "header":"Privatlånet som passar dig och dina behov!",
+            "loanAmount":"Hur mycket önskar du låna?",
+            "repayment":"Hur lång återbetalningstid vill du ha?",
+            "monthlyCost":"i månadskostnad",
+            "interest":"i ränta",
+            "year":"år",
+            "offerText": "Räkneexemplet baseras på beviljat belopp: {{loanAmount}} €, löptid {{repaymentTimeInYears}} år, rörlig nominell ränta {{nominalInterestRatePercent}} %, uppläggningsavgift mellan 49,00 € - 169,00 €, aviavgift 5,00 €, effektivränta {{effectiveInterstRatePercent}} %, månadskostnad {{monthlyCostIncludingFeesAmount}} €/mån. Totalt att återbetala inklusive alla avgifter: {{totalPaidAmount}} €.",
+            "offerText2": "Räkneexemplet baseras på beviljat belopp: {{loanAmount}} €, löptid {{repaymentTimeInYears}} år, rörlig nominell ränta {{nominalInterestRatePercent}} %, uppläggningsavgift 0,00 €, aviavgift 8,00 €, effektivränta {{effectiveInterstRatePercent}} %, månadskostnad {{monthlyCostIncludingFeesAmount}} €/mån. Totalt att återbetala inklusive alla avgifter: {{totalPaidAmount}} €.",
+            "warningText": "Hej! Balanzia har bytt namn till Brocc. Tills vidare använder den här sidan fortfarande Balanzia som domän."
+        },  
+        "calculator_footer":{
+            "about_header1":"Brocc privatlånet",
+            "about_text1":"Med Brocc Privatlånet kan du låna upp till 50.000 euro utan säkerhet. Lånet lämpar sig väl till att t.ex. lösa andra dyrare lån. Du får alltid ett kundspecifikt erbjudande och kan lösa lånet när som helst utan extra kostnad. Efter ansökan får du ett låneavtal med din kundspecifika ränta och avgifter. Ansökan är inte bindande och även lånet har en ångerrätt på 14 dagar.",
+            "about_link1":"Allmänna villkor",
+            "about_link2":"SEKKI",
+            "about_link3":"Registerbeskrivning",
+            "about_link4":"Dataskydd",
+            "contact_header1":"Kontakta oss",
+            "contact_text1":"Du är alltid välkommen att kontakta oss om du har frågor om din ansökan eller ditt lån.",
+            "contact_text2":"Telefon: 010 524 8410 (ppm)",
+            "contact_text3":"Epost: lainat@brocc.fi",
+            "contact_text4":"Vår kundtjänst är öppen vardagar kl 09:00 - 11:30 och 12:30 - 16:00",
+            "gcc_header1":"Om Brocc",
+            "gcc_text1":"Brocc Finance AB, filial i Finland är en filial till Brocc Finance AB. Företagets huvudkontor ligger i Sverige och verksamheten står under Sveriges Finansinspektionens tillsyn. I Finland har vi varit verksamma sedan år 2016.",
+            "gcc_link1":"Läs mer om Brocc Finance AB."
+        },   
+        "nrOfApplicants" : {
+            "header": "Hur många sökande är ni?"
+        },
+        "campaignCode": {
+            "header": "Har du en kampanjkod?",
+            "yes": "Ja, jag har en kampanjkod",
+            "no": "Nej, jag har ingen kampanjkod"
+        },
+        "campaignCodeCode": {
+            "header": "Ange din kampanjkod",
+            "placeHolder": "ex. C113331"
+        },
+        "ssn": {
+            "header": "Vad är din personbeteckning?",
+            "placeHolder": "ex. ddmmåå-xxxx",
+            "duplicateText": "Du har använt samma personbeteckning på båda sökande."
+        },
+        "email": {
+            "header": "Vad har du för e-postadress?",
+            "placeHolder": "firstname.lastname@example.org"
+        },
+        "phone": {
+            "header": "Vad har du för telefonnummer?",
+            "placeHolder": "04x 123 45 67"
+        },
+        "housing": {
+            "header": "Hur bor du idag?"
+        },
+        "costOfLiving": {
+            "header": "Vad har du för månadskostnad för ditt boende (t.ex. hyra/avgift)?",
+            "placeHolder": "ex 550"
+        },
+        "marriage": {
+            "header": "Vad är ditt civilstånd?"
+        },
+        "nrOfChildren": {
+            "header": "Hur många barn under 18-år bor i hushållet?",
+            "placeHolder": "ex. 1"
+        },
+        "employment": {
+            "header": "Vad har du för sysselsättning?"
+        },
+        "employmentDetails": {
+            "headerDate": "Hur länge har du haft din nuvarande sysselsättning?",
+            "placeHolderDate": "ex. 05.2014",
+            "headerEmployer": "Vem är din arbetsgivare?",
+            "placeHolderEmployer": "ex. Företaget Oy"
+        },
+        "income": {
+            "header": "Vad har du för månadsinkomst före skatt?",
+            "placeHolder": "ex. 2500"
+        },
+        "hasOtherLoans": {
+            "header": "Har du andra lån?"
+        },
+        "otherLoansOptions": {
+            "header": "Vilken typ av lån har du?"
+        },
+        "consolidationOptions": {
+            "header": "Ska lånet lösa befintliga lån?"
+        },
+        "consolidationAmount": {
+            "header": "Ange det belopp som ska lösa befintliga lån",
+            "placeHolder": "ex 2500"
+        },
+        "consent" : {
+            "header1": "Mitt samtycke",
+            "header2": "Medsökandes samtycke",
+            "satConsentHeader": "Jag godkänner att kreditgivare som är anslutna till det tekniska upplysningssystem som upprätthålls av Suomen Asiakastieto Oy, överlämnar uppgifter om mina krediter hos aktuell kreditgivare till Brocc Finance AB, filial i Finland. Jag godkänner även att Brocc Finance AB, filial i Finland lämnar ut nämnda uppgifter om mig till andra anslutna kreditgivare. Brocc Finance AB, filial i Finland kommer att göra en förfrågan via upplysningssystemet till de kreditinstitut som deltar i upplysningssystemet.",
+            "customerConsentHeader": "Jag bekräftar att jag har tagit del av uppgifterna ovan samt läst Brocc Finance AB, filial i Finland:s information om hur Brocc Finance AB, filial i Finland behandlar mina personuppgifter.",
+            "informationConsentHeader": "Jag bekräftar att den information jag har angivit är korrekt.",
+            "commonText": "För att kunna behandla din kreditansökan, samlar Brocc Finance AB, filial i Finland in och analyserar information om dina utestående krediter från andra kreditgivare och andra externa parter för att kunna göra en bedömning om att bevilja eller ge avslag på din ansökan. Denna behandling resulterar i ett godkännande om att bevilja eller ge avslag på din ansökan. Behandlingen sker delvis automatiserat och de parametrar som ligger till grund för beslutet är bl.a. ålder, övriga krediter, inkomst, anställningsform och eventuella betalningsanmärkningar.",
+            "linkText": "Information om hur Brocc Finance AB, filial i Finland behandlar mina personuppgifter.",
+            "linkUri": "https://assets.ctfassets.net/6efv05ymvl3z/2i5j9akoOBeAmlpcWr8BBe/3f8962039d668b924832919d7f3bdbb5/Brocc_-_Tietosuojaka__yta__nto___-_Fi_-2022-09-16.pdf"
+        }
+    }
+}

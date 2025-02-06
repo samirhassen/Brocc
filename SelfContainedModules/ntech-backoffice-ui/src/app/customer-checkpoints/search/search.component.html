@@ -1,0 +1,19 @@
+<div *ngIf="m">
+    <div class="row">
+        <form [formGroup]="m.searchForm.form" name="searchform" novalidate role="form">
+            <div class="col-xs-4">
+                <div class="relative">
+                    <span class="glyphicon glyphicon-search"></span>
+                    <input autocomplete="none" onEnter (onEnterClick)="onSearch()" formControlName="searchText"
+                        class="search form-control" name="searchText" type="text" placeholder="{{m.civicRegNrMask}}">
+                </div>
+            </div>
+            <div class="col-xs-8" *ngIf="m.searchForm.getValue('searchText')">
+                <button class="n-icon-btn n-white-btn" (click)="resetSearch($event)"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <button class="n-main-btn n-blue-btn" (click)="onSearch($event)" [disabled]="m.searchForm.invalid()"
+                    style="margin-left:5px">Search</button>
+            </div>
+        </form>
+    </div>
+</div>

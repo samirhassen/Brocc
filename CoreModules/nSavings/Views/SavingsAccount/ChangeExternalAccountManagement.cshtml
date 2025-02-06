@@ -1,0 +1,40 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "Savings - Change external account management";
+    ViewBag.AngularDeclaration = "ng-controller=\"changeExternalAccountManagementCtrl as c\" ng-app=\"app\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"c.isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+         var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-changeexternalaccountmanagement")
+}
+
+<div class="pt-1">
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <h1 class="adjusted">Savings: Pending change external account</h1>
+</div>
+
+<div class="row pt-2">
+    <div class="col-sm-offset-2 col-xs-8">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-xs-3">Account nr</th>
+                    <th class="col-xs-7">Initiated date</th>
+                    <th class="col-xs-2 text-right">Created by</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in c.pendingChanges">
+                    <td><a ng-href="{{p.SavingsAccountUrl}}" class="n-anchor">{{p.SavingsAccountNr}} <span class="glyphicon glyphicon-new-window"></span></a></td>
+                    <td>{{p.InitiatedTransactionDate | date:'shortDate'}}</td>
+                    <td class="text-right">{{p.InitiatedByUserDisplayName}}</td>
+                </tr>
+                <tr><td colspan="3" ng-show="!c.pendingChanges || c.pendingChanges.length === 0">-</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>

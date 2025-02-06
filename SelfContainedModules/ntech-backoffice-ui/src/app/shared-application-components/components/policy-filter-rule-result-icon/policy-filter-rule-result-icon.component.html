@@ -1,0 +1,11 @@
+<div class="form-horizontal" *ngIf="policy">
+  <div class="form-group">
+    <label class="col-xs-6 control-label">Rules</label>
+    <div *ngIf="policy?.statusCode" class="col-xs-6 form-control-static">
+      <policy-filter-icon [statusCode]="policy.statusCode"></policy-filter-icon>
+    </div>
+    <div *ngIf="policy?.missingMessage" class="col-xs-6 form-control-static">
+      <p>{{ policy.missingMessage }}</p>
+    </div>
+  </div>
+</div>

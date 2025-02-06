@@ -1,0 +1,284 @@
+{
+		"ProviderName": "{{providerName}}",
+		"UserLanguage": "sv",
+    "NrOfApplicants": 2,
+    "DisableAutomation" :  true,
+    "SkipHideFromManualUserLists" : true,
+  "Items": [
+    {
+      "Group": "application",
+      "Name": "amount",
+      "Value": "{{amount}}"
+    },
+    {
+      "Group": "application",
+      "Name": "repaymentTimeInYears",
+      "Value": "{{runtimeInYears}}"
+    },
+    {
+      "Group": "application",
+      "Name": "loansToSettleAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "creditReportConsent",
+      "Value": "True"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "customerConsent",
+      "Value": "True"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "educationText",
+      "Value": "Yrkesskola"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "housingText",
+      "Value": "Hyresbostad"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "employmentText",
+      "Value": "Fast anställd"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "marriageText",
+      "Value": "Gift"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "civicRegNr",
+      "Value": "{{civicRegNr}}"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "email",
+      "Value": "{{email}}"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "phone",
+      "Value": "{{phone}}"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "education",
+      "Value": "education_yrkesskola"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "housing",
+      "Value": "housing_hyresbostad"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "housingCostPerMonthAmount",
+      "Value": "250"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "employment",
+      "Value": "employment_fastanstalld"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "employedSinceMonth",
+      "Value": "2005-08"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "employer",
+      "Value": "ica"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "employerPhone",
+      "Value": "46546546"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "incomePerMonthAmount",
+      "Value": "5000"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "marriage",
+      "Value": "marriage_gift"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "nrOfChildren",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "mortgageLoanAmount",
+      "Value": "10000"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "carOrBoatLoanAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "studentLoanAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "otherLoanAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "creditCardAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "civicRegNrCountry",
+      "Value": "{{civicRegNrCountry}}"
+    },
+    {
+      "Group": "applicant1",
+      "Name": "approvedSat",
+      "Value": "true"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "creditReportConsent",
+      "Value": "True"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "customerConsent",
+      "Value": "True"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "educationText",
+      "Value": "Yrkesskola"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "housingText",
+      "Value": "Hyresbostad"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "employmentText",
+      "Value": "Fast anställd"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "marriageText",
+      "Value": "Gift"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "civicRegNr",
+      "Value": "{{civicRegNr2}}"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "email",
+      "Value": "{{email2}}"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "phone",
+      "Value": "{{phone2}}"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "education",
+      "Value": "education_yrkesskola"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "housing",
+      "Value": "housing_hyresbostad"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "housingCostPerMonthAmount",
+      "Value": "250"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "employment",
+      "Value": "employment_fastanstalld"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "employedSinceMonth",
+      "Value": "2005-08"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "employer",
+      "Value": "ica"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "employerPhone",
+      "Value": "46546546"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "incomePerMonthAmount",
+      "Value": "5000"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "marriage",
+      "Value": "marriage_gift"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "nrOfChildren",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "mortgageLoanAmount",
+      "Value": "10000"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "carOrBoatLoanAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "studentLoanAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "otherLoanAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "creditCardAmount",
+      "Value": "0"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "civicRegNrCountry",
+      "Value": "{{civicRegNrCountry2}}"
+    },
+    {
+      "Group": "applicant2",
+      "Name": "approvedSat",
+      "Value": "true"
+    }[[[EXTENSION_POINT_ITEMS]]]
+  ]   
+	}

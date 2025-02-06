@@ -1,0 +1,127 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="kyc-management-customer-trapets-data.html">
+    <div>
+        <h2 class="custom-header pt-3">Screening</h2>
+        <hr class="hr-section" />
+        <div class="pt-2 pb-2">
+            <button type="button" ng-click="$ctrl.showHistory($event)" class="n-popup-btn n-turquoise-btn pull-right">
+                History <span class="glyphicon glyphicon-resize-full"></span>
+            </button>
+            <div class="clearfix"></div>
+            <div class="pb-3">
+                <div class="form-horizontal" ng-if="$ctrl.m.latestTrapetsResult">
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">On PEP list</label>
+                        <p class="form-control-static col-xs-6">
+                            <span>{{$ctrl.m.latestTrapetsResult.IsPepHit ? 'Yes' : 'No'}}, {{$ctrl.m.latestTrapetsResult.QueryDate | date:'shortDate'}}</span>
+                            <span ng-if="$ctrl.m.latestTrapetsResult.IsPepHit">&nbsp;</span>
+                            <span class="n-unlock" ng-if="$ctrl.m.latestTrapetsResult.IsPepHit && !$ctrl.m.latestPepExternalIds">
+                                <a ng-click="$ctrl.showLatestDetails('pep', $event)" href="#"><span class="glyphicon glyphicon-lock"></span></a>
+                            </span>
+                        </p>
+                    </div>
+                    <div ng-if="$ctrl.m.latestPepExternalIds">
+                        <div class="form-group" ng-repeat="externalId in $ctrl.m.latestPepExternalIds">
+                            <label class="control-label col-xs-6">{{$first ? 'External ids' : ''}}</label>
+                            <p class="form-control-static col-xs-6 copyable">{{externalId}}</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">On Sanction list</label>
+                        <p class="form-control-static col-xs-6">
+                            <span>{{$ctrl.m.latestTrapetsResult.IsSanctionHit ? 'Yes' : 'No'}}, {{$ctrl.m.latestTrapetsResult.QueryDate | date:'shortDate'}}</span>
+                            <span ng-if="$ctrl.m.latestTrapetsResult.IsSanctionHit">&nbsp;</span>
+                            <span class="n-unlock" ng-if="$ctrl.m.latestTrapetsResult.IsSanctionHit && !$ctrl.m.latestSanctionExternalIds">
+                                <a ng-click="$ctrl.showLatestDetails('sanction', $event)" href="#"><span class="glyphicon glyphicon-lock"></span></a>
+                            </span>
+                        </p>
+                    </div>
+                    <div ng-if="$ctrl.m.latestSanctionExternalIds">
+                        <div class="form-group" ng-repeat="externalId in $ctrl.m.latestSanctionExternalIds">
+                            <label class="control-label col-xs-6">{{$first ? 'External ids' : ''}}</label>
+                            <p class="form-control-static col-xs-6 copyable">{{externalId}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal" ng-if="!$ctrl.m.latestTrapetsResult">
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">On PEP list</label>
+                        <p class="form-control-static col-xs-6">Unknown</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-6">On Sanction list</label>
+                        <p class="form-control-static col-xs-6">Unknown</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <modal-dialog dialog-title="'Screening history'" dialog-id="$ctrl.m.showHistoryDialogId" ng-show="$ctrl.m.historySummary">
+            <div class="pt-3">
+                <h2 class="custom-header">PEP list</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-3">From date</th>
+                            <th class="col-xs-3">To date</th>
+                            <th class="col-xs-3 text-right"># days</th>
+                            <th class="col-xs-3 text-right">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="i in $ctrl.m.historySummary.PepItems">
+                            <td>{{i.FromDate | date:'shortDate'}}</td>
+                            <td>{{i.ToDate | date:'shortDate'}}</td>
+                            <td class="text-right">{{i.Count}}</td>
+                            <td class="text-right">{{i.Value ? 'Hit' : 'No hit'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="custom-header pt-3">Sanction list</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-3">From date</th>
+                            <th class="col-xs-3">To date</th>
+                            <th class="col-xs-3 text-right"># days</th>
+                            <th class="col-xs-3 text-right">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="i in $ctrl.m.historySummary.SanctionItems">
+                            <td>{{i.FromDate | date:'shortDate'}}</td>
+                            <td>{{i.ToDate | date:'shortDate'}}</td>
+                            <td class="text-right">{{i.Count}}</td>
+                            <td class="text-right">{{i.Value ? 'Hit' : 'No hit'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div ng-if=" $ctrl.m.historicalExternalIds">
+                    <h2 class="custom-header pt-3">Last 60 days external ids</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-4">Query date</th>
+                                <th class="col-xs-4">Pep</th>
+                                <th class="col-xs-4">Sanction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="$ctrl.m.historicalExternalIds.length === 0"><td colspan="3">-</td></tr>
+                            <tr ng-repeat="idsForDate in $ctrl.m.historicalExternalIds">
+                                <td>{{idsForDate.QueryDate | date:'shortDate'}}</td>
+                                <td><span class="comma copyable" ng-repeat="i in idsForDate.PepExternalIds">{{i}}</span></td>
+                                <td><span class="comma copyable" ng-repeat="i in idsForDate.SanctionExternalIds">{{i}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </modal-dialog>
+    </div>
+</script>

@@ -1,0 +1,120 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Credit reports";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-phonenrs")
+    <script @Html.CspScriptNonce()>
+        var app = angular.module('app', []);
+        app.controller('ctr',
+                [
+                    '$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+                        $scope.buyReport = function(evt) {
+                            if (evt) {
+                                evt.preventDefault()
+                            }
+                            var isCompany = $scope.entityType === 'company'
+                            $http({
+                                method: 'POST',
+                                url: '/Api/TestDriver/Credit/BuyCreditReport',
+                                data: {
+                                    civicRegNr: isCompany ? null : $scope.civicRegNr,
+                                    orgnr: isCompany ? $scope.civicRegNr : null,
+                                    template: $scope.template
+                                }
+                            }).then(function successCallback(response) {
+                                    $scope.result = response.data
+                                },
+                                function errorCallback(response) {
+                                    $scope.isLoading = false
+                                    toastr.error('Failed!')
+                                })
+                        }
+
+                        $scope.buySatFiCreditReport = function (evt)
+                        {
+                            if (evt) {
+                                evt.preventDefault()
+                            }
+
+                            $http({
+                                method: 'POST',
+                                url: '/Api/TestDriver/Credit/BuySatFiCreditReport',
+                                data: {
+                                    civicRegNr: $scope.civicRegNr
+                                }
+                            }).then(function successCallback(response) {
+                                $scope.result = response.data
+                            },
+                                function errorCallback(response) {
+                                    $scope.isLoading = false
+                                    toastr.error('Failed!')
+                                })
+
+                        }
+
+                        window.scope = $scope
+                    }
+                ])
+    </script>
+}
+<div class="pb-2"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nTest"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+<div>
+    <div>
+        <h1>Buy credit report</h1>
+        <form class="form-horizontal col-sm-6">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Entity type</label>
+                <div class="col-sm-10">
+                    <select class="form-control" ng-model="entityType" ng-init="entityType='person'">
+                        <option value="person">Person</option>
+                        <option value="company">Company</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" ng-show="entityType !== 'company'">Civic regnr</label>
+                <label class="col-sm-2 control-label" ng-show="entityType == 'company'">Orgnr</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="civicRegNr" class="form-control" autocomplete="off" class="copyable" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Template</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="template" class="form-control" autocomplete="off" class="copyable" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <p class="form-control-static">
+                        <button class="btn btn-default" ng-click="buyReport($event)">Buy creditreport</button>
+                        <button class="btn btn-default" ng-show="entityType !== 'company'" ng-click="buySatFiCreditReport($event)">Buy SatFiCreditReport *</button>
+                    </p>
+                    <p ng-show="entityType !== 'company'"><i>* = requires ntech.creditreport.exchangetocivicnr to be disabled</i></p>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+    <div class="pt-3" ng-show="result">
+        <h2>Result <span ng-show="result.IsFromSat">- combined SAT-creditreport data shown in modal-dialog</span></h2>
+        <table class="table">
+            <tr ng-repeat="i in result.Items">
+                <td>{{i.Name}}</td>
+                <td ng-switch="i.Name">
+                    <span ng-switch-when="htmlReportArchiveKey"><a target="_blank" ng-href="{{'/Api/TestDriver/Credit/ArchiveDocument?key=' + i.Value}}">Html report >></a></span>
+                    <span ng-switch-when="pdfReportArchiveKey"><a target="_blank" ng-href="{{'/Api/TestDriver/Credit/ArchiveDocument?key=' + i.Value}}">Pdf report >></a></span>
+                    <span ng-switch-when="xmlReportArchiveKey"><a target="_blank" ng-href="{{'/Api/TestDriver/Credit/ArchiveDocument?key=' + i.Value}}">Xml data >></a></span>
+                    <span ng-switch-default>{{i.Value}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

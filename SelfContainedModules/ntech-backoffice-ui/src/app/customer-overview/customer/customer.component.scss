@@ -1,0 +1,14 @@
+.overview-container {
+  display: flex;
+  gap: 40px;
+  .customer {
+    flex: 0 1 350px;
+    padding-top: 10px;
+  }
+  .entities {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+}

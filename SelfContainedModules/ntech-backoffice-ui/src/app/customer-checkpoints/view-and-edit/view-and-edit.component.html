@@ -1,0 +1,95 @@
+<div *ngIf="m">
+    <div class="row pt-3 pb-3" *ngIf="m.view">
+        <div class="col-md-8 col-md-offset-2 col-sm-12">
+
+            <div class="editblock">
+                <div class="text-right" *ngIf="!m.edit">
+                    <button class="n-icon-btn n-blue-btn" (click)="beginEdit($event)"><span
+                            class="glyphicon glyphicon-pencil"></span></button>
+                </div>
+                <div class="form-horizontal pt-2" *ngIf="!m.edit">
+                    <div class="form-group" *ngIf="m.view.civicRegNr">
+                        <label class="control-label col-md-6 col-sm-5 col-xs-5">Civic number</label>
+                        <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                            <p>{{m.view.civicRegNr}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngFor="let activeCode of m.activeCodes">
+                        <label class="control-label col-md-6 col-sm-5 col-xs-5">{{activeCode.displayName}}</label>
+                        <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                            <p>{{isCodeEnabled(m.view.currentState, activeCode.code) ? 'Enabled' : 'Disabled'}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="m.view.currentState?.codes?.length > 0">
+                        <label class="control-label col-md-6 col-sm-5 col-xs-5">Reason</label>
+                        <div class="col-md-6 col-sm-6 col-xs-6 form-control-static">
+                            <span *ngIf="!m.view.isCurrentClearTextReasonUnlocked" class="n-unlock"
+                                (click)="unlockCurrentReason($event)"><a href="#"> <span
+                                        class="glyphicon glyphicon-lock"></span></a></span>
+                            <p *ngIf="m.view.isCurrentClearTextReasonUnlocked">
+                                {{m.view.clearTextReasons[m.view.currentState.id]}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form novalidate [formGroup]="m.edit?.form?.form" *ngIf="m.edit">
+                    <div class="text-right">
+                        <button class="n-icon-btn n-white-btn" (click)="cancelEdit($event)"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                        <button class="n-icon-btn n-green-btn" (click)="commitEdit($event)"
+                            [disabled]="m.edit.form.invalid()"><span class="glyphicon glyphicon-ok"></span></button>
+                    </div>
+                    <div class="form-horizontal pt-2">
+                        <div class="form-group" *ngIf="m.view.civicRegNr">
+                            <label class="control-label col-md-6 col-sm-5 col-xs-5">Civic number</label>
+                            <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                                <p>{{m.view?.civicRegNr}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngFor="let activeCode of m.activeCodes">
+                            <label class="control-label col-md-6 col-sm-5 col-xs-5">{{activeCode.displayName}}</label>
+                            <div class="col-md-4 col-sm-4 col-xs-4 form-control-static">
+                                <label class="n-toggle">
+                                    <input type="checkbox" [formControlName]="activeCode.code" />
+                                    <span class="n-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="isAnyEditCodeEnabled()">
+                            <label class="control-label col-md-6 col-sm-5 col-xs-5">Reason</label>
+                            <div class="col-md-6 col-sm-6 col-xs-4 form-control-static">
+                                <textarea class="form-control" rows="10" formControlName="clearTextReason"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pt-3" *ngIf="m.view?.historyStates">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-2">Date</th>
+                    <th class="col-sm-4">Checkpoints</th>
+                    <th class="col-sm-3">Reason</th>
+                    <th class="text-right col-sm-3">By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let h of m.view.historyStates">
+                    <td class="col-sm-2">{{h.stateDate | date}}</td>
+                    <td class="col-sm-4"><span class="comma" *ngFor="let code of nullToEmptyArray(h.codes)">{{getCodeDisplayName(code)}}</span><span *ngIf="nullToEmptyArray(h.codes).length === 0">Disabled</span></td>
+                    <td class="col-sm-3">
+                        <span *ngIf="h.codes?.length > 0 && !m.view.isHistoricalReasonUnlocked[h.id]" class="n-unlock"
+                            (click)="unlockHistoricalReason(h.id, $event)"><a href="#"><span
+                                    class="glyphicon glyphicon-lock"></span></a></span>
+                        <span *ngIf="m.view.isHistoricalReasonUnlocked[h.id]">{{m.view.clearTextReasons[h.id]}}</span>
+                    </td>
+                    <td class="text-right col-sm-3">{{getUserDisplayName(h)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

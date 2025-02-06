@@ -1,0 +1,151 @@
+<ng-container *ngIf="m">
+    <form [formGroup]="m.form.form">
+        <h2>Hushållets ekonomi</h2>
+
+        <div class="row pb-2">
+
+            <div class="col-sm-6 col-xs-12">
+                <div [formGroup]="m.form.form">                    
+                    <label>Hur många barn bor i hushållet?</label>
+                    <div class="row">
+                        <div class="col-sm-2 col-xs-3">
+                          <button (click)="removeChild()" [disabled]="!m.form || m.childrenGroupNames.length === 0" title="Remove a child" class="n-icon-btn n-blue-btn"><span class="glyphicon glyphicon-minus glyphicon-centered"></span></button>
+                        </div>
+                        <div class="col-sm-4 col-xs-6">
+                            <p class="form-control copyable bb-1 text-center">{{m.childrenGroupNames.length}}</p>
+                        </div>
+                        <div class="col-sm-2 col-xs-3">
+                            <button (click)="addChild()" title="Add a child" class="n-icon-btn n-blue-btn"><span class="glyphicon glyphicon-plus glyphicon-centered"></span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-container *ngFor="let groupName of m.childrenGroupNames">
+                    <div class="row pb-1" formGroupName="{{groupName}}">
+                        <div class="col-sm-8 col-xs-6" [ngClass]="{ 'has-error': m.form.form.hasError('ageInYears', groupName) }">
+                            <label>Ålder</label>
+                            <input class="form-control" type="text" formControlName="ageInYears" />
+                        </div>
+                        <div class="col-sm-4 col-xs-6" *ngIf="m.form.getValue('sharedCustodyAndUpkeep')">
+                            <label>Delad vårdnad?</label>
+                            <select class="form-control" formControlName="sharedCustody">
+                                <option [ngValue]="''"></option>
+                                <option [ngValue]="'true'">Ja</option>
+                                <option [ngValue]="'false'">Nej</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div class="pb-1" *ngIf="m.childrenGroupNames.length > 0">
+                    <div class="checkbox-inline">
+                        <label><input type="checkbox" formControlName="sharedCustodyAndUpkeep" /> Hushållet har delad vårdnad och underhåll</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6 col-xs-12">
+              <ng-container *ngTemplateOutlet="textGroup; context:
+                  { formControlName: 'childBenefitAmount', displayText: 'Hur mycket får hushållet i barnbidrag/studiebidrag?' }"></ng-container>
+              <ng-container *ngTemplateOutlet="textGroup; context:
+                  { formControlName: 'outgoingChildSupportAmount', displayText: 'Hur mycket får hushållet i underhåll?' }"></ng-container>
+              <ng-container *ngTemplateOutlet="textGroup; context:
+                  { formControlName: 'incomingChildSupportAmount', displayText: 'Hur mycket betalar hushållet i underhåll?' }"></ng-container>
+            </div>
+        </div>
+
+        <h2>Övriga lån</h2>
+        <div class="form-group pb-1">
+            <p>Har ni andra bolån (förutom det ni vill låna till nu)?</p>
+            <div class="radio-inline">
+                <label><input type="radio" formControlName="hasOtherMortgageLoans" value="true"> Ja</label>
+            </div>
+            <div class="radio-inline">
+                <label><input type="radio" formControlName="hasOtherMortgageLoans" value="false"> Nej</label>
+            </div>
+        </div>
+
+        <ng-container *ngFor="let groupName of m.mortgageLoanGroupNames">
+            <div class="row pb-1">
+                <div class="col-sm-11 col-xs-9">
+                    <div class="row">
+                        <div class="form-group col-sm-6 col-xs-12 pb-1" formGroupName="{{groupName}}">
+                            <label>Månadskostnad</label>
+                            <input type="text" class="form-control" formControlName="monthlyCostAmount">
+                        </div>
+                        <div class="form-group col-sm-6 col-xs-12 pb-1" formGroupName="{{groupName}}">
+                            <label>Nuvarande skuld</label>
+                            <input type="text" class="form-control" formControlName="currentDebtAmount">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1 col-xs-3" *ngIf="m.mortgageLoanGroupNames.length > 1">
+                    <div class="pt-2">
+                        <button class="n-icon-btn n-blue-btn" (click)="removeMortgageLoan(false, groupName)"><span class="glyphicon glyphicon-minus glyphicon-centered"></span></button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="pt-1 pb-2" *ngIf="m.form.getValue('hasOtherMortgageLoans') === 'true'">
+            <button class="n-icon-btn n-blue-btn" (click)="addMortgageLoan()">
+                <span class="glyphicon glyphicon-plus glyphicon-centered"></span>
+            </button>
+        </div>
+
+        <div class="form-group pb-1">
+            <p>Har ni ytterligare lån (förutom bolån)?</p>
+            <div class="radio-inline">
+                <label><input type="radio" formControlName="hasOtherNonMortgageLoans" value="true"> Ja</label>
+            </div>
+            <div class="radio-inline">
+                <label><input type="radio" formControlName="hasOtherNonMortgageLoans" value="false"> Nej</label>
+            </div>
+        </div>
+
+        <ng-container *ngFor="let groupName of m.otherLoanGroupNames">
+            <div class="row pb-1">
+                <div class="col-sm-11 col-xs-9">
+                    <div class="row">
+                        <div class="form-group col-sm-4 col-xs-12 pb-1" formGroupName="{{groupName}}">
+                            <label>Typ av lån</label>
+                            <select class="form-control" formControlName="loanType">
+                              <option value=""></option>
+                              <option [value]="opt.Code" *ngFor="let opt of m.otherLoanTypes()">{{opt.DisplayName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4 col-xs-12 pb-1" formGroupName="{{groupName}}">
+                            <label>Månadskostnad</label>
+                            <input type="text" class="form-control" formControlName="monthlyCostAmount">
+                        </div>
+                        <div class="form-group col-sm-4 col-xs-12 pb-1" formGroupName="{{groupName}}">
+                            <label>Nuvarande skuld</label>
+                            <input type="text" class="form-control" formControlName="currentDebtAmount">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1 col-xs-3" *ngIf="m.otherLoanGroupNames.length > 1">
+                    <div class="pt-2">
+                        <button class="n-icon-btn n-blue-btn" (click)="removeOtherLoan(false, groupName)"><span class="glyphicon glyphicon-minus glyphicon-centered"></span></button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="pt-1" *ngIf="m.form.getValue('hasOtherNonMortgageLoans') === 'true'">
+            <button class="n-icon-btn n-blue-btn" (click)="addOtherLoan()">
+                <span class="glyphicon glyphicon-plus glyphicon-centered"></span>
+            </button>
+        </div>
+
+        <div class="text-right pt-5">
+            <button class="n-main-btn n-green-btn" [disabled]="m.form.invalid()" (click)="apply($event)">Gå vidare</button>
+        </div>
+    </form>
+</ng-container>
+
+<ng-template #textGroup let-displayText="displayText" let-formControlName="formControlName">
+  <div class="form-group pb-1" *ngIf="m.form.hasFormControl(null, formControlName)" [ngClass]="{ 'has-error': m.form.hasError(formControlName) }" [formGroup]="m.form.form">
+      <label>{{displayText}}</label>
+      <input type="text" class="form-control" [formControlName]="formControlName">
+  </div>
+</ng-template>

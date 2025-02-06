@@ -1,0 +1,190 @@
+﻿<div id="itemDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="min-width:1200px; max-width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <div class="text-center worklist-counter">
+                            <label>My count</label>
+                            <p>{{m.wl.workListSummary.TakeOrCompletedByCurrentUserCount}}</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="text-center worklist-counter">
+                            <label>Total</label>
+                            <p>{{m.wl.workListSummary.TakenCount + m.wl.workListSummary.CompletedCount}}/{{m.wl.workListSummary.TotalCount}}</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="text-center worklist-counter">
+                            <label>Selection</label>
+                            <p>{{m.wl.openedFrom.filterModel.filterShortText}}</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 text-right pt-1">
+                        <button ng-click="m.nextOnSkipped($event)" type="button" class="n-main-btn n-blue-btn">Skip <span class="glyphicon glyphicon-arrow-right"></span></button>
+                    </div>
+                    <div class="col-xs-1 text-right" style="padding-top: 7px;">
+                        <button ng-click="m.closeOpenItem($event)" type="button" class="n-icon-btn n-white-btn"><span class="arrows-close"><span class="glyphicon glyphicon-arrow-down"></span><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="pt-3">
+                    <div class="tabs">
+                        <div class="col-sm-offset-4 col-xs-2">
+                            <span class="btn" ng-class="{ 'decision-form-active-btn' : !m.wl.current.isTryLaterTabActive, 'decision-form-inactive-btn' : m.wl.current.isTryLaterTabActive }" ng-click="m.wl.current.isTryLaterTabActive=false">Action</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span class="btn" ng-class="{ 'decision-form-active-btn' : m.wl.current.isTryLaterTabActive, 'decision-form-inactive-btn' : !m.wl.current.isTryLaterTabActive }" ng-click="m.wl.current.isTryLaterTabActive=true">Try later</span>
+                        </div>
+                    </div>
+
+                    <!--actions tab content-->
+                    <div class="col-xs-10 col-sm-offset-1 decision-form" ng-class="{ 'none' : m.wl.current.isTryLaterTabActive }">
+                        <div class="form-horizontal">
+                            <div class="col-xs-10 col-sm-offset-1">
+                                <div class="pt-1 pb-2">
+                                    <!--promise to pay not set-->
+                                    <div ng-hide="m.wl.current.creditSummary.promisedToPayDate || m.wl.current.isPromisedToPayDateEditMode">
+                                        <label class="control-label col-xs-6">Promise to pay</label>
+                                        <div class="col-xs-4"><a href="#" class="n-icon-btn n-blue-btn" ng-click="m.beginEditPromisedToPayDate($event)"><span class="glyphicon glyphicon-plus"></span></a></div>
+                                    </div>
+                                    <div ng-show="m.wl.current.isPromisedToPayDateEditMode">
+                                        <label class="control-label col-xs-6">Promise to pay</label>
+                                        <div class="col-xs-4"><input type="text" placeholder="YYYY-MM-DD" autocomplete="off" class="form-control" name="promisedToPayDateEdit" id="promisedToPayDateEdit" ng-model="m.wl.current.promisedToPayDateEdit"></div>
+                                        <div class="2">
+                                            <button class="n-icon-btn n-white-btn" ng-click="m.cancelAddPromisedToPayDate($event)"><span class="glyphicon glyphicon-remove"></span></button>
+                                            <button style="cursor:pointer" class="n-icon-btn n-green-btn" ng-click="m.addPromisedToPayDate($event)"><span class="glyphicon glyphicon-ok"></span></button>
+                                        </div>
+                                    </div>
+                                    <div ng-show="m.wl.current.creditSummary.promisedToPayDate && !m.wl.current.isPromisedToPayDateEditMode">
+                                        <label class="control-label col-xs-6">Promise to pay</label>
+                                        <div class="col-xs-4"><p class="form-control-static">{{m.wl.current.creditSummary.promisedToPayDate | date:'shortDate'}}</p></div>
+                                        <div class="col-xs-2"><button class="n-icon-btn n-red-btn" ng-click="m.removePromisedToPayDate($event)"><span class="glyphicon glyphicon-remove"></span></button></div>
+                                    </div>
+                                    <!--end-->
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-6 control-label">New terms sent</label>
+                                    <div class="col-xs-6"><div class="checkbox"><input ng-model="m.wl.current.isNewTermsSent" type="checkbox"></div></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-6 control-label">Settlement date added</label>
+                                    <div class="col-xs-6"><div class="checkbox"><input ng-model="m.wl.current.isSettlementDateAdded" type="checkbox"></div></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="row text-center pt-3">
+                                <button type="button" class="n-main-btn n-green-btn" ng-disabled="!m.isNextOnActionAllowed($event)" ng-click="m.nextOnAction($event)">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end action-->
+                    <!--try later tab content-->
+                    <div class="col-xs-10 col-sm-offset-1 decision-form" ng-class="{ 'none' : !m.wl.current.isTryLaterTabActive }">
+                        <div class="form-horizontal">
+                            <div class="col-xs-10 col-sm-offset-1">
+                                <div class="row pt-1">
+                                    <div class="col-xs-4 text-center">
+                                        <label class="control-label">Try later</label>
+                                        <div><input ng-model="m.wl.current.tryLaterChoice" name="tryLaterChoice" value="tryLater" type="radio"></div>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <label class="control-label">Try later + sms</label>
+                                        <div><input ng-model="m.wl.current.tryLaterChoice" name="tryLaterChoice" value="tryLaterPlusSms" type="radio"></div>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <label class="control-label">Try later + email</label>
+                                        <div><input ng-model="m.wl.current.tryLaterChoice" name="tryLaterChoice" value="tryLaterPlusEmail" type="radio"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="row text-center pt-3">
+                                <button type="button" class="n-main-btn n-green-btn" ng-disabled="!m.wl.current.tryLaterChoice" ng-click="m.nextOnTryLater($event)">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end try later-->
+                    <div class="clearfix"></div>
+                </div>
+
+
+                <div class="form-horizontal pt-3">
+                    <div class="row">
+                        <div class="col-xs-6 form-group">
+                            <div class="pb-2">
+                                <label class="control-label col-xs-4">Name</label>
+                                <p class="form-control-static col-xs-8">{{m.wl.current.applicants[0].firstName}} {{m.wl.current.applicants[0].lastName}}</p>
+                                <label class="control-label col-xs-4">Mail</label>
+                                <p class="form-control-static col-xs-8 copyable">{{m.wl.current.applicants[0].email}}</p>
+                                <label class="control-label col-xs-4">Phone</label>
+                                <p class="form-control-static col-xs-8 copyable">
+                                    {{m.wl.current.applicants[0].phoneParsed.isValid ? m.wl.current.applicants[0].phoneParsed.validNumber.standardDialingNumber : m.wl.current.applicants[0].phoneParsed.raw }}
+                                </p>
+                                <label class="control-label col-xs-4">&nbsp;</label>
+                                <p class="form-control-static col-xs-8">
+                                    <a class="n-anchor" ng-href="{{m.wl.current.applicants[0].customerCardUrl}}" target="_blank">View details<span class="glyphicon glyphicon-new-window"></span></a>
+                                </p>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div ng-hide="m.wl.current.applicants.length < 2">
+                                <label class="control-label col-xs-4">Name</label>
+                                <p class="form-control-static col-xs-8">{{m.wl.current.applicants[1].firstName}} {{m.wl.current.applicants[1].lastName}}</p>
+                                <label class="control-label col-xs-4">Mail</label>
+                                <p class="form-control-static col-xs-8 copyable">{{m.wl.current.applicants[1].email}}</p>
+                                <label class="control-label col-xs-4">Phone</label>
+                                <p class="form-control-static col-xs-8 copyable">
+                                    {{m.wl.current.applicants[1].phoneParsed.isValid ? m.wl.current.applicants[1].phoneParsed.validNumber.standardDialingNumber : m.wl.current.applicants[1].phoneParsed.raw }}
+                                </p>
+                                <label class="control-label col-xs-4">&nbsp;</label>
+                                <p class="form-control-static col-xs-8">
+                                    <a class="n-anchor" ng-href="{{m.wl.current.applicants[1].customerCardUrl}}" target="_blank">View details<span class="glyphicon glyphicon-new-window"></span></a>
+                                </p>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="frame">
+                                <a ng-href="{{m.wl.current.creditSummary.creditUrl}}" target="_blank" class="n-anchor pull-right">{{m.wl.current.itemId}} <span class="glyphicon glyphicon-new-window"></span></a>
+                                <div class="clearfix"></div>
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-xs-6 control-label">Overdue count</label>
+                                        <div class="col-xs-6 form-control-static">{{m.wl.current.creditSummary.nrOfOverdueNotifications}}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-6 control-label">Overdue days</label>
+                                        <div class="col-xs-6 form-control-static">{{m.wl.current.creditSummary.nrOfDaysPastDueDate}} days past due date</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-6 control-label">Overdue balance</label>
+                                        <div class="col-xs-6 form-control-static">{{m.wl.current.creditSummary.overdueBalance | currency}}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-6 control-label">Total capital debt</label>
+                                        <div class="col-xs-6 form-control-static">{{m.wl.current.creditSummary.totalCapitalDebt | currency}}</div>
+                                    </div>
+                                    <div class="form-group" ng-show="m.wl.current.creditSummary && m.wl.current.creditSummary.alternatePaymentPlanStateCode">
+                                        <label class="col-xs-6 control-label">Alternate payment plan</label>
+                                        <div class="col-xs-6 form-control-static">{{m.getAlternatePaymentPlanStatusText()}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-3">
+                    <h2 class="custom-header">Unpaid notifications</h2>
+                    <hr class="hr-section" />
+                    <notificationslist notifications="m.wl.current.unpaidnotifications"></notificationslist>
+                </div>
+                <credit-comments initial-data="m.wl.commentsInitialData"></credit-comments>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("Component_Notificationslist")
+@Html.Partial("Components/Component_CreditComments")

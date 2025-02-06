@@ -1,0 +1,3 @@
+<p *ngIf="!m">Downloading report...</p>
+<pre *ngIf="m?.error">{{m.error | json}}</pre>
+<p *ngIf="m?.report"><a #downloadAnchor [href]="m.report.objectUrl">Download</a></p>

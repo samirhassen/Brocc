@@ -1,0 +1,26 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label">Är någon av angivna ägare eller firmatecknare, en person i politiskt utsatt ställning? Har någon,
+                    eller tidigare haft, en hög politisk post eller hög statlig befattning eller är nära
+                    familjemedlem eller medarbetare till en sådan person?</label>
+            <div *ngFor="let person of getPersonsControls().controls; let i = index" formArrayName="persons">
+                <div [formGroupName]="i" [class.none]="form.value.noPep === true">
+                    <div>
+                        <label class="custom-checkbox" >
+                            <input type="checkbox" formControlName="isPep">
+                            Ja, {{person.value.name}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label class="custom-checkbox">
+                    <input type="checkbox" formControlName="noPep">
+                    Nej
+                </label>
+            </div>
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

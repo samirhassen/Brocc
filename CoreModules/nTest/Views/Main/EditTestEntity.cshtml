@@ -1,0 +1,63 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    ViewBag.Title = "nTest - Edit test entity";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-edit-testentity")
+}
+
+<div ng-if="pickModel">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <select class="form-control" ng-model="pickModel.nrType">
+                    <option value="Person">Person</option>
+                    <option value="Company">Company</option>
+                </select>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input type="text" ng-model="pickModel.nr" class="form-control">
+            </div>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary pull-right" ng-click="pick($event)">Edit</button>
+    </form>
+</div>
+
+<div ng-if="editModel">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-6 control-label">Civic regnr/Orgnr</label>
+            <div class="col-sm-6">
+                <span class="form-control-static">{{editModel.nr}}</span>
+            </div>
+        </div>
+        <div class="form-group" ng-repeat="n in editNames()">
+            <label class="col-sm-6 control-label">{{n}}</label>
+            <div class="col-sm-6">
+                <input type="text" ng-model="editModel.entity[n]" class="form-control">
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label class="col-sm-6 control-label"></label>
+            <div class="col-sm-6">
+                <select class="form-control" ng-model="editModel.cacheMode">
+                    <option value="Preserve">Leave credit report history</option>
+                    <option value="Clear">Remove credit report history</option>
+                </select>
+            </div>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary pull-right" ng-click="save($event)">Save</button>
+    </form>
+</div>

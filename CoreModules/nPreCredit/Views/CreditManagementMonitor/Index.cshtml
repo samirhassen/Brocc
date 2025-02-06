@@ -1,0 +1,142 @@
+﻿@using NWebsec.Mvc.HttpHeaders.Csp
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Credit Management Monitor</title>
+    @Styles.Render("~/Content/css/bundle-credit-monitoring")
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+</head>
+<body ng-app="app" ng-controller="ctr" ng-cloak ng-csp="no-unsafe-eval">
+    <div class="monitor zoomed" ng-show="!isBroken">
+        <div class="left">
+            <div class="box rejection-reason internal" ng-show="d && d.Details">
+                <h2>Automatic rejection reasons</h2>
+                <table>
+                    <tr ng-repeat="r in d.Details.TopAutoRejectionPercents">
+                        <td>{{getDisplayRejectionReason(r.RejectionReasonName)}}</td>
+                        <td>{{r.Percent | number:'1'}} %</td>
+                    </tr>
+                </table>
+                <div class="rejection-reason-line"></div>
+            </div>
+
+            <div class="box manual-reason" ng-show="d && d.Details">
+                <h2>Manual rejection reasons</h2>
+                <table>
+                    <tr ng-repeat="r in d.Details.TopManualRejectionPercents">
+                        <td>{{getDisplayRejectionReason(r.RejectionReasonName)}}</td>
+                        <td>{{r.Percent | number:'1'}} %</td>
+                    </tr>
+                </table>
+                <div class="manual-reason-line"></div>
+            </div>
+        </div>
+        <div class="middle">
+            <div class="top">
+                <div class="top-triangle" style="top:0px;"></div>
+                <div class="applications">Applications<br /> {{d.TotalCount | number:'0'}}</div>
+            </div>
+
+            <div class="content">
+                <div class="triangle" style="z-index:4; top:110px;"></div>
+                <div class="triangle" style="z-index:3; top:290px;"></div>
+                <div class="triangle" style="z-index:2; top:510px;"></div>
+                <div class="line" style="z-index:1; top: 860px;"></div>
+
+                <div class="circle blue" style="z-index:5; top: 70px; left: -100px;"></div>
+                <div class="circle purple" style="z-index:6; top: 390px; left: -100px;"></div>
+                <div class="circle yellow" style="z-index:7; top: 710px; left: -100px;"></div>
+
+                <div class="circle blue" style="z-index:5; top:70px; right: -100px;"></div>
+                <div class="circle purple" style="z-index:6; top: 390px; right: -100px;"></div>
+                <div class="circle green" style="z-index:7; top: 710px; right: -100px;"></div>
+
+                <div class="auto" id="auto">Auto</div>
+                <div class="auto-rejected">Rejected</div>
+                <div class="auto-rejected-number">{{getCount('AutoRejected') | number:'0'}}</div>
+                <div class="auto-rejected-procent">{{getPercent('AutoRejected') | number:'0'}} %</div>
+                <div class="auto-accepted">Accepted</div>
+                <div class="auto-accepted-number">{{getCount('AutoAccepted') | number:'0'}}</div>
+                <div class="auto-accepted-procent">{{getPercent('AutoAccepted') | number:'0'}} %</div>
+
+                <div class="cancelled">Cancelled</div>
+                <div class="cancelled-number">{{getCount('Cancelled') | number:'0' }}</div>
+
+                <div class="manual">Manual</div>
+                <div class="manual-number">{{getCount('Manual') | number:'0'}}</div>
+                <div class="manual-rejected">Rejected</div>
+                <div class="manual-rejected-number">{{getCount('ManuallyRejected') | number:'0'}}</div>
+                <div class="manual-rejected-procent">{{getPercent('ManuallyRejected') | number:'0'}} %</div>
+                <div class="manual-accepted">Accepted</div>
+                <div class="manual-accepted-number">{{getCount('ManuallyAccepted') | number:'0'}}</div>
+                <div class="manual-accepted-procent">{{getPercent('ManuallyAccepted') | number:'0'}} %</div>
+
+                <div class="total">Total</div>
+                <div class="total-rejected">Rejected</div>
+                <div class="total-rejected-number">{{(getCount('AutoRejected') + getCount('ManuallyRejected')) | number:'0'}}</div>
+                <div class="total-rejected-procent">{{(getPercent('AutoRejected') + getPercent('ManuallyRejected')) | number:'0'}} %</div>
+                <div class="total-accepted">Accepted</div>
+                <div class="total-accepted-number">{{(getCount('AutoAccepted') + getCount('ManuallyAccepted')) | number:'0'}}</div>
+                <div class="total-accepted-procent">{{(getPercent('AutoAccepted') + getPercent('ManuallyAccepted')) | number:'0'}} %</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="box volume" ng-show="d && d.Details">
+                <h2>Volume</h2>
+                <table>
+                    <tr ng-repeat="p in d.Details.ApplicationCountPerProvider">
+                        <td>{{getProviderDisplayName(p.ProviderName)}}</td>
+                        <td>{{p.NrOfApplications | number:'0'}}</td>
+                        <td>{{p.NrOfAcceptedApplications | number:'0'}}</td>
+                    </tr>
+                </table>
+                <div class="valume-reason-line"></div>
+            </div>
+
+            <div class="box acceptance-ratio" ng-show="d && d.Details">
+                <h2>Acceptance ratio</h2>
+                <table>
+                    <tr ng-repeat="p in d.Details.ApplicationCountPerProvider">
+                        <td>{{getProviderDisplayName(p.ProviderName)}}</td>
+                        <td>{{p.PercentAcceptedApplications | number:'1'}} %</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="bottom">
+            <div class="settings">
+                <select ng-model="providerName">
+                    <option value="*">All</option>
+                    <option ng-repeat="provider in providers" value="{{provider.ProviderName}}">{{provider.DisplayName}}</option>
+                </select>
+                <select ng-model="timeSpan">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="thisweek">This week</option>
+                    <option value="thismonth">This month</option>
+                </select>
+                <button ng-click="refresh($event)" ng-hide="isLoading">Refresh</button>
+                <div><input type="checkbox" ng-model="includeDetails" /> Show details</div>
+                <div ng-if="!isBroken && (timeSpan === 'today' || timeSpan === 'yesterday')" style="padding-top:10px;">
+                    <a ng-href="{{'Api/CreditManagementMonitor/DetailsReport?providerName=' + providerName + '&timeSpan=' + timeSpan}}" target="_blank">Application breakdown</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content" ng-show="isBroken">
+        <p style="color:red">The connection to the server was lost. Hit refresh or reload the page to try restoring it.</p>
+        <button ng-click="refresh($event)" ng-hide="isLoading">Refresh</button>
+    </div>
+    <div class="loading" ng-show="isLoading"></div>
+    <script @Html.CspScriptNonce()>
+        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+    </script>
+    @Scripts.Render("~/Content/js/bundle-creditmanagementmonitor-index")
+</body>
+</html>

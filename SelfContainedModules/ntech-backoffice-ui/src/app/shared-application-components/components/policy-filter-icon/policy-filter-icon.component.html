@@ -1,0 +1,7 @@
+<span
+  class="glyphicon"
+  [class.glyphicon-ok]="statusCode === 'accept'"
+  [class.glyphicon-remove]="statusCode === 'reject'"
+  [class.glyphicon-minus]="statusCode === 'noDecision'"
+  [class.glyphicon-exclamation-sign]="statusCode === 'manualControl'"
+></span>

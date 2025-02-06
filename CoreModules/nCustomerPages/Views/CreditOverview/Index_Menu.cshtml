@@ -1,0 +1,7 @@
+﻿<a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'productoverview' }" ng-href="{{productsOverviewUrl}}" translate="sao_minatjanster_m">Mina tjänster</a>
+<a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'opennotifications' }" ng-href="#!/opennotifications" translate="cao_opennotifications_m" style="margin-bottom:5px">Avier</a>
+<a class="item" ng-class="{ 'selected-submenu-item' : currentMenuItemName === 'accountdocuments' }" ng-href="#!/accountdocuments" translate="sao_accountdocuments_m" style="margin-bottom:5px">Mina dokument</a>
+<a class="item mobile" href="@Url.Action("Logout", "Common")"><span translate="logout">Logga ut</span></a>
+<span class="desktop">
+    <a href="@Url.Action("Logout", "Common")" class="item logout-link"><span translate="logout">Logga ut</span></a>
+</span>

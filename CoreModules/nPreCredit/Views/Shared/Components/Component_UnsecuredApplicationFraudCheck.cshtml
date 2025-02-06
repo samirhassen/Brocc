@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="unsecured-application-fraud-check.html">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="">
+                <div class="text-right">
+                    <a class="n-anchor" ng-href="{{$ctrl.m.FraudControlModel.applicant1.viewUrl}}" ng-show="$ctrl.m.FraudControlModel.applicant1.status == 'Approved' || $ctrl.m.FraudControlModel.applicant1.status == 'Rejected'">
+                        View details
+                    </a>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <p class="col-xs-4 control-label">Fraud Control</p>
+                        <p class="col-xs-8 form-control-static"><b>{{$ctrl.m.FraudControlModel.applicant1.status}}</b></p>
+                    </div>
+                </div>
+
+                <div class="pt-3">
+                    <div class="pb-2" ng-show="$ctrl.initialData.applicationInfo.IsActive === true && $ctrl.m.FraudControlModel.applicant1.status ==='Unresolved'">
+                        <a class="n-main-btn n-white-btn" href="{{$ctrl.m.FraudControlModel.applicant1.continueUrl}}" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation">
+                            Continue <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div ng-show="$ctrl.initialData.applicationInfo.IsActive === true && $ctrl.initialData.applicationInfo.IsPartiallyApproved !== true">
+                        <a class="n-main-btn n-blue-btn" ng-href="{{$ctrl.m.FraudControlModel.applicant1.newUrl}}" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation || $ctrl.initialData.applicationInfo.AgreementStatus != 'Accepted'">
+                            New fraud check <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-6">
+            <div ng-show="$ctrl.initialData.applicationInfo.NrOfApplicants > 1">
+                <div class="text-right" ng-show="$ctrl.m.FraudControlModel.applicant2.status == 'Approved' || $ctrl.m.FraudControlModel.applicant2.status == 'Rejected'">
+                    <a class="n-anchor" ng-href="{{$ctrl.m.FraudControlModel.applicant2.viewUrl}}">
+                        View details
+                    </a>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <p class="col-xs-4 control-label">Fraud Control</p>
+                        <p class="col-xs-8 form-control-static"><b>{{$ctrl.m.FraudControlModel.applicant2.status}}</b></p>
+                    </div>
+                </div>
+                <div class="pt-3">
+                    <div class="pb-2" ng-show="$ctrl.initialData.applicationInfo.IsActive === true && $ctrl.m.FraudControlModel.applicant2.status ==='Unresolved'">
+                        <a class="n-main-btn n-white-btn" href="{{$ctrl.m.FraudControlModel.applicant2.continueUrl}}" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation">
+                            Continue <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div ng-show="$ctrl.initialData.applicationInfo.IsActive === true && $ctrl.initialData.applicationInfo.IsPartiallyApproved !== true">
+                        <a class="n-main-btn n-blue-btn" ng-href="{{$ctrl.m.FraudControlModel.applicant2.newUrl}}" ng-disabled="$ctrl.initialData.applicationInfo.IsWaitingForAdditionalInformation || $ctrl.initialData.applicationInfo.AgreementStatus != 'Accepted'">
+                            New fraud check <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

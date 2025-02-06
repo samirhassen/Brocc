@@ -1,0 +1,24 @@
+<application-template>
+    <form [formGroup]="form">
+        <div class="pb-5 movein">
+            <label class="custom-label">Är någon av nedanstående ägare deklarations- eller skatteskyldiga i USA?</label>
+            <div *ngFor="let person of getPersonsControls().controls; let i = index" formArrayName="persons">
+                <div [formGroupName]="i" [class.none]="form.value.noUsPerson === true">
+                    <div>
+                        <label class="custom-checkbox" >
+                            <input type="checkbox" formControlName="isUsPerson">
+                            Ja, {{person.value.name}}
+                        </label>
+                    </div> 
+                </div>             
+            </div>
+            <div class="pt-2">
+                <label class="custom-checkbox">
+                    <input type="checkbox" formControlName="noUsPerson">
+                    Nej, bolaget har inte någon ägare som är deklarations- eller skatteskyldig i USA.
+                </label>
+            </div>
+        </div>
+        <forward-back-buttons></forward-back-buttons>
+    </form>
+</application-template>

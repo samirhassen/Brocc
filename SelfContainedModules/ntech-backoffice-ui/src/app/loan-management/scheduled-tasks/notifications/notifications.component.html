@@ -1,0 +1,88 @@
+<scheduled-tasks-menu [currentTaskName]="'Notifications'">
+    <ng-container task-area *ngIf="m">
+        <toggle-block [initialData]="{ headerText: 'Trigger job manually', useFixedBorder: true }">
+            <div class="row pb-2" *ngIf="!m.notificationResult">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="frame">
+                        <div class="row">
+                            <div class="col-sm-6 text-right">
+                                <p>Not notified</p>
+                                <p>Notified but not delivered</p>
+                                <p>Done</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p><b>{{m.counts?.countNotNotifiedCurrently}}</b></p>
+                                <p><b>{{m.counts?.countCreatedByNotDeliveredCurrently}}</b></p>
+                                <p><b>{{m.counts?.countDeliveredThisPeriod}}</b></p>
+                            </div>
+                        </div>
+                        <div class="text-center pt-3">
+                            <button class="n-main-btn n-green-btn" (click)="startNotification($event)">Create notifications</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-2" *ngIf="!m.notificationResult">
+                <toggle-block [initialData]="{ headerText: 'Preview - will be notified' }" *ngIf="m.counts?.countNotNotifiedCurrently > 0">
+                    <table class="table">
+                        <tbody>
+                            <tr *ngFor="let group of m.notificationGroups">
+                                <td><span class="comma" *ngFor="let creditNr of group">{{creditNr}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </toggle-block>
+                <toggle-block [initialData]="{ headerText: 'Preview - skipped' }" *ngIf="m.skipReasonsByCreditNr && getSkippedCreditNrs().length > 0">
+                    <table class="table">
+                        <tbody>
+                            <tr *ngFor="let creditNr of getSkippedCreditNrs()">
+                                <td>{{creditNr}}</td>
+                                <td>{{m.skipReasonsByCreditNr[creditNr]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </toggle-block>
+            </div>
+            <div *ngIf="m.notificationResult" class="row pt-3">
+                <div class="frame col-sm-8 col-sm-offset-2">
+                    <div class="row text-center">
+                        <ul>
+                            <li>Created: {{m.notificationResult.successCount}}</li>
+                            <li *ngIf="m.notificationResult.failCount>0">Failed: {{m.notificationResult.failCount}}</li>
+                            <li>Time taken: {{(m.notificationResult.totalMilliseconds/1000)|number:'1.0-0' }} seconds </li>
+                        </ul>
+                        <h3 *ngIf="m.notificationResult.errors && m.notificationResult.errors.length > 0">Errors</h3>
+                        <ul *ngIf="m.notificationResult.errors && m.notificationResult.errors.length > 0">
+                            <li *ngFor="let e of m.notificationResult.errors">{{e}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </toggle-block>
+
+        <div class="pt-3 text-center no-hits" *ngIf="m.files && m.files.TotalNrOfPages === 0"><p>There are no notification files yet.</p></div>
+        <ng-container *ngIf="m.files && m.files.TotalNrOfPages > 0">
+            <div class="pt-3" >
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th class="text-right">Number of credits</th>
+                            <th class="text-right">Download file</th>
+                            <th class="text-right">By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let f of m.files.Page">
+                            <td>{{f.TransactionDate | date:'shortDate'}}</td>
+                            <td class="text-right">{{f.NotificationCount}}</td>
+                            <td class="text-right"><a class="n-direct-btn n-purple-btn" target="_blank" [href]="getArchiveDocumentUrl(f.FileArchiveKey)">File <span class="glyphicon glyphicon-save"></span></a></td>
+                            <td class="text-right">{{f.UserDisplayName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table-pager [initialData]="m.files.pagingData"></table-pager>
+        </ng-container>
+    </ng-container>
+</scheduled-tasks-menu>

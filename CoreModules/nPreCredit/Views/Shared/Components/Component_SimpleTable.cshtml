@@ -1,0 +1,20 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/ng-template" id="simple-table.html">
+    <div>
+        <table class="table" ng-if="$ctrl.m">
+            <thead>
+                <tr>
+                    <th ng-repeat="h in $ctrl.m.headerCells track by $index" class="{{h.className}}">{{h.labelText}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in $ctrl.m.rows track by $index">
+                    <td ng-repeat="c in r.columnValues track by $index">{{c}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>

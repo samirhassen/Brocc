@@ -1,0 +1,25 @@
+<div class="block"
+  [ngClass]="{
+    'block-transparent': m?.useTransparentBackground,
+    'block-expanded': m.isExpanded,
+    'block-fixed-border': m.useFixedBorder }" *ngIf="m">
+
+  <div class="col-xs-12 block-toggle" style="padding-left: 0px" [ngClass]="{ 'block-toggle-fixed-border': m.useFixedBorder }" >
+    <h2 class="custom-header">
+      <span (click)="toggleExpanded($event)"><span class="glyphicon chevron-bg" [ngClass]="{
+            'glyphicon-chevron-down': m.isExpanded,
+            'glyphicon-chevron-right': !m.isExpanded
+          }"></span>
+      </span>
+      <span class="custom-header-text">{{ m.headerText }}</span>
+    </h2>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <div *ngIf="m.isExpanded" class="block-area pt-2" [ngClass]="{ 'block-area-fluid-border': !m.useFixedBorder }">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="clearfix"></div>
+</div>

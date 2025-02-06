@@ -1,0 +1,11 @@
+<ng-template #popupTemplate>
+  <div class="modal-header">
+    <button class="close" (click)="modalRef.hide()">&times;</button>
+    <h2 class="modal-title">AI</h2>
+  </div>
+  <div class="modal-body">
+    <ng-container *ngIf="m">
+      <div [innerHtml]="m.response" style="white-space: pre-wrap"></div>
+    </ng-container>
+  </div>
+</ng-template>

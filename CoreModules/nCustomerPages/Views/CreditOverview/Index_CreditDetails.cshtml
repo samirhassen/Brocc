@@ -1,0 +1,52 @@
+﻿<script type="text/ng-template" id="creditdetails.html">    
+    @Html.Partial("TitleAndBack", TitleAndBackModel.Dynamic("details.CreditNr", "backUrl"))
+    <div class="row pt-2">
+        <div class="col-md-6 pb-3">
+            <div class="row">
+                <label class="col-md-6 col-sm-6 col-xs-6 text-right" translate="cao_details_ks">Kapitalskuld</label>
+                <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{details.CurrentCapitalDebtAmount | currency}}</b></p></div>
+            </div>
+            <div class="row">
+                <label class="col-md-6 col-sm-6 col-xs-6 text-right" translate="cao_details_sdate">Startdatum</label>
+                <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{details.StartDate | date}}</b></p></div>
+            </div>
+            <div class="row">
+                <label class="col-md-6 col-sm-6 col-xs-6 text-right" translate="cao_details_rsats">Räntesats</label>
+                <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{details.CurrentTotalInterestRatePercent | number:'2'}} %</b></p></div>
+            </div>
+            <div class="row">
+                <label class="col-md-6 col-sm-6 col-xs-6 text-right" translate="cao_details_mbel">Månadsbelopp</label>
+                <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{details.MonthlyPaymentAmount | currency}}</b></p></div>
+            </div>
+            <div class="row">
+                <label class="col-md-6 col-sm-6 col-xs-6 text-right" translate="cao_details_remainingrepaymenttime">Kvarvarande återbetalningstid</label>
+                <div class="col-md-6 col-sm-6 col-xs-6"><p><b>{{details.RepaymentTimeInMonths}} <span translate="cao_details_month">månader</span></b></p></div>
+            </div>
+            <div class="row">
+                <label class="col-md-6 col-sm-6 col-xs-6 text-right" translate="cao_details_mortgage">Amorteringsplan</label>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <a ng-href="{{getAmortizationPlanPdf(details.CreditNr)}}" target="_blank" class="n-download-anchor" ><span translate="cao_details_download">Ladda ner</span> <span class="glyphicon glyphicon-save"></span></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 pb-3">
+            <h2 translate="cao_details_trs_h">Kapitalskuld</h2>
+            <div class="list-details">
+                <div class="list-item" ng-repeat="t in transactions">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <b>@Html.Partial("Index_CreditDetails_TransactionText")</b>
+                            <span class="subinfo">{{t.TransactionDate | date}}</span>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <p><b>{{t.Amount | currency}}</b></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p ng-show="areMoreTransactions" class="text-center pt-3"><a href="#" class="n-anchor turqoise" ng-click="loadMoreTransactions($event)" translate="cao_details_trs_load">Ladda fler</a></p>
+        </div>
+    </div>
+
+
+</script>

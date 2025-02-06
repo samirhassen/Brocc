@@ -1,0 +1,22 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Authenticate</title>
+</head>
+<body>
+    <div>
+        <h1>Test authentication</h1>
+        <form action="@Url.Action("PostAuthenticate", "MockAuthentication")" method="post">
+            <input type="hidden" name="sessionId" value="@Html.Raw(ViewBag.SessionId)" />
+            <button type="submit">Authenticate</button>
+        </form>
+    </div>
+</body>
+</html>

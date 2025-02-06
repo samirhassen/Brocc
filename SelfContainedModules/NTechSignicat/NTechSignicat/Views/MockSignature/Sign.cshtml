@@ -1,0 +1,23 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Sign</title>
+</head>
+<body>
+    <div>
+        <h1>Test signature</h1>
+        <form action="@Url.Action("PostSign", "MockSignature")" method="post">
+            <input type="hidden" name="RequestId" value="@Html.Raw(ViewBag.RequestId)" />
+            <input type="hidden" name="TaskId" value="@Html.Raw(ViewBag.TaskId)" />
+            <button type="submit">Sign</button>
+        </form>
+    </div>
+</body>
+</html>

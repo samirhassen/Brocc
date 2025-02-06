@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Allekirjoita sopimus
+    </title>    
+    <link rel="stylesheet" href="css/balanzia-signing.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo_area"><img src="img/Balanzia.png" alt="Balanzia"></div>
+        </div>
+        <div class="content-section">
+            <h1>Allekirjoita sopimus</h1>
+            <p>Alla näet allekirjoitettavan sopimuksen yleisine ehtoineen ja vakiomuotoiset eurooppalaiset kuluttajaluottotiedot- lomakkeen. Tutustu sopimukseen ja allekirjoita se alla olevaa nappia painamalla. Voit tallentaa sopimuksen myös koneellesi tai tulostaa sen</p>
+            <form name="signForm" action="#" method="post">
+                <div class="pdf-container" id="pdf-container">
+                    <a href="http://www.naktergaltech.se/press/Press-release-Websummit.pdf" class="backup-link" target="_blank"><span>Tutustu lainasopimukseen (PDF)</span></a>
+                </div>
+                <a class="link" href="http://www.naktergaltech.se/press/Press-release-Websummit.pdf" target="_blank">Lataa</a>
+                <div class="button-area">
+                    <input type="hidden" name="customer" value="ad16ce80-a52b-47af-a73b-25ef7914ca4a" />
+                    <input type="hidden" name="return_failure" value="http://www.naktergaltech.se/press/Press-release-Websummit.pdf" />
+                    <input type="hidden" name="data" value="yaa07HOZ1DywPqM5ah1OQEAgcLdbX9yhvpJDIp6C/uUvkbZ4nGM0mSgfwfLwGYUVVNyawp+HkwN7Jj5oGeEbp1bBNx41h4ncpxu5y8yPOJkJYvawMcBJmMqGdV+RK3SsICycHOOSyhAV3+ZuON/Vf4c0MA5EEW0NqWJhDqq8EdFr52jlsq+6l8DfmaUgAVJxv3O8dRsNzn0JZrg2bAt0RxzsMxyIe+oDrVAU2BHVHLDkfTYRMeuXYwjPLNVI7Wp20VRjweOwSClrhT1WyXSYQNuURhC4RQOSo3PloZKjsl6KHABAO24zFVB3mC6QJ678mHkPaujMHa6tlRm3BHcyqd5+s44x7tSOjZ0lV+91LDHiKCcuSDNKTPtUddcZXb81kV0icm1dKGNt0FxyJzPGdQW26u+fKMaVWIhV+MWnxOtLxrlogV+IIeL3dsvFha9qkTCiXMwlWjI98oNDTja23A==" />
+                    <input type="hidden" name="iv" value="lDCmLn6j7BTWQtXiZo+MSeb2qfTnAl+C6N7tDv52p1w=" />
+                    <button class="button" onclick="alert('Mot onnistu!!!!'); return false;">Allekirjoita sopimus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+   
+    <script src="js/pdfobject.min.js"></script>
+    <script>
+        PDFObject.embed("http://www.naktergaltech.se/press/Press-release-Websummit.pdf", "#pdf-container", { fallbackLink: "<p>Your browser does not support showing the document directly. Please use the link below to download and view it before signing.</p>" });
+    </script>
+</body>
+</html>

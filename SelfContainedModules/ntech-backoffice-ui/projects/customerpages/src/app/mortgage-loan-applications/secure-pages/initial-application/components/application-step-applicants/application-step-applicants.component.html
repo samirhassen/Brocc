@@ -1,0 +1,83 @@
+<ng-container *ngIf="m">
+    <form [formGroup]="m.form.form">
+        <h2>Huvudsökande</h2>
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+                <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmail', displayText: 'Vilken epostadress når vi dig på?' }"></ng-container>
+                <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantPhone', displayText: 'Vilket telefonnummer når vi dig enklast på?' }"></ng-container>
+                <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantIncomePerMonthAmount', displayText: 'Vad är din månadsinkomst innan skatt?' }"></ng-container>
+                                
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group pb-1" [ngClass]="{ 'has-error': m.form.hasError('mainApplicantEmployment') }">
+                    <label>Vad har du för sysselsättning</label>
+                    <select class="form-control" formControlName="mainApplicantEmployment">
+                        <option value="" *ngIf="!m.form.getValue('mainApplicantEmployment')"></option>
+                        <option [value]="opt.Code" *ngFor="let opt of m.employmentCodes">{{opt.DisplayName}}</option>
+                    </select>
+                </div>
+                <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployedSince', displayText: 'Från när har du haft din sysselsättning?' }"></ng-container>
+                <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployedTo', displayText: 'Till när har du din sysselsättning?' }"></ng-container>
+                <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployer', displayText: 'Vem är din arbetsgivare?' }"></ng-container>
+                <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'mainApplicantEmployerPhone', displayText: 'Vad är din arbetsgivares telefonnummer?' }"></ng-container>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group pb-1">
+                    <p>Finns det en medsökande?</p>
+                    <div class="radio-inline">
+                        <label><input type="radio" formControlName="hasCoApplicant" value="true"> Ja</label>
+                    </div>
+                    <div class="radio-inline">
+                        <label><input type="radio" formControlName="hasCoApplicant" value="false"> Nej</label>
+                    </div>
+                </div>
+            </div>            
+        </div>
+
+        <ng-container *ngIf="m.form.hasFormControl(null, 'coApplicantEmail')">
+            <h2 class="pt-3">Medsökande</h2>
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group pb-1"  [ngClass]="{ 'has-error': m.form.hasError('isCoApplicantPartOfTheHousehold') }">
+                        <p>Ingår medsökande i hushållet?</p>
+                        <div class="radio-inline">
+                            <label><input type="radio" formControlName="isCoApplicantPartOfTheHousehold" value="true"> Ja</label>
+                        </div>
+                        <div class="radio-inline">
+                            <label><input type="radio" formControlName="isCoApplicantPartOfTheHousehold" value="false"> Nej</label>
+                        </div>
+                    </div>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantCivicRegNr', displayText: 'Medsökande personnummer' }"></ng-container>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantEmail', displayText: 'Medsökande epostadress' }"></ng-container>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantPhone', displayText: 'Medsökande telefonnummer' }"></ng-container>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantIncomePerMonthAmount', displayText: 'Vad är din månadsinkomst innan skatt?' }"></ng-container> 
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group pb-1" [ngClass]="{ 'has-error': m.form.hasError('coApplicantEmployment') }">
+                        <label>Vad har du för sysselsättning</label>
+                        <select class="form-control" formControlName="coApplicantEmployment">
+                            <option value="" *ngIf="!m.form.getValue('coApplicantEmployment')"></option>
+                            <option [value]="opt.Code" *ngFor="let opt of m.employmentCodes">{{opt.DisplayName}}</option>
+                        </select>
+                    </div>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantEmployedSince', displayText: 'Från när har du haft din sysselsättning?' }"></ng-container>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantEmployedTo', displayText: 'Till när har du din sysselsättning?' }"></ng-container>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantEmployer', displayText: 'Vem är din arbetsgivare?' }"></ng-container>
+                    <ng-container *ngTemplateOutlet="textGroup; context: { formControlName: 'coApplicantEmployerPhone', displayText: 'Vad är din arbetsgivares telefonnummer?' }"></ng-container>
+                </div>
+            </div>
+        </ng-container>
+        <div class="text-right pt-5">
+            <button class="n-main-btn n-green-btn" [disabled]="m.form.invalid()" (click)="apply($event)">Gå vidare</button>
+        </div>
+    </form>
+</ng-container>
+
+<ng-template #textGroup let-displayText="displayText" let-formControlName="formControlName">
+    <div class="form-group pb-1" *ngIf="m.form.hasFormControl(null, formControlName)" [ngClass]="{ 'has-error': m.form.hasError(formControlName) }" [formGroup]="m.form.form">
+        <label>{{displayText}}</label>
+        <input type="text" class="form-control" [formControlName]="formControlName">
+    </div>
+</ng-template>
