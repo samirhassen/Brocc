@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\translations-en.txt" />
+    <None Remove="Resources\translations-sv.txt" />
+    <None Remove="Resources\Translations.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\translations-en.txt" />
+    <EmbeddedResource Include="Resources\translations-sv.txt" />
+    <EmbeddedResource Include="Resources\Translations.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NTech.Banking.Shared\NTech.Banking.Shared.csproj" />
+    <ProjectReference Include="..\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj" />
+    <ProjectReference Include="..\NTech.Core.TestSupport\NTech.Core.TestSupport.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />    
+  </ItemGroup>
+
+</Project>
