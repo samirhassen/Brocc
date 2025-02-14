@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>NTech.Services.Infrastructure</id>
+        <version>1.0.0</version>
+        <title>NTech.Services.Infrastructure</title>
+        <authors>Samir H.</authors>
+        <owners>Brocc</owners>
+        <description>Shared service infrastructure support code between Näktergal services</description>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <copyright>Copyright © 2016</copyright>
+        <tags>ntech infrastructure services</tags>
+        <dependencies>
+            <dependency id="IdentityModel" version="1.13.0" />
+            <dependency id="IdentityServer3.AccessTokenValidation" version="2.15.1" />
+            <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
+            <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
+            <dependency id="Microsoft.Owin" version="3.0.1" />
+            <dependency id="Newtonsoft.Json" version="9.0.1" />
+            <dependency id="NWebsec" version="6.0.0" />
+            <dependency id="Serilog" version="2.4.0" />
+            <dependency id="Serilog.Sinks.PeriodicBatching" version="2.1.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin\Release\NTech.Services.Infrastructure.dll" target="lib\net472" />
+    </files>
+</package> 
