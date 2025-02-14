@@ -1,1 +1,22 @@
- 
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>NTech.Banking.Shared</id>
+        <version>1.0.0</version>
+        <title>NTech.Banking.Shared</title>
+        <authors>Samir H.</authors>
+        <owners>Brocc</owners>
+        <description>Shared banking functionality for Näktergal services including bank account number parsing, civic registration number handling, and Autogiro integration</description>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <copyright>Copyright © 2016</copyright>
+        <tags>ntech banking autogiro bankaccount civicnumber</tags>
+        <dependencies>
+            <dependency id="System.Xml.Linq" version="4.0.0" />
+            <dependency id="System.Xml" version="4.0.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin\Release\NTech.Banking.Shared.dll" target="lib\net472" />
+        <file src="BankAccounts\Se\BankAccountNumberSeRules.xml" target="content\BankAccounts\Se" />
+    </files>
+</package> 
