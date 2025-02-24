@@ -93,10 +93,10 @@ if($f.servers.sqlServer.appPoolUserDomainUserName) {
 
 ##Firewall
 Write-Host 'Checking windows firewall'
-$fw = Get-NetFirewallRule | Where-Object {$_.DisplayName -eq 'Naktergal allow sql server port 1433' }
+$fw = Get-NetFirewallRule | Where-Object {$_.DisplayName -eq 'Brocc allow sql server port 1433' }
 if(!$fw) {
     Write-Host 'Port 1433 appears to be closed. Adding a rule to open it'
-    New-NetFirewallRule -DisplayName 'Naktergal allow sql server port 1433' -Direction Inbound -Protocol TCP -LocalPort 1433 -Action allow | Out-Null
+    New-NetFirewallRule -DisplayName 'Brocc allow sql server port 1433' -Direction Inbound -Protocol TCP -LocalPort 1433 -Action allow | Out-Null
     Write-Host 'Rule added'
 } else {
     Write-Host 'Windows firewall port 1433 open: Ok'

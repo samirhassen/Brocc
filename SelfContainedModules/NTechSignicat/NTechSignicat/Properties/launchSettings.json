@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "NTechSignicat": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:58668;http://localhost:58669"
+    }
+  }
+}

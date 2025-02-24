@@ -1,26 +1,3 @@
-# Node.js
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Angular
-dist/
-tmp/
-out-tsc/
-coverage/
-.angular/
-.angular-cache/
-SelfContainedModules/ntech-backoffice-ui/.angular/cache
-
-# Visual Studio
-.vscode/
-.vs/
-*.csproj.user
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
 # ASP.NET
 bin/
 obj/
@@ -28,12 +5,44 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
-# Logs
-*.log
+# --- Dependencies ---
+node_modules
+**/node_modules/  # Ignore npm/yarn packages
+npm-debug.log
+yarn-error.log
+.angular/
+.angular/cache # Angular CLI build cache (v12+)
+**/.angular/cache
+.tmp/          # Temporary files (Angular/CLI)
+dist/          # Compiled output (e.g., `ng build`)
+out/           # Alternate build output folder
+.aot/          # Ahead-of-Time compiler artifacts
+out-tsc/
 
-# Environment variables
-.env
+# --- Environment/Config ---
+.env           # Environment variables (never commit secrets!)
+.env.local     # Local environment overrides
+*.env          # Catch-all for .env files
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# --- IDE & Editor Files ---
+.idea/         # JetBrains IDE (WebStorm, IntelliJ)
+.vs/           # Visual Studio Code settings
+.vscode/       # Ibid
+*.suo          # Visual Studio user options
+*.userosscache
+*.sln.docstates
+*.ntvs*
+*.njsproj
+*.sln
+*.vsidx
+
+# --- OS & Tool Artifacts ---
+.DS_Store      # macOS folder attributes
+Thumbs.db      # Windows thumbnail cache
+*.log          # Log files (npm, yarn, etc.)
+npm-debug.log*
+
+# --- Temporary Files ---
+*.tmp
+*.swp
+*.swo

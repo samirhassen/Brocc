@@ -41,8 +41,8 @@ class SavingsAccountApplicationCtr {
         let isNullOrWhitespace = (input : any) => {
             if (typeof input === 'undefined' || input == null) return true;
 
-            if ($.type(input) === 'string') {
-                return $.trim(input).length < 1;
+            if (typeof input === 'string') {
+                return input.trim().length < 1;
             } else {
                 return false
             }
@@ -143,7 +143,7 @@ class SavingsAccountApplicationCtr {
                 if (!source)
                     return
                 angular.forEach(source, (v, k) => {
-                    ii.push({ Name: k, Value: v })
+                    ii.push({ Name: String(k), Value: v })
                 })
             }
 

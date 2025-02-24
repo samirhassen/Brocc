@@ -46,6 +46,12 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NTech.Banking.Shared">
+      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Core.TestSupport">
+      <HintPath>..\Core\NTech.Core.TestSupport\bin\Debug\netstandard2.0\NTech.Core.TestSupport.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
@@ -70,18 +76,7 @@
     <Compile Include="TestPersonRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\NTech.Core.TestSupport\NTech.Core.TestSupport.csproj">
-      <Project>{f53a0d16-16c5-4f08-9c5e-3113199d1d9d}</Project>
-      <Name>NTech.Core.TestSupport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
-      <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>
-      <Name>NTech.Banking.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets')" />

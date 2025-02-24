@@ -102,6 +102,29 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Core.TestSupport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Core\NTech.Core.TestSupport\bin\Debug\netstandard2.0\NTech.Core.TestSupport.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Legacy.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Services.Infrastructure, Version=1.0.9176.41490, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="nTest.RandomDataSource">
+      <HintPath>..\nTest.RandomDataSource\bin\Debug\nTest.RandomDataSource.dll</HintPath>
+    </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
     </Reference>
@@ -319,32 +342,6 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
-      <Project>{43e2dc29-ec0b-4d33-99ac-2ce3cba37011}</Project>
-      <Name>NTech.Core.Module.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Core\NTech.Core.TestSupport\NTech.Core.TestSupport.csproj">
-      <Project>{f53a0d16-16c5-4f08-9c5e-3113199d1d9d}</Project>
-      <Name>NTech.Core.TestSupport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
-      <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>
-      <Name>NTech.Banking.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Legacy.Module.Shared\NTech.Legacy.Module.Shared.csproj">
-      <Project>{a13c3d12-61ff-4b5f-b334-2897f3868479}</Project>
-      <Name>NTech.Legacy.Module.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
-      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
-      <Name>NTech.Services.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nTest.RandomDataSource\nTest.RandomDataSource.csproj">
-      <Project>{c0483966-4e25-4c0e-bf79-a99f46bcc07e}</Project>
-      <Name>nTest.RandomDataSource</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="Content\ts\controllers\CompanyLoan\create-loan.ts" />
     <TypeScriptCompile Include="Content\ts\controllers\CompanyLoan\create-application.ts" />
     <TypeScriptCompile Include="Content\ts\ntest-api-client.ts" />
@@ -371,12 +368,15 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
-xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-if $(ConfigurationName) == Debug (
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
-)</PreBuildEvent>
+    <PreBuildEvent>
+		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+		<!--
+        if $(ConfigurationName) == Debug (
+            xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+            xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
+        )
+		--></PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ContentSQLiteInteropFiles Condition="'$(Configuration)' == 'Release'">true</ContentSQLiteInteropFiles>

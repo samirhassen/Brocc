@@ -300,11 +300,11 @@ foreach($moduleName in $supportedModules) {
                 $appSettings += @{ key = 'ntech.identityserver.windowslogin.servicename'; value = 'nWindowsAuthIdentityServer' }
                 $appSettings += @{ key = 'ntech.identityserver.windowslogin.url'; value = Get-ModuleUrl 'nWindowsAuthIdentityServer' }
             }
-            if(Get-PropOrNull $f.modules.nUser 'azureadlogin') {
-                $appSettings += @{ key = 'ntech.identityserver.azureadlogin.enabled'; value = 'true' }
-                $appSettings += @{ key = 'ntech.identityserver.azureadlogin.authority'; value = $m.azureadlogin.authority }
-                $appSettings += @{ key = 'ntech.identityserver.azureadlogin.applicationclientid'; value = $m.azureadlogin.applicationclientid }
-            }
+            #if(Get-PropOrNull $f.modules.nUser 'azureadlogin') {
+            #    $appSettings += @{ key = 'ntech.identityserver.azureadlogin.enabled'; value = 'true' }
+            #    $appSettings += @{ key = 'ntech.identityserver.azureadlogin.authority'; value = $m.azureadlogin.authority }
+            #    $appSettings += @{ key = 'ntech.identityserver.azureadlogin.applicationclientid'; value = $m.azureadlogin.applicationclientid }
+            #}
 
             New-SqlServerConnectionStringFile $configFilesPath $moduleName 'UsersContext'
         } elseif($moduleName -eq 'nAudit') {

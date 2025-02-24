@@ -119,6 +119,26 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Core.Savings.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Core\NTech.Core.Savings.Shared\bin\Debug\netstandard2.0\NTech.Core.Savings.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Legacy.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Services.Infrastructure, Version=1.0.9181.30678, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Nustache.Core, Version=1.16.0.4, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
       <HintPath>..\packages\Nustache.1.16.0.4\lib\net20\Nustache.Core.dll</HintPath>
       <Private>True</Private>
@@ -673,28 +693,6 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
-      <Project>{43E2DC29-EC0B-4D33-99AC-2CE3CBA37011}</Project>
-      <Name>NTech.Core.Module.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Core\NTech.Core.Savings.Shared\NTech.Core.Savings.Shared.csproj">
-      <Project>{dca79f2e-e757-49ee-aef2-96289091622e}</Project>
-      <Name>NTech.Core.Savings.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
-      <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>
-      <Name>NTech.Banking.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Legacy.Module.Shared\NTech.Legacy.Module.Shared.csproj">
-      <Project>{A13C3D12-61FF-4B5F-B334-2897F3868479}</Project>
-      <Name>NTech.Legacy.Module.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
-      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
-      <Name>NTech.Services.Infrastructure</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -717,13 +715,16 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
-xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-if $(ConfigurationName) == Debug (
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
-)</PreBuildEvent>
+    <PreBuildEvent>
+		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+		<!--
+		if $(ConfigurationName) == Debug (
+		    xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+		    xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
+		)
+		--></PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

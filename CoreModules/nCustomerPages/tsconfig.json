@@ -1,15 +1,41 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "outDir": "Content/js-transpiled",
-    "allowJs": true,
-    "noImplicitAny": true,
-    "module": "none",
-    "typeRoots": [ "../SharedTsTypings" ]
-  },
-  "compileOnSave": true,
-  "include": [
-    "Content/ts"
-  ]
-  /* Add typings to [solution}\node_modules and make sure they are checked in to make the team build not take a million years */
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "noEmitOnError": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "target": "es5",
+        "lib": [
+            "dom",
+            "es5",
+            "es2015",
+            "scripthost"
+        ],
+        "outDir": "Content/js",
+        "module": "none",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "NTechComponents": [ "../NTech.Components/Scripts/NTechComponents" ]
+        },
+        "typeRoots": [
+            "node_modules/@types",
+            "../SharedTsTypings"
+        ],
+        "types": [
+            "angular",
+            "jquery",
+            "underscore",
+            "moment",
+            "toastr"
+        ]
+    },
+    "include": [
+        "Content/ts/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "wwwroot"
+    ]
+    /* Add typings to [solution}\node_modules and make sure they are checked in to make the team build not take a million years */
 }

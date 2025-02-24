@@ -29,7 +29,11 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <Use64BitIISExpress />
-    <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>4.9</TypeScriptToolsVersion>
+    <TypeScriptEnabled>true</TypeScriptEnabled>
+    <TypeScriptCompileOnSaveEnabled>true</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptCompileBlocked>false</TypeScriptCompileBlocked>
+    <TypeScriptConfigFile>tsconfig.json</TypeScriptConfigFile>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,6 +44,19 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES2015</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>ES6</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -98,6 +115,18 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Banking.Shared">
+      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Core.Module.Shared">
+      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Legacy.Module.Shared">
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Services.Infrastructure">
+      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
@@ -286,6 +315,23 @@
     <TypeScriptCompile Include="Content\ts\customerpages-api-client.ts" />
     <TypeScriptCompile Include="Content\ts\infrastructure\ntech.controllerbase.ts" />
     <TypeScriptCompile Include="Content\ts\legacy-globals.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\angular-fileupload.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.booleans.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.dates.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.linq.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.navigationtarget.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechInput-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTablePager-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTestFunctions-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechWsDocs-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.componentservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.controllerbase.template.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.eventhost.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httpinterceptor.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.localstorageservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.loggingservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\legacy\ntech.js.shared.ts" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -405,9 +451,6 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\Common\Error.cshtml" />
-    <Content Include="ncustomerpages.appsettings.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\CreditOverview\Index.cshtml" />
@@ -459,7 +502,6 @@
     <Content Include="Views\Shared\TitleAndBack.cshtml" />
     <Content Include="Views\SecureMessages\Index.cshtml" />
     <Content Include="Views\SecureMessages\Index_Menu.cshtml" />
-    <Content Include=".gitignore" />
     <Content Include="Views\MockEidLogin\Login.cshtml" />
     <Content Include="Views\MockEidSignature\Sign.cshtml" />
     <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_SharedForm.cshtml" />
@@ -470,6 +512,7 @@
     <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_ContinueMortgageLoanApplication.cshtml" />
     <Content Include="Views\Common\Loggedout_ContinueMortgageLoanApplication.cshtml" />
     <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_StandardOverview.cshtml" />
+    <Content Include="ncustomerpages.appsettings.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -489,24 +532,6 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
-      <Project>{43e2dc29-ec0b-4d33-99ac-2ce3cba37011}</Project>
-      <Name>NTech.Core.Module.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
-      <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>
-      <Name>NTech.Banking.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Legacy.Module.Shared\NTech.Legacy.Module.Shared.csproj">
-      <Project>{a13c3d12-61ff-4b5f-b334-2897f3868479}</Project>
-      <Name>NTech.Legacy.Module.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
-      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
-      <Name>NTech.Services.Infrastructure</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -525,10 +550,14 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-if $(ConfigurationName) == Debug (
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-)</PreBuildEvent>
+    <PreBuildEvent>
+      <!--
+    xcopy  /Q /Y /s /i /V /F "$(SolutionDir)..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+    if $(ConfigurationName) == Debug (
+      xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+    )
+    -->
+    </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

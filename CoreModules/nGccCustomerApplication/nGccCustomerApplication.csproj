@@ -38,6 +38,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <FilesToIncludeForPublish>AllFilesInTheProject</FilesToIncludeForPublish>
+    <LegacyPublishPropertiesPageEnabled>true</LegacyPublishPropertiesPageEnabled>
+    <IncludeIisSettings>false</IncludeIisSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -94,6 +97,12 @@
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="NTech.Banking.Shared">
+      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NTech.Services.Infrastructure">
+      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
@@ -274,9 +283,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Common\Error.cshtml" />
-    <Content Include="ngcccustomerapplication.appsettings.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Views\Balanzia\Application.cshtml" />
     <Content Include="Views\Balanzia\Success.cshtml" />
     <Content Include="Views\Balanzia\Failed.cshtml" />
@@ -292,6 +298,7 @@
     <Content Include="Views\ApplicationWrapperDirect\Index_DocumentCheck_Applicant.cshtml" />
     <Content Include="Views\ApplicationWrapperDirect\Index_DocumentSource.cshtml" />
     <Content Include="Views\ApplicationWrapperDirect\Index_DocumentSource_Applicant.cshtml" />
+    <Content Include="nGccCustomerApplication.appsettings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -306,16 +313,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\PSD2Service\" />
     <Folder Include="Views\PSD2\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
-      <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>
-      <Name>NTech.Banking.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
-      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
-      <Name>NTech.Services.Infrastructure</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -333,11 +330,13 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <!--
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName) == Debug (
 xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
 )</PreBuildEvent>
   </PropertyGroup>
+-->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
