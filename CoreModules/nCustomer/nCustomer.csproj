@@ -743,9 +743,9 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>
-		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
-		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
 		<!--
 			if $(ConfigurationName) == Debug (
 			xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
