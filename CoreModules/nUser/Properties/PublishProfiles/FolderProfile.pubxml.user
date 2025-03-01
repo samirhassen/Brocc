@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\BaCS.publish\nUser</_PublishTargetUrl>
+    <History>True|2025-02-27T21:05:58.1864841Z||;True|2025-02-24T16:54:34.3574234+01:00||;True|2025-02-24T16:54:01.4974758+01:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>04/16/2020 22:38:42</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>04/16/2020 22:38:56</publishTime>
+    </File>
+    <File Include="bin/IdentityModel.dll">
+      <publishTime>08/30/2016 14:06:08</publishTime>
+    </File>
+    <File Include="bin/IdentityModel.pdb">
+      <publishTime>08/30/2016 14:06:08</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.dll">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.dll.config">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.pdb">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.dll">
+      <publishTime>10/16/2018 18:29:46</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.pdb">
+      <publishTime>10/16/2018 18:28:18</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.dll">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.pdb">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.dll">
+      <publishTime>02/13/2015 14:16:30</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
+      <publishTime>02/13/2015 14:16:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Cookies.dll">
+      <publishTime>02/13/2015 14:16:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.dll">
+      <publishTime>02/13/2015 14:16:36</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Google.dll">
+      <publishTime>02/13/2015 14:16:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Jwt.dll">
+      <publishTime>02/13/2015 14:16:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
+      <publishTime>02/13/2015 14:16:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OpenIdConnect.dll">
+      <publishTime>08/19/2014 16:42:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.WsFederation.dll">
+      <publishTime>02/13/2015 14:16:42</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>07/25/2012 13:48:56</publishTime>
+    </File>
+    <File Include="bin/MiniProfiler.dll">
+      <publishTime>08/26/2015 10:57:06</publishTime>
+    </File>
+    <File Include="bin/MiniProfiler.EntityFramework6.dll">
+      <publishTime>05/27/2014 13:55:28</publishTime>
+    </File>
+    <File Include="bin/MiniProfiler.EntityFramework6.dll.config">
+      <publishTime>05/27/2014 13:55:28</publishTime>
+    </File>
+    <File Include="bin/MiniProfiler.EntityFramework6.pdb">
+      <publishTime>05/27/2014 13:55:28</publishTime>
+    </File>
+    <File Include="bin/MiniProfiler.Mvc.dll">
+      <publishTime>05/27/2014 13:55:10</publishTime>
+    </File>
+    <File Include="bin/MiniProfiler.Mvc.pdb">
+      <publishTime>05/27/2014 13:55:10</publishTime>
+    </File>
+    <File Include="bin/MiniProfiler.pdb">
+      <publishTime>08/26/2015 10:57:06</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>03/08/2023 08:09:56</publishTime>
+    </File>
+    <File Include="bin/Nito.AsyncEx.Context.dll">
+      <publishTime>09/26/2021 02:23:28</publishTime>
+    </File>
+    <File Include="bin/Nito.AsyncEx.Tasks.dll">
+      <publishTime>09/26/2021 02:23:26</publishTime>
+    </File>
+    <File Include="bin/Nito.Disposables.dll">
+      <publishTime>09/25/2021 23:43:20</publishTime>
+    </File>
+    <File Include="bin/NTech.Banking.Shared.dll">
+      <publishTime>02/14/2025 22:15:21</publishTime>
+    </File>
+    <File Include="bin/NTech.Banking.Shared.pdb">
+      <publishTime>02/14/2025 22:15:21</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Module.Shared.dll">
+      <publishTime>02/27/2025 11:41:42</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Module.Shared.pdb">
+      <publishTime>02/27/2025 11:41:42</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.User.Shared.dll">
+      <publishTime>02/26/2025 17:49:46</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.User.Shared.pdb">
+      <publishTime>02/19/2025 17:02:41</publishTime>
+    </File>
+    <File Include="bin/NTech.Legacy.Module.Shared.dll">
+      <publishTime>02/27/2025 11:55:53</publishTime>
+    </File>
+    <File Include="bin/NTech.Legacy.Module.Shared.pdb">
+      <publishTime>02/27/2025 11:55:53</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.dll">
+      <publishTime>02/27/2025 11:54:02</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.dll.config">
+      <publishTime>02/20/2025 10:31:36</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.pdb">
+      <publishTime>02/27/2025 11:54:02</publishTime>
+    </File>
+    <File Include="bin/nUser.dll">
+      <publishTime>02/27/2025 22:05:57</publishTime>
+    </File>
+    <File Include="bin/nUser.pdb">
+      <publishTime>02/27/2025 22:05:57</publishTime>
+    </File>
+    <File Include="bin/NWebsec.Core.dll">
+      <publishTime>01/13/2020 22:13:44</publishTime>
+    </File>
+    <File Include="bin/NWebsec.dll">
+      <publishTime>01/13/2020 22:13:52</publishTime>
+    </File>
+    <File Include="bin/NWebsec.Mvc.dll">
+      <publishTime>01/13/2020 22:13:54</publishTime>
+    </File>
+    <File Include="bin/Owin.dll">
+      <publishTime>11/13/2012 13:19:34</publishTime>
+    </File>
+    <File Include="bin/Serilog.dll">
+      <publishTime>02/03/2017 02:16:04</publishTime>
+    </File>
+    <File Include="bin/Serilog.Sinks.PeriodicBatching.dll">
+      <publishTime>10/25/2016 02:58:02</publishTime>
+    </File>
+    <File Include="bin/System.Buffers.dll">
+      <publishTime>02/19/2020 11:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Collections.Immutable.dll">
+      <publishTime>04/15/2020 00:39:26</publishTime>
+    </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.dll">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.pdb">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/System.Memory.dll">
+      <publishTime>02/19/2020 11:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>01/28/2015 05:02:42</publishTime>
+    </File>
+    <File Include="bin/System.Numerics.Vectors.dll">
+      <publishTime>05/15/2018 15:29:44</publishTime>
+    </File>
+    <File Include="bin/System.Runtime.CompilerServices.Unsafe.dll">
+      <publishTime>02/19/2020 11:05:16</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/28/2015 05:02:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/28/2015 05:03:46</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>01/28/2015 05:02:18</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>01/28/2015 05:02:32</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.Deployment.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.Razor.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="Content/js/angular-resource.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/js/angular.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/js/ngRemoteValidate.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="nuser.appsettings.config">
+      <publishTime>01/03/2024 13:22:36</publishTime>
+    </File>
+    <File Include="nuser.connectionstrings.config">
+      <publishTime>01/18/2024 15:05:50</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>02/19/2025 15:28:11</publishTime>
+    </File>
+    <File Include="Service References/Application Insights/ConnectedService.json">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Common/Error.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/web.config">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>02/24/2025 16:54:39</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

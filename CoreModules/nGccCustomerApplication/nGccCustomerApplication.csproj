@@ -302,7 +302,7 @@
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Web.Debug.config">
+    <None Include="Web.debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
@@ -330,13 +330,15 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <!--
   <PropertyGroup>
-    <PreBuildEvent>if $(ConfigurationName) == Debug (
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-)</PreBuildEvent>
+    <PreBuildEvent>
+		<!--
+		if $(ConfigurationName) == Debug (
+            xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+        )
+		-->
+</PreBuildEvent>
   </PropertyGroup>
--->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

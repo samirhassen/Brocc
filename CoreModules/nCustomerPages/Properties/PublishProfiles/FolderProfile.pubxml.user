@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Repository\BaCS\CoreModules\nCustomerPages\bin\app.publish\</_PublishTargetUrl>
-    <History>False|2025-02-22T17:15:39.1250803Z||;</History>
+    <_PublishTargetUrl>C:\BaCS.publish\nCustomerPages</_PublishTargetUrl>
+    <History>True|2025-02-28T08:43:53.1081986Z||;True|2025-02-28T09:41:56.4296293+01:00||;False|2025-02-22T18:15:39.1250803+01:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -67,10 +67,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>07/25/2012 13:48:56</publishTime>
     </File>
     <File Include="bin/nCustomerPages.dll">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:43:52</publishTime>
     </File>
     <File Include="bin/nCustomerPages.pdb">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:43:52</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>03/08/2023 08:09:56</publishTime>
@@ -91,25 +91,25 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/14/2025 22:15:21</publishTime>
     </File>
     <File Include="bin/NTech.Core.Module.Shared.dll">
-      <publishTime>02/19/2025 17:23:24</publishTime>
+      <publishTime>02/27/2025 11:41:42</publishTime>
     </File>
     <File Include="bin/NTech.Core.Module.Shared.pdb">
-      <publishTime>02/19/2025 17:23:24</publishTime>
+      <publishTime>02/27/2025 11:41:42</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.dll">
-      <publishTime>02/19/2025 17:02:41</publishTime>
+      <publishTime>02/27/2025 11:55:53</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.pdb">
-      <publishTime>02/19/2025 17:02:41</publishTime>
+      <publishTime>02/27/2025 11:55:53</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll">
-      <publishTime>02/20/2025 11:23:59</publishTime>
+      <publishTime>02/27/2025 11:54:02</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll.config">
       <publishTime>02/20/2025 10:31:36</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.pdb">
-      <publishTime>02/20/2025 11:23:59</publishTime>
+      <publishTime>02/27/2025 11:54:02</publishTime>
     </File>
     <File Include="bin/NWebsec.Core.dll">
       <publishTime>01/13/2020 22:13:44</publishTime>
@@ -316,22 +316,22 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/js/components/countryPicker-component.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/components/countryPicker-component.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/components/modalDialog-component.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/components/modalDialog-component.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/componentsbase.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/componentsbase.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/controllers/ContactInfo/contactinfo-index.js">
       <publishTime>02/10/2025 11:21:14</publishTime>
@@ -376,37 +376,37 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsStandardApplication/savings-standardapplication-index.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsStandardApplication/savings-standardapplication-index.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsStandardApplication/savings-standardapplication-signingdocumentpreview.js">
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/js/controllers/SecureMessages/secureMessages-index.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/controllers/SecureMessages/secureMessages-index.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/controllers/translation-only.js">
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/js/customerpages-api-client.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/customerpages-api-client.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/handle-angular-accessdenied.js">
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/js/infrastructure/ntech.controllerbase.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/infrastructure/ntech.controllerbase.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/jquery-1.12.4.js">
       <publishTime>02/10/2025 11:21:14</publishTime>
@@ -415,10 +415,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/js/legacy-globals.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/legacy-globals.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/moment.js">
       <publishTime>02/10/2025 11:21:14</publishTime>
@@ -430,106 +430,106 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/angular-fileupload.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/angular-fileupload.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.booleans.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.booleans.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.dates.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.dates.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.linq.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.linq.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.navigationtarget.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.navigationtarget.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechInput-component.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechInput-component.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechTablePager-component.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechTablePager-component.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechTestFunctions-component.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechTestFunctions-component.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechWsDocs-component.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechWsDocs-component.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.componentservice.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.componentservice.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.controllerbase.template.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.controllerbase.template.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.eventhost.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.eventhost.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httpinterceptor.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httpinterceptor.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httptrafficcopservice.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httptrafficcopservice.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.localstorageservice.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.localstorageservice.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.loggingservice.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.loggingservice.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/legacy/ntech.js.shared.js">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/legacy/ntech.js.shared.js.map">
-      <publishTime>02/22/2025 18:17:18</publishTime>
+      <publishTime>02/28/2025 09:41:27</publishTime>
     </File>
     <File Include="Content/js/pdfobject.min.js">
       <publishTime>02/10/2025 11:21:14</publishTime>

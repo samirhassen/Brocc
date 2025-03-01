@@ -24,10 +24,13 @@ namespace nPreCredit
             routes.MapRoute(
                 name: "Error",
                 url: "error",
-                defaults: new { controller = "Common", action = "Error" }
+                defaults: new { controller = "Common", 
+                    action = "Error" }
             );
 
             routes.MapMvcAttributeRoutes();
+
+
 
             NTech.Services.Infrastructure.NTechWs.ApiHostControllerHelper.RegisterRoutes(Controllers.Api.ApiHostController.RoutePrefix, routes);
         }

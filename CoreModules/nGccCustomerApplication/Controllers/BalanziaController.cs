@@ -25,10 +25,12 @@ namespace nGccCustomerApplication.Controllers
         [Route("~/")]
         public ActionResult Application(int? amount, int? repaymentTimeInYears, string cc) //cc = campaign code
         {
+            /*
             if(NEnv.RedirectOldApplication)
             {
                 return Redirect("/a/" + (this.Request.QueryString.Keys.Count > 0 ? $"?{this.Request.QueryString.ToString()}" : ""));
             }
+            */
             ViewBag.JsonInitialData = this.EncodeInitialData(new
             {
                 isProduction = NEnv.IsProduction,

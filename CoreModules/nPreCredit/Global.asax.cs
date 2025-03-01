@@ -86,15 +86,15 @@ namespace nPreCredit
 
             var sharedScripts = new string[]
                 {
-                    "~/Content/js/legacy-globals.js",
-                    "~/Content/jsexternal/jquery-1.12.4.js",
-                    "~/Content/jsexternal/jquery.flexselect.js",
-                    "~/Content/jsexternal/jquery-ui-position-only.js",
-                    "~/Content/jsexternal/liquidmetal.js",
-                    "~/Content/jsexternal/bootstrap.js",
-                    "~/Content/jsexternal/toastr.min.js",
-                    "~/Content/jsexternal/moment.js",
-                    "~/Content/jsexternal/underscore.js"
+                    "~/Content/ts/legacy-globals.ts",
+                    "~/Content/jsexternal/jquery-1.12.4.ts",
+                    "~/Content/jsexternal/jquery.flexselect.ts",
+                    "~/Content/jsexternal/jquery-ui-position-only.ts",
+                    "~/Content/jsexternal/liquidmetal.ts",
+                    "~/Content/jsexternal/bootstrap.ts",
+                    "~/Content/jsexternal/toastr.min.ts",
+                    "~/Content/jsexternal/moment.ts",
+                    "~/Content/jsexternal/underscore.ts"
                 };
 
             Func<string> getAngularLocale = () =>
@@ -119,146 +119,146 @@ namespace nPreCredit
                     "~/Content/jsexternal/angular-translate-storage-local.min.js",
                     "~/Content/jsexternal/angular-translate-loader-url.min.js",
                     //END ANGULAR TRANSLATE
-                    "~/Content/js/ntech_shared/common/*.js",
-                    "~/Content/js/ntech_shared/legacy/ntech.js.shared.js",
-                    "~/Content/js/ntech-forms.js",
-                    "~/Content/js/ntech_shared/components/infrastructure/*.js",
-                    "~/Content/js/infrastructure/*.js",
-                    "~/Content/js/componentsbase.js",
-                    "~/Content/js/ntech_shared/components/components/*.js",
-                    "~/Content/js/components/*.js",
-                    NEnv.IsCompanyLoansEnabled ? "~/Content/js/components/companyLoans/*.js" : null,
-                    NEnv.IsMortgageLoansEnabled? "~/Content/js/components/mortgageLoans/*.js" : null,
-                    "~/Content/js/angular-fileupload.js",
-                    "~/Content/js/precredit-api-client.js",
-                    "~/Content/js/companyloan-precredit-api-client.js"
+                    "~/Content/ts/ntech_shared/common/*.ts",
+                    "~/Content/ts/ntech_shared/legacy/ntech.js.shared.ts",
+                    "~/Content/ts/ntech-forms.ts",
+                    "~/Content/ts/ntech_shared/components/infrastructure/*.ts",
+                    "~/Content/ts/infrastructure/*.ts",
+                    "~/Content/ts/componentsbase.ts",
+                    "~/Content/ts/ntech_shared/components/components/*.ts",
+                    "~/Content/ts/components/*.ts",
+                    NEnv.IsCompanyLoansEnabled ? "~/Content/ts/components/companyLoans/*.ts" : null,
+                    NEnv.IsMortgageLoansEnabled? "~/Content/ts/components/mortgageLoans/*.ts" : null,
+                    "~/Content/ts/angular-fileupload.ts",
+                    "~/Content/ts/precredit-api-client.ts",
+                    "~/Content/ts/companyloan-precredit-api-client.ts"
                 }.Where(x => x != null).ToArray();
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-base")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-base")
                 .Include(sharedScripts));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-basewithangular")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-basewithangular")
                 .Include(sharedScripts)
                 .Include(angularScripts));
 
             //Credit management
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditmanagement-creditapplications")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditmanagement-creditapplications")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditManagement/creditapplications.js"));
+                .Include("~/Content/ts/controllers/CreditManagement/creditapplications.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditmanagement-creditapplication")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditmanagement-creditapplication")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditManagement/creditapplication.js")
-                .Include("~/Content/js/controllers/CreditManagement/creditapplication_customerinfo.js")
-                .Include("~/Content/js/controllers/CreditManagement/creditapplication_documentcheckstatus.js"));
+                .Include("~/Content/ts/controllers/CreditManagement/creditapplication.ts")
+                .Include("~/Content/ts/controllers/CreditManagement/creditapplication_customerinfo.ts")
+                .Include("~/Content/ts/controllers/CreditManagement/creditapplication_documentcheckstatus.ts"));
 
             //Credit decision
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditdecision-creditapplicationsToApprove")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditdecision-creditapplicationsToApprove")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditDecision/creditapplicationsToApprove.js"));
+                .Include("~/Content/ts/controllers/CreditDecision/creditapplicationsToApprove.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditdecision-creditapplicationToApprove")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditdecision-creditapplicationToApprove")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditDecision/creditapplicationToApprove.js"));
+                .Include("~/Content/ts/controllers/CreditDecision/creditapplicationToApprove.ts"));
 
             //Customer service
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-customerservice-applicationsearch")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-customerservice-applicationsearch")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CustomerService/applicationsearch.js"));
+                .Include("~/Content/ts/controllers/CustomerService/applicationsearch.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-customerservice-applicationtoservice")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-customerservice-applicationtoservice")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CustomerService/applicationtoservice.js"));
+                .Include("~/Content/ts/controllers/CustomerService/applicationtoservice.ts"));
 
             //Credit check
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditcheck-new")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditcheck-new")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditCheck/decisionDetailsBasisPopupSupport.js")
-                .Include("~/Content/js/controllers/CreditCheck/newCreditCheck.js"));
+                .Include("~/Content/ts/controllers/CreditCheck/decisionDetailsBasisPopupSupport.ts")
+                .Include("~/Content/ts/controllers/CreditCheck/newCreditCheck.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditcheck-view")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditcheck-view")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditCheck/decisionDetailsBasisPopupSupport.js")
-                .Include("~/Content/js/controllers/CreditCheck/viewCreditCheck.js"));
+                .Include("~/Content/ts/controllers/CreditCheck/decisionDetailsBasisPopupSupport.ts")
+                .Include("~/Content/ts/controllers/CreditCheck/viewCreditCheck.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditapplicationedit-editvalue")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditapplicationedit-editvalue")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditApplicationEdit/editValue.js"));
+                .Include("~/Content/ts/controllers/CreditApplicationEdit/editValue.ts"));
 
             //Fraud check
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-fraudcheck-new")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-fraudcheck-new")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/FraudCheck/sharedbetweenNewAndView.js")
-                .Include("~/Content/js/controllers/FraudCheck/new.js"));
+                .Include("~/Content/ts/controllers/FraudCheck/sharedbetweenNewAndView.ts")
+                .Include("~/Content/ts/controllers/FraudCheck/new.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-fraudcheck-view")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-fraudcheck-view")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/FraudCheck/sharedbetweenNewAndView.js")
-                .Include("~/Content/js/controllers/FraudCheck/view.js"));
+                .Include("~/Content/ts/controllers/FraudCheck/sharedbetweenNewAndView.ts")
+                .Include("~/Content/ts/controllers/FraudCheck/view.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-credithandlerlimitsettings-index")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-credithandlerlimitsettings-index")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditHandlerLimitSettings/creditHandlerLimitSettings-index.js"));
+                .Include("~/Content/ts/controllers/CreditHandlerLimitSettings/creditHandlerLimitSettings-index.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-handlecheckpoints-index")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-handlecheckpoints-index")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/HandleCheckpoints/index.js"));
+                .Include("~/Content/ts/controllers/HandleCheckpoints/index.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/libphonenumber")
-                     .Include("~/Content/jsexternal/libphonenumber.js"));
+            bundles.Add(new ScriptBundle("~/Content/ts/libphonenumber")
+                     .Include("~/Content/jsexternal/libphonenumber.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditmanagementmonitor-index")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditmanagementmonitor-index")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/CreditManagementMonitor/CreditManagementMonitor-index.js"));
+                .Include("~/Content/ts/controllers/CreditManagementMonitor/CreditManagementMonitor-index.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-testlatestemailslist")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-testlatestemailslist")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/jsexternal/angular-sanitize.js"));
+                .Include("~/Content/jsexternal/angular-sanitize.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-documentcheck-new")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-documentcheck-new")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/DocumentCheck/newDocumentCheck.js"));
+                .Include("~/Content/ts/controllers/DocumentCheck/newDocumentCheck.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-mortgage-valuation-host")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-mortgage-valuation-host")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/MortgageApplicationValuation/mortgage-application-valuation.js"));
+                .Include("~/Content/ts/controllers/MortgageApplicationValuation/mortgage-application-valuation.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-mortgage-amortization-host")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-mortgage-amortization-host")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/MortgageApplicationAmortization/mortgage-application-amortization.js"));
+                .Include("~/Content/ts/controllers/MortgageApplicationAmortization/mortgage-application-amortization.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-api-host")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-api-host")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/ApiHost/apiHost.js"));
+                .Include("~/Content/ts/controllers/ApiHost/apiHost.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-creditmanagement-archivedapplication")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-creditmanagement-archivedapplication")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/ArchivedUnsecuredLoanApplication/archived-unsecured-loan-application.js"));
+                .Include("~/Content/ts/controllers/ArchivedUnsecuredLoanApplication/archived-unsecured-loan-application.ts"));
 
-            bundles.Add(new ScriptBundle("~/Content/js/bundle-component-host")
+            bundles.Add(new ScriptBundle("~/Content/ts/bundle-component-host")
                 .Include(sharedScripts)
                 .Include(angularScripts)
-                .Include("~/Content/js/controllers/component-host.js"));
+                .Include("~/Content/ts/controllers/component-host.ts"));
         }
 
         /// <summary>

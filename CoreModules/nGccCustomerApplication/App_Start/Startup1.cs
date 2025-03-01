@@ -6,6 +6,7 @@ using Serilog;
 using Serilog.Core.Enrichers;
 using nGccCustomerApplication.Code;
 using NTech.Services.Infrastructure;
+using System.Net;
 
 [assembly: OwinStartup(typeof(nGccCustomerApplication.App_Start.Startup1))]
 
@@ -15,6 +16,11 @@ namespace nGccCustomerApplication.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
+            if (!NEnv.IsProduction)
+            {
+                ServicePointManager.ServerCertificateValidationCallback =
+                    (sender, certificate, chain, sslPolicyErrors) => true;
+            }
             var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() => NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry, NEnv.SystemUserCredentials));
             Log.Logger = new LoggerConfiguration()
                             .Enrich.WithMachineName()

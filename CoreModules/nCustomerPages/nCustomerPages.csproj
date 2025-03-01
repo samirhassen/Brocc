@@ -551,11 +551,11 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>
-      <!--
-    xcopy  /Q /Y /s /i /V /F "$(SolutionDir)..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-    if $(ConfigurationName) == Debug (
-      xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-    )
+        xcopy  /Q /Y /s /i /V /F "$(SolutionDir)\..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+   <!--
+		if $(ConfigurationName) == Debug (
+          xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+        )
     -->
     </PreBuildEvent>
   </PropertyGroup>

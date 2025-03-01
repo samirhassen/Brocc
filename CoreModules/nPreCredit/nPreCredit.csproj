@@ -386,6 +386,23 @@
     <TypeScriptCompile Include="Content\ts\controllers\component-host.ts" />
     <TypeScriptCompile Include="Content\ts\infrastructure\ntech.controllerbase.ts" />
     <TypeScriptCompile Include="Content\ts\companyloan-precredit-api-client.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\angular-fileupload.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.booleans.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.dates.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.linq.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.navigationtarget.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechInput-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTablePager-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTestFunctions-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechWsDocs-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.componentservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.controllerbase.template.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.eventhost.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httpinterceptor.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.localstorageservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.loggingservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\legacy\ntech.js.shared.ts" />
     <TypeScriptCompile Include="Content\ts\precredit-api-client.ts" />
     <TypeScriptCompile Include="Content\ts\componentsbase.ts" />
     <TypeScriptCompile Include="Content\ts\controllers\CreditManagement\creditapplication_documentcheckstatus.ts" />
@@ -1306,7 +1323,7 @@
     <Content Include="Views\CreditCheck\View.cshtml" />
     <Content Include="nprecredit.appsettings.config" />
     <Content Include="nprecredit.connectionstrings.config" />
-    <Content Include=".gitignore" />
+    <Content Include="nprecredit.appsettings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1462,9 +1479,9 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>
-		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
-		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+		xcopy /Q /Y /s /i "$(SolutionDir)\..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+		xcopy /Q /Y /s /i "$(SolutionDir)\..\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+		xcopy /Q /Y /s /i "$(SolutionDir)\..\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
 		<!--
 if $(ConfigurationName) == Debug (
 xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"

@@ -1,0 +1,1021 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\BaCS.publish\nPreCredit</_PublishTargetUrl>
+    <History>True|2025-02-27T20:33:32.0650713Z||;False|2025-02-27T21:33:07.7614106+01:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>09/10/2013 18:29:20</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.pdb">
+      <publishTime>09/10/2013 18:29:20</publishTime>
+    </File>
+    <File Include="bin/Autofac.dll">
+      <publishTime>10/08/2021 16:11:02</publishTime>
+    </File>
+    <File Include="bin/Autofac.Integration.Mvc.dll">
+      <publishTime>09/28/2020 23:55:52</publishTime>
+    </File>
+    <File Include="bin/Autofac.Integration.Mvc.pdb">
+      <publishTime>09/28/2020 23:55:52</publishTime>
+    </File>
+    <File Include="bin/Autofac.pdb">
+      <publishTime>10/08/2021 16:11:02</publishTime>
+    </File>
+    <File Include="bin/AutoMapper.dll">
+      <publishTime>06/03/2019 20:28:32</publishTime>
+    </File>
+    <File Include="bin/AutoMapper.pdb">
+      <publishTime>06/03/2019 20:28:32</publishTime>
+    </File>
+    <File Include="bin/CommonMark.dll">
+      <publishTime>02/20/2017 21:48:58</publishTime>
+    </File>
+    <File Include="bin/CommonMark.pdb">
+      <publishTime>02/20/2017 21:48:58</publishTime>
+    </File>
+    <File Include="bin/Dapper.dll">
+      <publishTime>11/03/2021 15:07:30</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>04/16/2020 22:38:42</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>04/16/2020 22:38:56</publishTime>
+    </File>
+    <File Include="bin/ICSharpCode.SharpZipLib.dll">
+      <publishTime>09/19/2021 11:20:28</publishTime>
+    </File>
+    <File Include="bin/ICSharpCode.SharpZipLib.pdb">
+      <publishTime>09/19/2021 11:20:28</publishTime>
+    </File>
+    <File Include="bin/IdentityModel.dll">
+      <publishTime>08/30/2016 14:06:08</publishTime>
+    </File>
+    <File Include="bin/IdentityModel.pdb">
+      <publishTime>08/30/2016 14:06:08</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.dll">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.dll.config">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.pdb">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/LinqKit.EntityFramework.dll">
+      <publishTime>07/14/2016 23:56:46</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Bcl.AsyncInterfaces.dll">
+      <publishTime>11/15/2019 09:38:12</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.dll">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.pdb">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.dll">
+      <publishTime>02/13/2015 14:16:30</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
+      <publishTime>02/13/2015 14:16:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Cookies.dll">
+      <publishTime>02/13/2015 14:16:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.dll">
+      <publishTime>02/13/2015 14:16:36</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Jwt.dll">
+      <publishTime>02/13/2015 14:16:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
+      <publishTime>02/13/2015 14:16:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OpenIdConnect.dll">
+      <publishTime>08/19/2014 16:42:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>07/25/2012 13:48:56</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>03/08/2023 08:09:56</publishTime>
+    </File>
+    <File Include="bin/Nito.AsyncEx.Context.dll">
+      <publishTime>09/26/2021 02:23:28</publishTime>
+    </File>
+    <File Include="bin/Nito.AsyncEx.Tasks.dll">
+      <publishTime>09/26/2021 02:23:26</publishTime>
+    </File>
+    <File Include="bin/Nito.Disposables.dll">
+      <publishTime>09/25/2021 23:43:20</publishTime>
+    </File>
+    <File Include="bin/nPreCredit.dll">
+      <publishTime>02/27/2025 21:33:30</publishTime>
+    </File>
+    <File Include="bin/nPreCredit.pdb">
+      <publishTime>02/27/2025 21:33:30</publishTime>
+    </File>
+    <File Include="bin/NTech.Banking.Shared.dll">
+      <publishTime>02/14/2025 22:15:21</publishTime>
+    </File>
+    <File Include="bin/NTech.Banking.Shared.pdb">
+      <publishTime>02/14/2025 22:15:21</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Module.Shared.dll">
+      <publishTime>02/27/2025 11:41:42</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Module.Shared.pdb">
+      <publishTime>02/27/2025 11:41:42</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.PreCredit.Shared.dll">
+      <publishTime>02/10/2025 11:35:52</publishTime>
+    </File>
+    <File Include="bin/NTech.Legacy.Module.Shared.dll">
+      <publishTime>02/27/2025 11:55:53</publishTime>
+    </File>
+    <File Include="bin/NTech.Legacy.Module.Shared.pdb">
+      <publishTime>02/27/2025 11:55:53</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.dll">
+      <publishTime>02/27/2025 11:54:02</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.dll.config">
+      <publishTime>02/20/2025 10:31:36</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.pdb">
+      <publishTime>02/27/2025 11:54:02</publishTime>
+    </File>
+    <File Include="bin/Nustache.Core.dll">
+      <publishTime>05/19/2016 21:40:38</publishTime>
+    </File>
+    <File Include="bin/NWebsec.Core.dll">
+      <publishTime>01/13/2020 22:13:44</publishTime>
+    </File>
+    <File Include="bin/NWebsec.dll">
+      <publishTime>01/13/2020 22:13:52</publishTime>
+    </File>
+    <File Include="bin/NWebsec.Mvc.dll">
+      <publishTime>01/13/2020 22:13:54</publishTime>
+    </File>
+    <File Include="bin/Owin.dll">
+      <publishTime>11/13/2012 13:19:34</publishTime>
+    </File>
+    <File Include="bin/Serilog.dll">
+      <publishTime>02/03/2017 02:16:04</publishTime>
+    </File>
+    <File Include="bin/Serilog.Sinks.PeriodicBatching.dll">
+      <publishTime>10/25/2016 02:58:02</publishTime>
+    </File>
+    <File Include="bin/System.Buffers.dll">
+      <publishTime>02/19/2020 11:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Collections.Immutable.dll">
+      <publishTime>04/15/2020 00:39:26</publishTime>
+    </File>
+    <File Include="bin/System.ComponentModel.Annotations.dll">
+      <publishTime>11/20/2017 19:09:04</publishTime>
+    </File>
+    <File Include="bin/System.Diagnostics.DiagnosticSource.dll">
+      <publishTime>04/15/2020 00:49:20</publishTime>
+    </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.dll">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.pdb">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/System.Memory.dll">
+      <publishTime>02/19/2020 11:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>01/28/2015 05:02:42</publishTime>
+    </File>
+    <File Include="bin/System.Numerics.Vectors.dll">
+      <publishTime>05/15/2018 15:29:44</publishTime>
+    </File>
+    <File Include="bin/System.Runtime.CompilerServices.Unsafe.dll">
+      <publishTime>02/19/2020 11:05:16</publishTime>
+    </File>
+    <File Include="bin/System.Threading.Tasks.Extensions.dll">
+      <publishTime>02/19/2020 11:05:18</publishTime>
+    </File>
+    <File Include="bin/System.ValueTuple.dll">
+      <publishTime>05/15/2018 15:29:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/28/2015 05:02:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/28/2015 05:03:46</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>01/28/2015 05:02:18</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>02/11/2014 16:26:04</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>01/28/2015 05:02:32</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.Deployment.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.Razor.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>01/23/2014 14:57:34</publishTime>
+    </File>
+    <File Include="Content/css/bootstrap.min.css">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/css/credit-monitoring.css">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/css/magellan.css">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/css/other.css">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/css/toastr.css">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.eot">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.svg">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.ttf">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.woff">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.woff2">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/img/arrow-down.png">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/img/loading.gif">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/img/naktergal-logo.png">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/js/companyloan-precredit-api-client.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/addRemoveList-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/affiliateReportingLog-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationAssignedHandlers-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationCheckpoints-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationComments-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationCustomerinfo-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationCustomerList-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationDataEditor-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationDataSource-helper.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationDocuments-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationEditor-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationFraudCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationFreeformDocuments-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationItemEditor-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationOtherApplications-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/applicationStatusBlock-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/archivedUnsecuredLoanApplication-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/campaign-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/campaigns-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanAdditionalQuestions-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanAgreement-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanApplication-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanApplicationSearch-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanApproveAgreement-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanApproveApplications-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanAuditAgreement-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanAuthorizedSignatoryCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanCollateralCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanFraudCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanFreeformDocuments-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanInitialCreditCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanInitialCreditCheckNew-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanInitialCreditCheckRecommendation-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanInitialCreditCheckView-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/companyLoans/companyLoanKyc-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/complex-application-list-helper.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/complexListWithCustomer-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/listAndBuyCreditReportForCustomer-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/manualDocumentsToSign-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/modalDialog-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationAdditionalQuestions-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationCollateralEdit-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationCustomerCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationDirectDebitCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationDocuments-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationFinalCreditCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationInitialCreditCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationObjectInfo-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationObjectValuation-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationObjectValuationManualSearch-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationObjectValuationNew-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationSearch-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageApplicationSettlement-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanAmortization-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationBasis-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationCollateral-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationCreateWorkList-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualAuditApproveAgreement-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualCreditCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualCreditCheckHelper.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualCreditCheckNew-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualCreditCheckView-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualDocuments-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualSettlement-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualSettlementHandle-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDualSignAgreement-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationDynamic-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationHouseholdIncome-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationRaw-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationSearchWrapper-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanApplicationWorkList-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanDualCollateralCompact-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanDualCustomerRoleHelper.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanKyc-Component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanLead-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanOtherConnectedApplications-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/mortgageLoans/mortgageLoanScoringResult-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/navigationTarget-helper.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/pageHeader-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/simpleForm-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/simpleTable-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/toggleBlock-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/twoColumnInformationBlock-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/unsecuredApplicationAdditionalQuestions-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/unsecuredApplicationCreditCheckStatus-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/unsecuredApplicationCustomerCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/unsecuredApplicationFraudCheck-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/unsecuredCreditCheckOtherApplications-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/components/workflow-helper.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/componentsbase.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/ApiHost/apiHost.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/ArchivedUnsecuredLoanApplication/archived-unsecured-loan-application.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/component-host.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditApplicationEdit/editValue.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditCheck/decisionDetailsBasisPopupSupport.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditCheck/viewCreditCheck.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditDecision/creditapplicationsToApprove.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditHandlerLimitSettings/creditHandlerLimitSettings-index.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditManagement/creditapplication.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditManagement/creditapplications.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditManagement/creditapplication_documentcheckstatus.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CreditManagementMonitor/CreditManagementMonitor-index.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CustomerService/applicationsearch.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CustomerService/applicationtoservice.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/DocumentCheck/newDocumentCheck.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/FraudCheck/new.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/FraudCheck/sharedbetweenNewAndView.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/FraudCheck/view.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/HandleCheckpoints/index.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/MortgageApplicationAmortization/mortgage-application-amortization.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/controllers/MortgageApplicationValuation/mortgage-application-valuation.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/infrastructure/ntech.controllerbase.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/legacy-globals.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech-forms.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/angular-fileupload.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.booleans.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.dates.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.linq.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.navigationtarget.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechInput-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechTablePager-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechTestFunctions-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechWsDocs-component.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.componentservice.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.controllerbase.template.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.eventhost.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httpinterceptor.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httptrafficcopservice.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.localstorageservice.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.loggingservice.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/legacy/ntech.js.shared.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/js/precredit-api-client.js">
+      <publishTime>02/27/2025 21:33:04</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-cookies.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-locale_fi-fi.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-locale_sv-se.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-resource.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-sanitize.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate-loader-url.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate-storage-cookie.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate-storage-local.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/bootstrap.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/jquery-1.12.4.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/jquery-ui-position-only.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/jquery.flexselect.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/libphonenumber.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/liquidmetal.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/moment.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/toastr.min.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/jsexternal/underscore.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/ts/controllers/CreditManagement/creditapplications.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/ts/controllers/CustomerService/applicationsearch.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/ts/controllers/CustomerService/applicationtoservice.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/ts/controllers/HandleCheckpoints/index.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Content/ts/ntech-forms.js">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="nprecredit.appsettings.config">
+      <publishTime>01/24/2024 12:45:27</publishTime>
+    </File>
+    <File Include="nprecredit.connectionstrings.config">
+      <publishTime>01/18/2024 15:04:58</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>02/19/2025 15:27:40</publishTime>
+    </File>
+    <File Include="tsconfig.json">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/ApiHost/Docs.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/ArchivedUnsecuredLoanApplication/Index.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Common/Error.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Common/Loggedout.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditApplicationEdit/EditValue.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditApplicationEdit/ViewValue.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditCheck/DecisionBasisDetailsPopup.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditCheck/View.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditDecision/CreditApplicationsToApprove.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditDecision/CreditApplicationsToApprove_History.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditHandlerLimitSettings/Index.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditManagement/Component_DocumentCheckStatus.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditManagement/CreditApplication.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditManagement/CreditApplications.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditManagement/CreditApplications_TestFunctions.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/CreditManagementMonitor/Index.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/DocumentCheck/NewOrView.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/DocumentCheck/NewOrView_ConfirmedApplicantInfo.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/DocumentCheck/NewOrView_Documents.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/DocumentCheck/NewOrView_StatedApplicantInfo.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/FraudCheck/New.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/FraudCheck/View.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/HandleCheckpoints/Index.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/MortgageApplicationAmortizationHost/New.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/MortgageApplicationValuation/ValuationHost.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/ComponentHostUi.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanAdditionalQuestions.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanAgreement.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanApplication.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanApplicationSearch.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanApproveAgreement.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanApproveApplications.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanAuditAgreement.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanFraudCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanInitialCreditCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanInitialCreditCheckNew.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanInitialCreditCheckRecommendation.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanInitialCreditCheckView.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/CompanyLoans/Component_CompanyLoanKyc.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_AffiliateReportingLog.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationCheckpoints.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationComments.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationCustomerInfo.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationCustomerList.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationDataEditor.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationDocuments.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationFraudCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationFreeformDocuments.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationOtherApplications.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ApplicationStatusBlock.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ArchivedUnsecuredLoanApplication.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ModalDialog.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_SimpleForm.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_SimpleTable.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_UnsecuredApplicationAdditionalQuestions.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_UnsecuredApplicationCreditCheckStatus.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_UnsecuredApplicationCustomerCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_UnsecuredApplicationFraudCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_UnsecuredCreditCheckOtherApplications.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationAdditionalQuestions.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationCustomerCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationDirectDebitCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationDocuments.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationFinalCreditCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationInitialCreditCheck.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationObjectInfo.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationObjectValuation.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationObjectValuationManualSearch.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationObjectValuationNew.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationSearch.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationSearchWrapper.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageApplicationSettlement.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageLoanAmortization.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageLoanApplicationBasis.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageLoanApplicationDynamic.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageLoanApplicationHouseholdIncome.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageLoanApplicationWorkList.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/MortgageLoans/Component_MortgageLoanScoringResult.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/TestLatestEmailsList/List.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/web.config">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>02/27/2025 20:59:54</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
