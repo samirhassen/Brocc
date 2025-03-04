@@ -363,6 +363,8 @@
     </Content>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="nuser.connectionstrings.config" />
+    <Content Include="nuser.appsettings.debug.config" />
+    <Content Include="nuser.connectionstrings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -423,12 +425,10 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>
-      <!--
 		if $(ConfigurationName) == Debug (
             xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
             xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
         )
-		-->
     </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

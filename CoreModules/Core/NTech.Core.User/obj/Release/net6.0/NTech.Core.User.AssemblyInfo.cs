@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NTech.Core.User")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1baa2e56f3ed9b0def2382dfffb7524c236a421")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f97db2690e517fefae6ebd9c55dc55d292494345")]
 [assembly: System.Reflection.AssemblyProductAttribute("NTech.Core.User")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NTech.Core.User")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

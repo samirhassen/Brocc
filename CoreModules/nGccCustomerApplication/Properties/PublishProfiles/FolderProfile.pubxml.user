@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\BaCS.publish\nGccCustomerApplication</_PublishTargetUrl>
-    <History>True|2025-02-25T10:11:29.8959101Z||;True|2025-02-25T10:40:13.8067786+01:00||;False|2025-02-25T10:37:37.6620656+01:00||;False|2025-02-25T10:33:46.2489110+01:00||;True|2025-02-22T18:53:03.8671509+01:00||;True|2025-02-22T18:50:04.5645810+01:00||;True|2025-02-22T18:42:55.9514915+01:00||;True|2025-02-22T18:13:55.8353904+01:00||;</History>
+    <History>True|2025-03-03T14:41:26.5050310Z||;True|2025-02-25T11:11:29.8959101+01:00||;True|2025-02-25T10:40:13.8067786+01:00||;False|2025-02-25T10:37:37.6620656+01:00||;False|2025-02-25T10:33:46.2489110+01:00||;True|2025-02-22T18:53:03.8671509+01:00||;True|2025-02-22T18:50:04.5645810+01:00||;True|2025-02-22T18:42:55.9514915+01:00||;True|2025-02-22T18:13:55.8353904+01:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -73,10 +73,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>06/14/2016 01:06:14</publishTime>
     </File>
     <File Include="bin/nGccCustomerApplication.dll">
-      <publishTime>02/25/2025 11:10:54</publishTime>
+      <publishTime>03/03/2025 22:22:37</publishTime>
     </File>
     <File Include="bin/nGccCustomerApplication.pdb">
-      <publishTime>02/25/2025 11:10:54</publishTime>
+      <publishTime>03/03/2025 22:22:37</publishTime>
     </File>
     <File Include="bin/NTech.Banking.Shared.dll">
       <publishTime>02/14/2025 22:15:21</publishTime>
@@ -85,13 +85,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/14/2025 22:15:21</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll">
-      <publishTime>02/20/2025 11:23:59</publishTime>
+      <publishTime>03/03/2025 17:06:12</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll.config">
       <publishTime>02/20/2025 10:31:36</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.pdb">
-      <publishTime>02/20/2025 11:23:59</publishTime>
+      <publishTime>03/03/2025 17:06:12</publishTime>
     </File>
     <File Include="bin/NWebsec.Core.dll">
       <publishTime>01/13/2020 22:13:44</publishTime>
@@ -448,7 +448,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>02/25/2025 10:40:13</publishTime>
+      <publishTime>03/03/2025 15:41:22</publishTime>
     </File>
     <File Include="Web.debug.config">
       <publishTime>02/25/2025 10:39:40</publishTime>

@@ -16,7 +16,7 @@
     <RootNamespace>nPreCredit</RootNamespace>
     <AssemblyName>nPreCredit</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -128,20 +128,17 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    <Reference Include="NTech.Banking.Shared">
+      <HintPath>..\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NTech.Core.Module.Shared">
       <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.PreCredit.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\NTech.Core.PreCredit.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Legacy.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NTech.Legacy.Module.Shared">
       <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Services.Infrastructure, Version=1.0.9176.41490, Culture=neutral, processorArchitecture=MSIL">
@@ -414,6 +411,139 @@
     <TypeScriptCompile Include="Content\ts\controllers\CreditHandlerLimitSettings\creditHandlerLimitSettings-index.ts" />
     <TypeScriptCompile Include="Content\ts\controllers\CreditManagementMonitor\CreditManagementMonitor-index.ts" />
     <TypeScriptCompile Include="Content\ts\controllers\CreditManagement\creditapplication.ts" />
+    <Content Include="Content\js\companyloan-precredit-api-client.js" />
+    <Content Include="Content\js\componentsbase.js" />
+    <Content Include="Content\js\components\addRemoveList-component.js" />
+    <Content Include="Content\js\components\affiliateReportingLog-component.js" />
+    <Content Include="Content\js\components\applicationAssignedHandlers-component.js" />
+    <Content Include="Content\js\components\applicationCheckpoints-component.js" />
+    <Content Include="Content\js\components\applicationComments-component.js" />
+    <Content Include="Content\js\components\applicationCustomerinfo-component.js" />
+    <Content Include="Content\js\components\applicationCustomerList-component.js" />
+    <Content Include="Content\js\components\applicationDataEditor-component.js" />
+    <Content Include="Content\js\components\applicationDataSource-helper.js" />
+    <Content Include="Content\js\components\applicationDocuments-component.js" />
+    <Content Include="Content\js\components\applicationEditor-component.js" />
+    <Content Include="Content\js\components\applicationFraudCheck-component.js" />
+    <Content Include="Content\js\components\applicationFreeformDocuments-component.js" />
+    <Content Include="Content\js\components\applicationItemEditor-component.js" />
+    <Content Include="Content\js\components\applicationOtherApplications-component.js" />
+    <Content Include="Content\js\components\applicationStatusBlock-component.js" />
+    <Content Include="Content\js\components\archivedUnsecuredLoanApplication-component.js" />
+    <Content Include="Content\js\components\campaign-component.js" />
+    <Content Include="Content\js\components\campaigns-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAdditionalQuestions-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAgreement-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApplication-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApplicationSearch-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApproveAgreement-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApproveApplications-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAuditAgreement-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAuthorizedSignatoryCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanCollateralCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanFraudCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanFreeformDocuments-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheckNew-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheckRecommendation-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheckView-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanKyc-component.js" />
+    <Content Include="Content\js\components\complex-application-list-helper.js" />
+    <Content Include="Content\js\components\complexListWithCustomer-component.js" />
+    <Content Include="Content\js\components\listAndBuyCreditReportForCustomer-component.js" />
+    <Content Include="Content\js\components\manualDocumentsToSign-component.js" />
+    <Content Include="Content\js\components\modalDialog-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationAdditionalQuestions-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationCollateralEdit-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationCustomerCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationDirectDebitCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationDocuments-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationFinalCreditCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationInitialCreditCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectInfo-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectValuation-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectValuationManualSearch-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectValuationNew-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationSearch-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationSettlement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanAmortization-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationBasis-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationCollateral-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationCreateWorkList-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualAuditApproveAgreement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckHelper.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckNew-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckView-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualDocuments-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualSettlement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualSettlementHandle-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualSignAgreement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDynamic-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationHouseholdIncome-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationRaw-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationSearchWrapper-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationWorkList-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanDualCollateralCompact-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanDualCustomerRoleHelper.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanKyc-Component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanLead-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanOtherConnectedApplications-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanScoringResult-component.js" />
+    <Content Include="Content\js\components\navigationTarget-helper.js" />
+    <Content Include="Content\js\components\pageHeader-component.js" />
+    <Content Include="Content\js\components\simpleForm-component.js" />
+    <Content Include="Content\js\components\simpleTable-component.js" />
+    <Content Include="Content\js\components\toggleBlock-component.js" />
+    <Content Include="Content\js\components\twoColumnInformationBlock-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationAdditionalQuestions-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationCreditCheckStatus-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationCustomerCheck-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationFraudCheck-component.js" />
+    <Content Include="Content\js\components\unsecuredCreditCheckOtherApplications-component.js" />
+    <Content Include="Content\js\components\workflow-helper.js" />
+    <Content Include="Content\js\controllers\ApiHost\apiHost.js" />
+    <Content Include="Content\js\controllers\ArchivedUnsecuredLoanApplication\archived-unsecured-loan-application.js" />
+    <Content Include="Content\js\controllers\component-host.js" />
+    <Content Include="Content\js\controllers\CreditApplicationEdit\editValue.js" />
+    <Content Include="Content\js\controllers\CreditCheck\decisionDetailsBasisPopupSupport.js" />
+    <Content Include="Content\js\controllers\CreditCheck\viewCreditCheck.js" />
+    <Content Include="Content\js\controllers\CreditDecision\creditapplicationsToApprove.js" />
+    <Content Include="Content\js\controllers\CreditHandlerLimitSettings\creditHandlerLimitSettings-index.js" />
+    <Content Include="Content\js\controllers\CreditManagementMonitor\CreditManagementMonitor-index.js" />
+    <Content Include="Content\js\controllers\CreditManagement\creditapplication.js" />
+    <Content Include="Content\js\controllers\CreditManagement\creditapplications.js" />
+    <Content Include="Content\js\controllers\CreditManagement\creditapplication_documentcheckstatus.js" />
+    <Content Include="Content\js\controllers\CustomerService\applicationsearch.js" />
+    <Content Include="Content\js\controllers\CustomerService\applicationtoservice.js" />
+    <Content Include="Content\js\controllers\DocumentCheck\newDocumentCheck.js" />
+    <Content Include="Content\js\controllers\FraudCheck\new.js" />
+    <Content Include="Content\js\controllers\FraudCheck\sharedbetweenNewAndView.js" />
+    <Content Include="Content\js\controllers\FraudCheck\view.js" />
+    <Content Include="Content\js\controllers\HandleCheckpoints\index.js" />
+    <Content Include="Content\js\controllers\MortgageApplicationAmortization\mortgage-application-amortization.js" />
+    <Content Include="Content\js\controllers\MortgageApplicationValuation\mortgage-application-valuation.js" />
+    <Content Include="Content\js\infrastructure\ntech.controllerbase.js" />
+    <Content Include="Content\js\legacy-globals.js" />
+    <Content Include="Content\js\ntech-forms.js" />
+    <Content Include="Content\js\ntech_shared\common\angular-fileupload.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.booleans.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.dates.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.linq.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.navigationtarget.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechInput-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTablePager-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTestFunctions-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechWsDocs-component.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.componentservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.controllerbase.template.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.eventhost.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httpinterceptor.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.localstorageservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.loggingservice.js" />
+    <Content Include="Content\js\ntech_shared\legacy\ntech.js.shared.js" />
+    <Content Include="Content\js\precredit-api-client.js" />
     <Content Include="Content\ts\controllers\CreditManagement\creditapplications.js" />
     <Content Include="Content\ts\controllers\CustomerService\applicationsearch.js" />
     <Content Include="Content\ts\controllers\CustomerService\applicationtoservice.js" />
@@ -1324,6 +1454,7 @@
     <Content Include="nprecredit.appsettings.config" />
     <Content Include="nprecredit.connectionstrings.config" />
     <Content Include="nprecredit.appsettings.debug.config" />
+    <Content Include="nprecredit.connectionstrings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1416,7 +1547,6 @@
     <Folder Include="Code\PartialModels\" />
     <Folder Include="Code\Scoring\" />
     <Folder Include="Code\Services\LegacyUnsecuredLoans\" />
-    <Folder Include="Content\js\" />
     <Folder Include="Content\ts-typings\" />
     <Folder Include="Models\" />
     <Folder Include="Views\FetchApplicationConsentAnswersMethod\" />
@@ -1472,22 +1602,31 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>50730</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:50730/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>
-		xcopy /Q /Y /s /i "$(SolutionDir)\..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-		xcopy /Q /Y /s /i "$(SolutionDir)\..\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
-		xcopy /Q /Y /s /i "$(SolutionDir)\..\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-		<!--
-if $(ConfigurationName) == Debug (
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
-)
---></PreBuildEvent>
+		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+		
+        if $(ConfigurationName) == Debug (
+        xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+        xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
+        )
+    </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

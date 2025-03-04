@@ -1,0 +1,569 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\BaCS.publish\nCustomer</_PublishTargetUrl>
+    <History>True|2025-03-03T21:15:56.2126660Z||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>09/10/2013 18:29:20</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.pdb">
+      <publishTime>09/10/2013 18:29:20</publishTime>
+    </File>
+    <File Include="bin/BouncyCastle.Cryptography.dll">
+      <publishTime>04/21/2023 14:07:22</publishTime>
+    </File>
+    <File Include="bin/CommonMark.dll">
+      <publishTime>02/20/2017 21:48:58</publishTime>
+    </File>
+    <File Include="bin/CommonMark.pdb">
+      <publishTime>02/20/2017 21:48:58</publishTime>
+    </File>
+    <File Include="bin/Dapper.dll">
+      <publishTime>11/03/2021 15:07:30</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>04/16/2020 22:38:42</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>04/16/2020 22:38:56</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.dll">
+      <publishTime>09/14/2022 15:22:38</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.pdb">
+      <publishTime>09/14/2022 15:22:38</publishTime>
+    </File>
+    <File Include="bin/IdentityModel.dll">
+      <publishTime>08/30/2016 14:06:08</publishTime>
+    </File>
+    <File Include="bin/IdentityModel.pdb">
+      <publishTime>08/30/2016 14:06:08</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.dll">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.dll.config">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/IdentityServer3.AccessTokenValidation.pdb">
+      <publishTime>11/29/2017 10:40:36</publishTime>
+    </File>
+    <File Include="bin/jose-jwt.dll">
+      <publishTime>12/02/2022 17:38:22</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.dll">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.pdb">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.dll">
+      <publishTime>02/13/2015 14:16:30</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
+      <publishTime>02/13/2015 14:16:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Cookies.dll">
+      <publishTime>02/13/2015 14:16:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.dll">
+      <publishTime>02/13/2015 14:16:36</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Jwt.dll">
+      <publishTime>02/13/2015 14:16:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
+      <publishTime>02/13/2015 14:16:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OpenIdConnect.dll">
+      <publishTime>08/19/2014 16:42:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>07/25/2012 13:48:56</publishTime>
+    </File>
+    <File Include="bin/nCustomer.dll">
+      <publishTime>03/03/2025 22:15:54</publishTime>
+    </File>
+    <File Include="bin/nCustomer.pdb">
+      <publishTime>03/03/2025 22:15:54</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>03/08/2023 08:09:56</publishTime>
+    </File>
+    <File Include="bin/Nito.AsyncEx.Context.dll">
+      <publishTime>09/26/2021 02:23:28</publishTime>
+    </File>
+    <File Include="bin/Nito.AsyncEx.Tasks.dll">
+      <publishTime>09/26/2021 02:23:26</publishTime>
+    </File>
+    <File Include="bin/Nito.Disposables.dll">
+      <publishTime>09/25/2021 23:43:20</publishTime>
+    </File>
+    <File Include="bin/NTech.Banking.Shared.dll">
+      <publishTime>03/03/2025 21:41:45</publishTime>
+    </File>
+    <File Include="bin/NTech.Banking.Shared.pdb">
+      <publishTime>03/03/2025 21:41:45</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Customer.Shared.dll">
+      <publishTime>03/03/2025 21:41:49</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Customer.Shared.pdb">
+      <publishTime>03/03/2025 21:41:49</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Module.Shared.dll">
+      <publishTime>03/03/2025 21:41:47</publishTime>
+    </File>
+    <File Include="bin/NTech.Core.Module.Shared.pdb">
+      <publishTime>03/03/2025 21:41:47</publishTime>
+    </File>
+    <File Include="bin/NTech.Legacy.Module.Shared.dll">
+      <publishTime>03/03/2025 17:06:12</publishTime>
+    </File>
+    <File Include="bin/NTech.Legacy.Module.Shared.pdb">
+      <publishTime>03/03/2025 17:06:12</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.dll">
+      <publishTime>03/03/2025 17:06:12</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.dll.config">
+      <publishTime>02/20/2025 10:31:36</publishTime>
+    </File>
+    <File Include="bin/NTech.Services.Infrastructure.pdb">
+      <publishTime>03/03/2025 17:06:12</publishTime>
+    </File>
+    <File Include="bin/Nustache.Core.dll">
+      <publishTime>10/10/2016 15:05:38</publishTime>
+    </File>
+    <File Include="bin/NWebsec.Core.dll">
+      <publishTime>01/13/2020 22:13:44</publishTime>
+    </File>
+    <File Include="bin/NWebsec.dll">
+      <publishTime>01/13/2020 22:13:52</publishTime>
+    </File>
+    <File Include="bin/NWebsec.Mvc.dll">
+      <publishTime>01/13/2020 22:13:54</publishTime>
+    </File>
+    <File Include="bin/Owin.dll">
+      <publishTime>11/13/2012 13:19:34</publishTime>
+    </File>
+    <File Include="bin/PhoneNumbers.dll">
+      <publishTime>01/27/2021 18:28:30</publishTime>
+    </File>
+    <File Include="bin/Phonix.dll">
+      <publishTime>12/28/2014 18:16:12</publishTime>
+    </File>
+    <File Include="bin/Renci.SshNet.dll">
+      <publishTime>10/16/2017 22:53:06</publishTime>
+    </File>
+    <File Include="bin/SecurityDriven.Inferno.dll">
+      <publishTime>04/12/2021 22:00:12</publishTime>
+    </File>
+    <File Include="bin/Serilog.dll">
+      <publishTime>02/03/2017 02:16:04</publishTime>
+    </File>
+    <File Include="bin/Serilog.Sinks.PeriodicBatching.dll">
+      <publishTime>10/25/2016 02:58:02</publishTime>
+    </File>
+    <File Include="bin/System.Buffers.dll">
+      <publishTime>02/19/2020 11:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Collections.Immutable.dll">
+      <publishTime>04/15/2020 00:39:26</publishTime>
+    </File>
+    <File Include="bin/System.ComponentModel.Annotations.dll">
+      <publishTime>11/20/2017 19:09:04</publishTime>
+    </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.dll">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.pdb">
+      <publishTime>06/22/2015 15:56:40</publishTime>
+    </File>
+    <File Include="bin/System.Memory.dll">
+      <publishTime>02/19/2020 11:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>01/28/2015 05:02:42</publishTime>
+    </File>
+    <File Include="bin/System.Numerics.Vectors.dll">
+      <publishTime>05/15/2018 15:29:44</publishTime>
+    </File>
+    <File Include="bin/System.Runtime.CompilerServices.Unsafe.dll">
+      <publishTime>10/19/2020 20:46:30</publishTime>
+    </File>
+    <File Include="bin/System.ValueTuple.dll">
+      <publishTime>05/15/2018 15:29:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/28/2015 05:02:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/28/2015 05:03:46</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>01/28/2015 05:02:18</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>02/11/2014 16:26:04</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>01/28/2015 05:02:32</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.Deployment.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Webpages.Razor.dll">
+      <publishTime>01/28/2015 05:04:30</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>01/23/2014 14:57:34</publishTime>
+    </File>
+    <File Include="Content/css/bootstrap.min.css">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/css/magellan.css">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/css/other.css">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/css/toastr.css">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.eot">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.svg">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.ttf">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.woff">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.woff2">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/img/loading.gif">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/img/naktergal-logo.png">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/js/components/addCustomer-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/countryListProperty-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/customerComments-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/customerContactInfo-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/customerInfo-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/editCustomerContactInfoValue-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/kycManagementCustomerAnswers-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/kycManagementCustomerTrapetsData-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/kycManagementFatcaCrs-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/kycManagementLocalDecision-component .js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/legacyCustomerCard-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/modalDialog-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/components/navigationTarget-helper.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/componentsbase.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/controllers/ApiHost/apiHost.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/controllers/component-host.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CustomerCard/addCustomer.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CustomerCard/customerCard.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/controllers/CustomerCard/customerItemPrettyPrinter.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/controllers/KycManagement/kycmanagement-fatcacrs.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/controllers/KycManagement/kycmanagement-manage.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/country-functions-fi.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/customer-api-client.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/infrastructure/ntech.controllerbase.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/legacy-globals.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech-forms.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/angular-fileupload.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.booleans.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.dates.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.linq.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/common/ntech.navigationtarget.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechInput-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechTablePager-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechTestFunctions-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/components/ntechWsDocs-component.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.componentservice.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.controllerbase.template.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.eventhost.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httpinterceptor.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httptrafficcopservice.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.localstorageservice.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/components/infrastructure/ntech.loggingservice.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/js/ntech_shared/legacy/ntech.js.shared.js">
+      <publishTime>03/03/2025 22:15:53</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-cookies.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-locale_fi-fi.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-locale_sv-se.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-resource.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-sanitize.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate-loader-url.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate-storage-cookie.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate-storage-local.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular-translate.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/angular.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/bootstrap.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/jquery-1.12.4.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/libphonenumber.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/moment.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/ngRemoteValidate.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/toastr.min.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/jsexternal/underscore.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Content/ts/ntech-forms.js">
+      <publishTime>02/10/2025 11:21:13</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="ncustomer.appsettings.config">
+      <publishTime>01/23/2024 15:24:25</publishTime>
+    </File>
+    <File Include="ncustomer.appsettings.debug.config">
+      <publishTime>12/04/2023 17:06:18</publishTime>
+    </File>
+    <File Include="ncustomer.connectionstrings.config">
+      <publishTime>01/18/2024 15:03:30</publishTime>
+    </File>
+    <File Include="ncustomer.connectionstrings.debug.config">
+      <publishTime>12/05/2023 14:19:53</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>02/19/2025 17:26:47</publishTime>
+    </File>
+    <File Include="Service References/TrapetsKycService/nCustomer.TrapetsKycService.DoQueryResponse.datasource">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Service References/TrapetsKycService/nCustomer.TrapetsKycService.Entity.datasource">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Service References/TrapetsKycService/nCustomer.TrapetsKycService.GetEntityByExternalIdResponse.datasource">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Service References/TrapetsKycService/nCustomer.TrapetsKycService.GetIndividualByExternalIdResponse.datasource">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Service References/TrapetsKycService/nCustomer.TrapetsKycService.Individual.datasource">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Service References/TrapetsKycService/nCustomer.TrapetsKycService.QueryResult.datasource">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="tsconfig.json">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/ApiHost/Docs.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Common/Error.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Common/Loggedout.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Conflicts/Resolve.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Customer/AddCustomer.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Customer/CustomerCard.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/KycManagement/FatcaCrs.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/KycManagement/Manage.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/ComponentHostUi.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_AddCustomer.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_CountryListProperty.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_CustomerComments.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_CustomerContactInfo.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_CustomerInfo.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_EditCustomerContactInfoValue.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_KycManagementCustomerAnswers.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_KycManagementCustomerTrapetsData.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_KycManagementFatcaCrs.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_KycManagementLocalDecision.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_LegacyCustomerCard.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Components/Component_ModalDialog.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/TestLatestEmailsList/List.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/web.config">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>02/10/2025 11:21:14</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>02/19/2025 17:26:48</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

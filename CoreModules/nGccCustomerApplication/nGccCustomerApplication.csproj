@@ -332,11 +332,9 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>
-		<!--
 		if $(ConfigurationName) == Debug (
             xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
         )
-		-->
 </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

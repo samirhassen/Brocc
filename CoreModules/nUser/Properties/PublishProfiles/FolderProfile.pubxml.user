@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\BaCS.publish\nUser</_PublishTargetUrl>
-    <History>True|2025-02-27T21:05:58.1864841Z||;True|2025-02-24T16:54:34.3574234+01:00||;True|2025-02-24T16:54:01.4974758+01:00||;</History>
+    <History>True|2025-03-03T13:58:38.9450319Z||;True|2025-02-27T22:05:58.1864841+01:00||;True|2025-02-24T16:54:34.3574234+01:00||;True|2025-02-24T16:54:01.4974758+01:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -112,37 +112,37 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/14/2025 22:15:21</publishTime>
     </File>
     <File Include="bin/NTech.Core.Module.Shared.dll">
-      <publishTime>02/27/2025 11:41:42</publishTime>
+      <publishTime>03/03/2025 21:41:47</publishTime>
     </File>
     <File Include="bin/NTech.Core.Module.Shared.pdb">
-      <publishTime>02/27/2025 11:41:42</publishTime>
+      <publishTime>03/03/2025 21:41:47</publishTime>
     </File>
     <File Include="bin/NTech.Core.User.Shared.dll">
-      <publishTime>02/26/2025 17:49:46</publishTime>
+      <publishTime>03/03/2025 21:41:48</publishTime>
     </File>
     <File Include="bin/NTech.Core.User.Shared.pdb">
-      <publishTime>02/19/2025 17:02:41</publishTime>
+      <publishTime>03/03/2025 21:41:48</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.dll">
-      <publishTime>02/27/2025 11:55:53</publishTime>
+      <publishTime>03/03/2025 17:06:12</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.pdb">
-      <publishTime>02/27/2025 11:55:53</publishTime>
+      <publishTime>03/03/2025 17:06:12</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll">
-      <publishTime>02/27/2025 11:54:02</publishTime>
+      <publishTime>03/03/2025 17:06:12</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll.config">
       <publishTime>02/20/2025 10:31:36</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.pdb">
-      <publishTime>02/27/2025 11:54:02</publishTime>
+      <publishTime>03/03/2025 17:06:12</publishTime>
     </File>
     <File Include="bin/nUser.dll">
-      <publishTime>02/27/2025 22:05:57</publishTime>
+      <publishTime>03/03/2025 22:11:24</publishTime>
     </File>
     <File Include="bin/nUser.pdb">
-      <publishTime>02/27/2025 22:05:57</publishTime>
+      <publishTime>03/03/2025 22:11:24</publishTime>
     </File>
     <File Include="bin/NWebsec.Core.dll">
       <publishTime>01/13/2020 22:13:44</publishTime>
@@ -225,8 +225,14 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="nuser.appsettings.config">
       <publishTime>01/03/2024 13:22:36</publishTime>
     </File>
+    <File Include="nuser.appsettings.debug.config">
+      <publishTime>12/05/2023 12:46:12</publishTime>
+    </File>
     <File Include="nuser.connectionstrings.config">
       <publishTime>01/18/2024 15:05:50</publishTime>
+    </File>
+    <File Include="nuser.connectionstrings.debug.config">
+      <publishTime>12/05/2023 14:35:38</publishTime>
     </File>
     <File Include="packages.config">
       <publishTime>02/19/2025 15:28:11</publishTime>

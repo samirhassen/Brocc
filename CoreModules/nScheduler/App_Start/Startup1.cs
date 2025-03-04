@@ -6,6 +6,9 @@ using Serilog;
 using Serilog.Core.Enrichers;
 using System;
 using System.Linq;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 
 [assembly: OwinStartup(typeof(nScheduler.App_Start.Startup1))]
 
@@ -40,6 +43,71 @@ namespace nScheduler.App_Start
                 Enumerable.Empty<string>().ToList());
 
             NTech.ClockFactory.Init();
+
+            // Code that runs on application startup
+            AreaRegistration.RegisterAllAreas();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            RegisterBundles();
+            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            GlobalFilters.Filters.Add(new NTechAuthorizeAttribute());
+            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+
+            SchedulerContext.InitDatabase();
+        }
+
+        //http://www.asp.net/mvc/overview/performance/bundling-and-minification
+        private static void RegisterBundles()
+        {
+            BundleTable.EnableOptimizations = NEnv.IsBundlingEnabled;
+            var bundles = BundleTable.Bundles;
+
+            RegisterStyles(bundles);
+
+            var sharedScripts = new string[]
+                {
+                    "~/Content/js/jquery-1.12.4.js",
+                    "~/Content/js/jquery.flexselect.js",
+                    "~/Content/js/liquidmetal.js",
+                    "~/Content/js/bootstrap.js"
+                };
+
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-base")
+                .Include(sharedScripts));
+
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-basewithangular")
+                .Include(sharedScripts)
+                .Include("~/Content/js/angular.min.js")
+                .Include("~/Content/js/angular-locale_sv-se.js")
+                .Include("~/Content/js/ntech-forms.js"));
+
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-scheduledjobs-index")
+                .Include(sharedScripts)
+                .Include("~/Content/js/angular.min.js")
+                .Include("~/Content/js/angular-locale_sv-se.js")
+                .Include("~/Content/js/ntech-forms.js")
+                .Include("~/Content/js/moment.min.js")
+                .Include("~/Content/js/controllers/ScheduledJobs/index.js"));
+        }
+
+        private static void RegisterStyles(BundleCollection bundles)
+        {
+            var cdnRootUrl = NEnv.NTechCdnUrl;
+            bundles.UseCdn = cdnRootUrl != null;
+            Func<string, string> getCdnUrl = n =>
+                cdnRootUrl == null ? null : new Uri(new Uri(cdnRootUrl), $"magellan/css/{n}").ToString();
+
+            var sharedStyles = new string[]
+                    {
+                    "~/Content/css/bootstrap.min.css",
+                    "~/Content/css/toastr.css",
+                    };
+
+            bundles.Add(new StyleBundle("~/Content/css/bundle-base")
+                .Include(sharedStyles));
+
+            bundles.Add(new StyleBundle("~/Content/css/bundle-magellan", getCdnUrl("magellan.css"))
+                .Include("~/Content/css/magellan.css"));
         }
     }
 }

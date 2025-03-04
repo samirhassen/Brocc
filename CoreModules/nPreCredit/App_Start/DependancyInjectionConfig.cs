@@ -24,6 +24,7 @@ using NTech.Services.Infrastructure.Email;
 using System;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace nPreCredit
 {
@@ -83,7 +84,7 @@ namespace nPreCredit.App_Start
         private static void ConfigureServices(ContainerBuilder builder)
         {
             builder.RegisterType<NTech.Services.Infrastructure.NTechExternalAssemblyLoader>().SingleInstance();
-
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
             builder.RegisterControllers(typeof(Global).Assembly);
             builder.RegisterModule<AutofacWebTypesModule>();
 

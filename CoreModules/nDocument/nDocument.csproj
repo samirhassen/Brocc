@@ -321,6 +321,7 @@
     <Content Include="packages.config" />
     <Content Include="Views\Common\Error.cshtml" />
     <Content Include="ndocument.appsettings.config" />
+    <Content Include="ndocument.appsettings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -376,11 +377,9 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>
-		<!--
 		if $(ConfigurationName) == Debug (
             xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
         )
-		-->
 </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

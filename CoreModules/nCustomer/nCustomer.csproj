@@ -121,10 +121,9 @@
     </Reference>
     <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+      <HintPath>..\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Core.Customer.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NTech.Core.Customer.Shared">
       <HintPath>..\Core\NTech.Core.Customer.Shared\bin\Debug\netstandard2.0\NTech.Core.Customer.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -306,11 +305,55 @@
     <TypeScriptCompile Include="Content\ts\controllers\CustomerCard\customerItemPrettyPrinter.ts" />
     <TypeScriptCompile Include="Content\ts\controllers\KycManagement\kycmanagement-fatcacrs.ts" />
     <TypeScriptCompile Include="Content\ts\country-functions-fi.ts" />
+    <Content Include="Content\js\componentsbase.js" />
+    <Content Include="Content\js\components\addCustomer-component.js" />
+    <Content Include="Content\js\components\countryListProperty-component.js" />
+    <Content Include="Content\js\components\customerComments-component.js" />
+    <Content Include="Content\js\components\customerContactInfo-component.js" />
+    <Content Include="Content\js\components\customerInfo-component.js" />
+    <Content Include="Content\js\components\editCustomerContactInfoValue-component.js" />
+    <Content Include="Content\js\components\kycManagementCustomerAnswers-component.js" />
+    <Content Include="Content\js\components\kycManagementCustomerTrapetsData-component.js" />
+    <Content Include="Content\js\components\kycManagementFatcaCrs-component.js" />
+    <Content Include="Content\js\components\kycManagementLocalDecision-component .js" />
+    <Content Include="Content\js\components\legacyCustomerCard-component.js" />
+    <Content Include="Content\js\components\modalDialog-component.js" />
+    <Content Include="Content\js\components\navigationTarget-helper.js" />
+    <Content Include="Content\js\controllers\ApiHost\apiHost.js" />
+    <Content Include="Content\js\controllers\component-host.js" />
+    <Content Include="Content\js\controllers\CustomerCard\addCustomer.js" />
+    <Content Include="Content\js\controllers\CustomerCard\customerCard.js" />
+    <Content Include="Content\js\controllers\CustomerCard\customerItemPrettyPrinter.js" />
+    <Content Include="Content\js\controllers\KycManagement\kycmanagement-fatcacrs.js" />
+    <Content Include="Content\js\controllers\KycManagement\kycmanagement-manage.js" />
+    <Content Include="Content\js\country-functions-fi.js" />
+    <Content Include="Content\js\customer-api-client.js" />
+    <Content Include="Content\js\infrastructure\ntech.controllerbase.js" />
+    <Content Include="Content\js\legacy-globals.js" />
+    <Content Include="Content\js\ntech-forms.js" />
+    <Content Include="Content\js\ntech_shared\common\angular-fileupload.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.booleans.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.dates.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.linq.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.navigationtarget.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechInput-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTablePager-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTestFunctions-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechWsDocs-component.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.componentservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.controllerbase.template.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.eventhost.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httpinterceptor.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.localstorageservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.loggingservice.js" />
+    <Content Include="Content\js\ntech_shared\legacy\ntech.js.shared.js" />
     <Content Include="Content\ts\ntech-forms.js" />
     <Content Include="Global.asax" />
     <Content Include="ncustomer.appsettings.config" />
     <Content Include="ncustomer.connectionstrings.config" />
-    <Content Include=".gitignore" />
+    <Content Include="ncustomer.appsettings.debug.config" />
+    <Content Include="ncustomer.connectionstrings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -378,6 +421,23 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\angular-fileupload.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.booleans.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.dates.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.linq.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.navigationtarget.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechInput-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTablePager-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTestFunctions-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechWsDocs-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.componentservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.controllerbase.template.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.eventhost.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httpinterceptor.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.localstorageservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.loggingservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\legacy\ntech.js.shared.ts" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -667,7 +727,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -746,12 +805,12 @@
 		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
 		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
 		xcopy /Q /Y /s /i "$(SolutionDir)\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-		<!--
-			if $(ConfigurationName) == Debug (
+		
+		if $(ConfigurationName) == Debug (
 			xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
 			xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
-			)
-			--></PreBuildEvent>
+		)
+	</PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

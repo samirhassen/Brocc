@@ -1,12 +1,37 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Startup.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Startup.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Startup.cs",
+              "RelativeToolTip": "NTechSignicat\\Startup.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-03T21:35:20.537Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

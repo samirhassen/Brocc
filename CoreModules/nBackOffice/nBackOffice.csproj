@@ -249,7 +249,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include=".gitignore" />
+    <Content Include="nbackoffice.appsettings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -352,15 +352,14 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-	  <PreBuildEvent>
+    <PreBuildEvent>
 		  xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
 		  xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-		  <!--
+		  
 		  if $(ConfigurationName) == Debug (
 		    xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
 		  )
-		  -->
-	  </PreBuildEvent>
+		  </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

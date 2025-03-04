@@ -259,6 +259,59 @@
     <Content Include="Content\jsexternal\angular-translate-storage-cookie.min.js" />
     <Content Include="Content\jsexternal\angular-translate-storage-local.min.js" />
     <Content Include="Content\jsexternal\angular-translate.min.js" />
+    <Content Include="Content\js\components-old\customerinfo.js" />
+    <Content Include="Content\js\componentsbase.js" />
+    <Content Include="Content\js\components\modalDialog-component.js" />
+    <Content Include="Content\js\components\savingsAccountDocuments-component.js" />
+    <Content Include="Content\js\controllers\AccountCreationRemarks\accountcreationremarks-index.js" />
+    <Content Include="Content\js\controllers\ApiHost\apiHost.js" />
+    <Content Include="Content\js\controllers\BookkeepingFiles\index.js" />
+    <Content Include="Content\js\controllers\DailyKycScreen\index.js" />
+    <Content Include="Content\js\controllers\FatcaExport\index.js" />
+    <Content Include="Content\js\controllers\IncomingPayments\importfile.js" />
+    <Content Include="Content\js\controllers\InterestRateChange\interestratechange-index.js" />
+    <Content Include="Content\js\controllers\ManualPayment\index.js" />
+    <Content Include="Content\js\controllers\OutgoingPayments\index.js" />
+    <Content Include="Content\js\controllers\Reports\index.js" />
+    <Content Include="Content\js\controllers\Riksgalden\index.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\changeexternalaacountmanagement.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-accountclosure.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-customer.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-details.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-index.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-search.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-withdrawalaccount.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-withdrawalaccountchange.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-withdrawals.js" />
+    <Content Include="Content\js\controllers\ScheduledTasks\cm1amlexport.js" />
+    <Content Include="Content\js\controllers\ScheduledTasks\customsAccountsExport.js" />
+    <Content Include="Content\js\controllers\ScheduledTasks\treasuryamlexport.js" />
+    <Content Include="Content\js\controllers\Shared\savingsAccountComments.js" />
+    <Content Include="Content\js\controllers\TrapetsAmlExport\trapetsamlexport.js" />
+    <Content Include="Content\js\controllers\UnplacedPayments\unplacedpayment-main.js" />
+    <Content Include="Content\js\controllers\UnplacedPayments\unplacedpayment-place.js" />
+    <Content Include="Content\js\controllers\UnplacedPayments\unplacedpayment-repay.js" />
+    <Content Include="Content\js\infrastructure\ntech.controllerbase.js" />
+    <Content Include="Content\js\legacy-globals.js" />
+    <Content Include="Content\js\ntech-forms.js" />
+    <Content Include="Content\js\ntech_shared\common\angular-fileupload.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.booleans.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.dates.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.linq.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.navigationtarget.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechInput-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTablePager-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTestFunctions-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechWsDocs-component.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.componentservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.controllerbase.template.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.eventhost.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httpinterceptor.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.localstorageservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.loggingservice.js" />
+    <Content Include="Content\js\ntech_shared\legacy\ntech.js.shared.js" />
+    <Content Include="Content\js\savings-api-client.js" />
     <Content Include="Content\ts\controllers\AccountCreationRemarks\accountcreationremarks-index.js" />
     <Content Include="Content\ts\controllers\BookkeepingFiles\index.js" />
     <Content Include="Content\ts\controllers\DailyKycScreen\index.js" />
@@ -592,7 +645,8 @@
     <Content Include="Views\ScheduledTasks\Cm1AmlExport.cshtml" />
     <Content Include="Views\ScheduledTasks\TreasuryAmlExport.cshtml" />
     <Content Include="Views\ScheduledTasks\CustomsAccountsExport.cshtml" />
-    <Content Include=".gitignore" />
+    <Content Include="nsavings.connectionstrings.debug.config" />
+    <Content Include="nsavings.appsettings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -607,7 +661,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Code\Cm1\" />
-    <Folder Include="Content\js\" />
     <Folder Include="DbModel\Model\" />
     <Folder Include="Models\" />
   </ItemGroup>
@@ -716,15 +769,15 @@
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
-		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
-		xcopy /Q /Y /s /i "$(SolutionDir)..\NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-		<!--
+		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+		
 		if $(ConfigurationName) == Debug (
 		    xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
 		    xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
 		)
-		--></PreBuildEvent>
+	</PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

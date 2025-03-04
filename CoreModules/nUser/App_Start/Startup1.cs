@@ -1,9 +1,12 @@
 ﻿using Microsoft.Owin;
+using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Services.Infrastructure;
 using Owin;
 using Serilog;
 using Serilog.Core.Enrichers;
 using System;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 [assembly: OwinStartup(typeof(nUser.App_Start.Startup1))]
 
@@ -13,6 +16,14 @@ namespace nUser.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
+            AreaRegistration.RegisterAllAreas();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            GlobalFilters.Filters.Add(new NTechAuthorizeAndPermissionsAttribute());
+            GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
+            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+
             var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() => NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry, NEnv.AutomationUsernameAndPassword));
             var cfg = new LoggerConfiguration();
             if (NEnv.IsVerboseLoggingEnabled)

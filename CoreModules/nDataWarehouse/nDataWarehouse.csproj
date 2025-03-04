@@ -376,7 +376,6 @@
     <Content Include="Views\Shared\Components\Component_NotFound.cshtml" />
     <Content Include="Views\Shared\Components\Component_VintageReport.cshtml" />
     <Content Include="Views\Shared\Components\Component_VintageReports.cshtml" />
-    <Content Include=".gitignore" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -439,13 +438,16 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
-xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
-xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-if $(ConfigurationName) == Debug (
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
-)</PreBuildEvent>
+    <PreBuildEvent>
+		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+        xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+        xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+        <!--
+		if $(ConfigurationName) == Debug (
+            xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+            xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
+        )
+		--></PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
