@@ -1,0 +1,36 @@
+[
+  {
+    "Name": "Customer Application",
+    "Projects": [
+      {
+        "Path": "nPreCredit\\nPreCredit.csproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "nUser\\nUser.csproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "nGccCustomerApplication\\nGccCustomerApplication.csproj",
+        "Action": "Start"
+      }
+    ]
+  },
+  {
+    "Name": "Customer Pages",
+    "Projects": [
+      {
+        "Path": "nUser\\nUser.csproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "nCustomerPages\\nCustomerPages.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "nDocument\\nDocument.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
