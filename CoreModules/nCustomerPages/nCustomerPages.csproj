@@ -116,17 +116,11 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Banking.Shared">
-      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
-    </Reference>
     <Reference Include="NTech.Core.Module.Shared">
-      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Release\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Legacy.Module.Shared">
-      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="NTech.Services.Infrastructure">
-      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Release\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
@@ -263,6 +257,33 @@
     <Content Include="Content\img\naktergal-logo.png" />
     <Content Include="Content\img\se-cutout.png" />
     <Content Include="Content\img\Triangel.png" />
+    <Content Include="Content\js-transpiled\componentsbase.js" />
+    <Content Include="Content\js-transpiled\components\notFound-component.js" />
+    <Content Include="Content\js-transpiled\components\vintageReport-component.js" />
+    <Content Include="Content\js-transpiled\components\vintageReports-component.js" />
+    <Content Include="Content\js-transpiled\controllers\ApiHost\apiHost.js" />
+    <Content Include="Content\js-transpiled\controllers\SpaHost\spaHost.js" />
+    <Content Include="Content\js-transpiled\customerpages-api-client.js" />
+    <Content Include="Content\js-transpiled\dw-api-client.js" />
+    <Content Include="Content\js-transpiled\infrastructure\ntech.controllerbase.js" />
+    <Content Include="Content\js-transpiled\legacy-globals.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\angular-fileupload.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.booleans.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.dates.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.linq.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.navigationtarget.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\components\ntechInput-component.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\components\ntechTablePager-component.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\components\ntechTestFunctions-component.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\components\ntechWsDocs-component.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\infrastructure\ntech.componentservice.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\infrastructure\ntech.controllerbase.template.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\infrastructure\ntech.eventhost.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\infrastructure\ntech.httpinterceptor.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\infrastructure\ntech.localstorageservice.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\components\infrastructure\ntech.loggingservice.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\legacy\ntech.js.shared.js" />
     <Content Include="Content\jsexternal\angular-sanitize.js" />
     <Content Include="Content\js\angular-jsoneditor.js" />
     <Content Include="Content\js\angular-locale_fi-fi.js" />
@@ -1930,7 +1951,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js-transpiled\" />
     <Folder Include="Content\js\components\" />
     <Folder Include="Content\js\infrastructure\" />
     <Folder Include="Content\js\ntech_shared\common\" />
@@ -1940,6 +1960,16 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
+      <Project>{8e8913c4-048d-4af1-9344-9494e917da35}</Project>
+      <Name>NTech.Banking.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
+      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
+      <Name>NTech.Services.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -1959,13 +1989,11 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>
-        xcopy  /Q /Y /s /i /V /F "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+    <PreBuildEvent>xcopy  /Q /Y /s /i /V /F "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
    
 		if $(ConfigurationName) == Debug (
           xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-        )
-    </PreBuildEvent>
+        )</PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

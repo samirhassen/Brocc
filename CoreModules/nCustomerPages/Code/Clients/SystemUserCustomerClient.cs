@@ -1,4 +1,5 @@
-﻿using NTech.Banking.CivicRegNumbers;
+﻿using Newtonsoft.Json;
+using NTech.Banking.CivicRegNumbers;
 using NTech.ElectronicSignatures;
 using NTech.Services.Infrastructure.ElectronicAuthentication;
 using System.Collections.Generic;
@@ -121,6 +122,8 @@ namespace nCustomerPages.Code
         /// </summary>
         public CommonElectronicAuthenticationSession CreateElectronicIdAuthenticationSession(string civicRegNumber, Dictionary<string, string> customData, string returnUrl)
         {
+            var obj = new { civicRegNumber, customData, returnUrl };
+            string json = JsonConvert.SerializeObject(obj);
             return Begin()
                 .PostJson("Api/ElectronicIdAuthentication/Create-Session", new { civicRegNumber, customData, returnUrl })
                 .ParseJsonAsAnonymousType(new { Session = (CommonElectronicAuthenticationSession)null })
@@ -129,7 +132,7 @@ namespace nCustomerPages.Code
 
         public Dictionary<string, string> LoadSettings(string settingCode) =>
             Begin()
-                .PostJson("api/Settings/LoadValues", new { settingCode })
+                .PostJson("Api/Settings/LoadValues", new { settingCode })
                 .ParseJsonAsAnonymousType(new { SettingValues = (Dictionary<string, string>)null })
                 ?.SettingValues;
     }

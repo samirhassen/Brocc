@@ -309,6 +309,7 @@
     <Compile Include="Code\Clients\CreditClient.cs" />
     <Compile Include="Code\Clients\CustomerClient.cs" />
     <Compile Include="Code\Clients\ICustomerClient.cs" />
+    <Compile Include="Code\Clients\PreCredit\CreditClient.cs" />
     <Compile Include="Code\DocumentClient.cs" />
     <Compile Include="Code\DwSupport.cs" />
     <Compile Include="Code\Excel\ExcelCustomerIdToCivicNrReplacer.cs" />
@@ -407,6 +408,10 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\nGccCustomerApplication\nGccCustomerApplication.csproj">
+      <Project>{FF2DA027-CB58-49AA-B484-AA61B2CB4CAE}</Project>
+      <Name>nGccCustomerApplication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
       <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>
       <Name>NTech.Banking.Shared</Name>

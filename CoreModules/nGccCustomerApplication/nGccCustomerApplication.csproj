@@ -94,15 +94,14 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OpenIdConnect.3.0.0\lib\net45\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Banking.Shared">
       <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Services.Infrastructure">
-      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+      <HintPath>..\NTech.Services.Infrastructure\bin\Release\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
@@ -193,6 +192,9 @@
     <Content Include="Content\css\balanzia-wrapper-direct.css" />
     <Content Include="Content\css\balanzia-application.css" />
     <Content Include="Content\css\balanzia-result.css" />
+    <Content Include="Content\css\embedded-customerapplication-imitation.css" />
+    <Content Include="Content\css\magellan-customerapplication.css" />
+    <Content Include="Content\css\ml-magellan-customerapplication.css" />
     <Content Include="Content\css\reset.css" />
     <Content Include="Content\img\Balanzia.png" />
     <Content Include="Content\img\Balanzia.svg" />
@@ -212,6 +214,8 @@
     <Content Include="Content\img\loading.gif" />
     <Content Include="Content\img\sveriges-flagga.png" />
     <Content Include="Content\js\angular-fileupload.js" />
+    <Content Include="Content\js\controllers\EidSignatureLogin\login-with-eid-signature.js" />
+    <Content Include="Content\js\handle-angular-accessdenied.js" />
     <Content Include="Content\js\wrapper-direct\main-documentsource.js" />
     <Content Include="Content\js\wrapper-direct\main-documentcheck.js" />
     <Content Include="Content\js\wrapper-direct\main-additionalquestions.js" />
@@ -239,37 +243,59 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup1.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Code\AbstractSystemUserServiceClient.cs" />
     <Compile Include="Code\AccountDataSharing\AccountDataSharingMockFlow.cs" />
     <Compile Include="Code\AccountDataSharing\PSD2Service.cs" />
+    <Compile Include="Code\AffiliateTrackingModel.cs" />
     <Compile Include="Code\BalanziaApplicationTranslation.cs" />
     <Compile Include="Code\CivicRegNumberFi.cs" />
+    <Compile Include="Code\Clients\CustomerLockedSavingsClient.cs" />
+    <Compile Include="Code\Clients\SystemUserCustomerClient.cs" />
+    <Compile Include="Code\Clients\SystemUserTestClient.cs" />
+    <Compile Include="Code\CustomerLockedCreditClient.cs" />
+    <Compile Include="Code\CustomerNavigationTargetName.cs" />
+    <Compile Include="Code\CustomerPagesAuthorizeAttribute.cs" />
     <Compile Include="Code\DocumentCheckRepository.cs" />
     <Compile Include="Code\DocumentClient.cs" />
+    <Compile Include="Code\ElectronicIdLogin\ElectronicIdLoginResult.cs" />
+    <Compile Include="Code\ElectronicIdLogin\CommonElectronicIdLoginProvider.cs" />
     <Compile Include="Code\ExternalProviderApplicationAuthentication\ExternalProviderApplicationAuthenticationBase.cs" />
     <Compile Include="Code\ExternalProviderApplicationAuthentication\ProviderApiKeyOrBasicAuthenticationAttribute.cs" />
+    <Compile Include="Code\LoginProvider.cs" />
     <Compile Include="Code\PreCreditKeyValueClient.cs" />
     <Compile Include="Code\HandleApiErrorAttribute.cs" />
     <Compile Include="Code\KycQuestions.cs" />
     <Compile Include="Code\NController.cs" />
     <Compile Include="Code\NEnv.cs" />
     <Compile Include="Code\PreCreditClient.cs" />
+    <Compile Include="Code\PreCredit\CreditClient.cs" />
+    <Compile Include="Code\PreventBackButtonAttribute.cs" />
     <Compile Include="Code\ProviderIntegrations\LendoIntegration.cs" />
     <Compile Include="Code\ProviderIntegrations\StandardIntegration.cs" />
     <Compile Include="Code\ProviderIntegrations\SalusIntegration.cs" />
     <Compile Include="Code\ProviderIntegrations\EtuaIntegration.cs" />
     <Compile Include="Code\ProviderIntegrations\ProviderIntegrationBase.cs" />
     <Compile Include="Code\ProviderIntegrations\EoneIntegration.cs" />
+    <Compile Include="Code\SavingsAgreementSigning\ElectronicIdProviderCode.cs" />
+    <Compile Include="Code\SystemUserSavingsClient.cs" />
     <Compile Include="Code\Translations.cs" />
     <Compile Include="Controllers\ApplicationApiController.cs" />
     <Compile Include="Controllers\ApplicationWrapperDirectController.cs" />
     <Compile Include="Controllers\ApplicationWrapperLinkController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\EmbeddedCustomerApplication\AnonymousEmbeddedCustomerApplicationController.cs" />
+    <Compile Include="Controllers\EmbeddedCustomerApplication\EmbeddedCustomerApplicationController.cs" />
+    <Compile Include="Controllers\EmbeddedCustomerApplication\EmbeddedCustomerApplicationControllerBase.cs" />
     <Compile Include="Controllers\ExternalProviderApplicationController.cs" />
     <Compile Include="Code\ISO3166.cs" />
     <Compile Include="Code\PreCreditClientWrapperDirectPart.cs" />
     <Compile Include="Controllers\BalanziaController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\Login\CreditTokenAuthenticationController.cs" />
+    <Compile Include="Controllers\Login\EidSignatureLoginController.cs" />
     <Compile Include="Controllers\PSD2Controller.cs" />
     <Compile Include="Controllers\Psd2DirectController.cs" />
+    <Compile Include="Controllers\SignicatController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -302,6 +328,15 @@
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_SharedForm.cshtml" />
+    <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_StandardOverview.cshtml" />
+    <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_SavingsStandardApplication.cshtml" />
+    <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_ApplicationsOverview.cshtml" />
+    <Content Include="Views\EidSignatureLogin\LoginWithEidSignature_ContinueMortgageLoanApplication.cshtml" />
+    <Content Include="Views\EidSignatureLogin\LoginWithEidSignature.cshtml" />
+    <Content Include="Views\Common\AccessDenied.cshtml" />
+    <Content Include="Views\Shared\EmbedddedCustomerPagesSimpleMessage.cshtml" />
+    <Content Include="Views\Shared\_EmbeddedCustomerPagesImitationLayout.cshtml" />
     <None Include="Web.debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -311,8 +346,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\AnonymousEmbeddedCustomerApplication\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\CreditTokenAuthentication\" />
+    <Folder Include="Views\EmbeddedCustomerApplicationControllerBase\" />
+    <Folder Include="Views\EmbeddedCustomerApplication\" />
     <Folder Include="Views\PSD2Service\" />
     <Folder Include="Views\PSD2\" />
+    <Folder Include="Views\Signicat\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
+      <Project>{43e2dc29-ec0b-4d33-99ac-2ce3cba37011}</Project>
+      <Name>NTech.Core.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Legacy.Module.Shared\NTech.Legacy.Module.Shared.csproj">
+      <Project>{A13C3D12-61FF-4B5F-B334-2897F3868479}</Project>
+      <Name>NTech.Legacy.Module.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -334,8 +385,7 @@
     <PreBuildEvent>
 		if $(ConfigurationName) == Debug (
             xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
-        )
-</PreBuildEvent>
+        )</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

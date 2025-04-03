@@ -10,6 +10,19 @@ namespace nGccCustomerApplication.Code
 {
     public class PreCreditClient
     {
+        //private readonly Func<string> getBearerToken;
+        //public PreCreditClient(Func<string> getBearerToken)
+        //{
+        //    this.getBearerToken = getBearerToken;
+        //}
+        //private NHttp.NHttpCall Begin(TimeSpan? timeout = null)
+        //{
+        //    return NHttp
+        //        .Begin(
+        //            NEnv.ServiceRegistry.Internal.ServiceRootUri("nPreCredit"),
+        //            getBearerToken(),
+        //            timeout ?? TimeSpan.FromSeconds(45));
+        //}
         private Tuple<bool, TResponse> Call<TResponse>(string uri, object input, string bearerToken = null) where TResponse : class
         {
             Func<Tuple<bool, TResponse>> fail = () =>
@@ -77,6 +90,36 @@ namespace nGccCustomerApplication.Code
                 .PostJsonRaw(url, request)
                 .ParseAsRawJson();
         }
+
+        // Added New Method
+        //public bool TryGetTemporarilyEncryptedData(string compoundKey, out string plaintextMessage, bool removeAfter = false)
+        //{
+        //    var result = Begin().PostJson("Api/EncryptedTemporaryStorage/GetString", new
+        //    {
+        //        compoundKey = compoundKey,
+        //        removeAfter = removeAfter
+        //    }).ParseJsonAsAnonymousType(new { exists = (bool?)null, plaintextMessage = (string)null });
+
+        //    if (result?.exists ?? false)
+        //    {
+        //        plaintextMessage = result?.plaintextMessage;
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        plaintextMessage = null;
+        //        return false;
+        //    }
+        //}
+        // Added New Method
+        //public string StoreTemporarilyEncryptedData(string plaintextMessage, int? expireAfterHours)
+        //{
+        //    return Begin().PostJson("Api/EncryptedTemporaryStorage/StoreString", new
+        //    {
+        //        plaintextMessage = plaintextMessage,
+        //        expireAfterHours = expireAfterHours
+        //    }).ParseJsonAsAnonymousType(new { compoundKey = (string)null })?.compoundKey;
+        //}
 
         public class ExternalProviderEventRequest
         {

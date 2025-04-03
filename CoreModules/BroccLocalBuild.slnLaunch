@@ -1,0 +1,22 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "nCustomer\\nCustomer.csproj",
+        "Action": "Start",
+        "DebugTarget": "Local IIS (Google Chrome)"
+      },
+      {
+        "Path": "nCustomerPages\\nCustomerPages.csproj",
+        "Action": "Start",
+        "DebugTarget": "Local IIS (Google Chrome)"
+      },
+      {
+        "Path": "nGccCustomerApplication\\nGccCustomerApplication.csproj",
+        "Action": "Start",
+        "DebugTarget": "Local IIS (Google Chrome)"
+      }
+    ]
+  }
+]

@@ -45,8 +45,10 @@ namespace nCustomerPages.Controllers
                 translation = BaseController.GetTranslationsShared(this.Url, this.Request)
             })));
             ViewBag.IsTokenExpired = isTokenExpired ?? false;
+            //TODO; Jatin
+            Session["EidSignatureCustomerTarget"]=  "http://localhost/ncustomerpages/login/eid/test333/return";
             ViewBag.ShowLogin = !(Session == null || (Session != null && Session["EidSignatureCustomerTarget"] == null));
-            ViewBag.EidSignatureCustomerTarget = Session != null && Session["EidSignatureCustomerTarget"] != null ? Session["EidSignatureCustomerTarget"].ToString() : "";
+            ViewBag.EidSignatureCustomerTarget =  Session != null && Session["EidSignatureCustomerTarget"] != null ? Session["EidSignatureCustomerTarget"].ToString() : "";
             if (NEnv.IsStandardEmbeddedCustomerPagesEnabled)
             {
                 ViewBag.Message = "Du har loggat ut, saknar rättigheter eller har inga tjänster hos oss.";

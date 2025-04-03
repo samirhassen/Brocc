@@ -1,0 +1,46 @@
+﻿@{
+    /**/
+
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak translate-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-login-with-eid-signature")
+}
+
+@section LastInHead {
+    @if (NEnv.IsProduction && NEnv.IsBalanzia && ViewBag.TargetName == "SavingsStandardApplication")
+    {
+        <!-- Google Tag Manager -->
+        <script>
+            (function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', 'GTM-MG7D4J');
+        </script>
+        <!-- End Google Tag Manager -->
+    }
+}
+
+@section FirstInBody {
+    @if (NEnv.IsProduction && NEnv.IsBalanzia && ViewBag.TargetName == "SavingsStandardApplication")
+    {
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MG7D4J" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    }
+}
+
+<div class="content">
+    <div class="pt-2vh">
+        <h3 class="text-center pb-3" translate="eidlogin_login">Logga in</h3>
+    </div>
+    
+    <div class="pb-3">
+        @Html.Partial("LoginWithEidSignature_SharedForm", new { SubmitButtonClasses = "n-main-btn n-green-btn" })
+    </div>
+</div>
+

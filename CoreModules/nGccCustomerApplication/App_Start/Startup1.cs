@@ -11,6 +11,7 @@ using System.Web.Optimization;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.Owin.Security.Cookies;
 
 [assembly: OwinStartup(typeof(nGccCustomerApplication.App_Start.Startup1))]
 
@@ -42,6 +43,33 @@ namespace nGccCustomerApplication.App_Start
 
             app.Use<NTechLoggingMiddleware>("nGccCustomerApplication");
 
+
+            if (NEnv.IsCreditTokenAuthenticationModeEnabled)
+            {
+                app.UseCookieAuthentication(new CookieAuthenticationOptions
+                {
+                    AuthenticationType = Controllers.Login.CreditTokenAuthenticationController.AuthType,
+                    CookieName = string.Format(".AuthCookie.{0}.{1}", Controllers.Login.CreditTokenAuthenticationController.AuthType, NEnv.IsProduction ? "P" : "T"),
+                    ExpireTimeSpan = TimeSpan.FromHours(1),
+                    SlidingExpiration = true,
+                    LoginPath = new PathString("/access-denied")
+                });
+            }
+            if (NEnv.IsDirectEidAuthenticationModeEnabled && Code.ElectronicIdLogin.CommonElectronicIdLoginProvider.IsProviderEnabled)
+            {
+                app.UseCookieAuthentication(new CookieAuthenticationOptions
+                {
+                    AuthenticationType = Code.ElectronicIdLogin.CommonElectronicIdLoginProvider.AuthTypeNameShared,
+                    CookieName = string.Format(".AuthCookie.{0}.{1}", Code.ElectronicIdLogin.CommonElectronicIdLoginProvider.AuthTypeNameShared, NEnv.IsProduction ? "P" : "T"),
+                    ExpireTimeSpan = TimeSpan.FromHours(1),
+                    SlidingExpiration = true,
+                    LoginPath = new PathString("/access-denied")
+                });
+            }
+
+            NTech.ClockFactory.Init();
+
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -57,6 +85,8 @@ namespace nGccCustomerApplication.App_Start
             var bundles = BundleTable.Bundles;
             bundles.UseCdn = false;
 
+            RegisterStyles(bundles);
+
             bundles.Add(new StyleBundle("~/Content/css/bundle-balanzia-application")
                 .Include("~/Content/css/reset.css")
                 .Include("~/Content/css/balanzia-application.css"));
@@ -64,6 +94,10 @@ namespace nGccCustomerApplication.App_Start
             bundles.Add(new StyleBundle("~/Content/css/bundle-balanzia-wrapper-direct")
                 .Include("~/Content/css/reset.css")
                 .Include("~/Content/css/balanzia-wrapper-direct.css"));
+
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-handle-angular-accessdenied")
+           .Include("~/Content/js/handle-angular-accessdenied.js"));
+
 
             var sharedJs = new string[]
             {
@@ -79,6 +113,9 @@ namespace nGccCustomerApplication.App_Start
                 "~/Content/js/angular-translate-loader-url.min.js",
                 "~/Content/js/country-functions-fi.js"
             };
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-login-with-eid-signature")
+            .Include(sharedJs)
+            .Include("~/Content/js/controllers/EidSignatureLogin/login-with-eid-signature.js"));
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-balanzia-application")
                 .Include(sharedJs)
@@ -91,6 +128,34 @@ namespace nGccCustomerApplication.App_Start
                 .Include("~/Content/js/wrapper-direct/main-documentcheck.js")
                 .Include("~/Content/js/wrapper-direct/main-documentsource.js")
                 .Include("~/Content/js/wrapper-direct/main.js"));
+        }
+
+
+        private static void RegisterStyles(BundleCollection bundles)
+        {
+            var cdnRootUrl = NEnv.NTechCdnUrl;
+            bundles.UseCdn = cdnRootUrl != null;
+            Func<string, string> getCdnUrl = n =>
+                cdnRootUrl == null ? null : new Uri(new Uri(cdnRootUrl), $"magellan-customerapplication/css/{n}").ToString();
+
+            var sharedStyles = new string[]
+                    {
+                    "~/Content/css/bootstrap.min.css",
+                    "~/Content/css/toastr.css",
+                    };
+
+            bundles.Add(new StyleBundle("~/Content/css/bundle-base")
+                .Include(sharedStyles));
+
+            bundles.Add(new StyleBundle("~/Content/css/bundle-magellan-customerapplication", getCdnUrl("magellan-customerapplication.css"))
+                .Include("~/Content/css/magellan-customerapplication.css"));
+
+            bundles.Add(new StyleBundle("~/Content/css/bundle-ml-magellan-customerapplication", getCdnUrl("ml-magellan-customerapplication.css"))
+                .Include("~/Content/css/ml-magellan-customerapplication.css"));
+
+            bundles.Add(new StyleBundle("~/Content/css/embedded-customerapplication-imitation")
+                .Include(sharedStyles)
+                .Include("~/Content/css/embedded-customerapplication-imitation.css"));
         }
     }
 }

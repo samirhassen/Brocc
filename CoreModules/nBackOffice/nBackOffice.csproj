@@ -16,7 +16,7 @@
     <RootNamespace>nBackOffice</RootNamespace>
     <AssemblyName>nBackOffice</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>
     </IISExpressAnonymousAuthentication>
@@ -104,15 +104,15 @@
     </Reference>
     <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Release\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Legacy.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Release\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Services.Infrastructure, Version=1.0.9176.41490, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+      <HintPath>..\NTech.Services.Infrastructure\bin\Release\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
@@ -341,7 +341,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:54931/</IISUrl>
+          <IISUrl>http://localhost/nBackOffice</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

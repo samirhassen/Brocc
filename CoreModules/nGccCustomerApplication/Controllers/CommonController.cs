@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Net;
 using nGccCustomerApplication.Code;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace nGccCustomerApplication.Controllers
 {
@@ -43,6 +45,31 @@ namespace nGccCustomerApplication.Controllers
             else
             {
                 return HttpNotFound();
+            }
+        }
+
+        [AllowAnonymous]
+        [Route("access-denied")]
+        public ActionResult AccessDenied(bool? isTokenExpired)
+        {
+            ViewBag.HideHeader = true;
+            ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new
+            {
+                translation = BaseController.GetTranslationsShared(this.Url, this.Request)
+            })));
+            ViewBag.IsTokenExpired = isTokenExpired ?? false;
+            //TODO; Jatin
+            Session["EidSignatureCustomerApplicationTarget"] = "http://localhost/ncustomerapplication/login/eid/test333/return";
+            ViewBag.ShowLogin = !(Session == null || (Session != null && Session["EidSignatureCustomerApplicationTarget"] == null));
+            ViewBag.EidSignatureCustomerTarget = Session != null && Session["EidSignatureCustomerApplicationTarget"] != null ? Session["EidSignatureCustomerApplicationTarget"].ToString() : "";
+            if (NEnv.IsStandardEmbeddedGccCustomerApplicationEnabled)
+            {
+                ViewBag.Message = "Du har loggat ut, saknar rättigheter eller har inga tjänster hos oss.";
+                return View("EmbedddedCustomerPagesSimpleMessage");
+            }
+            else
+            {
+                return View();
             }
         }
     }

@@ -124,16 +124,16 @@
       <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.Credit.Shared">
-      <HintPath>..\Core\NTech.Core.Credit.Shared\bin\Debug\netstandard2.0\NTech.Core.Credit.Shared.dll</HintPath>
+      <HintPath>..\Core\NTech.Core.Credit.Shared\bin\Release\netstandard2.0\NTech.Core.Credit.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.Module.Shared">
-      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Release\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Legacy.Module.Shared">
-      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Release\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Services.Infrastructure">
-      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+      <HintPath>..\NTech.Services.Infrastructure\bin\Release\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Nustache.Core, Version=1.16.0.4, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
       <HintPath>..\packages\Nustache.1.16.0.4\lib\net20\Nustache.Core.dll</HintPath>

@@ -23,12 +23,13 @@ namespace nGccCustomerApplication
 
         private void Application_Start(object sender, EventArgs e)
         {
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
-            RegisterBundles();
+            //Jatin TODO;
+            //AreaRegistration.RegisterAllAreas();
+            //GlobalConfiguration.Configure(WebApiConfig.Register);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            //RegisterBundles();
         }
 
         //http://www.asp.net/mvc/overview/performance/bundling-and-minification
