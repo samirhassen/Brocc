@@ -134,10 +134,6 @@
     <Reference Include="NTech.Core.Module.Shared">
       <HintPath>..\Core\NTech.Core.Module.Shared\bin\Release\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Core.PreCredit.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Core\NTech.Core.PreCredit.Shared\bin\Release\netstandard2.0\NTech.Core.PreCredit.Shared.dll</HintPath>
-    </Reference>
     <Reference Include="NTech.Legacy.Module.Shared">
       <HintPath>..\NTech.Legacy.Module.Shared\bin\Release\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
@@ -1591,6 +1587,12 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\NTech.Core.PreCredit.Shared\NTech.Core.PreCredit.Shared.csproj">
+      <Project>{c0142fa8-38b4-480f-a639-e95c6668e9b1}</Project>
+      <Name>NTech.Core.PreCredit.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -1606,7 +1608,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50730</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/nPreCredit</IISUrl>
+          <IISUrl>http://localhost:8091</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

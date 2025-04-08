@@ -16,6 +16,10 @@
         "Path": "nGccCustomerApplication\\nGccCustomerApplication.csproj",
         "Action": "Start",
         "DebugTarget": "Local IIS (Google Chrome)"
+      },
+      {
+        "Path": "nPreCredit\\nPreCredit.csproj",
+        "Action": "Start"
       }
     ]
   }

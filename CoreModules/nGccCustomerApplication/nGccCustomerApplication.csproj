@@ -192,12 +192,17 @@
     <Content Include="Content\css\balanzia-wrapper-direct.css" />
     <Content Include="Content\css\balanzia-application.css" />
     <Content Include="Content\css\balanzia-result.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\embedded-customerapplication-imitation.css" />
     <Content Include="Content\css\magellan-customerapplication.css" />
+    <Content Include="Content\css\magellan-customerpages.css" />
     <Content Include="Content\css\ml-magellan-customerapplication.css" />
+    <Content Include="Content\css\ml-magellan-customerpages.css" />
     <Content Include="Content\css\reset.css" />
+    <Content Include="Content\css\toastr.css" />
     <Content Include="Content\img\Balanzia.png" />
     <Content Include="Content\img\Balanzia.svg" />
+    <Content Include="Content\img\BankID_logo.svg" />
     <Content Include="Content\img\brocc-logo.png" />
     <Content Include="Content\img\body-bg.png" />
     <Content Include="Content\img\favicon.svg" />
@@ -293,6 +298,7 @@
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\Login\CreditTokenAuthenticationController.cs" />
     <Compile Include="Controllers\Login\EidSignatureLoginController.cs" />
+    <Compile Include="Controllers\Login\MockEidLoginController.cs" />
     <Compile Include="Controllers\PSD2Controller.cs" />
     <Compile Include="Controllers\Psd2DirectController.cs" />
     <Compile Include="Controllers\SignicatController.cs" />
@@ -337,6 +343,8 @@
     <Content Include="Views\Common\AccessDenied.cshtml" />
     <Content Include="Views\Shared\EmbedddedCustomerPagesSimpleMessage.cshtml" />
     <Content Include="Views\Shared\_EmbeddedCustomerPagesImitationLayout.cshtml" />
+    <Content Include="Views\MockEidLogin\Login.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -351,6 +359,7 @@
     <Folder Include="Views\CreditTokenAuthentication\" />
     <Folder Include="Views\EmbeddedCustomerApplicationControllerBase\" />
     <Folder Include="Views\EmbeddedCustomerApplication\" />
+    <Folder Include="Views\NewFolder1\" />
     <Folder Include="Views\PSD2Service\" />
     <Folder Include="Views\PSD2\" />
     <Folder Include="Views\Signicat\" />

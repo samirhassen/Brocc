@@ -188,7 +188,88 @@ namespace nGccCustomerApplication
 
         public ApplicationState GetApplicationState(string token)
         {
-            var result = Call<StateWrapper<ApplicationState>>("api/creditapplication-wrapper-direct/fetch-application-state", new { token = token });
+            
+           // var result = Call<StateWrapper<ApplicationState>>("api/creditapplication-wrapper-direct/fetch-application-state", new { token = token });
+
+            var result = new Tuple<bool, StateWrapper<ApplicationState>>(true,
+            new StateWrapper<ApplicationState>
+            {
+                State = new ApplicationState
+                {
+                    NrOfApplicants = 1,
+                    IsActive = true,
+                    Token = token,
+                    ApplicationNr = "CA176053",
+                    ActiveState = new ActiveStateModel
+                    {
+                        IsWaitingForClient = false,
+                        IsAwaitingFinalApproval = false,
+                        ShouldChooseDocumentSource = false,
+                        IsWatingForDocumentUpload = false,
+                        IsWaitingForSharedAccountDataCallback = false,
+                        ShouldAnswerAdditionalQuestions = true,
+                        AdditionalQuestionsData = new AdditionalQuestionsInitialDataModel
+                        {
+                            IsAdditionalLoanOffer = true,
+                            Applicant1 = new ApplicantInitialModel
+                            {
+                                FirstName = "Samir",
+                                LastName = "Hassen",
+                                CivicRegNr = "100380X598T",
+                                HasOtherTaxOrCitizenCountry = "No"
+                            }
+                        },
+                        ShouldAnswerExternalAdditionalQuestions = false,
+                        ExternalAdditionalQuestionsData = null,
+                        DocumentUploadData = new DocumentUploadDataModel
+                        {
+                            Applicant1 = new DocumentUploadDataModel.Applicant
+                            {
+                                FirstName = "Samir",
+                                LastName = "Hassen",
+                                CivicRegNr = "100380X598T",
+                                //HasOtherTaxOrCitizenCountry = "No",
+                                //SharedAccountDataPdfPreviewArchiveKey = "mockArchiveKey1",
+                                //AttachedFiles = new List<DocumentUploadDataModel.AttachedFile>
+                                //{
+                                //    new DocumentUploadDataModel.AttachedFile
+                                //    {
+                                //        Id = "file1",
+                                //        ApplicantNr = 1,
+                                //        FileName = "file1.pdf",
+                                //        MimeType = "application/pdf"
+                                //    }
+                                //}
+                            }
+                        },
+                        DocumentSourceData = new DocumentSourceDataModel
+                        {
+                            HasApplicant1ChosenDataSource = false
+                        },
+                        ShouldSignAgreements = true,
+                        //AgreementsData = new AgreementInitialModel
+                        //{
+                        //    HasApplicant1SignedAgreement = true,
+                        //    Applicant1 = new ApplicantInitialModel
+                        //    {
+                        //        FirstName = "Samir",
+                        //        LastName = "Hassen",
+                        //        CivicRegNr = "100380X598T",
+                        //        HasOtherTaxOrCitizenCountry = "No"
+                        //    }
+                        //}
+                    },
+                    //ClosedState = new ClosedStateModel
+                    //{
+                    //    WasAccepted = false
+                    //},
+                    ClosedState = null,
+                    IsForcedBankAccountDataSharing = false
+                }
+            }
+        );
+
+
 
             var activeState = result?.Item2?.State?.ActiveState;
             HandleAttachedFiles(token, activeState);

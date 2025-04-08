@@ -8,7 +8,6 @@ using Serilog;
 using Serilog.Core.Enrichers;
 using System;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -22,27 +21,6 @@ namespace nCredit.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            app.Use(async (context, next) =>
-            {
-                await next.Invoke();
-
-                // Equivalent to Application_EndRequest in Global.asax
-                var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName)
-                                  ?? new HttpContextWrapper(HttpContext.Current);
-
-                if (httpContext.Items[LoginSetupSupport.NTech401JsonItemName] != null)
-                {
-                    //IIS is trying to destroy the response ...
-                    var body = (string)httpContext.Items[LoginSetupSupport.NTech401JsonItemName];
-                    var response = httpContext.Response;
-                    response.Clear();
-                    response.TrySkipIisCustomErrors = true;
-                    response.StatusCode = 401;
-                    response.ContentType = "application/json";
-                    response.Write(body);
-                }
-            });
-
             var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() => NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry, NEnv.ApplicationAutomationUsernameAndPassword));
             Log.Logger = new LoggerConfiguration()
                                        .Enrich.WithMachineName()
@@ -75,9 +53,7 @@ namespace nCredit.App_Start
                 NEnv.EnabledPluginNames,
                 additionalPluginFolders: NEnv.PluginSourceFolders);
 
-            NTech.ClockFactory.Init();
-
-            AutoMapperHelper.Initialize(cfg => cfg.AddMaps(new[] { typeof(Global) }));
+            //AutoMapperHelper.Initialize(cfg => cfg.AddMaps(new[] { typeof(Global) }));
 
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
@@ -97,6 +73,9 @@ namespace nCredit.App_Start
             ModelBinders.Binders.Add(typeof(decimal?), new Code.CommaAndDotDecimalModelBinder());
 
             CreditContext.InitDatabase();
+
+
+            NTech.ClockFactory.Init();
         }
 
         private static void RegisterStyles(BundleCollection bundles)
@@ -265,6 +244,5 @@ namespace nCredit.App_Start
                 .Include(angularScripts)
                 .Include("~/Content/js/controllers/component-host.js"));
         }
-
     }
 }

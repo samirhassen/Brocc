@@ -194,8 +194,8 @@ namespace nGccCustomerApplication.Controllers.Login
                 p.SignIn(this.HttpContext.GetOwinContext(), customerId, firstName, true, this.electronicIdLoginProvider.Value.AuthTypeName, NEnv.BaseCivicRegNumberParser.Parse(result.CivicNr), reloginTarget);
 
                 Session["EidSignatureCustomerTarget"] = reloginTarget?.Name;
-
-                return RedirectToAction("Navigate", "CustomerPortal", new { targetName = reloginTarget?.Name, targetCustomData = reloginTarget?.CustomData, extVarKey = extVarKey });
+                var localSessionId = providerParameters?.Opt("localSessionId");
+                return RedirectToAction("Index","ApplicationWrapperDirect", new { token= localSessionId });
             }
             else
                 return RedirectToAction("AccessDenied", "Common");

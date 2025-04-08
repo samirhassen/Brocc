@@ -10,6 +10,8 @@ using nGccCustomerApplication.Code.AccountDataSharing;
 
 namespace nGccCustomerApplication.Controllers
 {
+    [CustomerPagesAuthorize(AllowEmptyRole = true)]
+
     public class ApplicationWrapperDirectController : NController
     {
         [Route("application-wrapper-direct")]

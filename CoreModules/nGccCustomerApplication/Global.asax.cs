@@ -16,7 +16,7 @@ namespace nGccCustomerApplication
     public class Global : HttpApplication
     {
         public override void Init()
-        {
+            {
             base.Init();
             NTechHttpHardening.HandleCachingAndInformationLeakHeader(this, false);
         }
@@ -29,10 +29,11 @@ namespace nGccCustomerApplication
             //RouteConfig.RegisterRoutes(RouteTable.Routes);
             //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
             //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
-            //RegisterBundles();
+            RegisterBundles();
         }
 
         //http://www.asp.net/mvc/overview/performance/bundling-and-minification
+
         private static void RegisterBundles()
         {
             BundleTable.EnableOptimizations = NEnv.IsBundlingEnabled;

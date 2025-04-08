@@ -58,8 +58,6 @@ namespace nGccCustomerApplication.Controllers
                 translation = BaseController.GetTranslationsShared(this.Url, this.Request)
             })));
             ViewBag.IsTokenExpired = isTokenExpired ?? false;
-            //TODO; Jatin
-            Session["EidSignatureCustomerApplicationTarget"] = "http://localhost/ncustomerapplication/login/eid/test333/return";
             ViewBag.ShowLogin = !(Session == null || (Session != null && Session["EidSignatureCustomerApplicationTarget"] == null));
             ViewBag.EidSignatureCustomerTarget = Session != null && Session["EidSignatureCustomerApplicationTarget"] != null ? Session["EidSignatureCustomerApplicationTarget"].ToString() : "";
             if (NEnv.IsStandardEmbeddedGccCustomerApplicationEnabled)

@@ -19,6 +19,7 @@ using IdentityModel.Client;
 
 namespace nGccCustomerApplication.Controllers
 {
+    [CustomerPagesAuthorize(AllowEmptyRole = true)]
     public class ApplicationWrapperLinkController : NController
     {
         [Route("application-wrapper-link")]

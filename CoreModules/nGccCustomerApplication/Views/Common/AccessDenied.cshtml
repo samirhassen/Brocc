@@ -2,7 +2,7 @@
     ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
 
 }
-
+@Styles.Render("~/Content/css/bundle-magellan-customerapplication")
 @section Scripts {
     <script>
         initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
@@ -15,11 +15,11 @@
         <div class="aligned-center">
             @if (!ViewBag.IsTokenExpired)
             {
-                <p translate="AccessDenied_generalmessage"/>
+                <p translate="AccessDenied_generalmessage" />
             }
             @if (ViewBag.IsTokenExpired)
             {
-                <p translate="AccessDenied_tokenexpiredmessage"/>
+                <p translate="AccessDenied_tokenexpiredmessage" />
 
             }
             @if (ViewBag.ShowLogin)

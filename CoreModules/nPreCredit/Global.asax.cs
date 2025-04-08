@@ -22,24 +22,24 @@ namespace nPreCredit
 
         private void Application_Start(object sender, EventArgs e)
         {
-            AutoMapperHelper.Initialize(cfg => cfg.AddMaps(new[] { typeof(Global) }));
+            //AutoMapperHelper.Initialize(cfg => cfg.AddMaps(new[] { typeof(Global) }));
 
-            // Code that runs on application startup
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            RegisterBundles();
-            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
-            GlobalFilters.Filters.Add(new NTechAuthorizeAttribute() { ValidateAccessToken = true });
-            GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
+            //// Code that runs on application startup
+            //AreaRegistration.RegisterAllAreas();
+            //GlobalConfiguration.Configure(WebApiConfig.Register);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //RegisterBundles();
+            //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            //GlobalFilters.Filters.Add(new NTechAuthorizeAttribute() { ValidateAccessToken = true });
+            //GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
 
-            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+            //GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
 
-            PreCreditContext.InitDatabase();
+            //PreCreditContext.InitDatabase();
 
-            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().Single());
-            ValueProviderFactories.Factories.Add(new Code.JsonNetValueProviderFactory());
+            //ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().Single());
+            //ValueProviderFactories.Factories.Add(new Code.JsonNetValueProviderFactory());
         }
 
         private void Application_EndRequest(object sender, EventArgs e)

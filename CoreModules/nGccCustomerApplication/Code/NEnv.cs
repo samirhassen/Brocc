@@ -385,7 +385,7 @@ namespace nGccCustomerApplication
         public static IClientConfigurationCore ClientCfgCore =>
             NTechCache.WithCache("nGccCustomerApplication.ClientCfgCore", TimeSpan.FromMinutes(15), () => ClientConfigurationCoreFactory.CreateUsingNTechEnvironment(E));
         public static string NTechCdnUrl => Opt("ntech.cdn.rooturl");
-
-
+        public static FileInfo SkinningCssFile => E.ClientResourceFile("ntech.skinning.cssfile", Path.Combine(SkinningRootFolder.FullName, "css\\skinning.css"), false);
+        public static bool IsSkinningCssEnabled => NTechCache.WithCacheS($"ntech.cache.skinningcssenabled", TimeSpan.FromMinutes(5), () => NEnv.SkinningCssFile?.Exists ?? false);
     }
 }

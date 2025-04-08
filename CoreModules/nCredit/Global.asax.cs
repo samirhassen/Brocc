@@ -22,26 +22,26 @@ namespace nCredit
 
         private void Application_Start(object sender, EventArgs e)
         {
-            AutoMapperHelper.Initialize(cfg => cfg.AddMaps(new[] { typeof(Global) }));
+            //AutoMapperHelper.Initialize(cfg => cfg.AddMaps(new[] { typeof(Global) }));
 
-            // Code that runs on application startup
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            RegisterBundles();
-            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
-            ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
-            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
-            GlobalFilters.Filters.Add(new NTechAuthorizeAttribute() { ValidateAccessToken = true });
-            GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
+            //// Code that runs on application startup
+            //AreaRegistration.RegisterAllAreas();
+            //GlobalConfiguration.Configure(WebApiConfig.Register);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //RegisterBundles();
+            //ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
+            //ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
+            //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            //GlobalFilters.Filters.Add(new NTechAuthorizeAttribute() { ValidateAccessToken = true });
+            //GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
 
-            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+            //GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
 
-            ModelBinders.Binders.Add(typeof(decimal), new Code.CommaAndDotDecimalModelBinder());
-            ModelBinders.Binders.Add(typeof(decimal?), new Code.CommaAndDotDecimalModelBinder());
+            //ModelBinders.Binders.Add(typeof(decimal), new Code.CommaAndDotDecimalModelBinder());
+            //ModelBinders.Binders.Add(typeof(decimal?), new Code.CommaAndDotDecimalModelBinder());
 
-            CreditContext.InitDatabase();
+            //CreditContext.InitDatabase();
         }
 
         private static void RegisterStyles(BundleCollection bundles)

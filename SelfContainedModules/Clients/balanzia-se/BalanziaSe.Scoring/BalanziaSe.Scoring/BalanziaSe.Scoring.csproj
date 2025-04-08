@@ -35,8 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NTech.Banking.Shared, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NTech.Banking.Shared.1.0.6\lib\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    <Reference Include="NTech.Banking.Shared">
+      <HintPath>..\..\..\..\..\CoreModules\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

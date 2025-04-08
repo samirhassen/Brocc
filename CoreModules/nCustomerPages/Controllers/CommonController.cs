@@ -45,8 +45,7 @@ namespace nCustomerPages.Controllers
                 translation = BaseController.GetTranslationsShared(this.Url, this.Request)
             })));
             ViewBag.IsTokenExpired = isTokenExpired ?? false;
-            //TODO; Jatin
-            Session["EidSignatureCustomerTarget"]=  "http://localhost/ncustomerpages/login/eid/test333/return";
+           
             ViewBag.ShowLogin = !(Session == null || (Session != null && Session["EidSignatureCustomerTarget"] == null));
             ViewBag.EidSignatureCustomerTarget =  Session != null && Session["EidSignatureCustomerTarget"] != null ? Session["EidSignatureCustomerTarget"].ToString() : "";
             if (NEnv.IsStandardEmbeddedCustomerPagesEnabled)
