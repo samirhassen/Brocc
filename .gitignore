@@ -47,8 +47,9 @@ npm-debug.log*
 *.swp
 *.swo
 /.vs
-*.db
-*.db-shm
-*.db-wal
-/CoreModules/nTest.RandomDataSource/.vs/nTest.RandomDataSource.csproj.dtbcache.json
-/CoreModules/TestsnPreCredit/.vs/NTech.UnitTests.csproj.dtbcache.json
+".vs/" 
+*.config
+/CoreModules/.vs/BroccLocalBuild/CopilotIndices/17.13.441.19478/SemanticSymbols.db
+/CoreModules/.vs/BroccLocalBuild/CopilotIndices/17.13.441.19478/SemanticSymbols.db-shm
+/CoreModules/.vs/BroccLocalBuild/CopilotIndices/17.13.441.19478/SemanticSymbols.db-wal
+*.json
