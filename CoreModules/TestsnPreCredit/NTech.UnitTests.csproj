@@ -331,10 +331,6 @@
       <Project>{19EF2C91-E5C8-4EDA-9B16-4B61BE9A47DF}</Project>
       <Name>nSavings</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nScheduler\nScheduler.csproj">
-      <Project>{a3d6721b-d08e-4680-98cf-d158b2445fd2}</Project>
-      <Name>nScheduler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
       <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>
       <Name>NTech.Banking.Shared</Name>
