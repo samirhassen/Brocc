@@ -47,10 +47,10 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Banking.Shared">
-      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+      <HintPath>..\..\..\BaCS\CoreModules\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.TestSupport">
-      <HintPath>..\Core\NTech.Core.TestSupport\bin\Debug\netstandard2.0\NTech.Core.TestSupport.dll</HintPath>
+      <HintPath>..\..\..\BaCS\CoreModules\Core\NTech.Core.TestSupport\bin\Debug\netstandard2.0\NTech.Core.TestSupport.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
