@@ -47,3 +47,8 @@ npm-debug.log*
 *.swp
 *.swo
 /.vs
+*.db
+*.db-shm
+*.db-wal
+/CoreModules/nTest.RandomDataSource/.vs/nTest.RandomDataSource.csproj.dtbcache.json
+/CoreModules/TestsnPreCredit/.vs/NTech.UnitTests.csproj.dtbcache.json
