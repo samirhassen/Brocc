@@ -24,7 +24,7 @@ namespace nCustomer.Code.Services.EidAuthentication
             return authenticationSessionService.CreateSession(civicRegNumber, currentUser, customData, ProviderName, x =>
             {
                 var providerSessionId = Guid.NewGuid().ToString();
-                var beginLoginRedirectUrl = NEnv.ServiceRegistry.External.ServiceUrl("nCustomerPages", $"mock-eid/{x.LocalSessionId}/login").ToString();
+                var beginLoginRedirectUrl = NEnv.ServiceRegistry.External.ServiceUrl("nGccCustomerApplication", $"mock-eid/{x.LocalSessionId}/login").ToString();
                 x.SetCustomData("standardReturnUrl", returnUrl.GetReturnUrl(x).ToString()); //This is basically the provider session
                 return (ProviderSessionId: providerSessionId, BeginLoginRedirectUrl: beginLoginRedirectUrl);
             });

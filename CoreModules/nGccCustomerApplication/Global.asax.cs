@@ -23,7 +23,7 @@ namespace nGccCustomerApplication
 
         private void Application_Start(object sender, EventArgs e)
         {
-            //Jatin TODO;
+            //Moved To Startup1.cs
             //AreaRegistration.RegisterAllAreas();
             //GlobalConfiguration.Configure(WebApiConfig.Register);
             //RouteConfig.RegisterRoutes(RouteTable.Routes);

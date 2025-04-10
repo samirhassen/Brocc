@@ -371,12 +371,12 @@
     <PreBuildEvent>
 		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
 		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-<!--
+
 		if $(ConfigurationName) == Debug (
 		xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
 		xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
 		)
-	--></PreBuildEvent>
+  </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ContentSQLiteInteropFiles Condition="'$(Configuration)' == 'Release'">true</ContentSQLiteInteropFiles>
