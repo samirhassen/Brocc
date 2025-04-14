@@ -10,55 +10,33 @@
     </script>
     @Scripts.Render("~/Content/js/bundle-angular-translateonly")
 }
-<style>
-    .info-box {
-        background-color: #f8f8f8;
-        border-radius: 12px;
-        padding: 20px;
-        max-width: 500px;
-        margin: 0 auto 20px auto;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        font-family: Arial, sans-serif;
-        text-align: left;
-    }
-
-        .info-box p {
-            margin: 0 0 10px 0;
-            color: #000;
-            font-size: 16px;
-        }
-
-        .info-box strong {
-            font-weight: 700;
-            font-size: 17px;
-        }
-
-        .info-box .highlight-link {
-            color: #f4a300;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-            .info-box .highlight-link:hover {
-                text-decoration: underline;
-            }
-</style>
+<div class="navigation">
+    <div class="content-position">
+        <div class="branding">
+            <a href="@Url.Action("Index", "#")">
+                <img src="@Url.Content("~/Content/img/brocc-logo.png")" style="max-height:38px;">
+            </a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
 
 <div class="content">
     <div class="vh-50">
         <div class="aligned-center">
-            <div class="info-box">
-                <p><strong>Welcome to My Pages!</strong></p>
-                <p>The product P2P is now only available on the old page that you find <a href="#" class="highlight-link">here</a>.</p>
-            </div>
             @if (!ViewBag.IsTokenExpired)
             {
-                <p translate="AccessDenied_generalmessage" />
+                <div class="info-box">
+                    <p translate="customerApplication_Login_Title"><strong>Välkommen till Brocc låneansökan</strong></p>
+                    <p translate="customerApplication_Login_Body">För att fullborda din låneansökan behöver du logga in.</p>
+                </div>
             }
             @if (ViewBag.IsTokenExpired)
             {
-                <p translate="AccessDenied_tokenexpiredmessage" />
-
+                <div class="info-box">
+                    <p translate="customerApplication_TokenExpired_Title"><strong>Din session har gått ut</strong></p>
+                    <p translate="customerApplication_TokenExpired_Body">Logga in igen för att återgå till din låneansökan.</p>
+                </div>
             }
             @if (ViewBag.ShowLogin)
             {
