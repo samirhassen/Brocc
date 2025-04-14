@@ -58,9 +58,10 @@ namespace nGccCustomerApplication.Controllers
                 translation = BaseController.GetTranslationsShared(this.Url, this.Request)
             })));
             ViewBag.IsTokenExpired = isTokenExpired ?? false;
-            ViewBag.ShowLogin = !(Session == null || (Session != null && Session["EidSignatureCustomerApplicationTarget"] == null));
+            //TESTING
+            ViewBag.ShowLogin = true; //!(Session == null || (Session != null && Session["EidSignatureCustomerApplicationTarget"] == null));
             ViewBag.EidSignatureCustomerTarget = Session != null && Session["EidSignatureCustomerApplicationTarget"] != null ? Session["EidSignatureCustomerApplicationTarget"].ToString() : "";
-            if (NEnv.IsStandardEmbeddedGccCustomerApplicationEnabled)
+            if (!NEnv.IsStandardEmbeddedGccCustomerApplicationEnabled)
             {
                 ViewBag.Message = "Du har loggat ut, saknar rättigheter eller har inga tjänster hos oss.";
                 return View("EmbedddedCustomerPagesSimpleMessage");
