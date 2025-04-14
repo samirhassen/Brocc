@@ -207,6 +207,7 @@
     <Content Include="Content\img\body-bg.png" />
     <Content Include="Content\img\favicon.svg" />
     <Content Include="Content\img\favicon-32x32.png" />
+    <Content Include="Content\img\fi-cutout.png" />
     <Content Include="Content\img\icon-48x48.png" />
     <Content Include="Content\img\icon-72x72.png" />
     <Content Include="Content\img\icon-96x96.png" />
@@ -217,10 +218,20 @@
     <Content Include="Content\img\icon-512x512.png" />
     <Content Include="Content\img\finlands-flagga.png" />
     <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\se-cutout.png" />
     <Content Include="Content\img\sveriges-flagga.png" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\angular-fileupload.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.booleans.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.dates.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.linq.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\common\ntech.navigationtarget.js" />
+    <Content Include="Content\js-transpiled\ntech_shared\legacy\ntech.js.shared.js" />
     <Content Include="Content\js\angular-fileupload.js" />
     <Content Include="Content\js\controllers\EidSignatureLogin\login-with-eid-signature.js" />
+    <Content Include="Content\js\controllers\translation-only.js" />
     <Content Include="Content\js\handle-angular-accessdenied.js" />
+    <Content Include="Content\js\layout-support.js" />
+    <Content Include="Content\js\ntech.js.shared.js" />
     <Content Include="Content\js\wrapper-direct\main-documentsource.js" />
     <Content Include="Content\js\wrapper-direct\main-documentcheck.js" />
     <Content Include="Content\js\wrapper-direct\main-additionalquestions.js" />
@@ -345,6 +356,7 @@
     <Content Include="Views\Shared\_EmbeddedCustomerPagesImitationLayout.cshtml" />
     <Content Include="Views\MockEidLogin\Login.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
     <None Include="Web.debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

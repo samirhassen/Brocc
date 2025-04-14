@@ -95,6 +95,10 @@ namespace nGccCustomerApplication.App_Start
                 .Include("~/Content/css/reset.css")
                 .Include("~/Content/css/balanzia-wrapper-direct.css"));
 
+            //New Added
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-layout-support")
+               .Include("~/Content/js/layout-support.js"));
+
             bundles.Add(new ScriptBundle("~/Content/js/bundle-handle-angular-accessdenied")
            .Include("~/Content/js/handle-angular-accessdenied.js"));
 
@@ -105,7 +109,11 @@ namespace nGccCustomerApplication.App_Start
                 "~/Content/js/angular.min.js",
                 "~/Content/js/angular-locale_fi-fi.js",
                 "~/Content/js/moment.min.js",
+
+                "~/Content/js-transpiled/ntech_shared/common/*.js",
+                "~/Content/js-transpiled/ntech_shared/legacy/ntech.js.shared.js",
                 "~/Content/js/ntech-forms.js",
+
                 "~/Content/js/angular-cookies.min.js",
                 "~/Content/js/angular-translate.min.js",
                 "~/Content/js/angular-translate-storage-cookie.min.js",
@@ -113,6 +121,14 @@ namespace nGccCustomerApplication.App_Start
                 "~/Content/js/angular-translate-loader-url.min.js",
                 "~/Content/js/country-functions-fi.js"
             };
+
+            //New Added
+            //Translation only
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-angular-translateonly")
+                .Include(sharedJs)
+                .Include(sharedJs)
+                .Include("~/Content/js/controllers/translation-only.js"));
+
             bundles.Add(new ScriptBundle("~/Content/js/bundle-login-with-eid-signature")
             .Include(sharedJs)
             .Include("~/Content/js/controllers/EidSignatureLogin/login-with-eid-signature.js"));
@@ -120,6 +136,8 @@ namespace nGccCustomerApplication.App_Start
             bundles.Add(new ScriptBundle("~/Content/js/bundle-balanzia-application")
                 .Include(sharedJs)
                 .Include("~/Content/js/application.js"));
+
+
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-balanzia-wrapper-direct")
                 .Include(sharedJs)

@@ -193,7 +193,7 @@ namespace nGccCustomerApplication.Controllers.Login
 
                 p.SignIn(this.HttpContext.GetOwinContext(), customerId, firstName, true, this.electronicIdLoginProvider.Value.AuthTypeName, NEnv.BaseCivicRegNumberParser.Parse(result.CivicNr), reloginTarget);
 
-                Session["EidSignatureCustomerTarget"] = reloginTarget?.Name;
+                Session["EidSignatureCustomerApplicationTarget"] = reloginTarget?.Name;
                 var localSessionId = providerParameters?.Opt("localSessionId");
                 return RedirectToAction("Index","ApplicationWrapperDirect", new { token= localSessionId });
             }
