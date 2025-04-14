@@ -18,17 +18,17 @@ namespace nCreditReport
 
         private void Application_Start(object sender, EventArgs e)
         {
-            // Code that runs on application startup
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            GlobalFilters.Filters.Add(new System.Web.Mvc.AuthorizeAttribute());
-            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            //// Code that runs on application startup
+            //AreaRegistration.RegisterAllAreas();
+            //GlobalConfiguration.Configure(WebApiConfig.Register);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            //GlobalFilters.Filters.Add(new System.Web.Mvc.AuthorizeAttribute());
+            //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
 
-            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+            //GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
 
-            CreditReportContext.InitDatabase();
+            //CreditReportContext.InitDatabase();
         }
 
 

@@ -119,25 +119,20 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+    <Reference Include="NTech.Banking.Shared">
+      <HintPath>..\..\..\BaCS\CoreModules\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Release\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+    <Reference Include="NTech.Core.Module.Shared">
+      <HintPath>..\..\..\BaCS\CoreModules\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Core.Savings.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Core\NTech.Core.Savings.Shared\bin\Release\netstandard2.0\NTech.Core.Savings.Shared.dll</HintPath>
+    <Reference Include="NTech.Core.Savings.Shared">
+      <HintPath>..\..\..\BaCS\CoreModules\Core\NTech.Core.Savings.Shared\bin\Debug\netstandard2.0\NTech.Core.Savings.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Legacy.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Legacy.Module.Shared\bin\Release\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+    <Reference Include="NTech.Legacy.Module.Shared">
+      <HintPath>..\..\..\BaCS\CoreModules\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Services.Infrastructure, Version=1.0.9181.30678, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Services.Infrastructure\bin\Release\NTech.Services.Infrastructure.dll</HintPath>
+    <Reference Include="NTech.Services.Infrastructure">
+      <HintPath>..\..\..\BaCS\CoreModules\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Nustache.Core, Version=1.16.0.4, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
       <HintPath>..\packages\Nustache.1.16.0.4\lib\net20\Nustache.Core.dll</HintPath>

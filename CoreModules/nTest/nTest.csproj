@@ -104,20 +104,19 @@
     </Reference>
     <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+      <HintPath>..\..\..\BaCS\CoreModules\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+    <Reference Include="NTech.Core.Module.Shared">
+      <HintPath>..\..\..\BaCS\CoreModules\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.TestSupport">
-      <HintPath>..\Core\NTech.Core.TestSupport\bin\Debug\netstandard2.0\NTech.Core.TestSupport.dll</HintPath>
+      <HintPath>..\..\..\BaCS\CoreModules\Core\NTech.Core.TestSupport\bin\Debug\netstandard2.0\NTech.Core.TestSupport.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Legacy.Module.Shared">
-      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+      <HintPath>..\..\..\BaCS\CoreModules\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Services.Infrastructure">
-      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+      <HintPath>..\..\..\BaCS\CoreModules\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
@@ -371,12 +370,12 @@
     <PreBuildEvent>
 		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
 		xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
-<!--
+
 		if $(ConfigurationName) == Debug (
 		xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
 		xcopy /Q /Y  "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
 		)
-	--></PreBuildEvent>
+  </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ContentSQLiteInteropFiles Condition="'$(Configuration)' == 'Release'">true</ContentSQLiteInteropFiles>

@@ -1,24 +1,17 @@
 [
   {
-    "Name": "New Profile",
+    "Name": "CustomerApplication",
     "Projects": [
       {
-        "Path": "nCustomer\\nCustomer.csproj",
-        "Action": "Start",
-        "DebugTarget": "Local IIS (Google Chrome)"
-      },
-      {
-        "Path": "nCustomerPages\\nCustomerPages.csproj",
-        "Action": "Start",
-        "DebugTarget": "Local IIS (Google Chrome)"
-      },
-      {
         "Path": "nGccCustomerApplication\\nGccCustomerApplication.csproj",
-        "Action": "Start",
-        "DebugTarget": "Local IIS (Google Chrome)"
+        "Action": "Start"
       },
       {
         "Path": "nPreCredit\\nPreCredit.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "nUser\\nUser.csproj",
         "Action": "Start"
       }
     ]

@@ -10,10 +10,10 @@ namespace nGccCustomerApplication
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapRoute(
-           name: "Hb",
-           url: "hb",
-           defaults: new { controller = "Common", action = "Hb" }
-       );
+                name: "Hb",
+                url: "hb",
+                defaults: new { controller = "Common", action = "Hb" }
+            );
 
             routes.MapRoute(
                 name: "Error",
