@@ -2,13 +2,6 @@
 <translations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<tr>
 		<key>
-			customerApplication_Login_Body
-		</key>
-		<sv>För att fullborda till resultatet av din låneansökan behöver du logga in.</sv>
-		<fi>Jos haluat nähdä lainahakemuksesi tulokset, sinun on kirjauduttava sisään.</fi>
-	</tr>
-	<tr>
-		<key>
 			customerApplication_Login_Title
 		</key>
 		<sv>Välkommen till Brocc låneansökan</sv>
@@ -16,17 +9,24 @@
 	</tr>
 	<tr>
 		<key>
-			customerApplication_TokenExpired_Body
+			customerApplication_Login_Body
 		</key>
-		<sv>För att fullborda till resultatet av din låneansökan behöver du logga in.</sv>
-		<fi>Jos haluat nähdä lainahakemuksesi tulokset, sinun on kirjauduttava sisään.</fi>
+		<sv>För att fullborda din låneanöskan och få tillgång till resultatet behöver du logga in.</sv>
+		<fi>Jotta voit suorittaa lainahakemuksen ja tarkastella tuloksia, sinun on kirjauduttava sisään.</fi>
 	</tr>
 	<tr>
 		<key>
 			customerApplication_TokenExpired_Title
 		</key>
-		<sv>Välkommen till Brocc låneansökan</sv>
-		<fi>Tervetuloa Brocc-lainahakemukseen</fi>
+		<sv>Din session har löpt ut</sv>
+		<fi>istuntosi on päättynyt</fi>
+	</tr>
+	<tr>
+		<key>
+			customerApplication_TokenExpired_Body
+		</key>
+		<sv>Du behöver logga in igen för att fortsätta.</sv>
+		<fi>Sinun on kirjauduttava uudelleen sisään jatkaaksesi.</fi>
 	</tr>
 	<tr>
 		<key>eidlogin_login</key>
