@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\BaCS.publish\nGccCustomerApplication</_PublishTargetUrl>
-    <History>True|2025-04-04T10:04:38.4500494Z||;True|2025-03-03T14:41:26.5050310+00:00||;True|2025-02-25T10:11:29.8959101+00:00||;True|2025-02-25T09:40:13.8067786+00:00||;False|2025-02-25T09:37:37.6620656+00:00||;False|2025-02-25T09:33:46.2489110+00:00||;True|2025-02-22T17:53:03.8671509+00:00||;True|2025-02-22T17:50:04.5645810+00:00||;True|2025-02-22T17:42:55.9514915+00:00||;True|2025-02-22T17:13:55.8353904+00:00||;</History>
+    <History>True|2025-04-16T12:04:47.6778362Z||;True|2025-04-16T13:37:38.3284310+02:00||;True|2025-04-16T13:29:50.8122423+02:00||;True|2025-04-04T12:04:38.4500494+02:00||;True|2025-03-03T15:41:26.5050310+01:00||;True|2025-02-25T11:11:29.8959101+01:00||;True|2025-02-25T10:40:13.8067786+01:00||;False|2025-02-25T10:37:37.6620656+01:00||;False|2025-02-25T10:33:46.2489110+01:00||;True|2025-02-22T18:53:03.8671509+01:00||;True|2025-02-22T18:50:04.5645810+01:00||;True|2025-02-22T18:42:55.9514915+01:00||;True|2025-02-22T18:13:55.8353904+01:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -19,172 +19,178 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
-      <publishTime>03/28/2025 11:02:19</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.pdb">
-      <publishTime>03/28/2025 11:02:19</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
+    </File>
+    <File Include="bin/App_global.asax.compiled">
+      <publishTime>04/16/2025 14:52:36</publishTime>
+    </File>
+    <File Include="bin/App_global.asax.dll">
+      <publishTime>04/16/2025 14:52:36</publishTime>
     </File>
     <File Include="bin/IdentityModel.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/IdentityModel.pdb">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/IdentityServer3.AccessTokenValidation.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/IdentityServer3.AccessTokenValidation.dll.config">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/IdentityServer3.AccessTokenValidation.pdb">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.pdb">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.Cookies.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.Jwt.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.OpenIdConnect.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
-      <publishTime>03/17/2021 20:03:36</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="bin/nGccCustomerApplication.dll">
-      <publishTime>04/04/2025 11:04:32</publishTime>
+      <publishTime>04/16/2025 14:52:28</publishTime>
     </File>
     <File Include="bin/nGccCustomerApplication.pdb">
-      <publishTime>04/04/2025 11:04:32</publishTime>
+      <publishTime>04/16/2025 14:52:28</publishTime>
     </File>
     <File Include="bin/Nito.AsyncEx.Context.dll">
-      <publishTime>09/26/2021 01:23:28</publishTime>
+      <publishTime>09/26/2021 02:23:28</publishTime>
     </File>
     <File Include="bin/Nito.AsyncEx.Tasks.dll">
-      <publishTime>09/26/2021 01:23:26</publishTime>
+      <publishTime>09/26/2021 02:23:26</publishTime>
     </File>
     <File Include="bin/Nito.Disposables.dll">
-      <publishTime>09/25/2021 22:43:20</publishTime>
+      <publishTime>09/25/2021 23:43:20</publishTime>
     </File>
     <File Include="bin/NTech.Banking.Shared.dll">
-      <publishTime>03/28/2025 21:40:42</publishTime>
+      <publishTime>04/16/2025 13:29:45</publishTime>
     </File>
     <File Include="bin/NTech.Banking.Shared.pdb">
-      <publishTime>03/28/2025 21:40:42</publishTime>
+      <publishTime>04/16/2025 13:29:45</publishTime>
     </File>
     <File Include="bin/NTech.Core.Module.Shared.dll">
-      <publishTime>04/04/2025 11:04:30</publishTime>
+      <publishTime>04/16/2025 13:29:46</publishTime>
     </File>
     <File Include="bin/NTech.Core.Module.Shared.pdb">
-      <publishTime>04/04/2025 11:04:30</publishTime>
+      <publishTime>04/16/2025 13:29:46</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.dll">
-      <publishTime>04/04/2025 11:04:31</publishTime>
+      <publishTime>04/16/2025 13:29:46</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.pdb">
-      <publishTime>04/04/2025 11:04:31</publishTime>
+      <publishTime>04/16/2025 13:29:46</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll">
-      <publishTime>04/04/2025 11:04:25</publishTime>
+      <publishTime>04/16/2025 13:29:44</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll.config">
-      <publishTime>03/28/2025 11:02:07</publishTime>
+      <publishTime>04/10/2025 23:41:07</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.pdb">
-      <publishTime>04/04/2025 11:04:25</publishTime>
+      <publishTime>04/16/2025 13:29:44</publishTime>
     </File>
     <File Include="bin/NWebsec.Core.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/NWebsec.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/NWebsec.Mvc.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Owin.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Serilog.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/Serilog.Sinks.PeriodicBatching.dll">
-      <publishTime>03/28/2025 11:02:21</publishTime>
+      <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
     <File Include="bin/System.Buffers.dll">
-      <publishTime>02/19/2020 10:05:18</publishTime>
+      <publishTime>02/19/2020 11:05:18</publishTime>
     </File>
     <File Include="bin/System.Collections.Immutable.dll">
-      <publishTime>04/14/2020 23:39:26</publishTime>
+      <publishTime>04/15/2020 00:39:26</publishTime>
     </File>
     <File Include="bin/System.IdentityModel.Tokens.Jwt.dll">
-      <publishTime>03/28/2025 11:02:22</publishTime>
+      <publishTime>03/13/2025 14:36:21</publishTime>
     </File>
     <File Include="bin/System.IdentityModel.Tokens.Jwt.pdb">
-      <publishTime>03/28/2025 11:02:22</publishTime>
+      <publishTime>03/13/2025 14:36:21</publishTime>
     </File>
     <File Include="bin/System.Memory.dll">
-      <publishTime>02/19/2020 10:05:18</publishTime>
+      <publishTime>02/19/2020 11:05:18</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Numerics.Vectors.dll">
-      <publishTime>05/15/2018 14:29:44</publishTime>
+      <publishTime>05/15/2018 15:29:44</publishTime>
     </File>
     <File Include="bin/System.Runtime.CompilerServices.Unsafe.dll">
-      <publishTime>02/19/2020 10:05:16</publishTime>
+      <publishTime>02/19/2020 11:05:16</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Http.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Http.WebHost.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Mvc.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Razor.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Webpages.Deployment.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Webpages.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/System.Web.Webpages.Razor.dll">
-      <publishTime>03/28/2025 11:02:20</publishTime>
+      <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
-      <publishTime>03/28/2025 11:02:22</publishTime>
+      <publishTime>03/13/2025 14:36:22</publishTime>
     </File>
     <File Include="Code/AccountDataSharing/AccountDataSharingMockFlow.cs">
       <publishTime>02/10/2025 11:21:14</publishTime>
@@ -256,136 +262,184 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Content/css/balanzia-application.css">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/css/balanzia-result.css">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/css/balanzia-wrapper-direct.css">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/css/bootstrap.min.css">
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Content/css/embedded-customerapplication-imitation.css">
-      <publishTime>04/02/2025 13:43:00</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Content/css/magellan-customerapplication.css">
-      <publishTime>04/02/2025 13:43:00</publishTime>
+      <publishTime>04/14/2025 17:25:55</publishTime>
+    </File>
+    <File Include="Content/css/magellan-customerpages.css">
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Content/css/ml-magellan-customerapplication.css">
-      <publishTime>04/02/2025 13:43:00</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
+    </File>
+    <File Include="Content/css/ml-magellan-customerpages.css">
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Content/css/reset.css">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/css/toastr.css">
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Content/img/Balanzia.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/Balanzia.svg">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/img/BankID_logo.svg">
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Content/img/body-bg.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/brocc-logo.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/favicon-32x32.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/favicon.svg">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/img/fi-cutout.png">
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Content/img/finlands-flagga.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-144x144.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-192x192.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-256x256.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-384x384.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-48x48.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-512x512.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-72x72.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/icon-96x96.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/img/loading.gif">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/img/se-cutout.png">
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Content/img/sveriges-flagga.png">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/js-transpiled/ntech_shared/common/angular-fileupload.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
+    </File>
+    <File Include="Content/js-transpiled/ntech_shared/common/ntech.booleans.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
+    </File>
+    <File Include="Content/js-transpiled/ntech_shared/common/ntech.dates.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
+    </File>
+    <File Include="Content/js-transpiled/ntech_shared/common/ntech.linq.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
+    </File>
+    <File Include="Content/js-transpiled/ntech_shared/common/ntech.navigationtarget.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
+    </File>
+    <File Include="Content/js-transpiled/ntech_shared/legacy/ntech.js.shared.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Content/js/angular-cookies.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular-fileupload.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular-locale_fi-fi.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular-resource.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular-translate-loader-url.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular-translate-storage-cookie.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular-translate-storage-local.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular-translate.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/angular.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/application.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/controllers/EidSignatureLogin/login-with-eid-signature.js">
-      <publishTime>04/01/2025 13:01:54</publishTime>
+      <publishTime>04/14/2025 15:11:34</publishTime>
+    </File>
+    <File Include="Content/js/controllers/translation-only.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Content/js/country-functions-fi.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/handle-angular-accessdenied.js">
-      <publishTime>04/02/2025 13:46:43</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Content/js/jquery-1.12.4.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/js/layout-support.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Content/js/moment.min.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/ntech-forms.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Content/js/ntech.js.shared.js">
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Content/js/wrapper-direct/main-additionalquestions.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/wrapper-direct/main-documentcheck.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/wrapper-direct/main-documentsource.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Content/js/wrapper-direct/main.js">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Controllers/ApplicationApiController.cs">
       <publishTime>02/10/2025 11:21:14</publishTime>
@@ -412,7 +466,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Global.asax">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Global.asax.cs">
       <publishTime>02/10/2025 11:21:14</publishTime>
@@ -427,7 +481,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>01/24/2024 10:25:51</publishTime>
     </File>
     <File Include="ngcccustomerapplication.appsettings.debug.config">
-      <publishTime>04/02/2025 13:34:38</publishTime>
+      <publishTime>01/24/2024 10:25:51</publishTime>
     </File>
     <File Include="nGccCustomerApplication.csproj">
       <publishTime>02/25/2025 10:38:08</publishTime>
@@ -439,7 +493,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>04/02/2025 08:54:12</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
+    </File>
+    <File Include="PrecompiledApp.config">
+      <publishTime>04/16/2025 14:52:29</publishTime>
     </File>
     <File Include="Properties/AssemblyInfo.cs">
       <publishTime>02/10/2025 11:21:14</publishTime>
@@ -448,91 +505,94 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/10/2025 11:21:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index_AdditionalQuestions.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index_AdditionalQuestions_Applicant.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index_Agreements.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index_DocumentCheck.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index_DocumentCheck_Applicant.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index_DocumentSource.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperDirect/Index_DocumentSource_Applicant.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperLink/ApplicationActive.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/ApplicationWrapperLink/ApplicationClosed.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/Balanzia/Applicant.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/Balanzia/Application.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/Balanzia/Failed.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/Balanzia/LocalResultPageBase.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/Balanzia/Success.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/Common/AccessDenied.cshtml">
-      <publishTime>04/01/2025 14:59:27</publishTime>
+      <publishTime>04/14/2025 18:27:23</publishTime>
     </File>
     <File Include="Views/Common/Error.cshtml">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
     </File>
     <File Include="Views/EidSignatureLogin/LoginWithEidSignature.cshtml">
-      <publishTime>04/01/2025 16:35:14</publishTime>
+      <publishTime>04/14/2025 17:49:11</publishTime>
     </File>
     <File Include="Views/EidSignatureLogin/LoginWithEidSignature_ApplicationsOverview.cshtml">
-      <publishTime>04/01/2025 10:03:42</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/EidSignatureLogin/LoginWithEidSignature_ContinueMortgageLoanApplication.cshtml">
-      <publishTime>04/01/2025 10:07:27</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/EidSignatureLogin/LoginWithEidSignature_SavingsStandardApplication.cshtml">
-      <publishTime>04/01/2025 10:00:32</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/EidSignatureLogin/LoginWithEidSignature_SharedForm.cshtml">
-      <publishTime>04/01/2025 09:43:11</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/EidSignatureLogin/LoginWithEidSignature_StandardOverview.cshtml">
-      <publishTime>04/01/2025 09:49:43</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/MockEidLogin/Login.cshtml">
-      <publishTime>04/04/2025 08:08:03</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/Shared/EmbedddedCustomerPagesSimpleMessage.cshtml">
-      <publishTime>04/02/2025 13:16:25</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/Shared/_EmbeddedCustomerPagesImitationLayout.cshtml">
-      <publishTime>04/02/2025 13:46:51</publishTime>
+      <publishTime>04/08/2025 15:48:11</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>04/04/2025 08:59:40</publishTime>
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Views/web.config">
-      <publishTime>03/28/2025 11:02:14</publishTime>
+      <publishTime>03/13/2025 14:36:14</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>04/14/2025 15:11:34</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/04/2025 11:04:32</publishTime>
+      <publishTime>04/16/2025 14:52:28</publishTime>
     </File>
     <File Include="Web.debug.config">
       <publishTime>02/25/2025 10:39:40</publishTime>
