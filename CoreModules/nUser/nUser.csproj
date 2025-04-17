@@ -124,23 +124,23 @@
     </Reference>
     <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\BaCS\CoreModules\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
+      <HintPath>..\NTech.Banking.Shared\bin\Debug\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\BaCS\CoreModules\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
+      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Core.User.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\BaCS\CoreModules\Core\NTech.Core.User.Shared\bin\Debug\netstandard2.0\NTech.Core.User.Shared.dll</HintPath>
+      <HintPath>..\Core\NTech.Core.User.Shared\bin\Debug\netstandard2.0\NTech.Core.User.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Legacy.Module.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\BaCS\CoreModules\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Services.Infrastructure, Version=1.0.9176.41490, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\BaCS\CoreModules\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>

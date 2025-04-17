@@ -122,10 +122,10 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Legacy.Module.Shared">
-      <HintPath>..\..\..\BaCS\CoreModules\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
+      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NTech.Services.Infrastructure">
-      <HintPath>..\..\..\BaCS\CoreModules\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
+      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
       <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>

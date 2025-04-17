@@ -1,54 +1,20 @@
 ﻿@{
     ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
-
 }
 
-@Styles.Render("~/Content/css/bundle-magellan-customerapplication")
+
 @section Scripts {
     <script>
         initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
     </script>
     @Scripts.Render("~/Content/js/bundle-angular-translateonly")
 }
-<style>
-    .info-box {
-        background-color: #f8f8f8;
-        border-radius: 12px;
-        padding: 20px;
-        max-width: 500px;
-        margin: 0 auto 20px auto;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        font-family: Arial, sans-serif;
-        text-align: left;
-    }
-
-        .info-box p {
-            margin: 0 0 10px 0;
-            color: #000;
-            font-size: 16px;
-        }
-
-        .info-box strong {
-            font-weight: 700;
-            font-size: 17px;
-        }
-
-        .info-box .highlight-link {
-            color: #f4a300;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-            .info-box .highlight-link:hover {
-                text-decoration: underline;
-            }
-</style>
 
 <div class="content">
     <div class="vh-50">
         <div class="aligned-center">
             <div class="info-box">
-                <p><strong>Welcome to My Pages!</strong></p>
+                <p><strong translate="AccessDenied_generalmessage"></strong></p>
                 <p>The product P2P is now only available on the old page that you find <a href="#" class="highlight-link">here</a>.</p>
             </div>
             @if (!ViewBag.IsTokenExpired)
@@ -73,6 +39,10 @@
 
     <!-- This is a hack to help detect access denied redirects from angular json posts. Make sure the guid below is somewhere in the new html if this page is changed -->
     <input type="hidden" name="accessdenieddetectionhelper" value="a0f9a6b5-3101-4bce-a0ca-39b9ddf01d09" />
+
+
 </div>
+
 <div class="clearfix"></div>
+
 

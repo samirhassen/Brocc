@@ -29,7 +29,7 @@ namespace nGccCustomerApplication
             //RouteConfig.RegisterRoutes(RouteTable.Routes);
             //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
             //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
-            RegisterBundles();
+           // RegisterBundles();
         }
 
         //http://www.asp.net/mvc/overview/performance/bundling-and-minification

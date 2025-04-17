@@ -4,7 +4,7 @@
     var isSavingsActive = NEnv.IsSavingsOverviewActive;
     var baseCountry = clientCfg.Country.BaseCountry;
     var productGroup = ViewBag.CurrentPageProductGroup ?? "";
-    var customFavIcon = clientCfg.OptionalSetting("ntech.customerpages.favicon");
+    var customFavIcon = clientCfg.OptionalSetting("ntech.customerapplication.favicon");
 }
 <!DOCTYPE html>
 <html>
@@ -26,6 +26,7 @@
     {
         @Styles.Render("~/Content/css/bundle-base")
         @Styles.Render("~/Content/css/bundle-magellan-customerapplication")
+
     }
     @RenderSection("Styles", false)
 
@@ -90,7 +91,8 @@
                 <li class="language-settings"><a data-changetolanguage="sv" href="#"><img src="~/Content/img/se-cutout.png" /></a></li>
                 if (!NEnv.IsProduction)
                 {
-                    <li class="language-settings">@NTech.ClockFactory.SharedInstance.Now.ToString("yyyy-MM-dd HH:mm")</li>
+
+                    @*<li class="language-settings">@NTech.ClockFactory.SharedInstance.Now.ToString("yyyy-MM-dd HH:mm")</li>*@
                 }
             }
         </ul>
@@ -108,5 +110,8 @@
             uiLanguageSwitcher.init()
         }
     </script>
+
+
+
 </body>
 </html>

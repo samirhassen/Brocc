@@ -45,10 +45,10 @@ namespace nCustomerPages.Controllers
                 translation = BaseController.GetTranslationsShared(this.Url, this.Request)
             })));
             ViewBag.IsTokenExpired = isTokenExpired ?? false;
-           
-            ViewBag.ShowLogin = !(Session == null || (Session != null && Session["EidSignatureCustomerTarget"] == null));
+
+            ViewBag.ShowLogin = true;// !(Session == null || (Session != null && Session["EidSignatureCustomerTarget"] == null));
             ViewBag.EidSignatureCustomerTarget =  Session != null && Session["EidSignatureCustomerTarget"] != null ? Session["EidSignatureCustomerTarget"].ToString() : "";
-            if (NEnv.IsStandardEmbeddedCustomerPagesEnabled)
+            if (!NEnv.IsStandardEmbeddedCustomerPagesEnabled)
             {
                 ViewBag.Message = "Du har loggat ut, saknar rättigheter eller har inga tjänster hos oss.";
                 return View("EmbedddedCustomerPagesSimpleMessage");

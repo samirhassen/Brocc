@@ -102,42 +102,87 @@ namespace nGccCustomerApplication.App_Start
             bundles.Add(new ScriptBundle("~/Content/js/bundle-handle-angular-accessdenied")
            .Include("~/Content/js/handle-angular-accessdenied.js"));
 
-
-            var sharedJs = new string[]
+            Func<string> getAngularLocale = () =>
             {
+                var c = NEnv.ClientCfg.Country.BaseCountry;
+                if (c == "SE")
+                    return "sv-se";
+                else if (c == "FI")
+                    return "fi-fi";
+                else
+                    throw new NotImplementedException();
+            };
+            var sharedJs = new string[]
+          {
                 "~/Content/js/jquery-1.12.4.min.js",
                 "~/Content/js/angular.min.js",
                 "~/Content/js/angular-locale_fi-fi.js",
                 "~/Content/js/moment.min.js",
-
-                "~/Content/js-transpiled/ntech_shared/common/*.js",
-                "~/Content/js-transpiled/ntech_shared/legacy/ntech.js.shared.js",
                 "~/Content/js/ntech-forms.js",
-
                 "~/Content/js/angular-cookies.min.js",
                 "~/Content/js/angular-translate.min.js",
                 "~/Content/js/angular-translate-storage-cookie.min.js",
                 "~/Content/js/angular-translate-storage-local.min.js",
                 "~/Content/js/angular-translate-loader-url.min.js",
                 "~/Content/js/country-functions-fi.js"
-            };
+          };
+            var sharedScripts = new string[]
+              {
+                    "~/Content/js/jquery-1.12.4.js",
+                    "~/Content/js/bootstrap.js",
+                    "~/Content/js/toastr.min.js",
+                    "~/Content/js/moment.js",
+                    "~/Content/js/underscore.js"
+              };
+
+            var angularScripts = new string[]
+                  {
+                    "~/Content/js/angular.min.js",
+                    $"~/Content/js/angular-locale_{getAngularLocale()}.js",
+                    "~/Content/js/angular-resource.min.js",
+                    "~/Content/js/angular-route.js",
+                    //BEGIN ANGULAR TRANSLATE
+                    "~/Content/js/translate/angular-cookies.min.js",
+                    "~/Content/js/translate/angular-translate.min.js",
+                    "~/Content/js/translate/angular-translate-storage-cookie.min.js",
+                    "~/Content/js/translate/angular-translate-storage-local.min.js",
+                    "~/Content/js/translate/angular-translate-loader-url.min.js",
+                    //END ANGULAR TRANSLATE
+                     "~/Content/js-transpiled/ntech_shared/common/*.js",
+                    "~/Content/js-transpiled/ntech_shared/legacy/ntech.js.shared.js",
+                    "~/Content/js/ntech-forms.js",
+                    //Components
+                    "~/Content/js-transpiled/ntech_shared/components/infrastructure/*.js",
+                    "~/Content/js-transpiled/infrastructure/*.js",
+                    "~/Content/js-transpiled/componentsbase.js",
+                    "~/Content/js-transpiled/ntech_shared/components/components/*.js",
+                    "~/Content/js-transpiled/components/*.js",
+                    "~/Content/js-transpiled/customerpages-api-client.js"
+                  };
 
             //New Added
+
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-base")
+                 .Include(sharedScripts));
+
+            bundles.Add(new ScriptBundle("~/Content/js/bundle-basewithangular")
+                .Include(sharedScripts)
+                .Include(angularScripts));
+
             //Translation only
             bundles.Add(new ScriptBundle("~/Content/js/bundle-angular-translateonly")
-                .Include(sharedJs)
-                .Include(sharedJs)
+                .Include(sharedScripts)
+                .Include(angularScripts)
                 .Include("~/Content/js/controllers/translation-only.js"));
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-login-with-eid-signature")
-            .Include(sharedJs)
-            .Include("~/Content/js/controllers/EidSignatureLogin/login-with-eid-signature.js"));
+                  .Include(sharedScripts)
+                  .Include(angularScripts)
+                  .Include("~/Content/js/controllers/EidSignatureLogin/login-with-eid-signature.js"));
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-balanzia-application")
                 .Include(sharedJs)
                 .Include("~/Content/js/application.js"));
-
-
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-balanzia-wrapper-direct")
                 .Include(sharedJs)
