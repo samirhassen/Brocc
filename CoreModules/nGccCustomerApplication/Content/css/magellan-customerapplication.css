@@ -1293,3 +1293,35 @@ hr.line {
     -o-user-select: none;
     user-select: none;
 }
+
+.info-box {
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-family: Arial, sans-serif;
+    text-align: left;
+}
+
+.info-box p {
+    margin: 0 0 10px 0;
+    color: #000;
+    font-size: 16px;
+}
+
+.info-box strong {
+    font-weight: 700;
+    font-size: 17px;
+}
+
+.info-box .highlight-link {
+    color: #f4a300;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.info-box .highlight-link:hover {
+    text-decoration: underline;
+}

@@ -1,30 +1,42 @@
 ﻿@{
     ViewBag.AngularDeclaration = "ng-app=\"app\" ng-cloak translate-cloak";
+
 }
 
-
+@Styles.Render("~/Content/css/bundle-magellan-customerapplication")
 @section Scripts {
     <script>
         initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
     </script>
     @Scripts.Render("~/Content/js/bundle-angular-translateonly")
 }
+<div class="navigation">
+    <div class="content-position">
+        <div class="branding">
+            <a href="@Url.Action("Index", "#")">
+                <img src="@Url.Content("~/Content/img/brocc-logo.png")" style="max-height:38px;">
+            </a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
 
 <div class="content">
     <div class="vh-50">
         <div class="aligned-center">
-            <div class="info-box">
-                <p><strong translate="AccessDenied_generalmessage"></strong></p>
-                <p>The product P2P is now only available on the old page that you find <a href="#" class="highlight-link">here</a>.</p>
-            </div>
             @if (!ViewBag.IsTokenExpired)
             {
-                <p translate="AccessDenied_generalmessage" />
+                <div class="info-box">
+                    <p translate="customerApplication_Login_Title"><strong>Välkommen till Brocc låneansökan</strong></p>
+                    <p translate="customerApplication_Login_Body">För att fullborda din låneansökan behöver du logga in.</p>
+                </div>
             }
             @if (ViewBag.IsTokenExpired)
             {
-                <p translate="AccessDenied_tokenexpiredmessage" />
-
+                <div class="info-box">
+                    <p translate="customerApplication_TokenExpired_Title"><strong>Din session har gått ut</strong></p>
+                    <p translate="customerApplication_TokenExpired_Body">Logga in igen för att återgå till din låneansökan.</p>
+                </div>
             }
             @if (ViewBag.ShowLogin)
             {
@@ -39,10 +51,6 @@
 
     <!-- This is a hack to help detect access denied redirects from angular json posts. Make sure the guid below is somewhere in the new html if this page is changed -->
     <input type="hidden" name="accessdenieddetectionhelper" value="a0f9a6b5-3101-4bce-a0ca-39b9ddf01d09" />
-
-
 </div>
-
 <div class="clearfix"></div>
-
 

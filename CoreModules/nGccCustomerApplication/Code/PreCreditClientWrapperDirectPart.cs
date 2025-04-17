@@ -188,9 +188,9 @@ namespace nGccCustomerApplication
 
         public ApplicationState GetApplicationState(string token)
         {
-            
-           // var result = Call<StateWrapper<ApplicationState>>("api/creditapplication-wrapper-direct/fetch-application-state", new { token = token });
+            var result = Call<StateWrapper<ApplicationState>>("api/creditapplication-wrapper-direct/fetch-application-state", new { token = token });
 
+            /* //Mocking Object
             var result = new Tuple<bool, StateWrapper<ApplicationState>>(true,
             new StateWrapper<ApplicationState>
             {
@@ -268,7 +268,7 @@ namespace nGccCustomerApplication
                 }
             }
         );
-
+            */
 
 
             var activeState = result?.Item2?.State?.ActiveState;

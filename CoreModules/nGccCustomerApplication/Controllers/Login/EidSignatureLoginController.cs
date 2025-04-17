@@ -79,6 +79,8 @@ namespace nGccCustomerApplication.Controllers.Login
             ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new
             {
                 translation = GetTranslations(),
+                svTranslations = Translations.FetchTranslation("sv"),
+                fiTranslations = Translations.FetchTranslation("fi"),
                 targetName = targetName,
                 targetCustomData = targetCustomData,
                 isSavingsApplicationActive = NEnv.IsSavingsApplicationActive,
