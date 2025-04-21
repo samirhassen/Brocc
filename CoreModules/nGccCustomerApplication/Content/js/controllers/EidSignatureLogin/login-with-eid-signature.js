@@ -22,7 +22,7 @@ app.controller('ctr', ['$scope', '$http', '$q', '$translate', '$timeout', functi
 
     $scope.isValidCivicNr = function (value) {
         if (isNullOrWhitespace(value))
-            return true;
+            return false;
         if ($scope.baseCountry === 'SE') {
             return ntech.se.isValidCivicNr(value)
         } else {
