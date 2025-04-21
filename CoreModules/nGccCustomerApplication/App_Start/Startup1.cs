@@ -87,15 +87,7 @@ namespace nGccCustomerApplication.App_Start
 
             RegisterStyles(bundles);
 
-            bundles.Add(new StyleBundle("~/Content/css/bundle-balanzia-application")
-                .Include("~/Content/css/reset.css")
-                .Include("~/Content/css/balanzia-application.css"));
-
-            bundles.Add(new StyleBundle("~/Content/css/bundle-balanzia-wrapper-direct")
-                .Include("~/Content/css/reset.css")
-                .Include("~/Content/css/balanzia-wrapper-direct.css"));
-
-            //New Added
+        
             bundles.Add(new ScriptBundle("~/Content/js/bundle-layout-support")
                .Include("~/Content/js/layout-support.js"));
 
@@ -219,6 +211,15 @@ namespace nGccCustomerApplication.App_Start
             bundles.Add(new StyleBundle("~/Content/css/embedded-customerapplication-imitation")
                 .Include(sharedStyles)
                 .Include("~/Content/css/embedded-customerapplication-imitation.css"));
+
+            bundles.Add(new StyleBundle("~/Content/css/bundle-balanzia-application")
+            .Include("~/Content/css/reset.css")
+            .Include("~/Content/css/balanzia-application.css"));
+
+            bundles.Add(new StyleBundle("~/Content/css/bundle-balanzia-wrapper-direct")
+                .Include("~/Content/css/reset.css")
+                .Include("~/Content/css/balanzia-wrapper-direct.css"));
+
         }
     }
 }
