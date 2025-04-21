@@ -52,7 +52,7 @@ namespace nGccCustomerApplication.Controllers
         [Route("access-denied")]
         public ActionResult AccessDenied(bool? isTokenExpired)
         {
-            ViewBag.HideHeader = true;
+            ViewBag.HideHeader = false;
             ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new
             {
                 translation = BaseController.GetTranslationsShared(this.Url, this.Request)

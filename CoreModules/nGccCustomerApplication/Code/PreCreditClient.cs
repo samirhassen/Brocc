@@ -10,19 +10,6 @@ namespace nGccCustomerApplication.Code
 {
     public class PreCreditClient
     {
-        //private readonly Func<string> getBearerToken;
-        //public PreCreditClient(Func<string> getBearerToken)
-        //{
-        //    this.getBearerToken = getBearerToken;
-        //}
-        //private NHttp.NHttpCall Begin(TimeSpan? timeout = null)
-        //{
-        //    return NHttp
-        //        .Begin(
-        //            NEnv.ServiceRegistry.Internal.ServiceRootUri("nPreCredit"),
-        //            getBearerToken(),
-        //            timeout ?? TimeSpan.FromSeconds(45));
-        //}
         private Tuple<bool, TResponse> Call<TResponse>(string uri, object input, string bearerToken = null) where TResponse : class
         {
             Func<Tuple<bool, TResponse>> fail = () =>

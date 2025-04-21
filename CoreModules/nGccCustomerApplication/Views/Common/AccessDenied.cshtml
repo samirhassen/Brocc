@@ -10,16 +10,6 @@
     </script>
     @Scripts.Render("~/Content/js/bundle-angular-translateonly")
 }
-<div class="navigation">
-    <div class="content-position">
-        <div class="branding">
-            <a href="@Url.Action("Index", "#")">
-                <img src="@Url.Content("~/Content/img/brocc-logo.png")" style="max-height:38px;">
-            </a>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-</div>
 
 <div class="content">
     <div class="vh-50">
@@ -27,15 +17,15 @@
             @if (!ViewBag.IsTokenExpired)
             {
                 <div class="info-box">
-                    <p translate="customerApplication_Login_Title"><strong>Välkommen till Brocc låneansökan</strong></p>
-                    <p translate="customerApplication_Login_Body">För att fullborda din låneansökan behöver du logga in.</p>
+                    <p translate="customerapp_title"><strong></strong></p>
+                    <p translate="customerapp_body"></p>
                 </div>
             }
             @if (ViewBag.IsTokenExpired)
             {
                 <div class="info-box">
-                    <p translate="customerApplication_TokenExpired_Title"><strong>Din session har gått ut</strong></p>
-                    <p translate="customerApplication_TokenExpired_Body">Logga in igen för att återgå till din låneansökan.</p>
+                    <p translate="tokenexpired_title"><strong></strong></p>
+                    <p translate="tokenexpired_body"></p>
                 </div>
             }
             @if (ViewBag.ShowLogin)
