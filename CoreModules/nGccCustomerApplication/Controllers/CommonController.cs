@@ -58,7 +58,7 @@ namespace nGccCustomerApplication.Controllers
                 translation = BaseController.GetTranslationsShared(this.Url, this.Request)
             })));
             ViewBag.IsTokenExpired = isTokenExpired ?? false;
-            ViewBag.ShowLogin = true; // !(Session == null || (Session != null && Session["EidSignatureCustomerApplicationTarget"] == null));
+            ViewBag.ShowLogin = true; 
             ViewBag.EidSignatureCustomerTarget = Session != null && Session["EidSignatureCustomerApplicationTarget"] != null ? Session["EidSignatureCustomerApplicationTarget"].ToString() : "";
             return View();
         }

@@ -40,6 +40,9 @@ namespace nGccCustomerApplication.Code
         // This method must be thread-safe since it is called by the thread-safe OnCacheAuthorization() method.
         protected virtual bool AuthorizeCore(HttpContextBase httpContext)
         {
+            if(httpContext.Request.Url.AbsoluteUri.Contains("application-wrapper-link"))
+                httpContext.Session["application-wrapper-token"] = httpContext.Request.Params["id"];
+            
             var isOk = AuthorizeCoreI(httpContext);
             if (ValidateAccessToken && isOk)
             {
