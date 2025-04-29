@@ -33,7 +33,7 @@ namespace nCustomer.Controllers.Api
                 {
                     var user = GetCurrentUserMetadata().CoreUser;
                     var ftpClient = CreateFtpClient(ftpSettings);
-                    Func<ISftpClient> createFtpClient = () => new RenciSftpClient(ftpClient);
+                    Func<Code.Services.Aml.Cm1.ISftpClient> createFtpClient = () => new RenciSftpClient(ftpClient);
 
                     var cm1Service = new CM1ImportService(Service.KeyValueStore, user,
                         resolver.CustomerContextFactory, resolver.Logging, createFtpClient, ftpSettings);
@@ -73,7 +73,7 @@ namespace nCustomer.Controllers.Api
             }
         }
 
-        public class RenciSftpClient : ISftpClient
+        public class RenciSftpClient : Code.Services.Aml.Cm1.ISftpClient
         {
             private readonly Lazy<SftpClient> client;
 
