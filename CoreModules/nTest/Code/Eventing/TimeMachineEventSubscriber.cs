@@ -1,4 +1,5 @@
-﻿using NTech.Services.Infrastructure.Eventing;
+﻿using Duende.IdentityModel.Client;
+using NTech.Services.Infrastructure.Eventing;
 using nTest.Code;
 using Serilog;
 using System;

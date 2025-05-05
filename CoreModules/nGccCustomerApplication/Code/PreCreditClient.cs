@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Duende.IdentityModel.Client;
+using Newtonsoft.Json;
 using NTech.Services.Infrastructure;
 using Serilog;
 using System;
@@ -25,7 +26,7 @@ namespace nGccCustomerApplication.Code
                 client.BaseAddress = new Uri(NEnv.ServiceRegistry.Internal["nPreCredit"]);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.SetBearerToken(bearerToken);
+                client.SetBearerToken(bearerToken);             
                 var response = client.PostAsJsonAsync(uri, input).Result;
                 if (response.IsSuccessStatusCode)
                 {

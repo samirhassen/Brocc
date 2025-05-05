@@ -16,7 +16,7 @@ namespace NTech.Services.Infrastructure
         private readonly CancellationTokenSource token = new CancellationTokenSource();
         private readonly Func<string, string> getServiceAddress;
         private readonly Lazy<NTechSelfRefreshingBearerToken> bearerToken;
-
+        
         public NTechSerilogSink(Func<string, string> getServiceAddress, Lazy<NTechSelfRefreshingBearerToken> bearerToken = null)
             : base(50, TimeSpan.FromSeconds(5))
         {
@@ -125,7 +125,7 @@ namespace NTech.Services.Infrastructure
                         //TODO: Make bearerToken mandatory and get rid of this branch and delete the api in NTechHost
                         endpoint = "Api/SystemLog/Create-Batch-Legacy";
                     }
-                    await client.PostAsJsonAsync(endpoint, new { items = items }, token.Token).ConfigureAwait(false);
+                    await client.PostAsJsonAsync(endpoint, new { items = items }, token.Token).ConfigureAwait(false);                    
                 }
             }
             catch (Exception ex)

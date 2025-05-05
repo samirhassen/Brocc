@@ -1,4 +1,5 @@
-﻿using IdentityModel.Client;
+﻿
+using Duende.IdentityModel.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,21 +38,25 @@ namespace NTech.Services.Infrastructure
         }
 
         public static string AquireSystemUserAccessTokenWithUsernamePassword(string username, string password, Uri userServiceUrl)
-        {
-            var tokenClient = new TokenClient(
-                NTechServiceRegistry.CreateUrl(userServiceUrl, "id/connect/token").ToString(),
-                "nTechSystemUser",
-                "nTechSystemUser");
+        {            
+            var client = new HttpClient();
 
-            var token = tokenClient.RequestResourceOwnerPasswordAsync(username, password, scope: "nTech1").Result;
-
-            if (token.IsError)
+            var token =  client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
-                throw new Exception(token.Error);
+                Address = NTechServiceRegistry.CreateUrl(userServiceUrl, "id/connect/token").ToString(),
+                ClientId = username,
+                ClientSecret = password,
+                Scope = "nTech1",
+                GrantType = "client_credential",
+            });           
+
+            if (token.Result.IsError)
+            {
+                throw new Exception(token.Result.Error);
             }
             else
             {
-                return token.AccessToken;
+                return token.Result.AccessToken;
             }
         }
 

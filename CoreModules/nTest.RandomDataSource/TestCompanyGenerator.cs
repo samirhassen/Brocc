@@ -1,4 +1,4 @@
-﻿using Ionic.Zip;
+﻿
 using NTech.Banking.BankAccounts;
 using NTech.Banking.CivicRegNumbers;
 using NTech.Banking.OrganisationNumbers;
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 
 namespace nTest.RandomDataSource
@@ -154,21 +155,29 @@ namespace nTest.RandomDataSource
 
             return p;
         }
-
+        public Stream ConvertStreamReaderToStream(StreamReader reader)
+        {
+            // Access the underlying stream from the StreamReader
+            return reader.BaseStream;
+        }
         private Dictionary<string, string> CreateUcSeTestCreditReport(IRandomnessSource random, bool isAccepted, Func<Stream, string> storeHtmlDocumentInArchive)
         {
             var result = new Dictionary<string, string>();
 
             var companyCreditReportHtmlArchiveKey = EmbeddedResources.UsingStream("exempel_foretagsuc.zip", s =>
             {
-                using (ZipFile zip = ZipFile.Read(s))
+                
+
+                using (var archive = new ZipArchive(s, ZipArchiveMode.Read))
                 {
-                    var report = zip.Entries.First(x => x.FileName.EndsWith(".html"));
-                    using (var r = report.OpenReader())
+                    var reportEntry = archive.Entries.FirstOrDefault(x => x.FullName.EndsWith(".html"));
+                    using (var reader = new StreamReader(reportEntry.Open()))
                     {
-                        return storeHtmlDocumentInArchive(r);
+                        return storeHtmlDocumentInArchive(ConvertStreamReaderToStream(reader));
                     }
                 }
+
+
             });
 
             result["htmlReportArchiveKey"] = companyCreditReportHtmlArchiveKey;

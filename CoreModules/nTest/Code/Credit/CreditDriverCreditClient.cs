@@ -1,4 +1,5 @@
-﻿using NTech.Core.Module.Shared.Clients;
+﻿using Duende.IdentityModel.Client;
+using NTech.Core.Module.Shared.Clients;
 using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace nTest.Controllers
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("X-Ntech-TimetravelTo", TimeMachine.SharedInstance.GetCurrentTime().ToString("o"));
-            client.SetBearerToken(NEnv.AutomationBearerToken());
+            client.SetBearerToken(NEnv.AutomationBearerToken());            
             client.Timeout = TimeSpan.FromMinutes(30);
             return client;
         }

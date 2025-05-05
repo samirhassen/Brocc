@@ -1,4 +1,4 @@
-﻿using IdentityModel.Client;
+﻿using Duende.IdentityModel.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NTech.ElectronicSignatures;
@@ -187,13 +187,15 @@ namespace nCustomer.Services.EidSignatures.Assently
         }
 
         protected async Task<string> GetCredentialTokenAsync()
-        {
-            var tokenClient = new TokenClient(
-                                      this.apiEndpoint + "/apiv3/token",
-                                      this.credentials.ClientCredentialsIdentifier,
-                                      this.credentials.ClientCredentialsSecret);
-
-            var token = await tokenClient.RequestClientCredentialsAsync();
+        {            
+            var client = new HttpClient();
+            var token = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = this.apiEndpoint + "/apiv3/token",
+                ClientId = "nTechSystemUser",
+                ClientSecret = "nTechSystemUser",
+                Scope = "nTech1"
+            });
 
             if (token.IsError || token.AccessToken == null)
             {

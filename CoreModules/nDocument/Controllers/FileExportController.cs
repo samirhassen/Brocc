@@ -1,6 +1,6 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Transfer;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Azure.Storage.Blobs;
 using nDocument.Code.Archive;
 using nDocument.Code.FileExport;
 using NTech.Services.Infrastructure;
@@ -87,12 +87,17 @@ namespace nDocument.Controllers
                     case ExportProfileRepository.ExportProfileCode.AzureBucket:
                         {
                             var p = profile as ExportProfileRepository.AzureBucketProfile;
-                            var c = new CloudBlobContainer(new Uri(p.SasContainerUrl));
-                            if (string.IsNullOrWhiteSpace(c.Name))
-                                throw (new ApplicationException("Azure CloudBlobContainer is missing in profile: " + p.Name));
-                            c.CreateIfNotExists();
-                            var blockBlob = c.GetBlockBlobReference(filename);
-                            blockBlob.UploadFromStream(getFileStream());
+
+                            var containerClient = new BlobContainerClient(new Uri(p.SasContainerUrl));
+
+                            if (string.IsNullOrWhiteSpace(containerClient.Uri.Segments.LastOrDefault()?.TrimEnd('/')))
+                                throw new ApplicationException("Azure BlobContainerClient is missing in profile: " + p.Name);
+
+                             containerClient.CreateIfNotExists();
+
+                            // Get blob client and upload stream
+                            var blobClient = containerClient.GetBlobClient(filename);
+                             blobClient.Upload(getFileStream(), overwrite: true);
 
                             return true;
                         }

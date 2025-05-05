@@ -66,10 +66,10 @@ namespace nCredit.Code.EInvoiceFi
 
             private class FileItem : IFtpItem
             {
-                private Renci.SshNet.Sftp.SftpFile f;
+                private Renci.SshNet.Sftp.ISftpFile f;
                 private Renci.SshNet.SftpClient c;
 
-                public FileItem(Renci.SshNet.Sftp.SftpFile f, Renci.SshNet.SftpClient c)
+                public FileItem(Renci.SshNet.Sftp.ISftpFile f, Renci.SshNet.SftpClient c)
                 {
                     this.f = f;
                     this.c = c;

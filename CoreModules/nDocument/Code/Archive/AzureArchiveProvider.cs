@@ -1,5 +1,7 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+﻿
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,12 +11,13 @@ namespace nDocument.Code.Archive
 {
     public class AzureArchiveProvider : IArchiveProvider
     {
-        private static T WithContainer<T>(Func<CloudBlobContainer, T> a)
+        private static T WithContainer<T>(Func<BlobContainerClient, T> a)
         {
+
+           
+
             var settings = NEnv.AzureStorageContainernameAndConnectionstring;
-            var storageAccount = CloudStorageAccount.Parse(settings.Item2);
-            var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(settings.Item1);
+            BlobContainerClient container = new BlobContainerClient(settings.Item2, settings.Item1);       
             return a(container);
         }
 
@@ -27,21 +30,25 @@ namespace nDocument.Code.Archive
         {
             return WithContainer(container =>
             {
-                var blockBlob = container.GetBlockBlobReference(BlobNameFromKey(key));
+               // var blockBlob = container.GetBlockBlobReference(BlobNameFromKey(key));
+                BlobClient blockBlob = container.GetBlobClient(BlobNameFromKey(key));
                 if (!blockBlob.Exists())
                     return null;
 
+                
                 var ms = new MemoryStream();
-                blockBlob.DownloadToStream(ms);
+                blockBlob.DownloadTo(ms);
 
                 ms.Position = 0;
+                var properties =  blockBlob.GetProperties();
+               
 
                 return new ArchiveFetchResult
                 {
                     Content = ms,
-                    ContentType = blockBlob.Properties.ContentType,
-                    FileName = Uri.UnescapeDataString(blockBlob.Metadata["ntechfilename"]),
-                    OptionalData = ParseOptionalData(blockBlob)
+                    ContentType = properties.Value.ContentType,
+                    FileName = Uri.UnescapeDataString(properties.Value.Metadata["ntechfilename"]),
+                    OptionalData = ParseOptionalData(properties.Value.Metadata)
                 };
             });
         }
@@ -57,26 +64,35 @@ namespace nDocument.Code.Archive
             return TryStore(new MemoryStream(fileBytes), mimeType, filename, out key, out errorMessage, optionalData: optionalData);
         }
 
-        private ArchiveOptionalData ParseOptionalData(CloudBlockBlob blockBlob)
-        {
-            Func<IDictionary<string, string>, string, string> getOpt = (d, name) => d.ContainsKey(name) ? d[name] : null;
+        //private ArchiveOptionalData ParseOptionalData(BlobClient blockBlob)
+        //{
+        //    Func<IDictionary<string, string>, string, string> getOpt = (d, name) => d.ContainsKey(name) ? d[name] : null;
 
-            return ArchiveOptionalData.Parse(name => getOpt(blockBlob.Metadata, name));
+        //    return ArchiveOptionalData.Parse(name => getOpt(blockBlob.Metadata, name));
+        //}
+
+        private ArchiveOptionalData ParseOptionalData(IDictionary<string, string> metadata)
+        {
+            return ArchiveOptionalData.Parse(name => metadata.TryGetValue(name, out var value) ? value : null);
         }
 
         public ArchiveMetadataFetchResult FetchMetadata(string key)
         {
             return WithContainer(container =>
             {
-                var blockBlob = container.GetBlockBlobReference(BlobNameFromKey(key));
+                BlobClient blockBlob = container.GetBlobClient(BlobNameFromKey(key));
+
+                //var blockBlob = container.GetBlockBlobReference(BlobNameFromKey(key));
                 if (!blockBlob.Exists())
                     return null;
 
+                var properties = blockBlob.GetProperties();
+
                 return new ArchiveMetadataFetchResult
                 {
-                    ContentType = blockBlob.Properties.ContentType,
-                    FileName = Uri.UnescapeDataString(blockBlob.Metadata["ntechfilename"]),
-                    OptionalData = ParseOptionalData(blockBlob)
+                    ContentType = properties.Value.ContentType,
+                    FileName = Uri.UnescapeDataString(properties.Value.Metadata["ntechfilename"]),
+                    OptionalData = ParseOptionalData(properties.Value.Metadata)
                 };
             });
         }
@@ -85,7 +101,8 @@ namespace nDocument.Code.Archive
         {
             return WithContainer(container =>
             {
-                var blockBlob = container.GetBlockBlobReference(BlobNameFromKey(key));
+                BlobClient blockBlob = container.GetBlobClient(BlobNameFromKey(key));
+
                 return blockBlob.DeleteIfExists();
             });
         }
@@ -103,7 +120,7 @@ namespace nDocument.Code.Archive
                 {
                     return TryStoreActual(file, mimeType, filename, optionalData);
                 }
-                catch (StorageException ex)
+                catch (RequestFailedException ex) when (ex.Status == 404)
                 {
                     if (tryNr == 1)
                     {
@@ -147,11 +164,36 @@ namespace nDocument.Code.Archive
 
             return WithContainer<(bool Success, string Key, string ErrorMessage)>(container =>
             {
-                var blockBlob = container.GetBlockBlobReference(BlobNameFromKey(innerKey));
-                blockBlob.Properties.ContentType = mimeType;
-                blockBlob.Metadata["ntechfilename"] = Uri.EscapeDataString(filename);
-                optionalData?.SetOptionalData((x, y) => blockBlob.Metadata[x] = y);
-                blockBlob.UploadFromStream(file);
+                // var blockBlob = container.GetBlockBlobReference(BlobNameFromKey(innerKey));
+
+                //blockBlob.Properties.ContentType = mimeType;
+                // blockBlob.Metadata["ntechfilename"] = Uri.EscapeDataString(filename);
+                // optionalData?.SetOptionalData((x, y) => blockBlob.Metadata[x] = y);
+                // blockBlob.UploadFromStream(file);
+
+             
+                var blobClient = container.GetBlobClient(BlobNameFromKey(innerKey));
+
+                // Build metadata dictionary
+                var metadata = new Dictionary<string, string>
+                {
+                    ["ntechfilename"] = Uri.EscapeDataString(filename)
+                };
+
+                // Add optional metadata if provided
+                optionalData?.SetOptionalData((key, value) => metadata[key] = value);
+
+                // Upload with metadata and content type
+                var blobHttpHeaders = new BlobHttpHeaders
+                {
+                    ContentType = mimeType
+                };
+
+                 blobClient.Upload(file, new BlobUploadOptions
+                {
+                    HttpHeaders = blobHttpHeaders,
+                    Metadata = metadata
+                });
 
                 return (true, innerKey, null);
             });

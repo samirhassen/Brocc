@@ -1,4 +1,4 @@
-﻿using IdentityModel.Client;
+﻿using Duende.IdentityModel.Client;
 using nCustomer.Code.Services.Aml.Cm1;
 using Newtonsoft.Json;
 using NTech.Banking.CivicRegNumbers;
@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Xml.Linq;
 
 namespace nCustomer
@@ -243,20 +244,26 @@ namespace nCustomer
         {
             return NTechCache.WithCache("nCustomerEventAutomation.95ed3beb-1593-4b54-94b2-760a32e640cd", TimeSpan.FromMinutes(3), () =>
             {
-                var tokenClient = new TokenClient(
-                                        new Uri(new Uri(NEnv.ServiceRegistry.Internal["nUser"]), "id/connect/token").ToString(),
-                                        "nTechSystemUser",
-                                        "nTechSystemUser");
+             
 
+                var client = new HttpClient();
                 var credentials = NEnv.ApplicationAutomationUsernameAndPassword;
-                var token = tokenClient.RequestResourceOwnerPasswordAsync(credentials.Item1, credentials.Item2, scope: "nTech1").Result;
-
-                if (token.IsError)
+                var token = client.RequestPasswordTokenAsync(new PasswordTokenRequest()
                 {
-                    throw new Exception("Bearer token login failed in nPreCredit event automation :" + token.Error);
+                    Address = NEnv.ServiceRegistry.Internal.ServiceUrl("nUser", "id/connect/token").ToString(),
+                    ClientId = "nTechSystemUser",
+                    ClientSecret = "nTechSystemUser",
+                    UserName = credentials.Item1,
+                    Password = credentials.Item2,
+                    Scope = "nTech1"
+                });
+
+                if (token.Result.IsError)
+                {
+                    throw new Exception("Bearer token login failed in nPreCredit event automation :" + token.Result.Error);
                 }
 
-                return token.AccessToken;
+                return token.Result.AccessToken;
             });
         }
 
