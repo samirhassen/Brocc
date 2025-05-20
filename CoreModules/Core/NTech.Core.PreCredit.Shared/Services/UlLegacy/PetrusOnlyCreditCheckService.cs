@@ -81,9 +81,6 @@ namespace NTech.Core.PreCredit.Shared.Services.UlLegacy
 
             try
             {
-                //For Testing
-                Thread.Sleep(10000);
-                throw new NTechCoreWebserviceException("TimeOut exception");
                 if (!supressCheckpointCheck && applicationCheckpointService.DoesAnyApplicationHaveAnActiveCheckpoint(applicationNr))
                 {
                     AddComment("Automatic credit check skipped due to customer checkpoint", "CreditCheckAcceptedAutomationSkipped", true, now, applicationNr);

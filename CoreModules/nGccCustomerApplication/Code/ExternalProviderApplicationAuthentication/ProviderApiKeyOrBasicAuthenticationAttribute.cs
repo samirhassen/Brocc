@@ -99,7 +99,7 @@ namespace nGccCustomerApplication.Code
             client.BaseAddress = new Uri(NEnv.ServiceRegistry.Internal["nUser"]);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.SetBearerToken(bearerToken);
+            AuthorizationHeaderExtensions.SetBearerToken(client, bearerToken);
             var response = client.PostAsJsonAsync("User/GetProviderNameForCurrentUser", new { }).Result;
             response.EnsureSuccessStatusCode();
             var rr = response.Content.ReadAsAsync<GetProviderNameResult>().Result;
