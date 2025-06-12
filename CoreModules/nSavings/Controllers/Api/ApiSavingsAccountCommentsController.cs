@@ -1,12 +1,15 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
-using NTech.Services.Infrastructure;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.Code;
+using nSavings.Code.nUser;
+using nSavings.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [RoutePrefix("Api/SavingsAccountComment")]
@@ -20,7 +23,9 @@ namespace nSavings.Controllers
 
         [HttpPost]
         [Route("Create")]
-        public ActionResult Create(string savingsAccountNr, string commentText, string eventType, bool? dontReturnComment, string attachedFileAsDataUrl, string attachedFileName, int? customerSecureMessageId)
+        public ActionResult Create(string savingsAccountNr, string commentText, string eventType,
+            bool? dontReturnComment, string attachedFileAsDataUrl, string attachedFileName,
+            int? customerSecureMessageId)
         {
             if (string.IsNullOrWhiteSpace(savingsAccountNr) || string.IsNullOrWhiteSpace(commentText))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr or commentText");
@@ -29,17 +34,18 @@ namespace nSavings.Controllers
             string mimeType = null;
             if (!string.IsNullOrWhiteSpace(attachedFileAsDataUrl) && !string.IsNullOrWhiteSpace(attachedFileName))
             {
-                byte[] fileData;
-                if (!TryParseDataUrl(attachedFileAsDataUrl, out mimeType, out fileData))
+                if (!TryParseDataUrl(attachedFileAsDataUrl, out mimeType, out var fileData))
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid attached file");
                 }
+
                 var client = new DocumentClient();
                 attachedFileArchiveDocumentKey = client.ArchiveStore(fileData, mimeType, attachedFileName);
             }
 
             var attachment = attachedFileArchiveDocumentKey == null
-                ? null : new { archiveKey = attachedFileArchiveDocumentKey, filename = attachedFileName, mimeType = mimeType };
+                ? null
+                : new { archiveKey = attachedFileArchiveDocumentKey, filename = attachedFileName, mimeType = mimeType };
 
             var now = Clock.Now;
             using (var context = new SavingsContext())
@@ -65,22 +71,20 @@ namespace nSavings.Controllers
                 {
                     return Json2(new { Id = c.Id });
                 }
-                else
+
+                var userClient = new UserClient();
+                return Json2(new
                 {
-                    var userClient = new Code.UserClient();
-                    return Json2(new
+                    Id = c.Id,
+                    comment = new
                     {
-                        Id = c.Id,
-                        comment = new
-                        {
-                            CommentDate = c.CommentDate,
-                            CommentText = c.CommentText,
-                            ArchiveLinks = AttachmentArchiveLinks(c.Attachment),
-                            DisplayUserName = userClient.GetUserDisplayNameByUserId(c.CommentById.ToString()),
-                            CustomerSecureMessageId = customerSecureMessageId
-                        }
-                    });
-                }
+                        CommentDate = c.CommentDate,
+                        CommentText = c.CommentText,
+                        ArchiveLinks = AttachmentArchiveLinks(c.Attachment),
+                        DisplayUserName = userClient.GetUserDisplayNameByUserId(c.CommentById.ToString()),
+                        CustomerSecureMessageId = customerSecureMessageId
+                    }
+                });
             }
         }
 
@@ -88,25 +92,27 @@ namespace nSavings.Controllers
         {
             if (attachment == null)
                 return null;
-            var item = JsonConvert.DeserializeAnonymousType(attachment, new { archiveKey = "", filename = "", mimeType = "", archiveKeys = new string[] { } });
+            var item = JsonConvert.DeserializeAnonymousType(attachment,
+                new { archiveKey = "", filename = "", mimeType = "", archiveKeys = new string[] { } });
             if (item == null)
                 return null;
-            else if (item.archiveKeys != null)
-                return item.archiveKeys.Select(x => Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = x })).ToList();
-            else if (item.archiveKey != null)
-                return new List<string>() { Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = item.archiveKey }) };
-            else
-                return null;
+            if (item.archiveKeys != null)
+                return item.archiveKeys
+                    .Select(x => Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = x })).ToList();
+            if (item.archiveKey != null)
+                return new List<string>()
+                    { Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = item.archiveKey }) };
+            return null;
         }
 
         [Route("LoadForSavingsAccount")]
-        public ActionResult LoadForSavingsAccount(string savingsAccountNr, List<string> excludeTheseEventTypes, List<string> onlyTheseEventTypes)
+        public ActionResult LoadForSavingsAccount(string savingsAccountNr, List<string> excludeTheseEventTypes,
+            List<string> onlyTheseEventTypes)
         {
             if (string.IsNullOrWhiteSpace(savingsAccountNr))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr");
-            var now = Clock.Now;
 
-            var userClient = new Code.UserClient();
+            var userClient = new UserClient();
             using (var context = new SavingsContext())
             {
                 var pre = context

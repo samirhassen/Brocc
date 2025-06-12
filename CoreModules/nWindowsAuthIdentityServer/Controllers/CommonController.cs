@@ -1,6 +1,7 @@
-﻿using NTech.Services.Infrastructure;
+﻿using System.Reflection;
 using System.Security.Principal;
 using System.Web.Mvc;
+using NTech.Services.Infrastructure;
 
 namespace nWindowsAuthIdentityServer.Controllers
 {
@@ -9,12 +10,12 @@ namespace nWindowsAuthIdentityServer.Controllers
         [AllowAnonymous]
         public ActionResult Hb()
         {
-            var a = System.Reflection.Assembly.GetExecutingAssembly();
+            var a = Assembly.GetExecutingAssembly();
             return Json(new
             {
                 status = "ok",
                 name = a.GetName().Name,
-                build = System.Reflection.AssemblyName.GetAssemblyName(a.Location).Version.ToString()
+                build = AssemblyName.GetAssemblyName(a.Location).Version.ToString()
             }, JsonRequestBehavior.AllowGet);
         }
 

@@ -1,9 +1,9 @@
-﻿using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Code
+namespace nSavings.Code.nUser
 {
     public class UserClient : AbstractServiceClient, IUserClient
     {
@@ -12,10 +12,7 @@ namespace nSavings.Code
         public string GetUserDisplayNameByUserId(string userId)
         {
             var d = GetUserDisplayNamesByUserId();
-            if (d.ContainsKey(userId))
-                return d[userId];
-            else
-                return $"User {userId}";
+            return d.TryGetValue(userId, out var value) ? value : $"User {userId}";
         }
 
         public Dictionary<string, string> GetUserDisplayNamesByUserId()

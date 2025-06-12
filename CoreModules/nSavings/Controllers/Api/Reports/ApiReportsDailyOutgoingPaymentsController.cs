@@ -1,20 +1,21 @@
-﻿using nSavings.Code;
-using nSavings.Excel;
-using NTech.Services.Infrastructure;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.DbModel;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Services.Infrastructure;
+using Serilog;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api.Reports
 {
     [NTechApi]
     public class ApiReportsDailyOutgoingPaymentsController : NController
     {
         [Route("Api/Reports/DailyOutgoingPayments")]
-        [HttpGet()]
+        [HttpGet]
         public ActionResult Get(DateTime date)
         {
             try
@@ -38,7 +39,8 @@ namespace nSavings.Controllers
                             y.CreatedByEvent,
                             ShouldBePaidToCustomerAmount = -y
                                 .Transactions
-                                .Where(z => z.AccountCode == shouldBePaidToCustomerCode && z.BusinessEvent.EventType == newOutgoingPaymentFileCode)
+                                .Where(z => z.AccountCode == shouldBePaidToCustomerCode &&
+                                            z.BusinessEvent.EventType == newOutgoingPaymentFileCode)
                                 .Sum(z => (decimal?)z.Amount) ?? 0m,
                             ToAccountItem = y
                                 .Items
@@ -53,15 +55,20 @@ namespace nSavings.Controllers
                         }))
                         .ToList();
 
-                    var encryptedItems = payments.Select(x => x.ToAccountItem).Concat(payments.Select(x => x.ToCustomerNameItem)).Where(x => x != null && x.IsEncrypted).ToList();
+                    var encryptedItems = payments.Select(x => x.ToAccountItem)
+                        .Concat(payments.Select(x => x.ToCustomerNameItem)).Where(x => x != null && x.IsEncrypted)
+                        .ToList();
 
                     IDictionary<long, string> decryptedValues = null;
                     if (encryptedItems.Any())
                     {
-                        decryptedValues = EncryptionContext.Load(context, encryptedItems.Select(x => long.Parse(x.Value)).ToArray(), NEnv.EncryptionKeys.AsDictionary());
+                        decryptedValues = EncryptionContext.Load(context,
+                            encryptedItems.Select(x => long.Parse(x.Value)).ToArray(),
+                            NEnv.EncryptionKeys.AsDictionary());
                     }
 
-                    var fileArchiveKeys = payments.Select(x => x.FileArchiveKey).Where(x => x != null).Distinct().ToList();
+                    var fileArchiveKeys = payments.Select(x => x.FileArchiveKey).Where(x => x != null).Distinct()
+                        .ToList();
 
                     IDictionary<string, string> fileNameByArchiveKey = new Dictionary<string, string>();
                     foreach (var key in fileArchiveKeys)
@@ -72,11 +79,21 @@ namespace nSavings.Controllers
 
                     var reportPayments = payments.Select(x => new
                     {
-                        ToCustomerName = x.ToCustomerNameItem != null ? (x.ToCustomerNameItem.IsEncrypted ? decryptedValues[long.Parse(x.ToCustomerNameItem.Value)] : x.ToCustomerNameItem.Value) : null,
-                        ToIban = x.ToAccountItem != null ? (x.ToAccountItem.IsEncrypted ? decryptedValues[long.Parse(x.ToAccountItem.Value)] : x.ToAccountItem.Value) : null,
+                        ToCustomerName = x.ToCustomerNameItem != null
+                            ? x.ToCustomerNameItem.IsEncrypted
+                                ? decryptedValues[long.Parse(x.ToCustomerNameItem.Value)]
+                                : x.ToCustomerNameItem.Value
+                            : null,
+                        ToIban = x.ToAccountItem != null
+                            ? x.ToAccountItem.IsEncrypted
+                                ? decryptedValues[long.Parse(x.ToAccountItem.Value)]
+                                : x.ToAccountItem.Value
+                            : null,
                         x.TransactionDate,
                         x.ShouldBePaidToCustomerAmount,
-                        PaymentFileName = fileNameByArchiveKey.ContainsKey(x.FileArchiveKey) ? fileNameByArchiveKey[x.FileArchiveKey] : "-"
+                        PaymentFileName = fileNameByArchiveKey.TryGetValue(x.FileArchiveKey, out var value)
+                            ? value
+                            : "-"
                     }).ToList();
 
 
@@ -85,28 +102,35 @@ namespace nSavings.Controllers
 
                     var request = new DocumentClientExcelRequest
                     {
-                        TemplateXlsxDocumentBytesAsBase64 = templateExists ? Convert.ToBase64String(System.IO.File.ReadAllBytes(templateFile.FullName)) : null,
-                        Sheets = new DocumentClientExcelRequest.Sheet[]
+                        TemplateXlsxDocumentBytesAsBase64 = templateExists
+                            ? Convert.ToBase64String(System.IO.File.ReadAllBytes(templateFile.FullName))
+                            : null,
+                        Sheets = new[]
                         {
                             new DocumentClientExcelRequest.Sheet
                             {
                                 AutoSizeColumns = true,
-                                Title = $"Payments savings accounts ({date.ToString("yyyy-MM-dd")})"
+                                Title = $"Payments savings accounts ({date:yyyy-MM-dd})"
                             }
                         }
                     };
 
                     var s = request.Sheets[0];
                     s.SetColumnsAndData(reportPayments,
-                        reportPayments.Col(x => x.ToCustomerName, ExcelType.Text, templateExists ? null : "To customer name"),
+                        reportPayments.Col(x => x.ToCustomerName, ExcelType.Text,
+                            templateExists ? null : "To customer name"),
                         reportPayments.Col(x => x.ToIban, ExcelType.Text, templateExists ? null : "To account"),
-                        reportPayments.Col(x => x.TransactionDate, ExcelType.Date, templateExists ? null : "Transaction date"),
-                        reportPayments.Col(x => x.ShouldBePaidToCustomerAmount, ExcelType.Number, templateExists ? null : "Amount", includeSum: true),
-                        reportPayments.Col(x => x.PaymentFileName, ExcelType.Text, templateExists ? null : "Payment file"));
+                        reportPayments.Col(x => x.TransactionDate, ExcelType.Date,
+                            templateExists ? null : "Transaction date"),
+                        reportPayments.Col(x => x.ShouldBePaidToCustomerAmount, ExcelType.Number,
+                            templateExists ? null : "Amount", includeSum: true),
+                        reportPayments.Col(x => x.PaymentFileName, ExcelType.Text,
+                            templateExists ? null : "Payment file"));
 
                     var result = dc.CreateXlsx(request);
 
-                    return new FileStreamResult(result, XlsxContentType) { FileDownloadName = $"PaymentsSavingsAccounts-{date.ToString("yyyy-MM-dd")}.xlsx" };
+                    return new FileStreamResult(result, XlsxContentType)
+                        { FileDownloadName = $"PaymentsSavingsAccounts-{date:yyyy-MM-dd}.xlsx" };
                 }
             }
             catch (Exception ex)

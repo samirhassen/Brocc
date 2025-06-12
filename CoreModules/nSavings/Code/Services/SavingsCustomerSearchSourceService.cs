@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.Code.Services
 {
@@ -21,7 +23,7 @@ namespace nSavings.Code.Services
 
         public List<CustomerSearchEntity> GetCustomerEntities(int customerId)
         {
-            using (var context = new SavingsContext())
+            using (var context = new DbModel.SavingsContext())
             {
                 return context
                     .SavingsAccountHeaders
@@ -53,7 +55,7 @@ namespace nSavings.Code.Services
                             : x.LatestStatusItem.TransactionDate,
                         StatusCode = x.Status,
                         StatusDisplayText = x.Status,
-                        EntityType = x.AccountTypeCode,
+                        EntityType = x.AccountTypeCode.ToString(),
                     })
                     .ToList();
             }

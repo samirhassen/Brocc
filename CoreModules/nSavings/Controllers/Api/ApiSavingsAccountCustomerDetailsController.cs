@@ -1,12 +1,13 @@
-﻿using nSavings.Code;
-using NTech.Services.Infrastructure;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.DbModel;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiSavingsAccountCustomerDetailsController : NController
@@ -19,8 +20,6 @@ namespace nSavings.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr");
             using (var context = new SavingsContext())
             {
-                var date = Clock.Today;
-
                 var mainCustomerId = context
                     .SavingsAccountHeaders
                     .Where(x => x.SavingsAccountNr == savingsAccountNr)
@@ -32,17 +31,24 @@ namespace nSavings.Controllers
 
                 var customerClient = new CustomerClient();
 
-                var customer = customerClient.BulkFetchPropertiesByCustomerIds(new HashSet<int> { mainCustomerId.Value }, "firstName", "email", "phone", "birthDate").Single();
+                var customer = customerClient
+                    .BulkFetchPropertiesByCustomerIds(new HashSet<int> { mainCustomerId.Value }, "firstName", "email",
+                        "phone", "birthDate").Single();
 
-                var targetToHere = NTechNavigationTarget.CreateCrossModuleNavigationTarget("SavingsAccountOverviewSpecificTab", new Dictionary<string, string> { { "savingsAccountNr", savingsAccountNr }, { "tab", "Customer" } });
+                var targetToHere = NTechNavigationTarget.CreateCrossModuleNavigationTarget(
+                    "SavingsAccountOverviewSpecificTab",
+                    new Dictionary<string, string> { { "savingsAccountNr", savingsAccountNr }, { "tab", "Customer" } });
 
                 var c = new ExpandoObject() as IDictionary<string, object>;
                 c["customerId"] = customer.Key;
                 c["isMainCustomer"] = true;
-                c["customerCardUrl"] = CustomerClient.GetCustomerCardUri(customer.Value.CustomerId, false, targetToHere).ToString();
-                c["customerFatcaCrsUrl"] = CustomerClient.GetCustomerFatcaCrsUri(customer.Value.CustomerId, targetToHere).ToString();
-                c["customerPepKycUrl"] = CustomerClient.GetCustomerPepKycUrl(customer.Value.CustomerId, targetToHere).ToString();
-                c["customerKycQuestionsUrl"] = CustomerClient.GetCustomerKycQuestionsUrl(customer.Value.CustomerId, targetToHere).ToString(); 
+                c["customerCardUrl"] = CustomerClient.GetCustomerCardUri(customer.Value.CustomerId, false, targetToHere)
+                    .ToString();
+                c["customerFatcaCrsUrl"] = CustomerClient
+                    .GetCustomerFatcaCrsUri(customer.Value.CustomerId, targetToHere).ToString();
+                c["customerPepKycUrl"] = CustomerClient.GetCustomerPepKycUrl(customer.Value.CustomerId, targetToHere);
+                c["customerKycQuestionsUrl"] = CustomerClient
+                    .GetCustomerKycQuestionsUrl(customer.Value.CustomerId, targetToHere);
                 foreach (var customerCard in customer.Value.Properties)
                 {
                     c[customerCard.Name] = customerCard.Value;
@@ -67,7 +73,8 @@ namespace nSavings.Controllers
         {
             var c = new CustomerClient();
             var result = c.BulkFetchPropertiesByCustomerIds(new HashSet<int> { customerId }, propertyNames?.ToArray());
-            var items = result.Where(x => x.Key == customerId).SelectMany(x => x.Value.Properties.Select(y => new { name = y.Name, value = y.Value })).ToList();
+            var items = result.Where(x => x.Key == customerId)
+                .SelectMany(x => x.Value.Properties.Select(y => new { name = y.Name, value = y.Value })).ToList();
             return Json2(new { customerId = customerId, items = items });
         }
     }

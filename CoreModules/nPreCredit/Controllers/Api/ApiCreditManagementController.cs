@@ -7,6 +7,7 @@ using NTech.Core.PreCredit.Shared.Code.PetrusOnlyScoringService;
 using NTech.Core.PreCredit.Shared.Services.UlLegacy;
 using NTech.Services.Infrastructure;
 using NTech.Services.Infrastructure.NTechWs;
+using Polly;
 using Serilog;
 using System;
 using System.Linq;
@@ -147,9 +148,21 @@ namespace nPreCredit.Controllers.Api
         [HttpPost]
         public ActionResult AutomaticCreditCheck(string applicationNr)
         {
+            var retryPolicy = Policy
+                .Handle<NTechCoreWebserviceException>()
+                .Or<Exception>()
+                .WaitAndRetry(3, retryAttempt => TimeSpan.FromSeconds(5),
+                    onRetry: (exception, timeSpan, retryCount, context) =>
+                    {
+                        NLog.Warning(exception, $"AutomaticCreditCheck Retry {retryCount} due to: {exception.Message}");
+                    }
+                );
+
+            var p2 = Service.Resolve<PetrusOnlyCreditCheckService>();
+
             try
             {
-                Service.Resolve<PetrusOnlyCreditCheckService>().AutomaticCreditCheck(applicationNr, false);
+                retryPolicy.Execute(() => p2.AutomaticCreditCheck(applicationNr, false));
                 return new HttpStatusCodeResult(HttpStatusCode.Accepted);
             }
             catch (NTechCoreWebserviceException ex)

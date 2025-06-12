@@ -1,8 +1,8 @@
-﻿using nSavings.DbModel.BusinessEvents;
+﻿using System.Web.Mvc;
+using NTech.Core.Savings.Shared.BusinessEvents;
 using NTech.Services.Infrastructure;
-using System.Web.Mvc;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiNewSavingsAccountNumberController : NController
@@ -11,7 +11,10 @@ namespace nSavings.Controllers
         [Route("Api/NewSavingsAccountNumber")]
         public ActionResult NewSavingsAccountNumber()
         {
-            return Json2(new { nr = CreateSavingsAccountBusinessEventManager.GenerateNewSavingsAccountNumber(Service.ContextFactory) });
+            return Json2(new
+            {
+                nr = CreateSavingsAccountBusinessEventManager.GenerateNewSavingsAccountNumber(Service.ContextFactory)
+            });
         }
     }
 }

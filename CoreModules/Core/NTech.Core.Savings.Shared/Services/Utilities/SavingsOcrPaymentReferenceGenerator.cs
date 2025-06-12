@@ -1,7 +1,8 @@
-﻿using NTech.Core.Savings.Shared.Database;
-using System;
+﻿using System;
+using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
 
-namespace nSavings.Code
+namespace NTech.Core.Savings.Shared.Services.Utilities
 {
     public class SavingsOcrPaymentReferenceGenerator
     {

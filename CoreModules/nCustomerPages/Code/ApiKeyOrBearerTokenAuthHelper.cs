@@ -1,8 +1,7 @@
-﻿using Duende.IdentityModel.Client;
+﻿using IdentityModel.Client;
 using NTech.Services.Infrastructure;
 using Serilog;
 using System;
-using System.Net.Http;
 
 namespace nCustomerPages.Code
 {
@@ -13,27 +12,22 @@ namespace nCustomerPages.Code
 
         public AuthResult AuthenticateWithBasicAuth(string username, string password, string callerIpAddress, bool requireProvider)
         {
-          
-            var client = new HttpClient();
-            var token = client.RequestPasswordTokenAsync(new PasswordTokenRequest()
+            var tokenClient = new TokenClient(
+                new Uri(new Uri(NEnv.ServiceRegistry.Internal["nUser"]), "id/connect/token").ToString(),
+                "nTechSystemUser",
+                "nTechSystemUser");
+
+            var token = tokenClient.RequestResourceOwnerPasswordAsync(username, password, scope: "nTech1").Result;
+            if (token.IsError)
             {
-                Address = NEnv.ServiceRegistry.Internal.ServiceUrl("nUser", "id/connect/token").ToString(),
-                ClientId = "nTechSystemUser",
-                ClientSecret = "nTechSystemUser",
-                UserName = username,
-                Password = password,
-                Scope = "nTech1"
-            });
-            if (token.Result.IsError)
-            {
-                NLog.Error("Failed call {errorMessage}", token.Result.Error);
+                NLog.Error("Failed call {errorMessage}", token.Error);
                 return null;
             }
 
             string providerName = null;
             if (requireProvider)
             {
-                var providerNameResult = NTechCache.WithCache($"ntech.customerpages.providernameByUsername2.{username}", TimeSpan.FromMinutes(15), () => GetProviderName(token.Result.AccessToken));
+                var providerNameResult = NTechCache.WithCache($"ntech.customerpages.providernameByUsername2.{username}", TimeSpan.FromMinutes(15), () => GetProviderName(token.AccessToken));
 
                 if (providerNameResult?.IsProvider != true || string.IsNullOrWhiteSpace(providerNameResult?.ProviderName))
                     return null;
@@ -45,7 +39,7 @@ namespace nCustomerPages.Code
             {
                 CallerIpAddress = callerIpAddress,
                 UsedApiKey = false,
-                PreCreditBearerToken = token.Result.AccessToken,
+                PreCreditBearerToken = token.AccessToken,
                 ProviderName = providerName,
                 UserName = username
             };

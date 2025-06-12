@@ -1,5 +1,5 @@
-﻿using NTech.Services.Infrastructure;
-using System;
+﻿using System;
+using NTech.Services.Infrastructure;
 
 namespace nSavings.Code
 {
@@ -9,7 +9,8 @@ namespace nSavings.Code
 
         protected NHttp.NHttpCall Begin(string bearerToken = null, TimeSpan? timeout = null)
         {
-            return NHttp.Begin(new Uri(NEnv.ServiceRegistry.Internal[ServiceName]), bearerToken ?? NHttp.GetCurrentAccessToken(), timeout: timeout);
+            return NHttp.Begin(new Uri(NEnv.ServiceRegistry.Internal[ServiceName]),
+                bearerToken ?? NHttp.GetCurrentAccessToken(), timeout: timeout);
         }
     }
 }

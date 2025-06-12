@@ -1,8 +1,12 @@
-﻿using nSavings.DbModel.BusinessEvents;
-using nSavings.DbModel.Repository;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using nSavings.DbModel.Repository;
+using NTech;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.Code.Treasury
 {
@@ -16,11 +20,15 @@ namespace nSavings.Code.Treasury
         {
         }
 
-        public static TreasuryDomainModel GetChangesSinceLastExport(int currentUserId, string informationMetadata, NTech.IClock clock)
+        public static TreasuryDomainModel GetChangesSinceLastExport(int currentUserId, string informationMetadata,
+            IClock clock)
         {
-            var d = new TreasuryDomainModel();
-            d.currentUserId = currentUserId;
-            d.informationMetadata = informationMetadata;
+            var d = new TreasuryDomainModel
+            {
+                currentUserId = currentUserId,
+                informationMetadata = informationMetadata
+            };
+            
             var repo = new SystemItemRepository(currentUserId, informationMetadata);
             using (var context = new SavingsContext())
             {
@@ -31,16 +39,18 @@ namespace nSavings.Code.Treasury
             return d;
         }
 
-        public static List<AccountModel> GetAccounts(SavingsContext context, NTech.IClock clock, int currentUserId, string informationMetadata)
+        public static List<AccountModel> GetAccounts(SavingsContext context, IClock clock,
+            int currentUserId, string informationMetadata)
         {
             var q = context
-               .SavingsAccountHeaders
-               .AsNoTracking()
-               .AsQueryable();
+                .SavingsAccountHeaders
+                .AsNoTracking()
+                .AsQueryable();
 
             var rates = ChangeInterestRateBusinessEventManager.GetPerAccountActiveInterestRates(context);
 
-            var withdrawalCodes = new List<string> { BusinessEventType.AccountClosure.ToString(), BusinessEventType.Withdrawal.ToString() };
+            var withdrawalCodes = new List<string>
+                { BusinessEventType.AccountClosure.ToString(), BusinessEventType.Withdrawal.ToString() };
             var r = q.Where(n => n.Status == SavingsAccountStatusCode.Active.ToString()).Select(x => new
             {
                 x.SavingsAccountNr,
@@ -48,24 +58,28 @@ namespace nSavings.Code.Treasury
                 StartDate = x.CreatedByEvent.TransactionDate,
                 CapitalBalanceTransactions = (x
                     .Transactions
-                    .Where(y => !withdrawalCodes.Contains(y.BusinessEvent.EventType) && y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
+                    .Where(y => !withdrawalCodes.Contains(y.BusinessEvent.EventType) &&
+                                y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
                     .Sum(y => (decimal?)y.Amount) ?? 0m) + (x
                     .Transactions
-                    .Where(y => y.BusinessEvent.EventType == BusinessEventType.OutgoingPaymentFileExport.ToString() && y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString())
+                    .Where(y => y.BusinessEvent.EventType == BusinessEventType.OutgoingPaymentFileExport.ToString() &&
+                                y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString())
                     .Sum(y => (decimal?)y.Amount) ?? 0m),
                 InterestRatePercent = rates
-                            .Where(y => y.SavingsAccountNr == x.SavingsAccountNr && y.ValidFromDate <= clock.Today)
-                            .OrderByDescending(y => y.ValidFromDate)
-                            .Select(y => (decimal?)y.InterestRatePercent)
-                            .FirstOrDefault()
+                    .Where(y => y.SavingsAccountNr == x.SavingsAccountNr && y.ValidFromDate <= clock.Today)
+                    .OrderByDescending(y => y.ValidFromDate)
+                    .Select(y => (decimal?)y.InterestRatePercent)
+                    .FirstOrDefault()
             }).ToList();
 
             //Get customerinfo
             var client = new CustomerClient();
-            var result = client.BulkFetchPropertiesByCustomerIds(new HashSet<int>(r.Select(x => x.MainCustomerId).Distinct()), "firstName", "lastName", "addressCountry");
+            var result = client.BulkFetchPropertiesByCustomerIds(
+                new HashSet<int>(r.Select(x => x.MainCustomerId).Distinct()), "firstName", "lastName",
+                "addressCountry");
 
             Func<string, IDictionary<int, CustomerClient.GetPropertyCustomer>, int, string> getValue = (n, h, cid) =>
-               h[cid].Properties.SingleOrDefault(x => x.Name.Equals(n, StringComparison.OrdinalIgnoreCase))?.Value;
+                h[cid].Properties.SingleOrDefault(x => x.Name.Equals(n, StringComparison.OrdinalIgnoreCase))?.Value;
 
             return r.Where(n => n.CapitalBalanceTransactions > 0).Select(x => new AccountModel
             {
@@ -74,7 +88,8 @@ namespace nSavings.Code.Treasury
                 StartDate = x.StartDate,
                 CurrentInterestRate = x.InterestRatePercent ?? 0m,
                 CurrentBalance = x.CapitalBalanceTransactions,
-                CustomerFullName = $"{getValue("firstName", result, x.MainCustomerId)} {getValue("lastName", result, x.MainCustomerId)}",
+                CustomerFullName =
+                    $"{getValue("firstName", result, x.MainCustomerId)} {getValue("lastName", result, x.MainCustomerId)}",
                 CustomerCountry = getValue("addressCountry", result, x.MainCustomerId)
             }).ToList();
         }

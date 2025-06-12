@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Threading;
+using Newtonsoft.Json;
 using NTech;
 using NTech.Services.Infrastructure.Eventing;
-using System;
-using System.Threading;
 
-namespace nSavings.Code
+namespace nSavings.Code.Eventing
 {
     public class TimeMachineEventSubscriber : EventSubscriberBase, IEventSubscriber
     {
@@ -15,10 +15,10 @@ namespace nSavings.Code
             Subscribe(SavingsEventCode.TimeMachineTimeChanged, OnTimeMachineTimeChanged, subscribe);
         }
 
-        public void OnTimeMachineTimeChanged(string data, CancellationToken ct)
+        public static void OnTimeMachineTimeChanged(string data, CancellationToken ct)
         {
             var d = JsonConvert.DeserializeAnonymousType(data, new { currentTime = (DateTimeOffset?)null });
-            if (d?.currentTime != null && d.currentTime.HasValue)
+            if (d?.currentTime != null)
             {
                 ClockFactory.TrySetApplicationDateAndTime(d.currentTime.Value);
             }

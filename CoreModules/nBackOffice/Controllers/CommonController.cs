@@ -17,7 +17,8 @@ namespace nBackoffice.Controllers
                 status = "ok",
                 name = a.GetName().Name,
                 build = System.Reflection.AssemblyName.GetAssemblyName(a.Location).Version.ToString(),
-                release = NTechSimpleSettings.GetValueFromClientResourceFile("CurrentReleaseMetadata.txt", "releaseNumber", "No Current Release Info")
+                release = NTechSimpleSettings.GetValueFromClientResourceFile("CurrentReleaseMetadata.txt",
+                    "releaseNumber", "No Current Release Info")
             }, JsonRequestBehavior.AllowGet);
         }
 

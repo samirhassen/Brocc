@@ -1,24 +1,31 @@
-﻿using Newtonsoft.Json;
-using NTech.Core.Module.Shared.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using Newtonsoft.Json;
+using NTech.Core.Module.Shared.Infrastructure;
 
 namespace NTech.Core.Module.Shared.Clients
 {
     public class ServiceClient : IServiceClientSyncConverter
     {
+        private const string CoreHostServiceName = "NTechHost";
+        private const string JsonMimeType = "application/json";
         private readonly INHttpServiceUser httpServiceUser;
         private readonly Func<string, Uri> getServiceRootUri;
         private readonly Func<HttpClient> createHttpClient;
         private readonly IServiceClientSyncConverter serviceClientSyncConverter;
         private readonly string serviceName;
 
-        public ServiceClient(INHttpServiceUser httpServiceUser, Func<string, Uri> getServiceRootUri, Func<HttpClient> createHttpClient, IServiceClientSyncConverter serviceClientSyncConverter, string serviceName)
+        public ServiceClient(INHttpServiceUser httpServiceUser, Func<string, Uri> getServiceRootUri,
+            Func<HttpClient> createHttpClient, IServiceClientSyncConverter serviceClientSyncConverter,
+            string serviceName)
         {
             this.httpServiceUser = httpServiceUser;
             this.getServiceRootUri = getServiceRootUri;
@@ -27,9 +34,7 @@ namespace NTech.Core.Module.Shared.Clients
             this.serviceName = serviceName;
         }
 
-        public const string CoreHostServiceName = "NTechHost";
-
-        protected async Task<NHttpCall> BeginAsync(TimeSpan? timeout = null, bool isCoreHosted = false)
+        private async Task<NHttpCall> BeginAsync(TimeSpan? timeout = null, bool isCoreHosted = false)
         {
             return new NHttpCall(createHttpClient())
             {
@@ -39,7 +44,8 @@ namespace NTech.Core.Module.Shared.Clients
             };
         }
 
-        public async Task<T> Call<T>(Func<NHttpCall, Task<NHttpCallResult>> call, Func<NHttpCallResult, Task<T>> handleResult,
+        public async Task<T> Call<T>(Func<NHttpCall, Task<NHttpCallResult>> call,
+            Func<NHttpCallResult, Task<T>> handleResult,
             TimeSpan? timeout = null, bool isCoreHosted = false)
         {
             var c = await BeginAsync(timeout: timeout, isCoreHosted: isCoreHosted);
@@ -56,14 +62,16 @@ namespace NTech.Core.Module.Shared.Clients
             return handleResult(r);
         }
 
-        public async Task CallVoid(Func<NHttpCall, Task<NHttpCallResult>> call, Func<NHttpCallResult, Task> handleResult, TimeSpan? timeout = null, bool isCoreHosted = false)
+        public async Task CallVoid(Func<NHttpCall, Task<NHttpCallResult>> call,
+            Func<NHttpCallResult, Task> handleResult, TimeSpan? timeout = null, bool isCoreHosted = false)
         {
             var c = await BeginAsync(timeout: timeout, isCoreHosted: isCoreHosted);
             var r = await call(c);
             await handleResult(r);
         }
 
-        public async Task CallVoid(Func<NHttpCall, Task<NHttpCallResult>> call, Action<NHttpCallResult> handleResult, TimeSpan? timeout = null, bool isCoreHosted = false)
+        public async Task CallVoid(Func<NHttpCall, Task<NHttpCallResult>> call, Action<NHttpCallResult> handleResult,
+            TimeSpan? timeout = null, bool isCoreHosted = false)
         {
             var c = await BeginAsync(timeout: timeout, isCoreHosted: isCoreHosted);
             var r = await call(c);
@@ -76,7 +84,7 @@ namespace NTech.Core.Module.Shared.Clients
 
         public class NHttpCall
         {
-            private HttpClient client;
+            private readonly HttpClient client;
 
             public NHttpCall(HttpClient client)
             {
@@ -87,28 +95,32 @@ namespace NTech.Core.Module.Shared.Clients
             internal string BearerToken { get; set; }
             internal TimeSpan? Timeout { get; set; }
 
-            private async Task<NHttpCallResult> Call(string relativeUrl, HttpMethod method, Action<HttpRequestMessage> prepare)
+            private async Task<NHttpCallResult> Call(string relativeUrl, HttpMethod method,
+                Action<HttpRequestMessage> prepare)
             {
                 var request = new HttpRequestMessage(method, CreateUrl(BaseUrl, relativeUrl));
                 if (BearerToken != null)
                 {
                     request.Headers.Add("Authorization", $"Bearer {BearerToken}");
                 }
+
                 if (method != HttpMethod.Get)
                 {
                     request.Headers.Add("X-Ntech-Api-Call", "1");
                 }
+
                 prepare(request);
                 var response = await client.SendAsync(request);
                 return new NHttpCallResult(response);
             }
 
-            protected static string NormalizePath(string path)
+            private static string NormalizePath(string path)
             {
-                return path?.TrimStart('/')?.TrimEnd('/') ?? "";
+                return path?.TrimStart('/').TrimEnd('/') ?? "";
             }
 
-            protected Uri CreateUrl(Uri rootUrl, string relativeUrl, params Tuple<string, string>[] queryStringParameters)
+            private static Uri CreateUrl(Uri rootUrl, string relativeUrl,
+                params Tuple<string, string>[] queryStringParameters)
             {
                 var relativeUrlTrimmed = NormalizePath(relativeUrl);
 
@@ -118,20 +130,24 @@ namespace NTech.Core.Module.Shared.Clients
                 if (i >= 0)
                 {
                     var queryString = relativeUrlTrimmed.Substring(i);
-                    var queryStringParsed = System.Web.HttpUtility.ParseQueryString(queryString);
+                    var queryStringParsed = HttpUtility.ParseQueryString(queryString);
                     foreach (var p in queryStringParsed.AllKeys)
                         queryParams.Add(Tuple.Create(p, queryStringParsed[p]));
                     relativeUrlTrimmed = relativeUrlTrimmed.Substring(0, i);
                 }
-                queryParams.AddRange(queryStringParameters.Where(x => !string.IsNullOrWhiteSpace(x.Item1) && !string.IsNullOrWhiteSpace(x.Item2)));
+
+                queryParams.AddRange(queryStringParameters.Where(x =>
+                    !string.IsNullOrWhiteSpace(x.Item1) && !string.IsNullOrWhiteSpace(x.Item2)));
 
                 var u = new UriBuilder(
                     rootUrl.Scheme,
                     rootUrl.Host,
                     rootUrl.Port,
-                    rootUrl.Segments.Length == 1 ? relativeUrlTrimmed : NormalizePath(rootUrl.LocalPath) + "/" + relativeUrlTrimmed);
+                    rootUrl.Segments.Length == 1
+                        ? relativeUrlTrimmed
+                        : $"{NormalizePath(rootUrl.LocalPath)}/{relativeUrlTrimmed}");
 
-                var query = System.Web.HttpUtility.ParseQueryString(rootUrl.Query);
+                var query = HttpUtility.ParseQueryString(rootUrl.Query);
                 foreach (var p in queryParams)
                     query[p.Item1] = p.Item2;
                 u.Query = query.ToString();
@@ -139,16 +155,17 @@ namespace NTech.Core.Module.Shared.Clients
                 return u.Uri;
             }
 
-            private static Lazy<JsonSerializerSettings> NullIgnoringJsonSerializerSettings = new Lazy<JsonSerializerSettings>(() =>
-            {
-                var s = new JsonSerializerSettings();
-                s.NullValueHandling = NullValueHandling.Ignore;
-                return s;
-            });
+            private static readonly Lazy<JsonSerializerSettings> NullIgnoringJsonSerializerSettings =
+                new Lazy<JsonSerializerSettings>(() => new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
 
             private static string SerializeObject<T>(T value, bool allowSkipNulls)
             {
-                return allowSkipNulls ? JsonConvert.SerializeObject(value, NullIgnoringJsonSerializerSettings.Value) : JsonConvert.SerializeObject(value);
+                return allowSkipNulls
+                    ? JsonConvert.SerializeObject(value, NullIgnoringJsonSerializerSettings.Value)
+                    : JsonConvert.SerializeObject(value);
             }
 
             public async Task<NHttpCallResult> PostJson<T>(string relativeUrl, T value, bool allowSkipNulls = false)
@@ -156,15 +173,14 @@ namespace NTech.Core.Module.Shared.Clients
                 return await PostJsonRaw(relativeUrl, SerializeObject(value, allowSkipNulls));
             }
 
-            public async Task<NHttpCallResult> PostJsonRaw(string relativeUrl, string json)
+            private async Task<NHttpCallResult> PostJsonRaw(string relativeUrl, string json)
             {
-                return await Call(relativeUrl, HttpMethod.Post, request =>
-                {
-                    request.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                });
+                return await Call(relativeUrl, HttpMethod.Post,
+                    request => { request.Content = new StringContent(json, Encoding.UTF8, JsonMimeType); });
             }
 
-            public async Task<NHttpCallResult> UploadFile(string relativeUrl, Stream file, string uploadFilename, string mimeType)
+            public async Task<NHttpCallResult> UploadFile(string relativeUrl, Stream file, string uploadFilename,
+                string mimeType)
             {
                 return await Call(relativeUrl, HttpMethod.Post, request =>
                 {
@@ -186,6 +202,7 @@ namespace NTech.Core.Module.Shared.Clients
                 return await Call(relativeUrl, HttpMethod.Get, request => { });
             }
         }
+
         public class NHttpCallResult
         {
             private readonly HttpResponseMessage response;
@@ -195,51 +212,21 @@ namespace NTech.Core.Module.Shared.Clients
                 this.response = response;
             }
 
-            public bool IsSuccessStatusCode
-            {
-                get
-                {
-                    return response.IsSuccessStatusCode;
-                }
-            }
+            public bool IsSuccessStatusCode => response.IsSuccessStatusCode;
 
-            public bool IsNotFoundStatusCode
-            {
-                get
-                {
-                    return response.StatusCode == System.Net.HttpStatusCode.NotFound;
-                }
-            }
+            public bool IsNotFoundStatusCode => response.StatusCode == HttpStatusCode.NotFound;
 
-            public int StatusCode
-            {
-                get
-                {
-                    return (int)response.StatusCode;
-                }
-            }
+            public int StatusCode => (int)response.StatusCode;
 
-            public string ReasonPhrase
-            {
-                get
-                {
-                    return response.ReasonPhrase;
-                }
-            }
+            public string ReasonPhrase => response.ReasonPhrase;
 
             public void EnsureSuccessStatusCode()
             {
                 response.EnsureSuccessStatusCode();
             }
 
-            public bool IsApiError
-            {
-                get
-                {
-                    IEnumerable<string> v;
-                    return response.Headers.TryGetValues("X-Ntech-Api-Error", out v) && v.FirstOrDefault() == "1";
-                }
-            }
+            public bool IsApiError =>
+                response.Headers.TryGetValues("X-Ntech-Api-Error", out var v) && v.FirstOrDefault() == "1";
 
             public async Task<ApiError> ParseApiError()
             {
@@ -256,10 +243,11 @@ namespace NTech.Core.Module.Shared.Clients
             {
                 if (!allowNonSucessStatusCode)
                     EnsureSuccessStatusCode();
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                     return null;
-                if (!response.Content.Headers.ContentType.MediaType.Contains("application/json"))
-                    throw new Exception($"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
+                if (!response.Content.Headers.ContentType.MediaType.Contains(JsonMimeType))
+                    throw new Exception(
+                        $"Expected application/json but instead got: {response.Content.Headers.ContentType}");
                 return await response.Content.ReadAsStringAsync();
             }
 
@@ -267,34 +255,40 @@ namespace NTech.Core.Module.Shared.Clients
             {
                 if (!allowNonSucessStatusCode)
                     EnsureSuccessStatusCode();
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                     return default(T);
-                if (!response.Content.Headers.ContentType.MediaType.Contains("application/json"))
-                    throw new Exception($"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
+                if (!response.Content.Headers.ContentType.MediaType.Contains(JsonMimeType))
+                    throw new Exception(
+                        $"Expected application/json but instead got: {response.Content.Headers.ContentType}");
                 return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
             }
 
-            public async Task<T> ParseJsonAsAnonymousType<T>(T anonymousTypeObject, bool allowNonSucessStatusCode = false, bool propagateApiError = false)
+            public async Task<T> ParseJsonAsAnonymousType<T>(T anonymousTypeObject,
+                bool allowNonSucessStatusCode = false, bool propagateApiError = false)
             {
                 if (propagateApiError && IsApiError)
                 {
                     var apiError = await ParseApiError();
                     throw new NTechCoreWebserviceException(apiError.ErrorMessage) { ErrorCode = apiError.ErrorCode };
                 }
+
                 if (!allowNonSucessStatusCode)
                     EnsureSuccessStatusCode();
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                     return default(T);
-                if (!response.Content.Headers.ContentType.MediaType.Contains("application/json"))
-                    throw new Exception($"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
-                return JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), anonymousTypeObject);
+                if (!response.Content.Headers.ContentType.MediaType.Contains(JsonMimeType))
+                    throw new Exception(
+                        $"Expected application/json but instead got: {response.Content.Headers.ContentType}");
+                return JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(),
+                    anonymousTypeObject);
             }
 
             public async Task CopyToStream(Stream target)
             {
                 EnsureSuccessStatusCode();
                 if (response.Content.Headers.ContentType.MediaType.Contains("html"))
-                    throw new Exception($"Expected a binary response but instead got: {response.Content.Headers.ContentType.ToString()}");
+                    throw new Exception(
+                        $"Expected a binary response but instead got: {response.Content.Headers.ContentType}");
                 await response.Content.CopyToAsync(target);
             }
 
@@ -302,7 +296,8 @@ namespace NTech.Core.Module.Shared.Clients
             {
                 EnsureSuccessStatusCode();
                 if (response.Content.Headers.ContentType.MediaType.Contains("html") && !allowHtml)
-                    throw new Exception($"Expected a binary response but instead got: {response.Content.Headers.ContentType.ToString()}");
+                    throw new Exception(
+                        $"Expected a binary response but instead got: {response.Content.Headers.ContentType}");
 
                 var contentType = response.Content.Headers.ContentType.MediaType;
                 var filename = response.Content.Headers.ContentDisposition?.FileName;

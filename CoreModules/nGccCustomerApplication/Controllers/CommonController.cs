@@ -5,8 +5,6 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Net;
 using nGccCustomerApplication.Code;
-using Newtonsoft.Json;
-using System.Text;
 
 namespace nGccCustomerApplication.Controllers
 {
@@ -46,21 +44,6 @@ namespace nGccCustomerApplication.Controllers
             {
                 return HttpNotFound();
             }
-        }
-
-        [AllowAnonymous]
-        [Route("access-denied")]
-        public ActionResult AccessDenied(bool? isTokenExpired)
-        {
-            ViewBag.HideHeader = false;
-            ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new
-            {
-                translation = BaseController.GetTranslationsShared(this.Url, this.Request)
-            })));
-            ViewBag.IsTokenExpired = isTokenExpired ?? false;
-            ViewBag.ShowLogin = true; 
-            ViewBag.EidSignatureCustomerTarget = Session != null && Session["EidSignatureCustomerApplicationTarget"] != null ? Session["EidSignatureCustomerApplicationTarget"].ToString() : "";
-            return View();
         }
     }
 }

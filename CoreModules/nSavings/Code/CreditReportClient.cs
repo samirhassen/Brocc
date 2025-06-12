@@ -1,5 +1,5 @@
-﻿using NTech.Banking.CivicRegNumbers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NTech.Banking.CivicRegNumbers;
 
 namespace nSavings.Code
 {
@@ -13,6 +13,7 @@ namespace nSavings.Code
             public bool IsInvalidCredentialsError { get; set; }
             public bool IsTimeoutError { get; set; }
             public List<Item> Items { get; set; }
+
             public class Item
             {
                 public string Name { get; set; }
@@ -20,7 +21,8 @@ namespace nSavings.Code
             }
         }
 
-        public FetchNameAndAddressResult FetchNameAndAddress(string providerName, ICivicRegNumber civicRegNr, List<string> requestedItemNames, int customerId)
+        public FetchNameAndAddressResult FetchNameAndAddress(string providerName, ICivicRegNumber civicRegNr,
+            List<string> requestedItemNames, int customerId)
         {
             return Begin()
                 .PostJson("PersonInfo/FetchNameAndAddress", new

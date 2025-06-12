@@ -1,15 +1,16 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
-using nSavings.DbModel.BusinessEvents;
-using NTech.Legacy.Module.Shared.Infrastructure;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.Code;
+using nSavings.DbModel.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Legacy.Module.Shared.Infrastructure;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [NTechAuthorizeSavingsMiddle]
     public class AccountCreationRemarksController : NController
@@ -20,7 +21,7 @@ namespace nSavings.Controllers
         {
             var cc = new CustomerClient();
 
-            using (var context = new SavingsContext())
+            using (var context = new DbModel.SavingsContext())
             {
                 var frozenAccounts = context
                     .SavingsAccountHeaders
@@ -35,13 +36,16 @@ namespace nSavings.Controllers
                     })
                     .ToList();
 
-                ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.GetEncoding("iso-8859-1").GetBytes(JsonConvert.SerializeObject(new
-                {
-                    fetchDetailsUrl = Url.Action("FetchAccountCreationRemarkDetails", "AccountCreationRemarks"),
-                    resolveAccountCreationRemarksUrl = Url.Action("ResolveAccountCreationRemarks", "AccountCreationRemarks"),
-                    kycScreenUrl = Url.Action("KycScreenForResolveAccountCreationRemarks", "AccountCreationRemarks"),
-                    frozenAccounts
-                })));
+                ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.GetEncoding("iso-8859-1").GetBytes(
+                    JsonConvert.SerializeObject(new
+                    {
+                        fetchDetailsUrl = Url.Action("FetchAccountCreationRemarkDetails", "AccountCreationRemarks"),
+                        resolveAccountCreationRemarksUrl =
+                            Url.Action("ResolveAccountCreationRemarks", "AccountCreationRemarks"),
+                        kycScreenUrl =
+                            Url.Action("KycScreenForResolveAccountCreationRemarks", "AccountCreationRemarks"),
+                        frozenAccounts
+                    })));
                 return View();
             }
         }
@@ -52,13 +56,18 @@ namespace nSavings.Controllers
         {
             var cc = new CustomerClient();
 
-            bool IsFatca(string remarkCode) => (remarkCode ?? "").Equals(SavingsAccountCreationRemarkCode.UnknownTaxOrCitizenCountry.ToString(), StringComparison.OrdinalIgnoreCase);
-            bool IsKycAttentionNeeded(string remarkCode) => (remarkCode ?? "").Equals(SavingsAccountCreationRemarkCode.KycAttentionNeeded.ToString(), StringComparison.OrdinalIgnoreCase);
-            bool IsCustomerCheckpoint(string remarkCode) => (remarkCode ?? "").Equals(SavingsAccountCreationRemarkCode.CustomerCheckpoint.ToString(), StringComparison.OrdinalIgnoreCase);
+            bool IsFatca(string remarkCode) => (remarkCode ?? "").Equals(
+                SavingsAccountCreationRemarkCode.UnknownTaxOrCitizenCountry.ToString(),
+                StringComparison.OrdinalIgnoreCase);
+
+            bool IsKycAttentionNeeded(string remarkCode) => (remarkCode ?? "").Equals(
+                SavingsAccountCreationRemarkCode.KycAttentionNeeded.ToString(), StringComparison.OrdinalIgnoreCase);
+
+            bool IsCustomerCheckpoint(string remarkCode) => (remarkCode ?? "").Equals(
+                SavingsAccountCreationRemarkCode.CustomerCheckpoint.ToString(), StringComparison.OrdinalIgnoreCase);
 
 
-
-            using (var context = new SavingsContext())
+            using (var context = new DbModel.SavingsContext())
             {
                 var a = context
                     .SavingsAccountHeaders
@@ -99,14 +108,25 @@ namespace nSavings.Controllers
                         {
                             y.code,
                             y.customerId,
-                            customerCardUrl = y.customerId.HasValue && !IsFatca(y.code) && !IsKycAttentionNeeded(y.code) && !IsCustomerCheckpoint(y.code) ? CustomerClient.GetCustomerCardUri(y.customerId.Value).ToString() : null,
-                            customerFatcaCrsUri = y.customerId.HasValue && IsFatca(y.code) ? CustomerClient.GetCustomerFatcaCrsUri(y.customerId.Value).ToString() : null,
-                            customerPepKycUrl = y.customerId.HasValue && IsKycAttentionNeeded(y.code) ? CustomerClient.GetCustomerPepKycUrl(y.customerId.Value, null).ToString() : null,
+                            customerCardUrl =
+                                y.customerId.HasValue && !IsFatca(y.code) && !IsKycAttentionNeeded(y.code) &&
+                                !IsCustomerCheckpoint(y.code)
+                                    ? CustomerClient.GetCustomerCardUri(y.customerId.Value).ToString()
+                                    : null,
+                            customerFatcaCrsUri = y.customerId.HasValue && IsFatca(y.code)
+                                ? CustomerClient.GetCustomerFatcaCrsUri(y.customerId.Value).ToString()
+                                : null,
+                            customerPepKycUrl = y.customerId.HasValue && IsKycAttentionNeeded(y.code)
+                                ? CustomerClient.GetCustomerPepKycUrl(y.customerId.Value, null).ToString()
+                                : null,
                             customerCheckpointUrl = y.customerId.HasValue && IsCustomerCheckpoint(y.code)
-                                ? NEnv.ServiceRegistry.Internal.ServiceUrl("nBackoffice", $"s/customer-checkpoints/for-customer/{y.customerId.Value}").ToString()
+                                ? NEnv.ServiceRegistry.Internal.ServiceUrl("nBackoffice",
+                                    $"s/customer-checkpoints/for-customer/{y.customerId.Value}").ToString()
                                 : null,
                             y.savingsAccountNr,
-                            savingsAccountUrl = y.savingsAccountNr != null ? CreateLinkToSavingsAccountDetails(y.savingsAccountNr) : null,
+                            savingsAccountUrl = y.savingsAccountNr != null
+                                ? CreateLinkToSavingsAccountDetails(y.savingsAccountNr)
+                                : null,
                             y.customerContactInfoSourceWarningCode,
                             y.customerContactInfoSourceWarningMessage
                         })
@@ -137,16 +157,13 @@ namespace nSavings.Controllers
         [Route("Api/ResolveAccountCreationRemarks")]
         public ActionResult ResolveAccountCreationRemarks(string savingsAccountNr, string resolutionAction)
         {
-
-            var mgr = new ResolveAccountCreationRemarksBusinessEventManager(GetCurrentUserMetadata(), CoreClock.SharedInstance, Service.ContextFactory,
+            var mgr = new ResolveAccountCreationRemarksBusinessEventManager(GetCurrentUserMetadata(),
+                CoreClock.SharedInstance, Service.ContextFactory,
                 NEnv.ClientCfgCore);
 
-            string failedMessage;
-            if (!mgr.TryResolve(savingsAccountNr, resolutionAction, out failedMessage))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
-            }
-            return Json2(new { });
+            return !mgr.TryResolve(savingsAccountNr, resolutionAction, out var failedMessage)
+                ? new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage)
+                : Json2(new { });
         }
 
         [HttpPost]
@@ -157,6 +174,7 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             var cc = new CustomerClient();
             var result = cc.ListScreenBatch(new[] { customerId.Value }.ToHashSet(), Clock.Today);
             var failedReason = result.FailedToGetTrapetsDataItems?.FirstOrDefault()?.Reason;
@@ -164,6 +182,7 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "KYC screen failed: " + failedReason);
             }
+
             var latestKycScreenResult = cc.FetchLatestKycScreenResult(customerId.Value);
             return Json2(new { latestKycScreenResult });
         }

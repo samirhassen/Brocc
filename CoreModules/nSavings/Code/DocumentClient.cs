@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using ICSharpCode.SharpZipLib.Zip;
+using Newtonsoft.Json;
+using NTech.Services.Infrastructure;
 
 namespace nSavings.Code
 {
@@ -12,7 +13,7 @@ namespace nSavings.Code
     {
         protected override string ServiceName => "nDocument";
 
-        public Stream CreateXlsx(Excel.DocumentClientExcelRequest request)
+        public Stream CreateXlsx(DocumentClientExcelRequest request)
         {
             var ms = new MemoryStream();
             Begin()
@@ -22,7 +23,7 @@ namespace nSavings.Code
             return ms;
         }
 
-        public string CreateXlsxToArchive(Excel.DocumentClientExcelRequest request, string archiveFileName)
+        public string CreateXlsxToArchive(DocumentClientExcelRequest request, string archiveFileName)
         {
             return Begin()
                 .PostJson("Excel/CreateXlsxToArchive", new { request = request, archiveFileName = archiveFileName })
@@ -71,13 +72,12 @@ namespace nSavings.Code
 
         public byte[] FetchRaw(string key, out string contentType, out string fileName)
         {
-            byte[] b;
-            if (TryFetchRaw(key, out contentType, out fileName, out b))
+            if (TryFetchRaw(key, out contentType, out fileName, out var b))
             {
                 return b;
             }
-            else
-                throw new Exception($"Missing document {key} in the archive");
+
+            throw new Exception($"Missing document {key} in the archive");
         }
 
         private class ArchiveStoreResult
@@ -99,7 +99,8 @@ namespace nSavings.Code
         {
             using (var fs = file.OpenRead())
             {
-                return Begin().UploadFile("Archive/StoreFile", fs, fileName, mimeType).ParseJsonAs<ArchiveStoreResult>().Key;
+                return Begin().UploadFile("Archive/StoreFile", fs, fileName, mimeType).ParseJsonAs<ArchiveStoreResult>()
+                    .Key;
             }
         }
 
@@ -128,11 +129,11 @@ namespace nSavings.Code
             public string BatchId { get; set; }
         }
 
-        private byte[] GetPdfTemplate(string templateName)
+        private static byte[] GetPdfTemplate(string templateName)
         {
             return PdfTemplateReaderLegacy.GetPdfTemplate(templateName, NEnv.ClientCfg.Country.BaseCountry, x =>
             {
-                var fs = new ICSharpCode.SharpZipLib.Zip.FastZip();
+                var fs = new FastZip();
                 using (var ms = new MemoryStream())
                 {
                     fs.CreateZip(ms, x, true, null, null);
@@ -156,10 +157,16 @@ namespace nSavings.Code
             public string Key { get; set; }
         }
 
-        public string BatchRenderDocumentToArchive(string batchId, string renderedPdfFileName, IDictionary<string, object> context)
+        public string BatchRenderDocumentToArchive(string batchId, string renderedPdfFileName,
+            IDictionary<string, object> context)
         {
             return Begin()
-                .PostJson("Pdf/BatchRenderDocumentToArchive", new { batchId = batchId, context = JsonConvert.SerializeObject(context), filename = renderedPdfFileName })
+                .PostJson("Pdf/BatchRenderDocumentToArchive",
+                    new
+                    {
+                        batchId = batchId, context = JsonConvert.SerializeObject(context),
+                        filename = renderedPdfFileName
+                    })
                 .ParseJsonAs<BatchRenderResult>()
                 .Key;
         }
@@ -180,10 +187,16 @@ namespace nSavings.Code
                 .BatchId;
         }
 
-        public string BatchRenderDelayedDocumentToArchive(string batchId, string renderedPdfFileName, IDictionary<string, object> context)
+        public string BatchRenderDelayedDocumentToArchive(string batchId, string renderedPdfFileName,
+            IDictionary<string, object> context)
         {
             return Begin()
-                .PostJson("Pdf/BatchRenderDelayedDocumentToArchive", new { batchId = batchId, context = JsonConvert.SerializeObject(context), filename = renderedPdfFileName })
+                .PostJson("Pdf/BatchRenderDelayedDocumentToArchive",
+                    new
+                    {
+                        batchId = batchId, context = JsonConvert.SerializeObject(context),
+                        filename = renderedPdfFileName
+                    })
                 .ParseJsonAs<BatchRenderResult>()
                 .Key;
         }
@@ -195,17 +208,16 @@ namespace nSavings.Code
                 .EnsureSuccessStatusCode();
         }
 
-        public T WithDocumentBatchRenderer<T>(string templateName, Func<Func<IDictionary<string, object>, string, string>, T> doWithRenderer, bool useDelayedDocuments = false)
+        public T WithDocumentBatchRenderer<T>(string templateName,
+            Func<Func<IDictionary<string, object>, string, string>, T> doWithRenderer, bool useDelayedDocuments = false)
         {
             var batchId = useDelayedDocuments ? BatchRenderDelayedBegin(templateName) : BatchRenderBegin(templateName);
             try
             {
-                Func<IDictionary<string, object>, string, string> renderToDocumentArchive = (ctx, pdfFileName) =>
+                return doWithRenderer((ctx, pdfFileName) =>
                     useDelayedDocuments
-                    ? BatchRenderDelayedDocumentToArchive(batchId, pdfFileName, ctx)
-                    : BatchRenderDocumentToArchive(batchId, pdfFileName, ctx);
-
-                return doWithRenderer(renderToDocumentArchive);
+                        ? BatchRenderDelayedDocumentToArchive(batchId, pdfFileName, ctx)
+                        : BatchRenderDocumentToArchive(batchId, pdfFileName, ctx));
             }
             finally
             {
@@ -243,10 +255,13 @@ namespace nSavings.Code
             public int TimeInMs { get; set; }
         }
 
-        public bool TryExportArchiveFile(string archiveKey, string exportProfileName, out List<string> successProfileNames, out List<string> failedProfileNames, out int timeInMs, string filename = null)
+        public bool TryExportArchiveFile(string archiveKey, string exportProfileName,
+            out List<string> successProfileNames, out List<string> failedProfileNames, out int timeInMs,
+            string filename = null)
         {
             var result = Begin()
-                .PostJson("FileExport/Export", new { FileArchiveKey = archiveKey, ProfileName = exportProfileName, Filename = filename })
+                .PostJson("FileExport/Export",
+                    new { FileArchiveKey = archiveKey, ProfileName = exportProfileName, Filename = filename })
                 .ParseJsonAs<TryExportResult>();
             timeInMs = result.TimeInMs;
             successProfileNames = result.SuccessProfileNames;
@@ -260,9 +275,7 @@ namespace nSavings.Code
         public string ContentType { get; set; }
         public string FileName { get; set; }
     }
-}
-namespace nSavings.Excel
-{
+
     public class DocumentClientExcelRequest
     {
         public Sheet[] Sheets { get; set; }
@@ -306,6 +319,7 @@ namespace nSavings.Excel
             return new List<Tuple<Column, Func<T, object>>>();
         }
     }
+
     public enum ExcelType
     {
         Date,
@@ -339,73 +353,78 @@ namespace nSavings.Excel
                 IsPercent = type == ExcelType.Percent,
                 IsText = type == ExcelType.Text,
                 IsNumericId = isNumericId
-            }, x => getValue(x));
+            }, getValue);
         }
 
-        public static void SetColumnsAndData<T>(this DocumentClientExcelRequest.Sheet source, IList<T> rows, params Tuple<DocumentClientExcelRequest.Column, Func<T, object>>[] columns)
+        public static void SetColumnsAndData<T>(this DocumentClientExcelRequest.Sheet source, IList<T> rows,
+            params Tuple<DocumentClientExcelRequest.Column, Func<T, object>>[] columns)
         {
             source.Columns = columns.Select(x => x.Item1).ToArray();
             source.Cells = rows.Select(row => columns.Select(c =>
             {
                 var col = c.Item1;
                 var value = c.Item2(row);
+                
                 if (col.IsNumber)
                 {
                     if (value == null)
                         return new DocumentClientExcelRequest.Value { };
-                    if (value is decimal)
-                        return new DocumentClientExcelRequest.Value { V = (decimal)value };
-                    else if (value is decimal?)
+                    if (value is decimal decVal)
+                        return new DocumentClientExcelRequest.Value { V = decVal };
+                    if (value is decimal?)
                     {
                         return new DocumentClientExcelRequest.Value { V = (decimal?)value };
                     }
-                    if (value is int)
-                        return new DocumentClientExcelRequest.Value { V = (int)value };
-                    else if (value is int?)
+
+                    if (value is int intVal)
+                        return new DocumentClientExcelRequest.Value { V = intVal };
+                    if (value is int?)
                     {
                         var v = (int?)value;
-                        return v.HasValue ? new DocumentClientExcelRequest.Value { V = (decimal)v.Value } : new DocumentClientExcelRequest.Value { };
+                        return v.HasValue
+                            ? new DocumentClientExcelRequest.Value { V = (decimal)v.Value }
+                            : new DocumentClientExcelRequest.Value { };
                     }
-                    else
-                        throw new Exception("Number column must be a decimal, decimal?, int or int? ");
+
+                    throw new Exception("Number column must be a decimal, decimal?, int or int? ");
                 }
-                else if (col.IsDate)
+
+                if (col.IsDate)
                 {
                     if (value == null)
                         return new DocumentClientExcelRequest.Value { };
-                    if (value is DateTime)
-                        return new DocumentClientExcelRequest.Value { D = (DateTime)value };
-                    else if (value is DateTime?)
+                    if (value is DateTime dateVal)
+                        return new DocumentClientExcelRequest.Value { D = dateVal };
+                    if (value is DateTime?)
                         return new DocumentClientExcelRequest.Value { D = (DateTime?)value };
-                    else
-                        throw new Exception("Date column must be a DateTime or DateTime?");
+
+                    throw new Exception("Date column must be a DateTime or DateTime?");
                 }
-                else if (col.IsPercent)
+
+                if (col.IsPercent)
                 {
                     if (value == null)
-                        return new DocumentClientExcelRequest.Value { };
-                    if (value is decimal)
-                        return new DocumentClientExcelRequest.Value { V = ((decimal)value) };
-                    else if (value is decimal?)
+                        return new DocumentClientExcelRequest.Value();
+                    if (value is decimal decVal)
+                        return new DocumentClientExcelRequest.Value { V = decVal };
+                    if (value is decimal?)
                     {
-                        var v = (decimal?)value;
                         return new DocumentClientExcelRequest.Value { V = (decimal?)value };
                     }
-                    else
-                        throw new Exception("Percent column must be a decimal or decimal? ");
+
+                    throw new Exception("Percent column must be a decimal or decimal? ");
                 }
-                else if (col.IsText)
+
+                if (col.IsText)
                 {
                     if (value == null)
                         return new DocumentClientExcelRequest.Value { };
-                    if (value is string)
-                        return new DocumentClientExcelRequest.Value { S = (string)value };
-                    else throw new Exception("Text column must be string");
+                    if (value is string sVal)
+                        return new DocumentClientExcelRequest.Value { S = sVal };
+                    throw new Exception("Text column must be string");
                 }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+
+                throw new NotImplementedException();
             }).ToArray()).ToArray();
         }
     }

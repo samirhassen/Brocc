@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.Code.Services
 {
@@ -22,7 +24,7 @@ namespace nSavings.Code.Services
 
             var allHits = new List<SavingsAccountSearchHit>();
 
-            using (var context = new SavingsContext())
+            using (var context = new DbModel.SavingsContext())
             {
                 if (NEnv.BaseOcrNumberParser.TryParse(searchQuery, out var ocrNr, out _))
                 {

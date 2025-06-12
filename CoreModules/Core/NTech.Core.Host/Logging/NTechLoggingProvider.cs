@@ -1,22 +1,23 @@
-﻿using NTech.Core.Host.Infrastructure;
-using NTech.Core.Module;
-using NTech.Core.Module.Shared.Clients;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using NTech.Core.Host.Infrastructure;
+using NTech.Core.Module;
+using NTech.Core.Module.Shared.Clients;
 
 namespace NTech.Core.Host.Logging
 {
     public class NTechLoggerConfiguration
     {
-        public bool IsVerboseLoggingEnabled { get; set; }
-        public bool IsHttpRequestLoggingEnabled { get; set; }
+        public bool IsVerboseLoggingEnabled { get; init; }
+        public bool IsHttpRequestLoggingEnabled { get; init; }
     }
 
     public class NTechLoggerProvider : ILoggerProvider
     {
         private readonly NTechLoggerConfiguration config;
-        private readonly ConcurrentDictionary<string, ILogger> loggers = new ConcurrentDictionary<string, ILogger>();
+        private readonly ConcurrentDictionary<string, ILogger> loggers = new();
         private readonly NTechAuditSystemLogBatchingService auditService;
         private readonly NEnv nEnv;
 
@@ -35,10 +36,11 @@ namespace NTech.Core.Host.Logging
         {
             if (categoryName == "Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware")
             {
-                return loggers.GetOrAdd(categoryName, name => new NTechHttpRequestLogger(config.IsHttpRequestLoggingEnabled, nEnv));
+                return loggers.GetOrAdd(categoryName,
+                    _ => new NTechHttpRequestLogger(config.IsHttpRequestLoggingEnabled, nEnv));
             }
-            else
-                return loggers.GetOrAdd(categoryName, name => new NTechLogger(name, config, auditService));
+
+            return loggers.GetOrAdd(categoryName, name => new NTechLogger(name, config, auditService));
         }
 
         public void Dispose()
@@ -51,9 +53,10 @@ namespace NTech.Core.Host.Logging
     {
         private readonly string name;
         private readonly NTechLoggerConfiguration config;
-        private NTechAuditSystemLogBatchingService auditService;
+        private readonly NTechAuditSystemLogBatchingService auditService;
 
-        public NTechLogger(string name, NTechLoggerConfiguration config, NTechAuditSystemLogBatchingService auditService)
+        public NTechLogger(string name, NTechLoggerConfiguration config,
+            NTechAuditSystemLogBatchingService auditService)
         {
             this.name = name;
             this.config = config;
@@ -67,15 +70,16 @@ namespace NTech.Core.Host.Logging
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            if (logLevel >= LogLevel.Warning)
-                return true;
-            else if (logLevel >= LogLevel.Information)
-                return config.IsVerboseLoggingEnabled;
-            else
-                return false;
+            return logLevel switch
+            {
+                >= LogLevel.Warning => true,
+                >= LogLevel.Information => config.IsVerboseLoggingEnabled,
+                _ => false
+            };
         }
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
+            Func<TState, Exception, string> formatter)
         {
             if (!IsEnabled(logLevel))
             {
@@ -86,30 +90,30 @@ namespace NTech.Core.Host.Logging
             switch (logLevel)
             {
                 case LogLevel.Critical:
-                    {
-                        ntechLogLevel = "Error";
-                    };
+                    ntechLogLevel = "Error";
                     break;
 
                 case LogLevel.Information:
                 case LogLevel.Error:
                 case LogLevel.Warning:
-                    {
-                        ntechLogLevel = logLevel.ToString();
-                    };
+                    ntechLogLevel = logLevel.ToString();
                     break;
 
                 default:
                     return;
             }
 
-            var p = new Dictionary<string, string>()
+            var p = new Dictionary<string, string>
             {
                 { "ServiceName", "NTechHost" }, //TODO: Can this be contextualized somehow?
-                { "ServiceVersion", System.Reflection.AssemblyName.GetAssemblyName(System.Reflection.Assembly.GetExecutingAssembly().Location).Version.ToString() }
+                {
+                    "ServiceVersion",
+                    AssemblyName
+                        .GetAssemblyName(Assembly.GetExecutingAssembly().Location).Version?.ToString()
+                }
             };
 
-            if (exception != null && exception is NTEchLoggerException loggerException)
+            if (exception is NTechLoggerException loggerException)
             {
                 string ClipLeft(string s, int maxLength) => s.Length > maxLength ? s.Substring(0, maxLength) : s;
 
@@ -152,31 +156,37 @@ namespace NTech.Core.Host.Logging
                 b.AppendLine(ex.StackTrace);
                 ex = ex.InnerException;
             }
+
             return b.ToString();
         }
 
-        public static NTEchLoggerException WrapException(Exception ex, string remoteIp = null, string requestUri = null, string userId = null, string eventType = null)
+        public static NTechLoggerException WrapException(Exception ex, string remoteIp = null, string requestUri = null,
+            string userId = null, string eventType = null)
         {
-            var result = new NTEchLoggerException(ex.Message, ex);
-
-            string NormalizeWhitespace(string s) => string.IsNullOrWhiteSpace(s) ? null : s.Trim();
-
-            result.RemoteIp = NormalizeWhitespace(remoteIp);
-            result.RequestUri = NormalizeWhitespace(requestUri);
-            result.UserId = NormalizeWhitespace(userId);
-            result.EventType = NormalizeWhitespace(eventType);
+            var result = new NTechLoggerException(ex.Message, ex)
+            {
+                RemoteIp = NormalizeWhitespace(remoteIp),
+                RequestUri = NormalizeWhitespace(requestUri),
+                UserId = NormalizeWhitespace(userId),
+                EventType = NormalizeWhitespace(eventType)
+            };
 
             return result;
+
+            string NormalizeWhitespace(string s) => string.IsNullOrWhiteSpace(s) ? null : s.Trim();
         }
     }
 
-    public class NTechAuditSystemLogBatchingService : HostingAwareBackgroundBatchedServiceRequestQueueService<AuditClientSystemLogItem>
+    public class
+        NTechAuditSystemLogBatchingService : HostingAwareBackgroundBatchedServiceRequestQueueService<
+        AuditClientSystemLogItem>
     {
         private readonly NEnv nEnv;
         private readonly ILogger<NTechAuditSystemLogBatchingService> logger;
         private readonly SystemLogService systemLogService;
 
-        public NTechAuditSystemLogBatchingService(NEnv nEnv, ILogger<NTechAuditSystemLogBatchingService> logger, SystemLogService systemLogService)
+        public NTechAuditSystemLogBatchingService(NEnv nEnv, ILogger<NTechAuditSystemLogBatchingService> logger,
+            SystemLogService systemLogService)
         {
             this.nEnv = nEnv;
             this.logger = logger;
@@ -184,7 +194,9 @@ namespace NTech.Core.Host.Logging
         }
 
         protected override string Name => "NTechLogginProviderAuditSink";
-        protected override async Task HandleBatch(List<AuditClientSystemLogItem> items, CancellationToken cancellationToken)
+
+        protected override async Task HandleBatch(List<AuditClientSystemLogItem> items,
+            CancellationToken cancellationToken)
         {
             await systemLogService.LogBatchAsync(items);
         }
@@ -197,21 +209,21 @@ namespace NTech.Core.Host.Logging
     /// logger.LogError(NTechLogger.WrapException(ex, remoteIp = "::1"));
     /// Which will cause the ip to be included in the logs
     /// </summary>
-    public class NTEchLoggerException : Exception
+    public class NTechLoggerException : Exception
     {
-        public NTEchLoggerException()
+        public NTechLoggerException()
         {
         }
 
-        public NTEchLoggerException(string message) : base(message)
+        public NTechLoggerException(string message) : base(message)
         {
         }
 
-        public NTEchLoggerException(string message, Exception innerException) : base(message, innerException)
+        public NTechLoggerException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
-        protected NTEchLoggerException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected NTechLoggerException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 

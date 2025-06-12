@@ -1,5 +1,4 @@
-﻿using nSavings.Code.Cm1;
-using NTech.Banking.CivicRegNumbers;
+﻿using NTech.Banking.CivicRegNumbers;
 using NTech.Services.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -23,48 +22,42 @@ namespace nSavings.Code
             public List<TrapetsAmlItem> Items { get; set; }
         }
 
-        public Tuple<byte[], List<TreasuryAmlItem>> FetchTreasuryAmlData(byte[] latestSeenTimestamp, IList<int> customerIds)
+        public Tuple<byte[], List<TreasuryAmlItem>> FetchTreasuryAmlData(byte[] latestSeenTimestamp,
+            IList<int> customerIds)
         {
             var rr = Begin(timeout: TimeSpan.FromMinutes(30))
                 .PostJson("Kyc/FetchTreasuryAmlData", new
                 {
                     customerIds = customerIds,
-                    latestSeenTimestamp = latestSeenTimestamp == null ? null : Convert.ToBase64String(latestSeenTimestamp)
+                    latestSeenTimestamp =
+                        latestSeenTimestamp == null ? null : Convert.ToBase64String(latestSeenTimestamp)
                 })
                 .ParseJsonAs<FetchTreasuryAmlDataResult>();
 
-            if (rr.Items != null && rr.Items.Count > 0)
-            {
-                if (rr.NewLatestSeenTimestamp == null)
-                    throw new Exception("Missing new latest timestamp");
-                return Tuple.Create(Convert.FromBase64String(rr.NewLatestSeenTimestamp), rr.Items);
-            }
-            else
-            {
-                return Tuple.Create((byte[])null, new List<TreasuryAmlItem>());
-            }
+            if (rr.Items == null || rr.Items.Count <= 0) return Tuple.Create((byte[])null, new List<TreasuryAmlItem>());
+
+            if (rr.NewLatestSeenTimestamp == null)
+                throw new Exception("Missing new latest timestamp");
+            return Tuple.Create(Convert.FromBase64String(rr.NewLatestSeenTimestamp), rr.Items);
         }
 
-        public Tuple<byte[], List<TrapetsAmlItem>> FetchTrapetsAmlData(byte[] latestSeenTimestamp, IList<int> customerIds)
+        public Tuple<byte[], List<TrapetsAmlItem>> FetchTrapetsAmlData(byte[] latestSeenTimestamp,
+            IList<int> customerIds)
         {
             var rr = Begin()
                 .PostJson("Kyc/FetchTrapetsAmlData", new
                 {
                     customerIds = customerIds,
-                    latestSeenTimestamp = latestSeenTimestamp == null ? null : Convert.ToBase64String(latestSeenTimestamp)
+                    latestSeenTimestamp =
+                        latestSeenTimestamp == null ? null : Convert.ToBase64String(latestSeenTimestamp)
                 })
                 .ParseJsonAs<FetchTrapetsAmlDataResult>();
 
-            if (rr.Items != null && rr.Items.Count > 0)
-            {
-                if (rr.NewLatestSeenTimestamp == null)
-                    throw new Exception("Missing new latest timestamp");
-                return Tuple.Create(Convert.FromBase64String(rr.NewLatestSeenTimestamp), rr.Items);
-            }
-            else
-            {
-                return Tuple.Create((byte[])null, new List<TrapetsAmlItem>());
-            }
+            if (rr.Items == null || rr.Items.Count <= 0) return Tuple.Create((byte[])null, new List<TrapetsAmlItem>());
+
+            if (rr.NewLatestSeenTimestamp == null)
+                throw new Exception("Missing new latest timestamp");
+            return Tuple.Create(Convert.FromBase64String(rr.NewLatestSeenTimestamp), rr.Items);
         }
 
         public int GetCustomerId(ICivicRegNumber civicRegNr)
@@ -89,7 +82,8 @@ namespace nSavings.Code
             public List<GetPropertyCustomer> Customers { get; set; }
         }
 
-        public IDictionary<int, GetPropertyCustomer> BulkFetchPropertiesByCustomerIds(ISet<int> customerIds, params string[] propertyNames)
+        public IDictionary<int, GetPropertyCustomer> BulkFetchPropertiesByCustomerIds(ISet<int> customerIds,
+            params string[] propertyNames)
         {
             return Begin()
                 .PostJson("Customer/BulkFetchPropertiesByCustomerIds", new
@@ -102,7 +96,8 @@ namespace nSavings.Code
                 .ToDictionary(x => x.CustomerId, x => x);
         }
 
-        public Dictionary<int, Dictionary<string, string>> BulkFetchPropertiesByCustomerIdsSimple(ISet<int> customerIds, params string[] propertyNames)
+        public Dictionary<int, Dictionary<string, string>> BulkFetchPropertiesByCustomerIdsSimple(ISet<int> customerIds,
+            params string[] propertyNames)
         {
             return BulkFetchPropertiesByCustomerIds(customerIds, propertyNames)
                 ?.ToDictionary(x => x.Key, x => x.Value.Properties.ToDictionary(y => y.Name, y => y.Value));
@@ -117,7 +112,8 @@ namespace nSavings.Code
             }).ParseJsonAs<ListScreenBatchResult>();
         }
 
-        public static Uri GetCustomerCardUri(int customerId, bool forceLegacyUi = false, NTechNavigationTarget backTarget = null)
+        public static Uri GetCustomerCardUri(int customerId, bool forceLegacyUi = false,
+            NTechNavigationTarget backTarget = null)
         {
             return NEnv.ServiceRegistry.External.ServiceUrl("nCustomer", "Customer/CustomerCard",
                 Tuple.Create("customerId", customerId.ToString()),
@@ -141,15 +137,15 @@ namespace nSavings.Code
         {
             var backTarget = back?.GetBackTargetOrNull();
             return NEnv.ServiceRegistry.Internal.ServiceUrl("nCustomer", "Ui/KycManagement/Manage",
-                        Tuple.Create("customerId", customerId.ToString()),
-                        backTarget == null ? null : Tuple.Create("backTarget", backTarget)).ToString();
+                Tuple.Create("customerId", customerId.ToString()),
+                backTarget == null ? null : Tuple.Create("backTarget", backTarget)).ToString();
         }
 
         public static string GetCustomerKycQuestionsUrl(int customerId, NTechNavigationTarget back)
         {
             var backTarget = back?.GetBackTargetOrNull();
             return NEnv.ServiceRegistry.Internal.ServiceUrl("nBackOffice", $"/s/customer-kyc/questions/{customerId}",
-                        backTarget == null ? null : Tuple.Create("backTarget", backTarget)).ToString();
+                backTarget == null ? null : Tuple.Create("backTarget", backTarget)).ToString();
         }
 
         private class ExistAllPropertiesResult
@@ -225,7 +221,7 @@ namespace nSavings.Code
                     terms = terms
                 })
                 .ParseJsonAs<FindCustomerIdsMatchingAllSearchTermsResult>();
-            return (rr?.CustomerIds) ?? new List<int>();
+            return rr?.CustomerIds ?? new List<int>();
         }
 
         public List<int> FindCustomerIdsByFullName(string name)
@@ -236,7 +232,7 @@ namespace nSavings.Code
                     name = name
                 })
                 .ParseJsonAs<FindCustomerIdsMatchingAllSearchTermsResult>();
-            return (rr?.CustomerIds) ?? new List<int>();
+            return rr?.CustomerIds ?? new List<int>();
         }
 
 
@@ -246,7 +242,7 @@ namespace nSavings.Code
             {
                 name = name
             }).ParseJsonAs<FindCustomerIdsMatchingAllSearchTermsResult>();
-            return (rr?.CustomerIds) ?? new List<int>();
+            return rr?.CustomerIds ?? new List<int>();
         }
 
         private class FetchTreasuryAmlDataResult
@@ -370,7 +366,8 @@ namespace nSavings.Code
             public bool IsSanctionHit { get; set; }
         }
 
-        public CustomerContactInfoModel FetchCustomerContactInfo(int customerId, bool includeSensitive, bool includeCivicRegNr)
+        public CustomerContactInfoModel FetchCustomerContactInfo(int customerId, bool includeSensitive,
+            bool includeCivicRegNr)
         {
             return Begin()
                 .PostJson("/Api/ContactInfo/Fetch", new { customerId, includeSensitive, includeCivicRegNr })
@@ -439,7 +436,8 @@ namespace nSavings.Code
             public DateTime? EndDate { get; set; }
         }
 
-        public string AddCustomerQuestionsSet(CustomerQuestionsSet customerQuestionsSet, string sourceType, string sourceId)
+        public string AddCustomerQuestionsSet(CustomerQuestionsSet customerQuestionsSet, string sourceType,
+            string sourceId)
         {
             return Begin()
                 .PostJson("Api/KycManagement/AddCustomerQuestionsSet", new
@@ -467,10 +465,12 @@ namespace nSavings.Code
             }
         }
 
-        public FetchCustomerKycStatusChangesResult FetchCustomerKycStatusChanges(ISet<int> customerIds, DateTime screenDate)
+        public FetchCustomerKycStatusChangesResult FetchCustomerKycStatusChanges(ISet<int> customerIds,
+            DateTime screenDate)
         {
             return Begin()
-                .PostJson("Api/KycScreening/FetchCustomerStatusChanges", new { customerIds = customerIds, screenDate = screenDate })
+                .PostJson("Api/KycScreening/FetchCustomerStatusChanges",
+                    new { customerIds = customerIds, screenDate = screenDate })
                 .ParseJsonAs<FetchCustomerKycStatusChangesResult>();
         }
 

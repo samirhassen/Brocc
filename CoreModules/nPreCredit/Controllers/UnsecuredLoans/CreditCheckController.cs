@@ -7,6 +7,7 @@ using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.PreCredit.Shared.Code.PetrusOnlyScoringService;
 using NTech.Core.PreCredit.Shared.Services.UlLegacy;
 using NTech.Services.Infrastructure;
+using Polly;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -33,11 +34,20 @@ namespace nPreCredit.Controllers
         [Route("New")]
         public ActionResult New(string applicationNr)
         {
+            var retryPolicy = Policy
+                                .Handle<NTechCoreWebserviceException>() //ex => !ex.IsUserFacing
+                                .Or<Exception>()
+                                .WaitAndRetry(3, retryAttempt => TimeSpan.FromSeconds(5),
+            onRetry: (exception, timeSpan, retryCount, context) =>
+            {
+                NLog.Warning(exception, $"AutomaticCreditCheck Retry {retryCount} due to: {exception.Message}");
+            });
+
             var p2 = Service.Resolve<PetrusOnlyCreditCheckService>();
 
             try
             {
-                p2.AutomaticCreditCheck(applicationNr, true);
+                retryPolicy.Execute(() => p2.AutomaticCreditCheck(applicationNr, true));
                 return RedirectToAction("ApplicationGateway", "CreditApplicationLink", new { applicationNr });
             }
             catch (NTechCoreWebserviceException ex)
@@ -47,7 +57,7 @@ namespace nPreCredit.Controllers
                     if (ex.ErrorCode == "petrusError")
                     {
                         Service.Resolve<IApplicationCommentService>().TryAddComment(applicationNr, $"Petrus returned an error: {ex.Message}", "petrusError", null, out var _);
-                    }
+                    }                        
                 }
                 NLog.Error(ex, "NewCreditCheck failed");
                 return RedirectToAction("CreditApplication", "CreditManagement", new
@@ -56,7 +66,7 @@ namespace nPreCredit.Controllers
                     onLoadMessage = "Credit check failed"
                 });
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 NLog.Error(ex, "NewCreditCheck failed");
                 return RedirectToAction("CreditApplication", "CreditManagement", new
@@ -64,7 +74,7 @@ namespace nPreCredit.Controllers
                     applicationNr,
                     onLoadMessage = "Credit check failed"
                 });
-            }
+            }            
         }
 
         [Route("View")]

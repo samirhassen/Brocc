@@ -1,7 +1,7 @@
-﻿using NTech.Services.Infrastructure;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [RoutePrefix("Api/YearlySummaries")]

@@ -1,11 +1,12 @@
-﻿using NTech.Services.Infrastructure;
-using NWebsec.Csp;
-using System;
+﻿using System;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using nBackOffice.Controllers;
+using NTech.Services.Infrastructure;
+using NWebsec.Csp;
 
 namespace nBackOffice
 {
@@ -17,7 +18,7 @@ namespace nBackOffice
             NTechHttpHardening.HandleCachingAndInformationLeakHeader(this, false);
         }
 
-        private void Application_Start(object sender, EventArgs e)
+        public static void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
@@ -28,27 +29,29 @@ namespace nBackOffice
             GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
             GlobalFilters.Filters.Add(new NTechAuthorizeAttribute());
 
-            Controllers.EmbeddedBackOfficeController.AddCsp(GlobalFilters.Filters);
+            EmbeddedBackOfficeController.AddCsp(GlobalFilters.Filters);
         }
 
         private static void RegisterStyles(BundleCollection bundles)
         {
             var cdnRootUrl = NEnv.NTechCdnUrl;
             bundles.UseCdn = cdnRootUrl != null;
-            Func<string, string> getCdnUrl = n =>
-                cdnRootUrl == null ? null : new Uri(new Uri(cdnRootUrl), $"magellan/css/{n}").ToString();
 
-            var sharedStyles = new string[]
-                    {
-                    "~/Content/css/bootstrap.min.css",
-                    "~/Content/css/toastr.css",
-                    };
+            var sharedStyles = new[]
+            {
+                "~/Content/css/bootstrap.min.css",
+                "~/Content/css/toastr.css",
+            };
 
             bundles.Add(new StyleBundle("~/Content/css/bundle-base")
                 .Include(sharedStyles));
 
-            bundles.Add(new StyleBundle("~/Content/css/bundle-magellan", getCdnUrl("magellan.css"))
+            bundles.Add(new StyleBundle("~/Content/css/bundle-magellan", GetCdnUrl("magellan.css"))
                 .Include("~/Content/css/magellan.css"));
+            return;
+
+            string GetCdnUrl(string n) =>
+                cdnRootUrl == null ? null : new Uri(new Uri(cdnRootUrl), $"magellan/css/{n}").ToString();
         }
 
         //http://www.asp.net/mvc/overview/performance/bundling-and-minification
@@ -59,23 +62,23 @@ namespace nBackOffice
 
             RegisterStyles(bundles);
 
-            var sharedScripts = new string[]
-                {
-                    "~/Content/js/jquery-1.12.4.js",
-                    "~/Content/js/bootstrap.js",
-                    "~/Content/js/toastr.min.js",
-                    "~/Content/js/moment.js",
-                    "~/Content/js/underscore.js"
-                };
+            var sharedScripts = new[]
+            {
+                "~/Content/js/jquery-1.12.4.js",
+                "~/Content/js/bootstrap.js",
+                "~/Content/js/toastr.min.js",
+                "~/Content/js/moment.js",
+                "~/Content/js/underscore.js"
+            };
 
-            var angularScripts = new string[]
-                {
-                    "~/Content/js/angular.min.js",
-                    "~/Content/js/angular-locale_sv-se.js",
-                    "~/Content/js/angular-resource.min.js",
-                    "~/Content/js/ngRemoteValidate.js",
-                    "~/Content/js/ntech-forms.js"
-                };
+            var angularScripts = new[]
+            {
+                "~/Content/js/angular.min.js",
+                "~/Content/js/angular-locale_sv-se.js",
+                "~/Content/js/angular-resource.min.js",
+                "~/Content/js/ngRemoteValidate.js",
+                "~/Content/js/ntech-forms.js"
+            };
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-base")
                 .Include(sharedScripts));
@@ -107,12 +110,12 @@ namespace nBackOffice
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void NWebsecHttpHeaderSecurityModule_CspViolationReported(object sender, CspViolationReportEventArgs e)
+        protected void NWebsecHttpHeaderSecurityModule_CspViolationReported(object sender,
+            CspViolationReportEventArgs e)
         {
             var violationReport = e.ViolationReport;
             var logFolder = NEnv.LogFolder;
             GlobalContentSecurityPolicyFilters.LogToFile(violationReport, logFolder);
         }
-
     }
 }

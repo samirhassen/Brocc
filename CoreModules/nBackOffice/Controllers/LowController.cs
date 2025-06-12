@@ -5,7 +5,7 @@ using System.Web.Mvc;
 namespace nBackOffice.Controllers
 {
     //Not in use any more
-    [NTechAuthorizeCreditLow()]
+    [NTechAuthorizeCreditLow]
     public class LowController : NController
     {
         public ActionResult Index()

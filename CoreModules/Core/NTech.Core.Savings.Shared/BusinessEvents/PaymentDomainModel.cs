@@ -1,10 +1,11 @@
-﻿using NTech.Core.Module.Shared.Services;
-using NTech.Core.Savings.Shared.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech.Core.Module.Shared.Services;
+using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
 
-namespace nSavings.DbModel.BusinessEvents
+namespace NTech.Core.Savings.Shared.BusinessEvents
 {
     public class PaymentDomainModel
     {

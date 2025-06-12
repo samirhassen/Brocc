@@ -14,20 +14,25 @@ namespace nWindowsAuthIdentityServer.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() => NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry, NEnv.AutomationUsernameAndPassword));
+            var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() =>
+                NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry,
+                    NEnv.AutomationUsernameAndPassword));
             Log.Logger = new LoggerConfiguration()
-                            .Enrich.WithMachineName()
-                            .Enrich.FromLogContext()
-                            .Enrich.With(
-                                new PropertyEnricher("ServiceName", "nWindowsAuthIdentityServer"),
-                                new PropertyEnricher("ServiceVersion", System.Reflection.Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString())
-                            )
-                            .WriteTo.Sink(new NTechSerilogSink(n => NEnv.ServiceRegistry.Internal[n], bearerToken: automationUser), NEnv.IsVerboseLoggingEnabled
-                                ? Serilog.Events.LogEventLevel.Information
-                                : Serilog.Events.LogEventLevel.Warning)
-                            .CreateLogger();
+                .Enrich.WithMachineName()
+                .Enrich.FromLogContext()
+                .Enrich.With(
+                    new PropertyEnricher("ServiceName", "nWindowsAuthIdentityServer"),
+                    new PropertyEnricher("ServiceVersion",
+                        System.Reflection.Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString())
+                )
+                .WriteTo.Sink(new NTechSerilogSink(n => NEnv.ServiceRegistry.Internal[n], bearerToken: automationUser),
+                    NEnv.IsVerboseLoggingEnabled
+                        ? Serilog.Events.LogEventLevel.Information
+                        : Serilog.Events.LogEventLevel.Warning)
+                .CreateLogger();
 
-            NLog.Information("{EventType}: in {environment} mode", "ServiceStarting", NEnv.IsProduction ? "prod" : "dev");
+            NLog.Information("{EventType}: in {environment} mode", "ServiceStarting",
+                NEnv.IsProduction ? "prod" : "dev");
 
             app.Use<NTechLoggingMiddleware>("nWindowsAuthIdentityServer");
 

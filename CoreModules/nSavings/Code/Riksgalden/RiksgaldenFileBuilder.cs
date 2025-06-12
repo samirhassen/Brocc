@@ -10,7 +10,10 @@ namespace nSavings.Code.Riksgalden
     public class RiksgaldenFileBuilder<T>
     {
         private readonly List<Column> columns = new List<Column>();
-        private static System.Globalization.CultureInfo FormattingCulture = System.Globalization.CultureInfo.GetCultureInfo("sv-SE");
+
+        private static System.Globalization.CultureInfo FormattingCulture =
+            System.Globalization.CultureInfo.GetCultureInfo("sv-SE");
+
         private readonly IList<T> items;
 
         private RiksgaldenFileBuilder(IList<T> items)
@@ -23,7 +26,8 @@ namespace nSavings.Code.Riksgalden
             return new RiksgaldenFileBuilder<T>(items);
         }
 
-        public RiksgaldenFileBuilder<T> AddStringColumn(string name, bool isRequired, int maxLength, Func<T, string> getValue)
+        public RiksgaldenFileBuilder<T> AddStringColumn(string name, bool isRequired, int maxLength,
+            Func<T, string> getValue)
         {
             columns.Add(new Column
             {
@@ -39,13 +43,14 @@ namespace nSavings.Code.Riksgalden
             return this;
         }
 
-        public RiksgaldenFileBuilder<T> AddDecimalColumn(string name, bool isRequired, int maxLength, Func<T, decimal?> getValue, int? fixedDecimals = null)
+        public RiksgaldenFileBuilder<T> AddDecimalColumn(string name, bool isRequired, int maxLength,
+            Func<T, decimal?> getValue, int? fixedDecimals = null)
         {
             return AddStringColumn(name, isRequired, maxLength,
                 x => fixedDecimals.HasValue
                     ? getValue(x)?.ToString($"f{fixedDecimals.Value}", FormattingCulture)
                     : getValue(x)?.ToString(FormattingCulture)
-                );
+            );
         }
 
         public RiksgaldenFileBuilder<T> AddDateAndTimeColumn(string name, bool isRequired, Func<T, DateTime?> getValue)
@@ -53,15 +58,16 @@ namespace nSavings.Code.Riksgalden
             return AddStringColumn(name, isRequired, 20, x => getValue(x)?.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
-        public RiksgaldenFileBuilder<T> AddCivicRegNrColumn(string name, bool isRequired, Func<T, ICivicRegNumber> getValue)
+        public RiksgaldenFileBuilder<T> AddCivicRegNrColumn(string name, bool isRequired,
+            Func<T, ICivicRegNumber> getValue)
         {
             return AddStringColumn(name, isRequired, 50, x =>
-                {
-                    var v = getValue(x);
-                    if (v == null)
-                        return null;
-                    return v.Country == "SE" ? v.NormalizedValue : $"{v.Country}{v.NormalizedValue}";
-                });
+            {
+                var v = getValue(x);
+                if (v == null)
+                    return null;
+                return v.Country == "SE" ? v.NormalizedValue : $"{v.Country}{v.NormalizedValue}";
+            });
         }
 
         private class Column
@@ -86,7 +92,8 @@ namespace nSavings.Code.Riksgalden
             w.WriteLine(string.Join("|", values));
         }
 
-        public void WriteFileToStream(DateTime writeTime, string instituteName, string instituteOrgnr, Stream target, bool? isFirstFilialBlock = null)
+        public void WriteFileToStream(DateTime writeTime, string instituteName, string instituteOrgnr, Stream target,
+            bool? isFirstFilialBlock = null)
         {
             if (string.IsNullOrWhiteSpace(instituteName))
                 throw new Exception("Missing instituteName");
@@ -97,7 +104,7 @@ namespace nSavings.Code.Riksgalden
             {
                 if (!isFirstFilialBlock.HasValue || isFirstFilialBlock.GetValueOrDefault())
                 {
-                    var firstLinePrefix = $"#!3|ÅÄÖåäö|{writeTime.ToString("yyyy-MM-dd HH:mm:ss")}|{instituteOrgnr}|";
+                    var firstLinePrefix = $"#!3|ÅÄÖåäö|{writeTime:yyyy-MM-dd HH:mm:ss}|{instituteOrgnr}|";
                     if (firstLinePrefix.Length + instituteName.Length > 160)
                         instituteName = instituteName.Substring(0, 160 - firstLinePrefix.Length);
                     w.WriteLine(firstLinePrefix + instituteName);
@@ -112,6 +119,7 @@ namespace nSavings.Code.Riksgalden
                 {
                     WriteItem(w, item);
                 }
+
                 w.Flush();
             }
         }

@@ -1,41 +1,39 @@
-﻿using Newtonsoft.Json;
-using nSavings;
-using nSavings.Code;
-using nSavings.Controllers;
-using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
-using NTech.Services.Infrastructure;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.Code;
+using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
+using NTech.Services.Infrastructure;
+using Serilog;
+using SavingsContext = nSavings.DbModel.SavingsContext;
 
-namespace nCredit.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [RoutePrefix("Api/SavingsInvoicingMetricsExport")]
     [NTechAuthorizeCreditHigh(ValidateAccessToken = true)]
     public class ApiCreditInvoicingMetricsExportController : NController
     {
-        [Route("Run")]
-        [HttpPost()]
+        private static readonly Lazy<NTechSelfRefreshingBearerToken> TelemetryUser =
+            new Lazy<NTechSelfRefreshingBearerToken>(
+                () =>
+                    NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(
+                        NEnv.ServiceRegistryNormal, NEnv.ApplicationAutomationUsernameAndPassword));
+
         public ActionResult RunCreditInvoicingMetricsExport(IDictionary<string, string> schedulerData = null)
         {
-            Func<string, string> getSchedulerData = s => (schedulerData != null && schedulerData.ContainsKey(s)) ? schedulerData[s] : null;
-
             return SavingsContext.RunWithExclusiveLock("ntech.scheduledjobs.savingsinvoicingmetricsexport",
-                    () => RunCreditInvoicingMetricsExportI(),
-                    () => new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Job is already running"));
+                RunCreditInvoicingMetricsExportI,
+                () => new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Job is already running"));
         }
-
-        private static Lazy<NTechSelfRefreshingBearerToken> telemetryUser = new Lazy<NTechSelfRefreshingBearerToken>(() =>
-            NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistryNormal, NEnv.ApplicationAutomationUsernameAndPassword));
 
         private ActionResult RunCreditInvoicingMetricsExportI()
         {
-            List<string> errors = new List<string>();
+            var errors = new List<string>();
 
             //Used by nScheduler
             var warnings = new List<string>();
@@ -44,8 +42,8 @@ namespace nCredit.Controllers
             try
             {
                 var items = FetchSavingsInvoicingMetricsData();
-                
-                var user = new LegacyHttpServiceBearerTokenUser(telemetryUser);
+
+                var user = new LegacyHttpServiceBearerTokenUser(TelemetryUser);
                 var auditClient = LegacyServiceClientFactory.CreateAuditClient(user, NEnv.ServiceRegistry);
 
                 auditClient.LogTelemetryData("InvoicingMetricsData", JsonConvert.SerializeObject(items));
@@ -60,11 +58,12 @@ namespace nCredit.Controllers
                 w.Stop();
             }
 
-            NLog.Information("SavingsInvoicingMetricsExport finished TotalMilliseconds={totalMilliseconds}", w.ElapsedMilliseconds);
+            NLog.Information("SavingsInvoicingMetricsExport finished TotalMilliseconds={totalMilliseconds}",
+                w.ElapsedMilliseconds);
 
-            errors?.ForEach(x => warnings.Add(x));
+            errors.ForEach(x => warnings.Add(x));
 
-            return Json2(new { errors, totalMilliseconds = w.ElapsedMilliseconds, warnings = warnings });
+            return Json2(new { errors, totalMilliseconds = w.ElapsedMilliseconds, warnings });
         }
 
         private InvoicingMetricItem[] FetchSavingsInvoicingMetricsData()
@@ -93,7 +92,7 @@ namespace nCredit.Controllers
                 if (savings.Any())
                     sumCapitalBalance = savings.Sum(x => x.CapitalBalance);
 
-                return new InvoicingMetricItem[]
+                return new[]
                 {
                     new InvoicingMetricItem
                     {
@@ -117,13 +116,5 @@ namespace nCredit.Controllers
             public string Metric { get; set; }
             public string Value { get; set; }
         }
-
     }
-
-
-
 }
-
-
-
-

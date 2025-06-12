@@ -1,31 +1,30 @@
-﻿using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Linq;
+using NTech.Services.Infrastructure;
 
-namespace nCustomerPages.Code
+namespace nCustomerPages.Code;
+
+public abstract class AbstractSystemUserServiceClient
 {
-    public abstract class AbstractSystemUserServiceClient
+    protected abstract string ServiceName { get; }
+
+    protected NHttp.NHttpCall Begin(string bearerToken = null, TimeSpan? timeout = null)
     {
-        protected abstract string ServiceName { get; }
+        return NHttp.Begin(new Uri(NEnv.ServiceRegistry.Internal[ServiceName]),
+            bearerToken ?? NEnv.SystemUserBearerToken, timeout: timeout);
+    }
 
-        protected NHttp.NHttpCall Begin(string bearerToken = null, TimeSpan? timeout = null)
+    protected Uri CreateServiceUri(string serviceName, string relativePath, params Tuple<string, string>[] args)
+    {
+        var serviceUrl = new Uri(new Uri(NEnv.ServiceRegistry.Internal[serviceName]), relativePath);
+        if (relativePath.Contains("?"))
+            throw new Exception("Put the arguments in args not in relativePath");
+        if (args.Length > 0)
         {
-            return NHttp.Begin(new Uri(NEnv.ServiceRegistry.Internal[ServiceName]), bearerToken ?? NEnv.SystemUserBearerToken, timeout: timeout);
+            return new Uri(
+                serviceUrl.AbsoluteUri + "?" + string.Join("&", args.Select(x => $"{x.Item1}={x.Item2}")));
         }
 
-        protected Uri CreateServiceUri(string serviceName, string relativePath, params Tuple<string, string>[] args)
-        {
-            var serviceUrl = new Uri(new Uri(NEnv.ServiceRegistry.Internal[serviceName]), relativePath);
-            if (relativePath.Contains("?"))
-                throw new Exception("Put the arguments in args not in relativePath");
-            if (args.Length > 0)
-            {
-                return new Uri(serviceUrl.AbsoluteUri + "?" + string.Join("&", args.Select(x => $"{x.Item1}={x.Item2}")));
-            }
-            else
-            {
-                return serviceUrl;
-            }
-        }
+        return serviceUrl;
     }
 }

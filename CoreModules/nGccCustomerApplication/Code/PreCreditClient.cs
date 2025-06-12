@@ -1,5 +1,4 @@
-﻿using Duende.IdentityModel.Client;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NTech.Services.Infrastructure;
 using Serilog;
 using System;
@@ -26,7 +25,7 @@ namespace nGccCustomerApplication.Code
                 client.BaseAddress = new Uri(NEnv.ServiceRegistry.Internal["nPreCredit"]);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                AuthorizationHeaderExtensions.SetBearerToken(client, bearerToken);
+                client.SetBearerToken(bearerToken);
                 var response = client.PostAsJsonAsync(uri, input).Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -78,36 +77,6 @@ namespace nGccCustomerApplication.Code
                 .PostJsonRaw(url, request)
                 .ParseAsRawJson();
         }
-
-        // Added New Method
-        //public bool TryGetTemporarilyEncryptedData(string compoundKey, out string plaintextMessage, bool removeAfter = false)
-        //{
-        //    var result = Begin().PostJson("Api/EncryptedTemporaryStorage/GetString", new
-        //    {
-        //        compoundKey = compoundKey,
-        //        removeAfter = removeAfter
-        //    }).ParseJsonAsAnonymousType(new { exists = (bool?)null, plaintextMessage = (string)null });
-
-        //    if (result?.exists ?? false)
-        //    {
-        //        plaintextMessage = result?.plaintextMessage;
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        plaintextMessage = null;
-        //        return false;
-        //    }
-        //}
-        // Added New Method
-        //public string StoreTemporarilyEncryptedData(string plaintextMessage, int? expireAfterHours)
-        //{
-        //    return Begin().PostJson("Api/EncryptedTemporaryStorage/StoreString", new
-        //    {
-        //        plaintextMessage = plaintextMessage,
-        //        expireAfterHours = expireAfterHours
-        //    }).ParseJsonAsAnonymousType(new { compoundKey = (string)null })?.compoundKey;
-        //}
 
         public class ExternalProviderEventRequest
         {

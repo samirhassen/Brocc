@@ -92,8 +92,8 @@
   </tr>
   <tr>
     <key>AccessDenied_generalmessage</key>
-    <sv>Logga in för att gå tillgång till din låneansökan</sv>
-    <fi>Kirjaudu sisään päästäksesi lainahakemukseen.</fi>
+    <sv>Du har nu loggat ut.</sv>
+    <fi>Olet nyt kirjautunut ulos.</fi>
   </tr>
   <tr>
     <key>Layout_loggedinas</key>
@@ -119,6 +119,11 @@
     <key>eidlogin_identification</key>
     <sv>Identifiering</sv>
     <fi>Tunnistaminen</fi>
+  </tr>
+  <tr>
+    <key>eidlogin_kontotyp</key>
+    <sv>Kontotyp</sv>
+    <fi>Tilityyppiä</fi>
   </tr>
   <tr>
     <key>eidlogin_uppgifter</key>
@@ -171,6 +176,26 @@
     <fi>Tunnistautuminen</fi>
   </tr>
   <tr>
+    <key>ssa_kontotyp</key>
+    <sv>Välj kontotyp</sv>
+    <fi>Valitse tilityyppiä</fi>
+  </tr>
+  <tr>
+    <key>ssa_kontouppgifter</key>
+    <sv>Kontouppgifter</sv>
+    <fi>Tilitiedot</fi>
+  </tr>
+  <tr>
+    <key>ssa_kontotyp_flex_description</key>
+    <sv>Lorem ipsum dolor sit amet, consectetur.</sv>
+    <fi>Lorem ipsum dolor sit amet, consectetur.</fi>
+  </tr>
+  <tr>
+    <key>ssa_kontotyp_fixed_description</key>
+    <sv>Lorem ipsum dolor sit amet, consectetur.</sv>
+    <fi>Lorem ipsum dolor sit amet, consectetur.</fi>
+  </tr>
+  <tr>
     <key>ssa_uppgifter</key>
     <sv>Uppgifter</sv>
     <fi>Tiedot</fi>
@@ -179,6 +204,16 @@
     <key>ssa_signering</key>
     <sv>Signering</sv>
     <fi>Allekirjoitus</fi>
+  </tr>
+  <tr>
+    <key>ssa_kontotyp_flex</key>
+    <sv>Flexibel ränta</sv>
+    <fi>Joustava korko</fi>
+  </tr>
+  <tr>
+    <key>ssa_kontotyp_fast</key>
+    <sv>Fast ränta</sv>
+    <fi>Kiinteä korko</fi>
   </tr>
   <tr>
     <key>ssa_civicnr</key>

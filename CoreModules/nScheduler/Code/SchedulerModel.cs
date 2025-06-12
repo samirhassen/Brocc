@@ -1,5 +1,4 @@
-﻿using Duende.IdentityModel.Client;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using nScheduler.Code;
 using NTech;
 using NTech.Core.Module.Shared.Clients;
@@ -11,7 +10,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -102,7 +100,7 @@ namespace nScheduler
                     var client = new HttpClient();
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                    client.SetBearerToken(accessToken);              
+                    client.SetBearerToken(accessToken);
                     client.Timeout = TimeSpan.FromHours(4);
                     var result = syncConverter.ToSync(() => client.PostAsJsonAsync(service.ServiceUrl, new { schedulerData = schedulerData }));
                     if (result.IsSuccessStatusCode)
@@ -271,9 +269,7 @@ namespace nScheduler
                         var client = new HttpClient();
                         client.DefaultRequestHeaders.Accept.Clear();
                         client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                        //client.SetBearerToken(context.AcccessToken.GetToken());
-
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue((context.AcccessToken.GetToken()));
+                        client.SetBearerToken(context.AcccessToken.GetToken());
                         client.Timeout = TimeSpan.FromHours(4);
                         var result = syncConverter.ToSync(() => client.PostAsJsonAsync(item.ServiceCall.ServiceUrl, new { schedulerData = context.SchedulerData }));
                         if (result.IsSuccessStatusCode)

@@ -1,0 +1,139 @@
+@{
+    Layout = null;
+}
+
+@using nSavings.ViewModel.FixedRateProduct.Common
+@model nSavings.ViewModel.FixedRateProduct.Common.ProductViewModel
+
+<style>
+    .modal-form-container {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+        max-width: 80rem;
+        min-width: 40rem;
+        margin: 0 auto;
+        position: relative;
+        font-family: sans-serif;
+    }
+
+    .modal-form-container h2 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .modal-form-container label {
+        display: block;
+        margin-bottom: 0.375rem;
+        font-weight: 600;
+    }
+
+    .modal-form-container input {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        font-size: 1rem;
+    }
+
+    .modal-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.625rem;
+    }
+
+    .modal-form-actions button {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+
+    .modal-form-actions .cancel-btn {
+        background-color: #eee;
+        color: #333;
+    }
+
+    .modal-form-actions .submit-btn {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #888;
+        cursor: pointer;
+    }
+
+    .close-button:hover {
+        color: #444;
+    }
+</style>
+
+@{
+    var today = DateTime.Now.ToString("yyyy-MM-dd");
+    var action = $"/Ui/FixedRateProductManagement/{(Model.Id != null ? "Update" : "CreateProduct")}";
+    var isStarted = Model.Id != null && Model.ResponseStatus == ResponseStatus.Approved && DateTime.Now > Model.ValidFrom;
+}
+
+<div class="modal-form-container">
+    <button class="close-button" @@click="showModal = false">
+    </button>
+
+    @if (Model.Id == null)
+    {
+        <h2>Create new product</h2>
+    }
+    else
+    {
+        <h2>Edit product @Model.Name</h2>
+    }
+
+    <form action="@action"
+          method="post">
+
+        @if (Model.Id != null)
+        {
+            <input type="hidden" name="id" value="@Model.Id"/>
+        }
+
+        <label for="Name">Name</label>
+        <input type="text" class="@(isStarted ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "")" name="Name"
+               id="Name" required value="@(Model?.Name)" @(isStarted ? "readonly" : "")/>
+
+        <label for="InterestRate">Interest Rate (%)</label>
+        <input type="number" class="@(isStarted ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "")"
+               name="InterestRate" step="0.01" id="InterestRate" required value="@(Model?.InterestRate)"
+               @(isStarted ? "readonly" : "")/>
+
+        <label for="TermInMonths">Term in months</label>
+        <input type="number" class="@(isStarted ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "")"
+               name="TermInMonths" id="TermInMonths" required value="@(Model?.TermInMonths)"
+               @(isStarted ? "readonly" : "")/>
+
+        <label for="ValidFrom">Valid from</label>
+        <input type="date" class="@(isStarted ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "")" name="ValidFrom"
+               id="ValidFrom" required min="@today"
+               value="@(Model?.ValidFrom.ToString("yyyy-MM-dd"))"
+               @(isStarted ? "readonly" : "")/>
+
+        <label for="ValidTo">Valid to</label>
+        <input type="date" name="ValidTo" id="ValidTo" min="@today" value="@(Model?.ValidTo?.ToString("yyyy-MM-dd"))"/>
+
+        <div class="modal-form-actions">
+            <button type="button" class="cancel-btn" @@click="showModal = false">
+                Cancel
+            </button>
+            <button type="submit" class="submit-btn">Submit</button>
+        </div>
+    </form>
+</div>

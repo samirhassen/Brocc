@@ -1,18 +1,22 @@
-﻿using NTech;
-using NTech.Banking.Conversion;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech;
+using NTech.Banking.Conversion;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.DbModel.BusinessEvents
 {
     public class ChangeInterestRateBusinessEventManager : BusinessEventManagerBase
     {
-        public ChangeInterestRateBusinessEventManager(int userId, string informationMetadata, IClock clock) : base(userId, informationMetadata, clock)
+        public ChangeInterestRateBusinessEventManager(int userId, string informationMetadata, IClock clock) : base(
+            userId, informationMetadata, clock)
         {
         }
 
-        public bool TryChangeInterestRate(InMemoryInterestChangeManager.ChangeState change, out string failedMessage, out SharedSavingsInterestRateChangeHeader newSharedSavingsInterestRateHeader)
+        public bool TryChangeInterestRate(InMemoryInterestChangeManager.ChangeState change, out string failedMessage,
+            out SharedSavingsInterestRateChangeHeader newSharedSavingsInterestRateHeader)
         {
             using (var context = new SavingsContext())
             {
@@ -35,13 +39,13 @@ namespace nSavings.DbModel.BusinessEvents
 
                 if (change.AllAccountsValidFromDate.Date <= today)
                 {
-                    failedMessage = $"allAccountsValidFromDate must be > {today.ToString("yyyy-MM-dd")}";
+                    failedMessage = $"allAccountsValidFromDate must be > {today:yyyy-MM-dd}";
                     return false;
                 }
 
                 if (change.NewAccountsValidFromDate.HasValue && change.NewAccountsValidFromDate.Value.Date <= today)
                 {
-                    failedMessage = $"newAccountsValidFromDate must be > {today.ToString("yyyy-MM-dd")}";
+                    failedMessage = $"newAccountsValidFromDate must be > {today:yyyy-MM-dd}";
                     return false;
                 }
 
@@ -72,7 +76,7 @@ namespace nSavings.DbModel.BusinessEvents
 
                 var allRate = new SharedSavingsInterestRate
                 {
-                    AccountTypeCode = savingsAccountTypeCode.ToString(),
+                    AccountTypeCode = savingsAccountTypeCode.Value.ToString(),
                     BusinessEvent = evt,
                     InterestRatePercent = change.NewInterestRatePercent,
                     TransactionDate = Clock.Today,
@@ -86,7 +90,7 @@ namespace nSavings.DbModel.BusinessEvents
                 {
                     var newRate = new SharedSavingsInterestRate
                     {
-                        AccountTypeCode = savingsAccountTypeCode.ToString(),
+                        AccountTypeCode = savingsAccountTypeCode.Value.ToString(),
                         BusinessEvent = evt,
                         InterestRatePercent = change.NewInterestRatePercent,
                         TransactionDate = Clock.Today,
@@ -117,7 +121,7 @@ namespace nSavings.DbModel.BusinessEvents
                     Id = x.Id,
                     AppliesToAccountsSinceBusinessEventId = x.AppliesToAccountsSinceBusinessEventId,
                     BusinessEventId = x.BusinessEventId,
-                    AccountTypeCode = x.AccountTypeCode,
+                    AccountTypeCode = x.AccountTypeCode.ToString(),
                     InterestRatePercent = x.InterestRatePercent,
                     TransactionDate = x.TransactionDate,
                     ValidFromDate = x.ValidFromDate,
@@ -130,17 +134,20 @@ namespace nSavings.DbModel.BusinessEvents
             var rates = GetActiveInterestRates(context);
             var tmp = context
                 .SavingsAccountHeaders
-                .SelectMany(x => rates.Where(y => x.AccountTypeCode == y.AccountTypeCode && (!y.AppliesToAccountsSinceBusinessEventId.HasValue || y.AppliesToAccountsSinceBusinessEventId.Value <= x.CreatedByBusinessEventId))
-                .Select(y => new
-                {
-                    Id = y.Id,
-                    SavingsAccountNr = x.SavingsAccountNr,
-                    BusinessEventId = y.BusinessEventId,
-                    InterestRatePercent = y.InterestRatePercent,
-                    TransactionDate = y.TransactionDate,
-                    ValidFromDate = y.ValidFromDate,
-                    ChangedById = y.ChangedById
-                }));
+                .SelectMany(x => rates
+                    .Where(y => x.AccountTypeCode.ToString() == y.AccountTypeCode &&
+                                (!y.AppliesToAccountsSinceBusinessEventId.HasValue ||
+                                 y.AppliesToAccountsSinceBusinessEventId.Value <= x.CreatedByBusinessEventId))
+                    .Select(y => new
+                    {
+                        Id = y.Id,
+                        SavingsAccountNr = x.SavingsAccountNr,
+                        BusinessEventId = y.BusinessEventId,
+                        InterestRatePercent = y.InterestRatePercent,
+                        TransactionDate = y.TransactionDate,
+                        ValidFromDate = y.ValidFromDate,
+                        ChangedById = y.ChangedById
+                    }));
 
             return tmp.Select(x => new PerAccountInterestRateModel
             {
@@ -157,29 +164,34 @@ namespace nSavings.DbModel.BusinessEvents
         /// <summary>
         /// Filters out rates from before the account was created and after it was closed
         /// </summary>
-        public static List<PerAccountInterestRateModel> GetSavingsAccountFilteredActiveInterestRates(SavingsContext context, string savingsAccountNr, DateTime createdTransactionDate, int? closedBusinessEventId)
+        public static List<PerAccountInterestRateModel> GetSavingsAccountFilteredActiveInterestRates(
+            SavingsContext context, string savingsAccountNr, DateTime createdTransactionDate,
+            int? closedBusinessEventId)
         {
             var b = GetPerAccountActiveInterestRates(context)
-                    .Where(x => x.SavingsAccountNr == savingsAccountNr && (!closedBusinessEventId.HasValue || x.BusinessEventId <= closedBusinessEventId.Value))
-                    .Select(x => new
-                    {
-                        V = x,
-                        IsFromOrBeforeCreationDate = x.ValidFromDate <= createdTransactionDate,
-                    });
+                .Where(x => x.SavingsAccountNr == savingsAccountNr && (!closedBusinessEventId.HasValue ||
+                                                                       x.BusinessEventId <=
+                                                                       closedBusinessEventId.Value))
+                .Select(x => new
+                {
+                    V = x,
+                    IsFromOrBeforeCreationDate = x.ValidFromDate <= createdTransactionDate,
+                });
             return b
-                    .Select(x => new
-                    {
-                        x.V,
-                        x.IsFromOrBeforeCreationDate,
-                        IsBeforeFirst = x.IsFromOrBeforeCreationDate
-                            && b.Any(y => y.IsFromOrBeforeCreationDate && y.V.ValidFromDate > x.V.ValidFromDate)
-                    })
-                    .Where(x => !x.IsBeforeFirst)
-                    .Select(x => x.V)
-                    .ToList();
+                .Select(x => new
+                {
+                    x.V,
+                    x.IsFromOrBeforeCreationDate,
+                    IsBeforeFirst = x.IsFromOrBeforeCreationDate
+                                    && b.Any(y => y.IsFromOrBeforeCreationDate && y.V.ValidFromDate > x.V.ValidFromDate)
+                })
+                .Where(x => !x.IsBeforeFirst)
+                .Select(x => x.V)
+                .ToList();
         }
 
-        public static SharedInterestRateModel GetCurrentInterestRateForNewAccounts(SavingsContext context, SavingsAccountTypeCode savingsAccountTypeCode, DateTime forDate)
+        public static SharedInterestRateModel GetCurrentInterestRateForNewAccounts(SavingsContext context,
+            SavingsAccountTypeCode savingsAccountTypeCode, DateTime forDate)
         {
             return GetActiveInterestRates(context)
                 .Where(x => x.AccountTypeCode == savingsAccountTypeCode.ToString() && x.ValidFromDate <= forDate)
@@ -213,6 +225,7 @@ namespace nSavings.DbModel.BusinessEvents
         public class UpcomingChangeModel
         {
             public int Id { get; set; }
+
             public class Rate
             {
                 public string SavingsAccountTypeCode { get; set; }
@@ -220,6 +233,7 @@ namespace nSavings.DbModel.BusinessEvents
                 public DateTime ValidFromDate { get; set; }
                 public bool IsPending { get; set; }
             }
+
             public Rate AllAccountsRate { get; set; }
             public Rate NewAccountsOnlyRate { get; set; }
             public int InitiatedAndCreatedByUserId { get; set; }
@@ -236,28 +250,35 @@ namespace nSavings.DbModel.BusinessEvents
             return context
                 .SharedSavingsInterestRateChangeHeaders
                 .Where(x =>
-                    ((x.NewAccountsOnlyRateId.HasValue && x.NewAccountsOnlyRate.ValidFromDate > today && !x.NewAccountsOnlyRate.RemovedByBusinessEventId.HasValue)
-                      ||
-                      (x.AllAccountsRateId.HasValue && x.AllAccountsRate.ValidFromDate > today && !x.AllAccountsRate.RemovedByBusinessEventId.HasValue)
-                    )
+                    (x.NewAccountsOnlyRateId.HasValue && x.NewAccountsOnlyRate.ValidFromDate > today &&
+                     !x.NewAccountsOnlyRate.RemovedByBusinessEventId.HasValue)
+                    ||
+                    (x.AllAccountsRateId.HasValue && x.AllAccountsRate.ValidFromDate > today &&
+                     !x.AllAccountsRate.RemovedByBusinessEventId.HasValue)
                 )
                 .Select(x => new UpcomingChangeModel
                 {
                     Id = x.Id,
-                    AllAccountsRate = x.AllAccountsRateId.HasValue && !x.AllAccountsRate.RemovedByBusinessEventId.HasValue ? new UpcomingChangeModel.Rate
-                    {
-                        NewInterestRatePercent = x.AllAccountsRate.InterestRatePercent,
-                        SavingsAccountTypeCode = x.AllAccountsRate.AccountTypeCode,
-                        ValidFromDate = x.AllAccountsRate.ValidFromDate,
-                        IsPending = x.AllAccountsRate.ValidFromDate > today
-                    } : null,
-                    NewAccountsOnlyRate = x.NewAccountsOnlyRateId.HasValue && !x.NewAccountsOnlyRate.RemovedByBusinessEventId.HasValue ? new UpcomingChangeModel.Rate
-                    {
-                        NewInterestRatePercent = x.NewAccountsOnlyRate.InterestRatePercent,
-                        SavingsAccountTypeCode = x.NewAccountsOnlyRate.AccountTypeCode,
-                        ValidFromDate = x.NewAccountsOnlyRate.ValidFromDate,
-                        IsPending = x.NewAccountsOnlyRate.ValidFromDate > today
-                    } : null,
+                    AllAccountsRate =
+                        x.AllAccountsRateId.HasValue && !x.AllAccountsRate.RemovedByBusinessEventId.HasValue
+                            ? new UpcomingChangeModel.Rate
+                            {
+                                NewInterestRatePercent = x.AllAccountsRate.InterestRatePercent,
+                                SavingsAccountTypeCode = x.AllAccountsRate.AccountTypeCode,
+                                ValidFromDate = x.AllAccountsRate.ValidFromDate,
+                                IsPending = x.AllAccountsRate.ValidFromDate > today
+                            }
+                            : null,
+                    NewAccountsOnlyRate =
+                        x.NewAccountsOnlyRateId.HasValue && !x.NewAccountsOnlyRate.RemovedByBusinessEventId.HasValue
+                            ? new UpcomingChangeModel.Rate
+                            {
+                                NewInterestRatePercent = x.NewAccountsOnlyRate.InterestRatePercent,
+                                SavingsAccountTypeCode = x.NewAccountsOnlyRate.AccountTypeCode,
+                                ValidFromDate = x.NewAccountsOnlyRate.ValidFromDate,
+                                IsPending = x.NewAccountsOnlyRate.ValidFromDate > today
+                            }
+                            : null,
                     HadNewAccountsOnlyRate = x.NewAccountsOnlyRateId.HasValue,
                     InitiatedAndCreatedByUserId = x.InitiatedAndCreatedByUserId,
                     VerifiedByUserId = x.VerifiedByUserId,
@@ -301,7 +322,9 @@ namespace nSavings.DbModel.BusinessEvents
                     ValidFromDate = x.ValidFromDate,
                     RemovedByBusinessEvent = x.RemovedByBusinessEvent,
                     AppliesToAccountsSinceBusinessEventId = x.AppliesToAccountsSinceBusinessEventId,
-                    Header = x.AppliesToAccountsSinceBusinessEventId.HasValue ? x.NewAccountsHeaders.FirstOrDefault() : x.AllAccountsHeaders.FirstOrDefault()
+                    Header = x.AppliesToAccountsSinceBusinessEventId.HasValue
+                        ? x.NewAccountsHeaders.FirstOrDefault()
+                        : x.AllAccountsHeaders.FirstOrDefault()
                 })
                 .Select(x => new HistoryItemModel
                 {
@@ -311,7 +334,8 @@ namespace nSavings.DbModel.BusinessEvents
                     ValidFromDate = x.ValidFromDate,
                     RemovedByBusinessEventId = x.RemovedByBusinessEvent.Id,
                     AppliesToAccountsSinceBusinessEventId = x.AppliesToAccountsSinceBusinessEventId,
-                    IsPartOfSplitChange = x.Header != null && x.Header.AllAccountsRateId.HasValue && x.Header.NewAccountsOnlyRateId.HasValue,
+                    IsPartOfSplitChange = x.Header != null && x.Header.AllAccountsRateId.HasValue &&
+                                          x.Header.NewAccountsOnlyRateId.HasValue,
                     CreatedByUserId = x.Header.InitiatedAndCreatedByUserId,
                     InitiatedDate = x.Header.InitiatedDate,
                     FallbackInitiatedDate = x.BusinessEvent.TransactionDate,
@@ -322,7 +346,8 @@ namespace nSavings.DbModel.BusinessEvents
                 });
         }
 
-        internal bool TryRemovePendingInterestRateChange(int sharedSavingsInterestRateChangeHeaderId, out string failedMessage)
+        internal bool TryRemovePendingInterestRateChange(int sharedSavingsInterestRateChangeHeaderId,
+            out string failedMessage)
         {
             using (var context = new SavingsContext())
             {
@@ -340,19 +365,11 @@ namespace nSavings.DbModel.BusinessEvents
 
                 var evt = AddBusinessEvent(BusinessEventType.InterestRateChangeRemoval, context);
 
-                int cancelledCount = 0;
+                var cancelledCount = 0;
                 var today = Clock.Today;
-                Action<SharedSavingsInterestRate> removeIfPossible = s =>
-                {
-                    if (s != null && !s.RemovedByBusinessEventId.HasValue && s.ValidFromDate > today)
-                    {
-                        s.RemovedByBusinessEvent = evt;
-                        cancelledCount += 1;
-                    }
-                };
 
-                removeIfPossible(change.AllAccountsRate);
-                removeIfPossible(change.NewAccountsOnlyRate);
+                RemoveIfPossible(change.AllAccountsRate);
+                RemoveIfPossible(change.NewAccountsOnlyRate);
 
                 if (cancelledCount == 0)
                 {
@@ -364,6 +381,13 @@ namespace nSavings.DbModel.BusinessEvents
 
                 failedMessage = null;
                 return true;
+
+                void RemoveIfPossible(SharedSavingsInterestRate s)
+                {
+                    if (s == null || s.RemovedByBusinessEventId.HasValue || s.ValidFromDate <= today) return;
+                    s.RemovedByBusinessEvent = evt;
+                    cancelledCount += 1;
+                }
             }
         }
     }

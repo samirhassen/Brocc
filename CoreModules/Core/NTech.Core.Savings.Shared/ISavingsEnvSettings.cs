@@ -4,6 +4,7 @@ using NTech.Banking.BankAccounts.Se;
 using NTech.Core.Module.Shared;
 using System;
 using System.IO;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Core.Savings.Shared
 {

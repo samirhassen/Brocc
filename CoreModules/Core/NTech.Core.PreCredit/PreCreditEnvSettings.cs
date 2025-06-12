@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Xml.Linq;
+using Newtonsoft.Json;
 using nPreCredit;
 using nPreCredit.Code;
-using nPreCredit.Code.Balanzia;
 using NTech.Core.Module;
 using NTech.Core.Module.Shared.Infrastructure;
-using System.Xml.Linq;
 
 namespace NTech.Core.PreCredit
 {
@@ -24,16 +23,26 @@ namespace NTech.Core.PreCredit
         private IClientConfigurationCore ClientCfg => clientConfiguration;
         private string Opt(string name) => env.OptionalSetting(name);
         private string Req(string name) => env.RequiredSetting(name);
-        public int CreditApplicationWorkListIsNewMinutes => int.Parse(Opt("ntech.precredit.worklist.isnewminutes") ?? "3");
-        public string DefaultScoringVersion => Opt("ntech.precredit.scoringversion") ?? ClientCfg.OptionalSetting("ntech.precredit.scoringversion");
+
+        public int CreditApplicationWorkListIsNewMinutes =>
+            int.Parse(Opt("ntech.precredit.worklist.isnewminutes") ?? "3");
+
+        public string DefaultScoringVersion => Opt("ntech.precredit.scoringversion") ??
+                                               ClientCfg.OptionalSetting("ntech.precredit.scoringversion");
 
         public bool IsMortgageLoansEnabled => ClientCfg.IsFeatureEnabled("ntech.feature.mortgageloans");
-        public bool IsStandardMortgageLoansEnabled => IsMortgageLoansEnabled && ClientCfg.IsFeatureEnabled("ntech.feature.mortgageloans.standard");
+
+        public bool IsStandardMortgageLoansEnabled => IsMortgageLoansEnabled &&
+                                                      ClientCfg.IsFeatureEnabled(
+                                                          "ntech.feature.mortgageloans.standard");
 
         public bool IsOnlyNonStandardMortgageLoansEnabled => IsMortgageLoansEnabled && !IsStandardMortgageLoansEnabled;
 
         public bool IsUnsecuredLoansEnabled => ClientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans");
-        public bool IsStandardUnsecuredLoansEnabled => IsUnsecuredLoansEnabled && ClientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans.standard");
+
+        public bool IsStandardUnsecuredLoansEnabled => IsUnsecuredLoansEnabled &&
+                                                       ClientCfg.IsFeatureEnabled(
+                                                           "ntech.feature.unsecuredloans.standard");
 
         public bool IsCompanyLoansEnabled
         {
@@ -41,7 +50,7 @@ namespace NTech.Core.PreCredit
             {
                 var v = Opt("ntech.feature.companyloans");
                 if (!string.IsNullOrWhiteSpace(v))
-                    return v?.ToLowerInvariant() == "true";
+                    return v.ToLowerInvariant() == "true";
                 return ClientCfg.IsFeatureEnabled("ntech.feature.companyloans");
             }
         }
@@ -60,24 +69,23 @@ namespace NTech.Core.PreCredit
             var path = AffiliatesFolder;
             var affilateFile = Path.Combine(path.FullName, providerName + ".json");
 
-            if (!File.Exists(affilateFile))
-            {
-                if (allowMissing)
-                    return null;
-                else
-                    throw new Exception("Missing affiliate file: " + affilateFile);
-            }
-
-            return JsonConvert.DeserializeObject<AffiliateModel>(File.ReadAllText(affilateFile));
+            if (File.Exists(affilateFile))
+                return JsonConvert.DeserializeObject<AffiliateModel>(File.ReadAllText(affilateFile));
+            if (allowMissing)
+                return null;
+            throw new Exception("Missing affiliate file: " + affilateFile);
         }
-        public DirectoryInfo AffiliatesFolder => env.ClientResourceDirectory("ntech.credit.affiliatesfolder", "Affiliates", true);
+
+        public DirectoryInfo AffiliatesFolder =>
+            env.ClientResourceDirectory("ntech.credit.affiliatesfolder", "Affiliates", true);
 
         public AffiliateModel GetAffiliateModel(string providerName, bool allowMissing = false)
         {
-            return cache.WithCache($"527332db-fb47-4dab-bd69-93088f3c9e95.{providerName}", TimeSpan.FromMinutes(15), () => new
-            {
-                Affilate = GetAffiliateModelNonCached(providerName, allowMissing: allowMissing)
-            })?.Affilate;
+            return cache.WithCache($"527332db-fb47-4dab-bd69-93088f3c9e95.{providerName}", TimeSpan.FromMinutes(15),
+                () => new
+                {
+                    Affilate = GetAffiliateModelNonCached(providerName, allowMissing: allowMissing)
+                })?.Affilate;
         }
 
         public List<AffiliateModel> GetAffiliateModels()
@@ -96,7 +104,9 @@ namespace NTech.Core.PreCredit
             return (Opt(name) ?? "false").Trim().ToLowerInvariant() == "true";
         }
 
-        public bool IsTemplateCacheDisabled => string.Equals((Opt("ntech.document.disabletemplatecache") ?? "false"), "true", StringComparison.InvariantCultureIgnoreCase);
+        public bool IsTemplateCacheDisabled => string.Equals((Opt("ntech.document.disabletemplatecache") ?? "false"),
+            "true", StringComparison.InvariantCultureIgnoreCase);
+
         public string CreditReportProviderName => Opt("ntech.credit.creditreportprovider") ?? "bisnodefi";
 
         /// <summary>
@@ -104,23 +114,24 @@ namespace NTech.Core.PreCredit
         /// Comma-separated string, or will return the creditreportprovider if not set. 
         /// </summary>
         public string[] ListCreditReportProviders =>
-            Opt("ntech.precredit.listcreditreportproviders")?.Split(',').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
+            Opt("ntech.precredit.listcreditreportproviders")?.Split(',').Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
             ?? new[] { CreditReportProviderName };
 
-        public bool CreditsUse360DayInterestYear => (ClientCfg.OptionalSetting("ntech.credit.interestmodel") ?? "") == "Actual_360";
+        public bool CreditsUse360DayInterestYear =>
+            (ClientCfg.OptionalSetting("ntech.credit.interestmodel") ?? "") == "Actual_360";
+
         public string CurrentServiceName => "nPreCredit";
 
-        public CampaignCodeSettingsModel CampaignCodeSettings
-        {
-            get
+        public CampaignCodeSettingsModel CampaignCodeSettings =>
+            new()
             {
-                return new CampaignCodeSettingsModel
-                {
-                    DisableForceManualControl = (Opt("ntech.campaigncode.forcemanualcontrol.disable") ?? "").Trim().ToLowerInvariant() == "true",
-                    DisableRemoveInitialFee = (Opt("ntech.campaigncode.removeinitialfee.disable") ?? "").Trim().ToLowerInvariant() == "true",
-                };
-            }
-        }
+                DisableForceManualControl =
+                    (Opt("ntech.campaigncode.forcemanualcontrol.disable") ?? "").Trim().ToLowerInvariant() ==
+                    "true",
+                DisableRemoveInitialFee =
+                    (Opt("ntech.campaigncode.removeinitialfee.disable") ?? "").Trim().ToLowerInvariant() == "true",
+            };
 
         public ScoringSetupModel ScoringSetup
         {
@@ -128,7 +139,8 @@ namespace NTech.Core.PreCredit
             {
                 return cache.WithCache("b57cb07c-c0fe-4a22-9502-5107fab8a5d3", TimeSpan.FromMinutes(15), () =>
                 {
-                    var f = env.ClientResourceFile("ntech.precredit.scoringsetupfile", "PreCredit-ScoringSetup.xml", true);
+                    var f = env.ClientResourceFile("ntech.precredit.scoringsetupfile", "PreCredit-ScoringSetup.xml",
+                        true);
 
                     return ScoringSetupModel.Parse(
                         XDocuments.Load(f.FullName));
@@ -138,42 +150,41 @@ namespace NTech.Core.PreCredit
 
         public int PersonCreditReportReuseDays => int.Parse(Opt("ntech.precredit.personcreditreportreusedays") ?? "1");
 
-        public int CompanyCreditReportReuseDays => int.Parse(Opt("ntech.precredit.companycreditreportreusedays") ?? "7");
+        public int CompanyCreditReportReuseDays =>
+            int.Parse(Opt("ntech.precredit.companycreditreportreusedays") ?? "7");
 
-        public string AdditionalQuestionsUrlPattern
-        {
-            get
-            {
-                //Something like: http://localhost:32730/additional-questions?id={token}
-                return Req("ntech.credit.additionalquestions.urlpattern");
-            }
-        }
+        public string AdditionalQuestionsUrlPattern =>
+            //Something like: http://localhost:32730/additional-questions?id={token}
+            Req("ntech.credit.additionalquestions.urlpattern");
 
         public string ApplicationWrapperUrlPattern => Opt("ntech.credit.applicationwrapper.urlpattern");
 
-        public bool ShowDemoMessages => (Opt("ntech.precredit.showdemomessages") ?? "false").ToLowerInvariant() == "true";
+        public bool ShowDemoMessages =>
+            (Opt("ntech.precredit.showdemomessages") ?? "false").ToLowerInvariant() == "true";
+
         public SignatureProviderCode? SignatureProvider
         {
             get
             {
-                var s = Opt("ntech.eidsignatureprovider")?.Trim()?.ToLowerInvariant();
+                var s = Opt("ntech.eidsignatureprovider")?.Trim().ToLowerInvariant();
                 if (s == null)
                     return null;
                 return (SignatureProviderCode)Enum.Parse(typeof(SignatureProviderCode), s, true);
             }
         }
 
-        public bool IsAdditionalLoanScoringRuleDisabled => OptBool("ntech.precredit.isAdditionalLoanScoringRuleDisabled");
+        public bool IsAdditionalLoanScoringRuleDisabled =>
+            OptBool("ntech.precredit.isAdditionalLoanScoringRuleDisabled");
+
         public bool IsCoApplicantScoringRuleDisabled => OptBool("ntech.precredit.isCoApplicantScoringRuleDisabled");
         public bool IsTranslationCacheDisabled => OptBool("ntech.precredit.disabletranslationcache");
+
         public DirectoryInfo LogFolder
         {
             get
             {
                 var v = Opt("ntech.logfolder");
-                if (v == null)
-                    return null;
-                return new DirectoryInfo(v);
+                return v == null ? null : new DirectoryInfo(v);
             }
         }
 
@@ -182,9 +193,7 @@ namespace NTech.Core.PreCredit
             get
             {
                 var v = Opt("ntech.precredit.disabledScoringRuleNames");
-                if (v == null)
-                    return new List<string>();
-                return v.Replace(" ", "").Replace(";", ",").Split(',').ToList();
+                return v == null ? new List<string>() : v.Replace(" ", "").Replace(";", ",").Split(',').ToList();
             }
         }
     }

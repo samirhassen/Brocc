@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Test Module",
+    "Projects": [
+      {
+        "Path": "nPreCredit\\nPreCredit.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "nGccCustomerApplication\\nGccCustomerApplication.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

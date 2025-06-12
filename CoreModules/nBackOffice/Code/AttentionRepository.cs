@@ -1,15 +1,15 @@
-﻿using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using NTech.Services.Infrastructure;
 
 namespace nBackOffice.Code
 {
     public class AttentionRepository
     {
-        private Func<string, bool> isUserInRole;
-        private Func<int?> getUserId;
-        UrlHelper url;
+        private readonly Func<string, bool> isUserInRole;
+        private readonly Func<int?> getUserId;
+        private readonly UrlHelper url;
 
         public AttentionRepository(Func<string, bool> isUserInRole, Func<int?> getUserId, UrlHelper url)
         {
@@ -37,18 +37,17 @@ namespace nBackOffice.Code
                 });
             }
 
-            if (isUserInRole("Admin"))
+            if (!isUserInRole("Admin")) return attentions;
+            var u = new UserClient();
+            var gs = u.FetchGroupsAboutToExpire(getUserId);
+            foreach (var g in gs.groupsAboutToExpire)
             {
-                var u = new UserClient();
-                var gs = u.FetchGroupsAboutToExpire(getUserId);
-                foreach (var g in gs.groupsAboutToExpire)
+                attentions.Add(new Attention
                 {
-                    attentions.Add(new Attention
-                    {
-                        Text = $"The membership in {g.GroupName} expires for user {g.UserDisplayName} at {g.EndDate.ToString("yyyy-MM-dd")}",
-                        ActionUrl = url.Action("AdministerUsers", "Admin")
-                    });
-                }
+                    Text =
+                        $"The membership in {g.GroupName} expires for user {g.UserDisplayName} at {g.EndDate.ToString("yyyy-MM-dd")}",
+                    ActionUrl = url.Action("AdministerUsers", "Admin")
+                });
             }
 
             return attentions;

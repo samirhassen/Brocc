@@ -1,6 +1,7 @@
-﻿using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
+using NTech.Services.Infrastructure;
 
 namespace nWindowsAuthIdentityServer
 {
@@ -15,36 +16,39 @@ namespace nWindowsAuthIdentityServer
             }
         }
 
-        public static System.Security.Cryptography.X509Certificates.X509Certificate2 IdentityServerCertificate
+        public static X509Certificate2 IdentityServerCertificate
         {
             get
             {
                 var s = Req("ntech.identityserver.certificate");
                 if (s.StartsWith("file:"))
                 {
-                    var c = System.IO.File.ReadAllBytes(s.Substring("file:".Length));
-                    return new System.Security.Cryptography.X509Certificates.X509Certificate2(c);
+                    var c = File.ReadAllBytes(s.Substring("file:".Length));
+                    return new X509Certificate2(c);
                 }
-                else if (s.StartsWith("filewithpw:"))
+
+                if (s.StartsWith("filewithpw:"))
                 {
                     var fileAndPw = s.Substring("filewithpw:".Length);
                     var i = fileAndPw.IndexOf(';');
                     var file = fileAndPw.Substring(0, i);
                     var pw = fileAndPw.Substring(i + 1);
-                    var c = System.IO.File.ReadAllBytes(file);
-                    return new System.Security.Cryptography.X509Certificates.X509Certificate2(c, pw);
+                    var c = File.ReadAllBytes(file);
+                    return new X509Certificate2(c, pw);
                 }
-                else if (s.StartsWith("thumbprint:"))
+
+                if (s.StartsWith("thumbprint:"))
                 {
                     var thumbprint = s.Substring("thumbprint:".Length);
-                    using (var store = new System.Security.Cryptography.X509Certificates.X509Store(System.Security.Cryptography.X509Certificates.StoreName.My, System.Security.Cryptography.X509Certificates.StoreLocation.LocalMachine))
+                    using (var store = new X509Store(StoreName.My, StoreLocation.LocalMachine))
                     {
-                        store.Open(System.Security.Cryptography.X509Certificates.OpenFlags.ReadOnly);
-                        var certs = store.Certificates.Find(System.Security.Cryptography.X509Certificates.X509FindType.FindByThumbprint, thumbprint, false);
+                        store.Open(OpenFlags.ReadOnly);
+                        var certs = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
 
                         if (certs.Count == 0)
                         {
-                            throw new Exception("Could not find certificate pointed to by thumbprint. Make sure it's in the store: My, location: LocalMachine");
+                            throw new Exception(
+                                "Could not find certificate pointed to by thumbprint. Make sure it's in the store: My, location: LocalMachine");
                         }
 
                         store.Close();
@@ -52,10 +56,9 @@ namespace nWindowsAuthIdentityServer
                         return certs[0];
                     }
                 }
-                else
-                {
-                    throw new Exception("The appsetting 'ntech.identityserver.certificate' is incorrectly used. Refer to the documentation.");
-                }
+
+                throw new Exception(
+                    "The appsetting 'ntech.identityserver.certificate' is incorrectly used. Refer to the documentation.");
             }
         }
 
@@ -76,34 +79,22 @@ namespace nWindowsAuthIdentityServer
             }
         }
 
-        public static Tuple<string, string> AutomationUsernameAndPassword => Tuple.Create(Req("ntech.automationuser.username"), Req("ntech.automationuser.password"));
+        public static Tuple<string, string> AutomationUsernameAndPassword =>
+            Tuple.Create(Req("ntech.automationuser.username"), Req("ntech.automationuser.password"));
 
         public static DirectoryInfo LogFolder
         {
             get
             {
                 var v = Opt("ntech.logfolder");
-                if (v == null)
-                    return null;
-                return new DirectoryInfo(v);
+                return v == null ? null : new DirectoryInfo(v);
             }
         }
 
-        public static bool IsDebugPageEnabled
-        {
-            get
-            {
-                return (Opt("ntech.identityserver.windows.debugpage.enable") ?? "false").ToLowerInvariant() == "true";
-            }
-        }
+        public static bool IsDebugPageEnabled =>
+            (Opt("ntech.identityserver.windows.debugpage.enable") ?? "false").ToLowerInvariant() == "true";
 
-        public static bool IsVerboseLoggingEnabled
-        {
-            get
-            {
-                return (Opt("ntech.isverboseloggingenabled") ?? "false") == "true";
-            }
-        }
+        public static bool IsVerboseLoggingEnabled => (Opt("ntech.isverboseloggingenabled") ?? "false") == "true";
 
         public static string CurrentServiceName => "nWindowsAuthIdentityServer";
 

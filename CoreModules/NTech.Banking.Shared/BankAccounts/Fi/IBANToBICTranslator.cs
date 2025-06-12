@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml.Linq;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Banking.BankAccounts.Fi
 {

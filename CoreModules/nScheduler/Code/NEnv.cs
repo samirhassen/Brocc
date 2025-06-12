@@ -1,10 +1,10 @@
-﻿using nScheduler.Code;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using nScheduler.Code;
+using NTech.Services.Infrastructure;
 
 namespace nScheduler
 {
@@ -12,10 +12,7 @@ namespace nScheduler
     {
         public static bool IsProduction
         {
-            get
-            {
-                return Req("ntech.isproduction") == "true";
-            }
+            get { return Req("ntech.isproduction") == "true"; }
         }
 
         public static bool IsTelemetryLoggingEnabled
@@ -41,7 +38,8 @@ namespace nScheduler
         {
             get
             {
-                return NTechCache.WithCache("nScheduler.ClientCfg", TimeSpan.FromMinutes(15), () => ClientConfiguration.CreateUsingNTechEnvironment());
+                return NTechCache.WithCache("nScheduler.ClientCfg", TimeSpan.FromMinutes(15),
+                    () => ClientConfiguration.CreateUsingNTechEnvironment());
             }
         }
 
@@ -72,13 +70,11 @@ namespace nScheduler
         {
             get
             {
-                return NTechCache.WithCache("nScheduler.EncryptionKeys", TimeSpan.FromMinutes(15), () =>
-                {
-                    return NHttp
-                        .Begin(NEnv.ServiceRegistryNormal.Internal.ServiceRootUri("nUser"), NHttp.GetCurrentAccessToken())
-                        .PostJson("Encryption/KeySet", new { })
-                        .ParseJsonAs<EncryptionKeySet>();
-                });
+                return NTechCache.WithCache("nScheduler.EncryptionKeys", TimeSpan.FromMinutes(15), () => NHttp
+                    .Begin(ServiceRegistryNormal.Internal.ServiceRootUri("nUser"),
+                        NHttp.GetCurrentAccessToken())
+                    .PostJson("Encryption/KeySet", new { })
+                    .ParseJsonAs<EncryptionKeySet>());
             }
         }
 
@@ -87,26 +83,20 @@ namespace nScheduler
             get
             {
                 return NTechCache.WithCache(
-                   "138819bd-fe35-4b25-b104-801150e2dcf601",
+                    "138819bd-fe35-4b25-b104-801150e2dcf601",
                     TimeSpan.FromMinutes(5),
-                    () =>
-                        {
-                            return NTechEnvironment.Instance.ServiceRegistry;
-                        });
+                    () => NTechEnvironment.Instance.ServiceRegistry);
             }
         }
 
-        public static Code.ServiceRegistry ServiceRegistryScheduler
+        public static ServiceRegistry ServiceRegistryScheduler
         {
             get
             {
                 return NTechCache.WithCache(
-                   "138819bd-fe35-4b25-b104-801150e2dcf602",
+                    "138819bd-fe35-4b25-b104-801150e2dcf602",
                     TimeSpan.FromMinutes(5),
-                    () =>
-                    {
-                        return Code.ServiceRegistry.CreateFromDict(NTechEnvironment.Instance.ServiceRegistry.Internal);
-                    });
+                    () => ServiceRegistry.CreateFromDict(NTechEnvironment.Instance.ServiceRegistry.Internal));
             }
         }
 
@@ -120,14 +110,19 @@ namespace nScheduler
                     var sharedResourcesDir = OptionalSharedResourcesDirectory;
                     if (sharedResourcesDir != null)
                     {
-                        var sharedJobsFile = XDocument.Load(Path.Combine(Path.Combine(sharedResourcesDir.FullName, "ScheduledJobs"), "ScheduledJobs.xml"));
-                        sharedJobs = SchedulerModel.Parse(sharedJobsFile, ServiceRegistryScheduler, ClientCfg.IsFeatureEnabled, ClientCfg.Country.BaseCountry);
+                        var sharedJobsFile =
+                            XDocument.Load(Path.Combine(Path.Combine(sharedResourcesDir.FullName, "ScheduledJobs"),
+                                "ScheduledJobs.xml"));
+                        sharedJobs = SchedulerModel.Parse(sharedJobsFile, ServiceRegistryScheduler,
+                            ClientCfg.IsFeatureEnabled, ClientCfg.Country.BaseCountry);
                     }
 
-                    var file = NTechEnvironment.Instance.ClientResourceFile("ntech.scheduler.modelfile", "ScheduledJobs.xml", true);
+                    var file = NTechEnvironment.Instance.ClientResourceFile("ntech.scheduler.modelfile",
+                        "ScheduledJobs.xml", true);
                     var doc = XDocuments.Load(file.FullName);
 
-                    var clientJobs = SchedulerModel.Parse(doc, ServiceRegistryScheduler, ClientCfg.IsFeatureEnabled, ClientCfg.Country.BaseCountry);
+                    var clientJobs = SchedulerModel.Parse(doc, ServiceRegistryScheduler, ClientCfg.IsFeatureEnabled,
+                        ClientCfg.Country.BaseCountry);
 
                     var combinator = new SchedulerModelCombinator();
                     combinator.MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
@@ -174,37 +169,23 @@ namespace nScheduler
             }
         }
 
-        public static string NTechCdnUrl
-        {
-            get
-            {
-                return Opt("ntech.cdn.rooturl");
-            }
-        }
+        public static string NTechCdnUrl => Opt("ntech.cdn.rooturl");
 
-        public static string SchedulerAlertProvider
-        {
-            get
-            {
-                return Opt("ntech.scheduler.alertprovider") ?? "none";
-            }
-        }
+        public static string SchedulerAlertProvider => Opt("ntech.scheduler.alertprovider") ?? "none";
 
-        public static List<string> SchedulerAlertEmail
-        {
-            get
-            {
-                return Req("ntech.scheduler.alertemail").Split(';').ToList();
-            }
-        }
+        public static List<string> SchedulerAlertEmail => Req("ntech.scheduler.alertemail").Split(';').ToList();
 
-        public static DirectoryInfo SkinningRootFolder => NTechEnvironment.Instance.ClientResourceDirectory("ntech.skinning.rootfolder", "Skinning", false);
+        public static DirectoryInfo SkinningRootFolder =>
+            NTechEnvironment.Instance.ClientResourceDirectory("ntech.skinning.rootfolder", "Skinning", false);
 
-        public static FileInfo SkinningCssFile => NTechEnvironment.Instance.ClientResourceFile("ntech.skinning.cssfile", Path.Combine(SkinningRootFolder.FullName, "css\\skinning.css"), false);
+        public static FileInfo SkinningCssFile => NTechEnvironment.Instance.ClientResourceFile("ntech.skinning.cssfile",
+            Path.Combine(SkinningRootFolder.FullName, "css\\skinning.css"), false);
 
-        public static bool IsSkinningEnabled => NTechCache.WithCacheS($"ntech.cache.skinningenabled", TimeSpan.FromMinutes(5), () => NEnv.SkinningRootFolder?.Exists ?? false);
+        public static bool IsSkinningEnabled => NTechCache.WithCacheS($"ntech.cache.skinningenabled",
+            TimeSpan.FromMinutes(5), () => SkinningRootFolder?.Exists ?? false);
 
-        public static bool IsSkinningCssEnabled => NTechCache.WithCacheS($"ntech.cache.skinningcssenabled", TimeSpan.FromMinutes(5), () => NEnv.SkinningCssFile?.Exists ?? false);
+        public static bool IsSkinningCssEnabled => NTechCache.WithCacheS($"ntech.cache.skinningcssenabled",
+            TimeSpan.FromMinutes(5), () => SkinningCssFile?.Exists ?? false);
 
         private static string Opt(string n)
         {
@@ -216,13 +197,7 @@ namespace nScheduler
             return NTechEnvironment.Instance.Setting(n, true);
         }
 
-        public static bool IsVerboseLoggingEnabled
-        {
-            get
-            {
-                return (Opt("ntech.isverboseloggingenabled") ?? "false") == "true";
-            }
-        }
+        public static bool IsVerboseLoggingEnabled => (Opt("ntech.isverboseloggingenabled") ?? "false") == "true";
 
         public static string CurrentServiceName => "nScheduler";
     }

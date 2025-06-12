@@ -17,16 +17,16 @@ namespace nTest
             NTechHttpHardening.HandleCachingAndInformationLeakHeader(this, false);
         }
 
-        private void Application_Start(object sender, EventArgs e)
+        public static void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
-            //AreaRegistration.RegisterAllAreas();
-            //RouteConfig.RegisterRoutes(RouteTable.Routes);
-            //RegisterBundles();
-            //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            //GlobalFilters.Filters.Add(new NTech.Services.Infrastructure.NTechHandleErrorAttribute());
-            //GlobalFilters.Filters.Add(new NTech.Services.Infrastructure.NTechAuthorizeAttribute());
-            //GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+            AreaRegistration.RegisterAllAreas();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            RegisterBundles();
+            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            GlobalFilters.Filters.Add(new NTech.Services.Infrastructure.NTechHandleErrorAttribute());
+            GlobalFilters.Filters.Add(new NTech.Services.Infrastructure.NTechAuthorizeAttribute());
+            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
         }
 
         private static void RegisterStyles(BundleCollection bundles)

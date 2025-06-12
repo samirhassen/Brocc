@@ -22,7 +22,7 @@ namespace TestsnPreCredit.Savings
         [TestMethod]
         public void RunningTotalCache_BasicUsecase()
         {
-            var items = new List<Tuple<DateTime, decimal>>()
+            var items = new List<Tuple<DateTime, decimal>>
             {
                 Tuple.Create(new DateTime(2016,12,12), 1m),
                 Tuple.Create(new DateTime(2016,12,16), 10m),

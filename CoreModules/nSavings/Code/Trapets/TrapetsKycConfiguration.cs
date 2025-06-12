@@ -15,13 +15,17 @@ namespace nSavings.Code.Trapets
 
         public static TrapetsKycConfiguration FromXElement(XElement d)
         {
-            var r = new TrapetsKycConfiguration();
-            r.IdSuffix = d.Descendants().SingleOrDefault(x => x.Name == "IdSuffix")?.Value;
-            r.BaseAccountType = d.Descendants().SingleOrDefault(x => x.Name == "BaseAccountType")?.Value;
-            r.BaseAccountRisk = d.Descendants().SingleOrDefault(x => x.Name == "BaseAccountRisk")?.Value;
-            r.BaseCustomerType = d.Descendants().SingleOrDefault(x => x.Name == "BaseCustomerType")?.Value;
-            r.ExportFileNamePattern = d.Descendants().SingleOrDefault(x => x.Name == "ExportFileNamePattern")?.Value;
-            r.ApplicationKycQuestionNamesToTransfer = d.Descendants().Where(x => x.Name == "ApplicationKycQuestionToTransfer").Select(x => x.Attribute("name")?.Value).Where(x => x != null).ToList();
+            var r = new TrapetsKycConfiguration
+            {
+                IdSuffix = d.Descendants().SingleOrDefault(x => x.Name == "IdSuffix")?.Value,
+                BaseAccountType = d.Descendants().SingleOrDefault(x => x.Name == "BaseAccountType")?.Value,
+                BaseAccountRisk = d.Descendants().SingleOrDefault(x => x.Name == "BaseAccountRisk")?.Value,
+                BaseCustomerType = d.Descendants().SingleOrDefault(x => x.Name == "BaseCustomerType")?.Value,
+                ExportFileNamePattern = d.Descendants().SingleOrDefault(x => x.Name == "ExportFileNamePattern")?.Value,
+                ApplicationKycQuestionNamesToTransfer = d.Descendants()
+                    .Where(x => x.Name == "ApplicationKycQuestionToTransfer").Select(x => x.Attribute("name")?.Value)
+                    .Where(x => x != null).ToList()
+            };
             return r;
         }
     }

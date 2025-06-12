@@ -1,8 +1,8 @@
-﻿using NTech.Banking.CivicRegNumbers;
+﻿using System;
+using System.Collections.Generic;
+using NTech.Banking.CivicRegNumbers;
 using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Services.Infrastructure.ElectronicAuthentication;
-using System;
-using System.Collections.Generic;
 
 namespace nCustomer.Code.Services.EidAuthentication
 {
@@ -17,20 +17,25 @@ namespace nCustomer.Code.Services.EidAuthentication
             authenticationSessionService = new AuthenticationSessionService(clock);
         }
 
-        public static string ProviderName = "mock";
+        public const string ProviderName = "mock";
 
-        public CommonElectronicAuthenticationSession CreateSession(ICivicRegNumber civicRegNumber, ReturnUrlModel returnUrl, NtechCurrentUserMetadata currentUser, Dictionary<string, string> customData)
+        public CommonElectronicAuthenticationSession CreateSession(ICivicRegNumber civicRegNumber,
+            ReturnUrlModel returnUrl, NtechCurrentUserMetadata currentUser, Dictionary<string, string> customData)
         {
-            return authenticationSessionService.CreateSession(civicRegNumber, currentUser, customData, ProviderName, x =>
-            {
-                var providerSessionId = Guid.NewGuid().ToString();
-                var beginLoginRedirectUrl = NEnv.ServiceRegistry.External.ServiceUrl("nGccCustomerApplication", $"mock-eid/{x.LocalSessionId}/login").ToString();
-                x.SetCustomData("standardReturnUrl", returnUrl.GetReturnUrl(x).ToString()); //This is basically the provider session
-                return (ProviderSessionId: providerSessionId, BeginLoginRedirectUrl: beginLoginRedirectUrl);
-            });
+            return authenticationSessionService.CreateSession(civicRegNumber, currentUser, customData, ProviderName,
+                x =>
+                {
+                    var providerSessionId = Guid.NewGuid().ToString();
+                    var beginLoginRedirectUrl = NEnv.ServiceRegistry.External
+                        .ServiceUrl("nCustomerPages", $"mock-eid/{x.LocalSessionId}/login").ToString();
+                    x.SetCustomData("standardReturnUrl",
+                        returnUrl.GetReturnUrl(x).ToString()); //This is basically the provider session
+                    return (ProviderSessionId: providerSessionId, BeginLoginRedirectUrl: beginLoginRedirectUrl);
+                });
         }
 
-        public (CommonElectronicAuthenticationSession Session, bool WasAuthenticated) HandleProviderLoginEvent(string localSessionId, NtechCurrentUserMetadata currentUser, Dictionary<string, string> providerEventData)
+        public (CommonElectronicAuthenticationSession Session, bool WasAuthenticated) HandleProviderLoginEvent(
+            string localSessionId, NtechCurrentUserMetadata currentUser, Dictionary<string, string> providerEventData)
         {
             return authenticationSessionService.HandleProviderEvent(localSessionId, currentUser, localSession =>
             {

@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json;
-using NTech;
-using NTech.Core.Module.Shared.Database;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Newtonsoft.Json;
+using nSavings.Code;
+using NTech;
+using NTech.Core.Module.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Services.Infrastructure;
 
 namespace nSavings.DbModel.BusinessEvents
 {
@@ -13,16 +16,15 @@ namespace nSavings.DbModel.BusinessEvents
         public int UserId { get; set; }
         public string InformationMetadata { get; set; }
 
-        private IClock clock;
-
         public static string GenerateUniqueOperationKey()
         {
             return OneTimeTokenGenerator.SharedInstance.GenerateUniqueToken(length: 20);
         }
 
-        protected bool TryGetCustomerNameFromCustomerCard(int customerId, out string customerName, out string failedMessage)
+        protected static bool TryGetCustomerNameFromCustomerCard(int customerId, out string customerName,
+            out string failedMessage)
         {
-            var customerClient = new Code.CustomerClient();
+            var customerClient = new CustomerClient();
             var customerCard = customerClient.GetCustomerCardItems(customerId, "firstName", "lastName");
             if (!customerCard.ContainsKey("firstName") || !customerCard.ContainsKey("lastName"))
             {
@@ -30,61 +32,40 @@ namespace nSavings.DbModel.BusinessEvents
                 customerName = null;
                 return false;
             }
-            else
-            {
-                failedMessage = null;
-                customerName = $"{customerCard["firstName"]} {customerCard["lastName"]}";
-                return true;
-            }
+
+            failedMessage = null;
+            customerName = $"{customerCard["firstName"]} {customerCard["lastName"]}";
+            return true;
         }
 
-        public DateTimeOffset Now
-        {
-            get
-            {
-                return clock.Now;
-            }
-        }
+        public DateTimeOffset Now => Clock.Now;
 
-        public IClock Clock
-        {
-            get
-            {
-                return clock;
-            }
-            set
-            {
-                clock = value;
-            }
-        }
+        public IClock Clock { get; set; }
 
-        protected bool IsProduction
-        {
-            get
-            {
-                return NEnv.IsProduction;
-            }
-        }
+        protected bool IsProduction => NEnv.IsProduction;
 
         public BusinessEventManagerBase(int userId, string informationMetadata, IClock clock)
         {
             UserId = userId;
             InformationMetadata = informationMetadata;
-            this.clock = clock;
+            Clock = clock;
         }
 
-        public BusinessEventManagerBase(int userId, string informationMetadata) : this(userId, informationMetadata, ClockFactory.SharedInstance)
+        public BusinessEventManagerBase(int userId, string informationMetadata) : this(userId, informationMetadata,
+            ClockFactory.SharedInstance)
         {
-
         }
 
-        protected void SetStatus(SavingsAccountHeader savingsAccount, SavingsAccountStatusCode status, BusinessEvent e, SavingsContext context)
+        protected void SetStatus(SavingsAccountHeader savingsAccount, SavingsAccountStatusCode status, BusinessEvent e,
+            SavingsContext context)
         {
             savingsAccount.Status = status.ToString();
-            AddDatedSavingsAccountString(DatedSavingsAccountStringCode.SavingsAccountStatus.ToString(), status.ToString(), savingsAccount, e, context);
+            AddDatedSavingsAccountString(DatedSavingsAccountStringCode.SavingsAccountStatus.ToString(),
+                status.ToString(), savingsAccount, e, context);
         }
 
-        protected LedgerAccountTransaction AddTransaction(SavingsContext context, LedgerAccountTypeCode accountType, decimal amount, BusinessEvent e, DateTime bookKeepingDate,
+        protected LedgerAccountTransaction AddTransaction(SavingsContext context, LedgerAccountTypeCode accountType,
+            decimal amount, BusinessEvent e, DateTime bookKeepingDate,
             SavingsAccountHeader savingsAccount = null, string savingsAccountNr = null,
             IncomingPaymentHeader incomingPayment = null, int? incomingPaymentId = null,
             int? outgoingPaymentId = null, OutgoingPaymentHeader outgoingPayment = null,
@@ -126,7 +107,9 @@ namespace nSavings.DbModel.BusinessEvents
             return evt;
         }
 
-        protected SavingsAccountComment AddComment(string commentText, BusinessEventType eventType, SavingsContext context, SavingsAccountHeader savingsAccount = null, string savingsAccountNr = null, List<string> attachmentArchiveKeys = null)
+        protected SavingsAccountComment AddComment(string commentText, BusinessEventType eventType,
+            SavingsContext context, SavingsAccountHeader savingsAccount = null, string savingsAccountNr = null,
+            List<string> attachmentArchiveKeys = null)
         {
             if (savingsAccount == null && savingsAccountNr == null)
                 throw new Exception("One of savingsAccount or savingsAccountNr must be set");
@@ -135,17 +118,20 @@ namespace nSavings.DbModel.BusinessEvents
                 CommentById = UserId,
                 CommentDate = Now,
                 CommentText = commentText,
-                Attachment = attachmentArchiveKeys == null ? null : JsonConvert.SerializeObject(new { archiveKeys = attachmentArchiveKeys }),
+                Attachment = attachmentArchiveKeys == null
+                    ? null
+                    : JsonConvert.SerializeObject(new { archiveKeys = attachmentArchiveKeys }),
                 SavingsAccount = savingsAccount,
                 SavingsAccountNr = savingsAccountNr,
-                EventType = "BusinessEvent_" + eventType.ToString(),
+                EventType = $"BusinessEvent_{eventType}",
             };
             FillInInfrastructureFields(c);
             context.SavingsAccountComments.Add(c);
             return c;
         }
 
-        protected DatedSavingsAccountValue AddDatedSavingsAccountValue(string name, decimal amount, SavingsAccountHeader savingsAccount, BusinessEvent e, SavingsContext context)
+        protected DatedSavingsAccountValue AddDatedSavingsAccountValue(string name, decimal amount,
+            SavingsAccountHeader savingsAccount, BusinessEvent e, SavingsContext context)
         {
             var r = new DatedSavingsAccountValue
             {
@@ -160,17 +146,21 @@ namespace nSavings.DbModel.BusinessEvents
             return r;
         }
 
-        protected DatedSavingsAccountString AddDatedSavingsAccountString(string name, string value, SavingsAccountHeader savingsAccount, BusinessEvent e, SavingsContext context)
+        protected DatedSavingsAccountString AddDatedSavingsAccountString(string name, string value,
+            SavingsAccountHeader savingsAccount, BusinessEvent e, SavingsContext context)
         {
             return AddSavingsAccountStringI(name, value, savingsAccount, null, e, context);
         }
 
-        protected DatedSavingsAccountString AddDatedSavingsAccountString(string name, string value, string savingsAccountNr, BusinessEvent e, SavingsContext context)
+        protected DatedSavingsAccountString AddDatedSavingsAccountString(string name, string value,
+            string savingsAccountNr, BusinessEvent e, SavingsContext context)
         {
             return AddSavingsAccountStringI(name, value, null, savingsAccountNr, e, context);
         }
 
-        protected SavingsAccountDocument AddSavingsAccountDocument(SavingsAccountDocumentTypeCode code, string archiveKey, BusinessEvent e, SavingsContext context, string savingsAccountNr = null, SavingsAccountHeader savingsAccount = null, string documentData = null)
+        protected SavingsAccountDocument AddSavingsAccountDocument(SavingsAccountDocumentTypeCode code,
+            string archiveKey, BusinessEvent e, SavingsContext context, string savingsAccountNr = null,
+            SavingsAccountHeader savingsAccount = null, string documentData = null)
         {
             var d = new SavingsAccountDocument
             {
@@ -187,7 +177,8 @@ namespace nSavings.DbModel.BusinessEvents
             return d;
         }
 
-        private DatedSavingsAccountString AddSavingsAccountStringI(string name, string value, SavingsAccountHeader savingsAccount, string savingsAccountNr, BusinessEvent e, SavingsContext context)
+        private DatedSavingsAccountString AddSavingsAccountStringI(string name, string value,
+            SavingsAccountHeader savingsAccount, string savingsAccountNr, BusinessEvent e, SavingsContext context)
         {
             var r = new DatedSavingsAccountString
             {
@@ -203,44 +194,25 @@ namespace nSavings.DbModel.BusinessEvents
             return r;
         }
 
-        private CultureInfo commentFormattingCulture;
-        protected CultureInfo CommentFormattingCulture
-        {
-            get
-            {
-                if (commentFormattingCulture == null)
-                {
-                    commentFormattingCulture = CultureInfo.GetCultureInfo(NEnv.ClientCfg.Country.BaseFormattingCulture);
-                }
-                return commentFormattingCulture;
-            }
-        }
+        private CultureInfo _commentFormattingCulture;
 
-        private CultureInfo printFormattingCulture;
-        protected CultureInfo PrintFormattingCulture
-        {
-            get
-            {
-                if (printFormattingCulture == null)
-                {
-                    printFormattingCulture = CultureInfo.GetCultureInfo(NEnv.ClientCfg.Country.BaseFormattingCulture);
-                }
-                return printFormattingCulture;
-            }
-        }
+        protected CultureInfo CommentFormattingCulture =>
+            _commentFormattingCulture ??= CultureInfo.GetCultureInfo(NEnv.ClientCfg.Country.BaseFormattingCulture);
+
+        private CultureInfo _printFormattingCulture;
+
+        protected CultureInfo PrintFormattingCulture =>
+            _printFormattingCulture ??= CultureInfo.GetCultureInfo(NEnv.ClientCfg.Country.BaseFormattingCulture);
 
         /// <summary>
         /// YYYY-MM but culture aware
         /// </summary>
-        /// <param name=""></param>
+        /// <param name="d">The datetime to format</param>
         /// <returns></returns>
         protected string FormatMonthCultureAware(DateTime d)
         {
             var c = (NEnv.ClientCfg.Country.BaseCountry ?? "FI").ToUpperInvariant();
-            if (c == "FI")
-                return d.ToString("yyyy.MM");
-            else
-                return d.ToString("yyyy-MM");
+            return d.ToString(c == "FI" ? "yyyy.MM" : "yyyy-MM");
         }
 
         protected T FillInInfrastructureFields<T>(T item) where T : InfrastructureBaseItem

@@ -1,15 +1,17 @@
 ﻿using nSavings.Code;
-using nSavings.Excel;
 using NTech;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.DbModel.BusinessEvents
 {
     public class YearlyInterestCapitalizationBusinessEventManager : BusinessEventManagerBase
     {
-        public YearlyInterestCapitalizationBusinessEventManager(int userId, string informationMetadata, IClock clock) : base(userId, informationMetadata, clock)
+        public YearlyInterestCapitalizationBusinessEventManager(int userId, string informationMetadata, IClock clock) :
+            base(userId, informationMetadata, clock)
         {
         }
 
@@ -26,7 +28,7 @@ namespace nSavings.DbModel.BusinessEvents
                         x.Status == SavingsAccountStatusCode.Active.ToString()
                         && !x.SavingsAccountInterestCapitalizations.Any(y => y.ToDate >= toDate)
                         && x.CreatedByEvent.TransactionDate < firstOfCurrentYear
-                        )
+                    )
                     .Select(x => x.SavingsAccountNr)
                     .ToArray();
 
@@ -38,17 +40,19 @@ namespace nSavings.DbModel.BusinessEvents
 
                 foreach (var accountNrGroup in eligableAccountNrs.SplitIntoGroupsOfN(500))
                 {
-                    IDictionary<string, ResultModel> result;
-                    string failedMessage;
-                    if (!TryComputeAccumulatedInterestUntilDate(context, accountNrGroup.ToList(), toDate, includeCalculationDetails, out result, out failedMessage))
+                    var accountNrs = accountNrGroup as string[] ?? accountNrGroup.ToArray();
+                    if (!TryComputeAccumulatedInterestUntilDate(context, accountNrs.ToList(), toDate,
+                            includeCalculationDetails, out var result, out var failedMessage))
                     {
                         throw new Exception(failedMessage);
                     }
-                    foreach (var accountNr in accountNrGroup)
+
+                    foreach (var accountNr in accountNrs)
                     {
                         var r = result[accountNr];
                         if (toDate != r.ToDate) //Sanity check since the interest calculation part is shared
-                            throw new Exception($"Invalid state. Account {accountNr} got toDate={r.ToDate.ToString("yyyy-MM-dd")} != {toDate.ToString("yyyy-MM-dd")}");
+                            throw new Exception(
+                                $"Invalid state. Account {accountNr} got toDate={r.ToDate:yyyy-MM-dd} != {toDate:yyyy-MM-dd}");
                         var c = new SavingsAccountInterestCapitalization
                         {
                             FromDate = r.FromDate,
@@ -62,38 +66,51 @@ namespace nSavings.DbModel.BusinessEvents
                         if (includeCalculationDetails)
                         {
                             //TODO: We may need to batch this somehow. Figure out if we can (like put each group of accounts into one excel)
-                            c.CalculationDetailsDocumentArchiveKey = dc.Value.CreateXlsxToArchive(r.ToDocumentClientExcelRequest(), $"YearlyInterestCapitalizationCalculationDetails_{accountNr}_{toDate.ToString("yyyy")}.xlsx");
+                            c.CalculationDetailsDocumentArchiveKey = dc.Value.CreateXlsxToArchive(
+                                r.ToDocumentClientExcelRequest(),
+                                $"YearlyInterestCapitalizationCalculationDetails_{accountNr}_{toDate:yyyy}.xlsx");
                         }
+
                         if (r.TotalInterestAmount > 0m)
                         {
                             AddTransaction(context, LedgerAccountTypeCode.Capital, r.TotalInterestAmount, evt, r.ToDate,
                                 savingsAccountNr: accountNr,
                                 interestFromDate: r.ToDate.AddDays(1),
                                 businessEventRoleCode: "CapitalizedInterest");
-                            AddTransaction(context, LedgerAccountTypeCode.CapitalizedInterest, r.TotalInterestAmount, evt, r.ToDate,
+                            AddTransaction(context, LedgerAccountTypeCode.CapitalizedInterest, r.TotalInterestAmount,
+                                evt, r.ToDate,
                                 savingsAccountNr: accountNr);
                         }
+
                         if (r.ShouldBeWithheldForTaxAmount > 0m)
                         {
-                            AddTransaction(context, LedgerAccountTypeCode.Capital, -r.ShouldBeWithheldForTaxAmount, evt, r.ToDate,
+                            AddTransaction(context, LedgerAccountTypeCode.Capital, -r.ShouldBeWithheldForTaxAmount, evt,
+                                r.ToDate,
                                 savingsAccountNr: accountNr,
                                 interestFromDate: r.ToDate.AddDays(1),
                                 businessEventRoleCode: "WithheldTax");
-                            AddTransaction(context, LedgerAccountTypeCode.WithheldCapitalizedInterestTax, r.ShouldBeWithheldForTaxAmount, evt, r.ToDate,
+                            AddTransaction(context, LedgerAccountTypeCode.WithheldCapitalizedInterestTax,
+                                r.ShouldBeWithheldForTaxAmount, evt, r.ToDate,
                                 savingsAccountNr: accountNr);
                         }
-                        AddComment($"Interest capitalized for {toDate.ToString("yyyy")}. Capitalized interest={r.TotalInterestAmount.ToString("C", CommentFormattingCulture)}. Of which withheld for tax={r.ShouldBeWithheldForTaxAmount.ToString("C", CommentFormattingCulture)}", BusinessEventType.YearlyInterestCapitalization, context,
+
+                        AddComment(
+                            $"Interest capitalized for {toDate:yyyy}. Capitalized interest={r.TotalInterestAmount.ToString("C", CommentFormattingCulture)}. Of which withheld for tax={r.ShouldBeWithheldForTaxAmount.ToString("C", CommentFormattingCulture)}",
+                            BusinessEventType.YearlyInterestCapitalization, context,
                             savingsAccountNr: accountNr,
                             attachmentArchiveKeys: c.CalculationDetailsDocumentArchiveKey == null
                                 ? null
                                 : new List<string>() { c.CalculationDetailsDocumentArchiveKey });
                     }
                 }
+
                 context.SaveChanges();
             }
         }
 
-        public static IDictionary<string, decimal?> ComputeAccumulatedInterestForAllAccountsOnHistoricalDate(SavingsContext context, DateTime historicalDate, Action<IDictionary<string, IList<ResultModel.DayResultModel>>> observeInterestAmountParts = null)
+        public static IDictionary<string, decimal?> ComputeAccumulatedInterestForAllAccountsOnHistoricalDate(
+            SavingsContext context, DateTime historicalDate,
+            Action<IDictionary<string, IList<ResultModel.DayResultModel>>> observeInterestAmountParts = null)
         {
             historicalDate = historicalDate.Date;
             var allActiveAccounts = context
@@ -103,10 +120,11 @@ namespace nSavings.DbModel.BusinessEvents
                     x.SavingsAccountNr,
                     x.CreatedByBusinessEventId,
                     AccountCreationDate = x.CreatedByEvent.TransactionDate,
-                    x.AccountTypeCode,
+                    AccountTypeCode = x.AccountTypeCode.ToString(),
                     Status = x
                         .DatedStrings
-                        .Where(y => y.TransactionDate <= historicalDate && y.Name == DatedSavingsAccountStringCode.SavingsAccountStatus.ToString())
+                        .Where(y => y.TransactionDate <= historicalDate &&
+                                    y.Name == DatedSavingsAccountStringCode.SavingsAccountStatus.ToString())
                         .OrderByDescending(y => y.BusinessEventId)
                         .Select(y => y.Value)
                         .FirstOrDefault(),
@@ -118,12 +136,15 @@ namespace nSavings.DbModel.BusinessEvents
                         .FirstOrDefault(),
                     CapitalTransactions = x
                         .Transactions
-                        .Where(y => y.TransactionDate <= historicalDate && y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
+                        .Where(y => y.TransactionDate <= historicalDate &&
+                                    y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
                         .OrderBy(y => y.InterestFromDate)
                         .ThenBy(y => y.BusinessEventId)
                         .Select(y => new { y.InterestFromDate, y.Amount })
                 })
-                .Where(x => x.Status == SavingsAccountStatusCode.Active.ToString()); //Dont need to filter on created date since this will do that implicitly
+                .Where(x => x.Status ==
+                            SavingsAccountStatusCode.Active
+                                .ToString()); //Dont need to filter on created date since this will do that implicitly
 
             var interestRateChanges = ChangeInterestRateBusinessEventManager
                 .GetActiveInterestRates(context)
@@ -131,19 +152,20 @@ namespace nSavings.DbModel.BusinessEvents
                 .GroupBy(x => x.AccountTypeCode)
                 .Select(x => new { AccountTypeCode = x.Key, InterestRateChanges = x.OrderBy(y => y.ValidFromDate) })
                 .ToDictionary(
-                        x => x.AccountTypeCode,
-                        x => x
-                            .InterestRateChanges
-                            .Select(y => new InputModel.InterestRateChangeModel
-                            {
-                                InterestRatePercent = y.InterestRatePercent,
-                                ValidFromDate = y.ValidFromDate,
-                                AppliesToAccountsSinceBusinessEventId = y.AppliesToAccountsSinceBusinessEventId
-                            }).ToList());
+                    x => x.AccountTypeCode,
+                    x => x
+                        .InterestRateChanges
+                        .Select(y => new InputModel.InterestRateChangeModel
+                        {
+                            InterestRatePercent = y.InterestRatePercent,
+                            ValidFromDate = y.ValidFromDate,
+                            AppliesToAccountsSinceBusinessEventId = y.AppliesToAccountsSinceBusinessEventId
+                        }).ToList());
 
             var allNrs = allActiveAccounts.Select(x => x.SavingsAccountNr).ToArray();
             var result = new Dictionary<string, decimal?>(allNrs.Length);
-            IDictionary<string, IList<ResultModel.DayResultModel>> interestAmountParts = observeInterestAmountParts == null ? null : new Dictionary<string, IList<ResultModel.DayResultModel>>();
+            IDictionary<string, IList<ResultModel.DayResultModel>> interestAmountParts =
+                observeInterestAmountParts == null ? null : new Dictionary<string, IList<ResultModel.DayResultModel>>();
             foreach (var nrGroup in allNrs.SplitIntoGroupsOfN(300))
             {
                 var accounts = allActiveAccounts
@@ -154,7 +176,7 @@ namespace nSavings.DbModel.BusinessEvents
                         SavingsAccountNr = x.SavingsAccountNr,
                         CreatedByBusinessEventId = x.CreatedByBusinessEventId,
                         AccountCreationDate = x.AccountCreationDate,
-                        LatestCapitalizationInterestFromDate = x.LatestInterestCapitalizationToDate.HasValue ? x.LatestInterestCapitalizationToDate.Value.AddDays(1) : new DateTime?(),
+                        LatestCapitalizationInterestFromDate = x.LatestInterestCapitalizationToDate?.AddDays(1),
                         OrderedCapitalTransactions = x
                             .CapitalTransactions
                             .Select(y => new InputModel.CapitalTransactionModel
@@ -167,9 +189,9 @@ namespace nSavings.DbModel.BusinessEvents
                     })
                     .ToList();
 
-                IDictionary<string, ResultModel> r;
-                string failedMessage;
-                if (!TryComputeInterestRateUntilDate(accounts, historicalDate.AddDays(-1), observeInterestAmountParts != null, out r, out failedMessage, useNullInsteadOfErrorOnMissingInterst: true))
+                if (!TryComputeInterestRateUntilDate(accounts, historicalDate.AddDays(-1),
+                        observeInterestAmountParts != null, out var r, out var failedMessage,
+                        useNullInsteadOfErrorOnMissingInterst: true))
                     throw new Exception(failedMessage);
 
                 foreach (var rr in r)
@@ -179,6 +201,7 @@ namespace nSavings.DbModel.BusinessEvents
                         interestAmountParts[rr.Key] = rr.Value?.InterestAmountParts;
                 }
             }
+
             observeInterestAmountParts?.Invoke(interestAmountParts);
             return result;
         }
@@ -193,7 +216,9 @@ namespace nSavings.DbModel.BusinessEvents
             int? maxBusinessEventId = null,
             bool skipNonActiveAccounts = false)
         {
-            return TryComputeAccumulatedInterestUntilDate(context, savingsAccountNrs, clock.Today.Date.AddDays(-1), includeInterestAmountParts, out result, out failedMessage, maxBusinessEventId: maxBusinessEventId, skipNonActiveAccounts: skipNonActiveAccounts);
+            return TryComputeAccumulatedInterestUntilDate(context, savingsAccountNrs, clock.Today.Date.AddDays(-1),
+                includeInterestAmountParts, out result, out failedMessage, maxBusinessEventId: maxBusinessEventId,
+                skipNonActiveAccounts: skipNonActiveAccounts);
         }
 
         public static bool TryComputeAccumulatedInterestUntilDate(
@@ -206,9 +231,8 @@ namespace nSavings.DbModel.BusinessEvents
             int? maxBusinessEventId = null,
             bool skipNonActiveAccounts = false)
         {
-            List<InputModel> models;
-
-            var capitalTransactions = context.LedgerAccountTransactions.Where(x => x.AccountCode == LedgerAccountTypeCode.Capital.ToString());
+            var capitalTransactions =
+                context.LedgerAccountTransactions.Where(x => x.AccountCode == LedgerAccountTypeCode.Capital.ToString());
             var capitalizations = context.SavingsAccountInterestCapitalizations.AsQueryable();
 
             if (maxBusinessEventId.HasValue)
@@ -226,7 +250,7 @@ namespace nSavings.DbModel.BusinessEvents
                     x.CreatedByBusinessEventId,
                     CreatedTransactionDate = x.CreatedByEvent.TransactionDate,
                     x.Status,
-                    x.AccountTypeCode,
+                    AccountTypeCode = x.AccountTypeCode.ToString(),
                     LatestInterestCapitalizationToDate = capitalizations
                         .Where(y => y.SavingsAccountNr == x.SavingsAccountNr)
                         .OrderByDescending(y => y.ToDate)
@@ -278,28 +302,30 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            models = accounts.Select(x => new InputModel
+            var models = accounts.Select(x => new InputModel
             {
                 SavingsAccountNr = x.SavingsAccountNr,
                 CreatedByBusinessEventId = x.CreatedByBusinessEventId,
                 AccountCreationDate = x.CreatedTransactionDate,
                 LatestCapitalizationInterestFromDate = x.LatestInterestCapitalizationToDate.HasValue
-                        ? new DateTime?(x.LatestInterestCapitalizationToDate.Value.AddDays(1))
-                        : new DateTime?(),
+                    ? new DateTime?(x.LatestInterestCapitalizationToDate.Value.AddDays(1))
+                    : null,
                 OrderedCapitalTransactions = x.CapitalTransactions.Select(y => new InputModel.CapitalTransactionModel
                 {
                     Amount = y.Amount,
                     InterestFromDate = y.InterestFromDate
                 }).ToList(),
-                OrderedInterestRateChanges = interestRateChanges[x.AccountTypeCode].Select(y => new InputModel.InterestRateChangeModel
-                {
-                    InterestRatePercent = y.InterestRatePercent,
-                    ValidFromDate = y.ValidFromDate,
-                    AppliesToAccountsSinceBusinessEventId = y.AppliesToAccountsSinceBusinessEventId
-                }).ToList()
+                OrderedInterestRateChanges = interestRateChanges[x.AccountTypeCode].Select(y =>
+                    new InputModel.InterestRateChangeModel
+                    {
+                        InterestRatePercent = y.InterestRatePercent,
+                        ValidFromDate = y.ValidFromDate,
+                        AppliesToAccountsSinceBusinessEventId = y.AppliesToAccountsSinceBusinessEventId
+                    }).ToList()
             }).ToList();
 
-            return TryComputeInterestRateUntilDate(models, toDate, includeInterestAmountParts, out result, out failedMessage);
+            return TryComputeInterestRateUntilDate(models, toDate, includeInterestAmountParts, out result,
+                out failedMessage);
         }
 
         public static bool TryComputeInterestRateUntilDate(
@@ -313,16 +339,14 @@ namespace nSavings.DbModel.BusinessEvents
             var localResult = new Dictionary<string, ResultModel>();
             foreach (var a in accounts)
             {
-                ResultModel r;
-                if (!TryComputeInterestRateUntilDateForSingleAccount(toDate, a, includeInterestAmountParts, useNullInsteadOfErrorOnMissingInterst, out failedMessage, out r))
+                if (!TryComputeInterestRateUntilDateForSingleAccount(toDate, a, includeInterestAmountParts,
+                        useNullInsteadOfErrorOnMissingInterst, out failedMessage, out var r))
                 {
                     result = null;
                     return false;
                 }
-                else
-                {
-                    localResult[a.SavingsAccountNr] = r;
-                }
+
+                localResult[a.SavingsAccountNr] = r;
             }
 
             result = localResult;
@@ -330,7 +354,9 @@ namespace nSavings.DbModel.BusinessEvents
             return true;
         }
 
-        private static bool TryComputeInterestRateUntilDateForSingleAccount(DateTime toDate, InputModel a, bool includeInterestAmountParts, bool useNullInsteadOfErrorOnMissingInterst, out string failedMessage, out ResultModel result)
+        private static bool TryComputeInterestRateUntilDateForSingleAccount(DateTime toDate, InputModel a,
+            bool includeInterestAmountParts, bool useNullInsteadOfErrorOnMissingInterst, out string failedMessage,
+            out ResultModel result)
         {
             var r = new ResultModel
             {
@@ -339,7 +365,8 @@ namespace nSavings.DbModel.BusinessEvents
                 InterestAmountParts = includeInterestAmountParts ? new List<ResultModel.DayResultModel>() : null,
                 TotalInterestAmount = 0m
             };
-            var firstTransactionDate = a.OrderedCapitalTransactions.Select(x => (DateTime?)x.InterestFromDate).FirstOrDefault();
+            var firstTransactionDate =
+                a.OrderedCapitalTransactions.Select(x => (DateTime?)x.InterestFromDate).FirstOrDefault();
             var firstDate = DateTimeUtilities.Max(firstTransactionDate, a.LatestCapitalizationInterestFromDate);
             if (!firstDate.HasValue)
             {
@@ -356,8 +383,13 @@ namespace nSavings.DbModel.BusinessEvents
 
             var d = firstDate.Value;
             var totalInterestAmount = 0m;
-            var capitalBalanceCache = RunningTotalCache.Create(r.Input.OrderedCapitalTransactions, x => x.InterestFromDate, x => x.Amount, true);
-            var interestCache = LatestItemCache.Create<InputModel.InterestRateChangeModel, decimal>(r.Input.OrderedInterestRateChanges.Where(x => !x.AppliesToAccountsSinceBusinessEventId.HasValue || x.AppliesToAccountsSinceBusinessEventId.Value <= a.CreatedByBusinessEventId.Value), x => x.ValidFromDate, x => x.InterestRatePercent, true);
+            var capitalBalanceCache = RunningTotalCache.Create(r.Input.OrderedCapitalTransactions,
+                x => x.InterestFromDate, x => x.Amount, true);
+            var interestCache = LatestItemCache.Create<InputModel.InterestRateChangeModel, decimal>(
+                r.Input.OrderedInterestRateChanges.Where(x =>
+                    !x.AppliesToAccountsSinceBusinessEventId.HasValue ||
+                    x.AppliesToAccountsSinceBusinessEventId.Value <= a.CreatedByBusinessEventId.Value),
+                x => x.ValidFromDate, x => x.InterestRatePercent, true);
 
             r.FromDate = d;
             while (d <= toDate)
@@ -373,18 +405,17 @@ namespace nSavings.DbModel.BusinessEvents
                         result = null;
                         return true;
                     }
-                    else
-                    {
-                        failedMessage = $"Account {a.SavingsAccountNr} has capital balance for {d.ToString("yyyy-MM-dd")} but no interest is defined for that date";
-                        result = null;
-                        return false;
-                    }
+
+                    failedMessage =
+                        $"Account {a.SavingsAccountNr} has capital balance for {d:yyyy-MM-dd} but no interest is defined for that date";
+                    result = null;
+                    return false;
                 }
 
                 var isLeapYear = DateTime.IsLeapYear(d.Year);
 
                 var dailyInterestAmount = interestRatePercent.HasValue && capitalBalance > 0m
-                    ? (((interestRatePercent.Value / 100m) / (isLeapYear ? 366m : 365m)) * capitalBalance)
+                    ? interestRatePercent.Value / 100m / (isLeapYear ? 366m : 365m) * capitalBalance
                     : 0m;
 
                 totalInterestAmount += dailyInterestAmount;
@@ -402,6 +433,7 @@ namespace nSavings.DbModel.BusinessEvents
 
                 d = d.AddDays(1);
             }
+
             r.TotalInterestAmount = Math.Round(totalInterestAmount, 2);
             r.ShouldBeWithheldForTaxAmount = Math.Round(r.TotalInterestAmount * 0.3m, 2);
 
@@ -417,12 +449,15 @@ namespace nSavings.DbModel.BusinessEvents
             public DateTime AccountCreationDate { get; set; }
             public DateTime? LatestCapitalizationInterestFromDate { get; set; }
             public List<CapitalTransactionModel> OrderedCapitalTransactions { get; set; }
+
             public class CapitalTransactionModel
             {
                 public decimal Amount { get; set; }
                 public DateTime InterestFromDate { get; set; }
             }
+
             public List<InterestRateChangeModel> OrderedInterestRateChanges { get; set; }
+
             public class InterestRateChangeModel
             {
                 public decimal InterestRatePercent { get; set; }
@@ -439,6 +474,7 @@ namespace nSavings.DbModel.BusinessEvents
             public decimal TotalInterestAmount { get; set; }
             public decimal ShouldBeWithheldForTaxAmount { get; set; }
             public IList<DayResultModel> InterestAmountParts { get; set; }
+
             public class DayResultModel
             {
                 public decimal Amount { get; set; }
@@ -482,9 +518,11 @@ namespace nSavings.DbModel.BusinessEvents
                             items.Add(currentList);
                         currentList = new List<DayResultModel>();
                     }
+
                     currentList.Add(i);
                     lastItem = i;
                 }
+
                 if (currentList.Count > 0)
                     items.Add(currentList);
                 return items;
@@ -495,8 +533,8 @@ namespace nSavings.DbModel.BusinessEvents
                 var r = this;
                 var er = new DocumentClientExcelRequest
                 {
-                    Sheets = new DocumentClientExcelRequest.Sheet[]
-                                   {
+                    Sheets = new[]
+                    {
                         new DocumentClientExcelRequest.Sheet
                         {
                             Title = $"{r.Input.SavingsAccountNr} Summarized",
@@ -507,7 +545,7 @@ namespace nSavings.DbModel.BusinessEvents
                             Title = "Raw",
                             AutoSizeColumns = true
                         }
-                                   }
+                    }
                 };
 
                 var summaries = r
@@ -530,21 +568,25 @@ namespace nSavings.DbModel.BusinessEvents
                     summaries.Col(x => x.CountDays, ExcelType.Number, "# days", nrOfDecimals: 0, includeSum: true),
                     summaries.Col(x => x.Balance, ExcelType.Number, "Balance", nrOfDecimals: 2, includeSum: false),
                     summaries.Col(x => x.AccountInterestRatePercent / 100m, ExcelType.Percent, "Interest rate"),
-                    summaries.Col(x => x.InterestAmount, ExcelType.Number, "Daily Interest amount", nrOfDecimals: 6, includeSum: false),
-                    summaries.Col(x => x.InterestAmount * x.CountDays, ExcelType.Number, "Period Interest amount", nrOfDecimals: 6, includeSum: true),
+                    summaries.Col(x => x.InterestAmount, ExcelType.Number, "Daily Interest amount", nrOfDecimals: 6,
+                        includeSum: false),
+                    summaries.Col(x => x.InterestAmount * x.CountDays, ExcelType.Number, "Period Interest amount",
+                        nrOfDecimals: 6, includeSum: true),
                     summaries.Col(x => x.IsLeapYear ? "X" : "", ExcelType.Text, "Leap year"));
 
                 var interestAmountParts = r.InterestAmountParts;
                 er.Sheets[1].SetColumnsAndData(r.InterestAmountParts,
                     interestAmountParts.Col(x => x.Date, ExcelType.Date, "Date"),
-                    interestAmountParts.Col(x => x.AccountBalance, ExcelType.Number, "Balance", nrOfDecimals: 2, includeSum: false),
-                    interestAmountParts.Col(x => x.AccountInterestRatePercent / 100m, ExcelType.Percent, "Interest rate"),
-                    interestAmountParts.Col(x => x.Amount, ExcelType.Number, "Interest amount", nrOfDecimals: 6, includeSum: true),
+                    interestAmountParts.Col(x => x.AccountBalance, ExcelType.Number, "Balance", nrOfDecimals: 2,
+                        includeSum: false),
+                    interestAmountParts.Col(x => x.AccountInterestRatePercent / 100m, ExcelType.Percent,
+                        "Interest rate"),
+                    interestAmountParts.Col(x => x.Amount, ExcelType.Number, "Interest amount", nrOfDecimals: 6,
+                        includeSum: true),
                     interestAmountParts.Col(x => x.IsLeapYear ? "X" : "", ExcelType.Text, "Leap year"));
 
                 return er;
             }
         }
-
     }
 }

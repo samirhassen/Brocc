@@ -1,5 +1,16 @@
-﻿using Microsoft.Owin;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
+using Microsoft.Owin;
+using nCustomer.App_Start;
 using nCustomer.DbModel;
+using NTech;
 using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Services.Infrastructure;
 using NTech.Services.Infrastructure.Eventing;
@@ -7,15 +18,10 @@ using NWebsec.Csp;
 using Owin;
 using Serilog;
 using Serilog.Core.Enrichers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
+using Serilog.Events;
+using JsonNetValueProviderFactory = nCustomer.Code.JsonNetValueProviderFactory;
 
-[assembly: OwinStartup(typeof(nCustomer.App_Start.Startup1))]
+[assembly: OwinStartup(typeof(Startup1))]
 
 namespace nCustomer.App_Start
 {
@@ -23,18 +29,22 @@ namespace nCustomer.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() => NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry, NEnv.ApplicationAutomationUsernameAndPassword));
+            var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() =>
+                NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry,
+                    NEnv.ApplicationAutomationUsernameAndPassword));
             Log.Logger = new LoggerConfiguration()
-                           .Enrich.WithMachineName()
-                           .Enrich.FromLogContext()
-                           .Enrich.With(
-                               new PropertyEnricher("ServiceName", "nCustomer"),
-                               new PropertyEnricher("ServiceVersion", System.Reflection.Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString())
-                           )
-                           .WriteTo.Sink(new NTechSerilogSink(n => NEnv.ServiceRegistry.Internal[n], bearerToken: automationUser), NEnv.IsVerboseLoggingEnabled
-                               ? Serilog.Events.LogEventLevel.Debug
-                               : Serilog.Events.LogEventLevel.Information)
-                           .CreateLogger();
+                .Enrich.WithMachineName()
+                .Enrich.FromLogContext()
+                .Enrich.With(
+                    new PropertyEnricher("ServiceName", "nCustomer"),
+                    new PropertyEnricher("ServiceVersion",
+                        Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString())
+                )
+                .WriteTo.Sink(new NTechSerilogSink(n => NEnv.ServiceRegistry.Internal[n], bearerToken: automationUser),
+                    NEnv.IsVerboseLoggingEnabled
+                        ? LogEventLevel.Debug
+                        : LogEventLevel.Information)
+                .CreateLogger();
 
             NLog.Information("{EventType}: {environment} mode", "ServiceStarting", NEnv.IsProduction ? "prod" : "dev");
 
@@ -42,19 +52,22 @@ namespace nCustomer.App_Start
             {
                 var logFolder = NEnv.LogFolder;
                 if (logFolder != null)
-                    app.Use<NTechVerboseRequestLogMiddleware>(new System.IO.DirectoryInfo(System.IO.Path.Combine(logFolder.FullName, "RawRequests")), "nCustomer");
+                    app.Use<NTechVerboseRequestLogMiddleware>(
+                        new DirectoryInfo(Path.Combine(logFolder.FullName, "RawRequests")),
+                        "nCustomer");
             }
 
             app.Use<NTechLoggingMiddleware>("nCustomer");
 
             //Start the background worker
             NTechEventHandler.CreateAndLoadSubscribers(
-                typeof(nCustomer.MvcApplication).Assembly,
+                typeof(MvcApplication).Assembly,
                 new List<string>());
 
-            LoginSetupSupport.SetupLogin(app, "nCustomer", LoginSetupSupport.LoginMode.BothUsersAndApi, NEnv.IsProduction, NEnv.ServiceRegistry, NEnv.ClientCfg);
+            LoginSetupSupport.SetupLogin(app, "nCustomer", LoginSetupSupport.LoginMode.BothUsersAndApi,
+                NEnv.IsProduction, NEnv.ServiceRegistry, NEnv.ClientCfg);
 
-            NTech.ClockFactory.Init();
+            ClockFactory.Init();
 
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
@@ -66,8 +79,9 @@ namespace nCustomer.App_Start
             GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
             GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
 
-            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().Single());
-            ValueProviderFactories.Factories.Add(new Code.JsonNetValueProviderFactory());
+            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>()
+                .Single());
+            ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
 
             //Make sure the db is created
             CustomersContext.InitDatabase();
@@ -81,11 +95,11 @@ namespace nCustomer.App_Start
                 cdnRootUrl == null ? null : new Uri(new Uri(cdnRootUrl), $"magellan/css/{n}").ToString();
 
             var sharedStyles = new string[]
-                    {
-                    "~/Content/css/bootstrap.min.css",
-                    "~/Content/css/toastr.css",
-                    "~/Content/css/other.css"
-                    };
+            {
+                "~/Content/css/bootstrap.min.css",
+                "~/Content/css/toastr.css",
+                "~/Content/css/other.css"
+            };
 
             bundles.Add(new StyleBundle("~/Content/css/bundle-base")
                 .Include(sharedStyles));
@@ -114,38 +128,38 @@ namespace nCustomer.App_Start
             };
 
             var sharedScripts = new string[]
-                {
-                    "~/Content/jsexternal/jquery-1.12.4.js",
-                    "~/Content/jsexternal/bootstrap.js",
-                    "~/Content/jsexternal/toastr.min.js",
-                    "~/Content/jsexternal/moment.js",
-                    "~/Content/jsexternal/underscore.js"
-                };
+            {
+                "~/Content/jsexternal/jquery-1.12.4.js",
+                "~/Content/jsexternal/bootstrap.js",
+                "~/Content/jsexternal/toastr.min.js",
+                "~/Content/jsexternal/moment.js",
+                "~/Content/jsexternal/underscore.js"
+            };
 
             var angularScripts = new string[]
-                {
-                    "~/Content/jsexternal/angular.min.js",
-                    $"~/Content/jsexternal/angular-locale_{getAngularLocale()}.js",
-                    "~/Content/jsexternal/angular-resource.min.js",
-                    //BEGIN ANGULAR TRANSLATE
-                    "~/Content/jsexternal/angular-cookies.min.js",
-                    "~/Content/jsexternal/angular-translate.min.js",
-                    "~/Content/jsexternal/angular-translate-storage-cookie.min.js",
-                    "~/Content/jsexternal/angular-translate-storage-local.min.js",
-                    "~/Content/jsexternal/angular-translate-loader-url.min.js",
-                    //END ANGULAR TRANSLATE
-                    "~/Content/js/ntech_shared/common/*.js",
-                    "~/Content/js/ntech_shared/legacy/ntech.js.shared.js",
-                    "~/Content/js/country-functions-fi.js",
-                    "~/Content/js/ntech-forms.js",
-                    "~/Content/js/ntech_shared/components/infrastructure/*.js",
-                    "~/Content/js/infrastructure/*.js",
-                    "~/Content/js/componentsbase.js",
-                    "~/Content/js/ntech_shared/components/components/*.js",
-                    "~/Content/js/components/*.js",
-                    "~/Content/js/angular-fileupload.js",
-                    "~/Content/js/customer-api-client.js"
-                };
+            {
+                "~/Content/jsexternal/angular.min.js",
+                $"~/Content/jsexternal/angular-locale_{getAngularLocale()}.js",
+                "~/Content/jsexternal/angular-resource.min.js",
+                //BEGIN ANGULAR TRANSLATE
+                "~/Content/jsexternal/angular-cookies.min.js",
+                "~/Content/jsexternal/angular-translate.min.js",
+                "~/Content/jsexternal/angular-translate-storage-cookie.min.js",
+                "~/Content/jsexternal/angular-translate-storage-local.min.js",
+                "~/Content/jsexternal/angular-translate-loader-url.min.js",
+                //END ANGULAR TRANSLATE
+                "~/Content/js/ntech_shared/common/*.js",
+                "~/Content/js/ntech_shared/legacy/ntech.js.shared.js",
+                "~/Content/js/country-functions-fi.js",
+                "~/Content/js/ntech-forms.js",
+                "~/Content/js/ntech_shared/components/infrastructure/*.js",
+                "~/Content/js/infrastructure/*.js",
+                "~/Content/js/componentsbase.js",
+                "~/Content/js/ntech_shared/components/components/*.js",
+                "~/Content/js/components/*.js",
+                "~/Content/js/angular-fileupload.js",
+                "~/Content/js/customer-api-client.js"
+            };
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-base")
                 .Include(sharedScripts));
@@ -169,7 +183,7 @@ namespace nCustomer.App_Start
                 .Include("~/Content/js/controllers/CustomerCard/resolveConflicts.js"));
 
             bundles.Add(new ScriptBundle("~/Content/js/libphonenumber")
-                     .Include("~/Content/jsexternal/libphonenumber.js"));
+                .Include("~/Content/jsexternal/libphonenumber.js"));
 
             bundles.Add(new ScriptBundle("~/Content/js/bundle-kycmanagement-manage")
                 .Include(sharedScripts)
@@ -203,7 +217,8 @@ namespace nCustomer.App_Start
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void NWebsecHttpHeaderSecurityModule_CspViolationReported(object sender, CspViolationReportEventArgs e)
+        protected void NWebsecHttpHeaderSecurityModule_CspViolationReported(object sender,
+            CspViolationReportEventArgs e)
         {
             var violationReport = e.ViolationReport;
             var logFolder = NEnv.LogFolder;

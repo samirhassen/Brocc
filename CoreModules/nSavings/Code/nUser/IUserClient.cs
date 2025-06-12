@@ -1,4 +1,4 @@
-﻿namespace nSavings.Code
+﻿namespace nSavings.Code.nUser
 {
     public interface IUserClient
     {

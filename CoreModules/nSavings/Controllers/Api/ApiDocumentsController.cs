@@ -1,9 +1,9 @@
-﻿using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [RoutePrefix("Api/Documents")]
@@ -22,7 +22,11 @@ namespace nSavings.Controllers
                     CreationDate = new DateTime(year + 1, 1, 1).AddDays(-1),
                     DocumentData = year.ToString(),
                     DocumentType = "YearlySummary",
-                    DownloadUrl = Url.Action("ShowPdf", "ApiYearlySummaries", new { savingsAccountNr, year, fileDownloadName = $"YearlySummary_{savingsAccountNr}_{year}.pdf" })
+                    DownloadUrl = Url.Action("ShowPdf", "ApiYearlySummaries",
+                        new
+                        {
+                            savingsAccountNr, year, fileDownloadName = $"YearlySummary_{savingsAccountNr}_{year}.pdf"
+                        })
                 });
             }
 

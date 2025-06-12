@@ -2,6 +2,7 @@
 using NTech.Banking.BankAccounts.Se;
 using NTech.Core.Module.Shared.Infrastructure;
 using System;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace nCredit.Code.Services
 {

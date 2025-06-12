@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using NTech.Services.Infrastructure;
 
 namespace nBackOffice.Controllers
 {
@@ -18,23 +18,20 @@ namespace nBackOffice.Controllers
             return RedirectToAction("NavMenu", "Secure");
         }
 
-        private NHttp.NHttpCall BeginCallUser()
+        private static NHttp.NHttpCall BeginCallUser()
         {
             return NHttp
                 .Begin(new Uri(NEnv.ServiceRegistry.Internal["nUser"]), NHttp.GetCurrentAccessToken());
         }
 
-        public string checkDisplayName(string displayName)
+        public string CheckDisplayName(string displayName)
         {
-            bool result = displayName.Substring(0, 1).All(Char.IsLetter);
+            var result = displayName.Substring(0, 1).All(char.IsLetter);
             if (result == false)
                 return "DisplayName first character must only contain letters";
 
-            result = displayName.All(c => Char.IsLetterOrDigit(c) || Char.IsWhiteSpace(c));
-            if (result == false)
-                return "DisplayName must only contain letters/digits and whitespace";
-
-            return "";
+            result = displayName.All(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c));
+            return result == false ? "DisplayName must only contain letters/digits and whitespace" : "";
         }
 
         [HttpPost]
@@ -47,7 +44,8 @@ namespace nBackOffice.Controllers
             var allCurrentUsers = BeginCallUser()
                 .PostJson("User/GetAllDisplayNamesAndUserIds", new { })
                 .ParseJsonAsAnonymousType(new[] { new { UserId = default(int), DisplayName = default(string) } });
-            if (allCurrentUsers != null && allCurrentUsers.Any(x => x.DisplayName.Equals(displayName, StringComparison.InvariantCultureIgnoreCase)))
+            if (allCurrentUsers != null && allCurrentUsers.Any(x =>
+                    x.DisplayName.Equals(displayName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return Json(new { userDisplayNameAlreadyInUse = true, errorMessage = "DisplayName already in use" });
             }
@@ -70,7 +68,7 @@ namespace nBackOffice.Controllers
 
             if (!string.IsNullOrEmpty(displayName) && displayName.Length > 1)
             {
-                var errorMessage = checkDisplayName(displayName);
+                var errorMessage = CheckDisplayName(displayName);
                 if (!string.IsNullOrEmpty(errorMessage))
 
                     return Json(new { userDisplayNameAlreadyInUse = true, errorMessage = errorMessage });
@@ -81,66 +79,63 @@ namespace nBackOffice.Controllers
                 .PostJson("User/GetAllDisplayNamesAndUserIds", new { })
                 .ParseJsonAsAnonymousType(new[] { new { UserId = default(int), DisplayName = default(string) } });
 
-            if (allCurrentUsers != null && allCurrentUsers.Any(x => x.DisplayName.Equals(displayName, StringComparison.InvariantCultureIgnoreCase)))
+            if (allCurrentUsers != null && allCurrentUsers.Any(x =>
+                    x.DisplayName.Equals(displayName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return Json(new { userDisplayNameAlreadyInUse = true, errorMessage = "DisplayName already in use" });
             }
 
-            if (userType == "admin")
+            switch (userType)
             {
-                if (string.IsNullOrWhiteSpace(adminStartDate))
+                case "admin" when string.IsNullOrWhiteSpace(adminStartDate):
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "adminStartDate missing");
-                if (string.IsNullOrWhiteSpace(adminEndDate))
+                case "admin" when string.IsNullOrWhiteSpace(adminEndDate):
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "adminEndDate missing");
-                request = new
-                {
-                    displayName = displayName,
-                    startDate = DateTime.ParseExact(adminStartDate, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    endDate = DateTime.ParseExact(adminEndDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                };
-                methodName = "CreateAdminSimple";
-            }
-            else if (userType == "provider")
-            {
-                request = new
-                {
-                    displayName = displayName,
-                    providerName = displayName
-                };
-                methodName = "CreateProviderSimple";
-            }
-            else if (userType == "systemUser")
-            {
-                request = new
-                {
-                    displayName = displayName
-                };
-                methodName = "CreatSystemUserSimple";
-            }
-            else if (userType == "user")
-            {
-                request = new
-                {
-                    displayName = displayName
-                };
-                methodName = "CreateRegularUserSimple";
-            }
-            else
-            {
-                return Json(new { errorMessage = "Incorrect user type" });
+                case "admin":
+                    request = new
+                    {
+                        displayName = displayName,
+                        startDate = DateTime.ParseExact(adminStartDate, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                        endDate = DateTime.ParseExact(adminEndDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                    };
+                    methodName = "CreateAdminSimple";
+                    break;
+                case "provider":
+                    request = new
+                    {
+                        displayName = displayName,
+                        providerName = displayName
+                    };
+                    methodName = "CreateProviderSimple";
+                    break;
+                case "systemUser":
+                    request = new
+                    {
+                        displayName = displayName
+                    };
+                    methodName = "CreatSystemUserSimple";
+                    break;
+                case "user":
+                    request = new
+                    {
+                        displayName = displayName
+                    };
+                    methodName = "CreateRegularUserSimple";
+                    break;
+                default:
+                    return Json(new { errorMessage = "Incorrect user type" });
             }
 
             var response = BeginCallUser()
                 .PostJson("User/" + methodName, request);
-            if (response.StatusCode == 400)
+            if (response.StatusCode == 400) return Json(new { errorMessage = response.ReasonPhrase });
+
+            var result = response.ParseJsonAs<dynamic>();
+            return Json(new
             {
-                return Json(new { errorMessage = response.ReasonPhrase });
-            }
-            else
-            {
-                var result = response.ParseJsonAs<dynamic>();
-                return Json(new { redirectToUrl = Url.Action("AdministerUser", new { id = result.UserId }), createdUserId = result.UserId });
-            }
+                redirectToUrl = Url.Action("AdministerUser", new { id = result.UserId }),
+                createdUserId = result.UserId
+            });
         }
 
         public ActionResult AdministerUser(int id)
@@ -149,27 +144,27 @@ namespace nBackOffice.Controllers
                 return HttpNotFound();
 
             var activeLoginMethods = WithCache("nBackoffice.Controllers.NController.ActiveLoginMethods", () =>
-            {
-                return BeginCallUser()
+                BeginCallUser()
                     .PostJson("AuthenticationMechanism/GetActiveLoginMethods", new { })
-                    .ParseJsonAs<dynamic>();
-            }, TimeSpan.FromMinutes(5));
+                    .ParseJsonAs<dynamic>(), TimeSpan.FromMinutes(5));
 
             var result = BeginCallUser()
                 .PostJson("GroupMembership/GetDataForAdministerUser", new { userid = id })
                 .ParseJsonAs<dynamic>();
 
-            ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.GetEncoding("iso-8859-1").GetBytes(JsonConvert.SerializeObject(new
-            {
-                loggedInUserId = LoggedInUserId,
-                groupMemberships = result.groups,
-                expiredGroupMemberships = result.expiredGroups,
-                user = result.user,
-                activeLoginMethods = activeLoginMethods,
-                loginMethods = result.loginMethods,
-                isMortgageLoansEnabled = NEnv.IsMortgageLoansEnabled,
-                isUnsecuredLoansEnabled = NEnv.IsUnsecuredLoansEnabled
-            })));
+            ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.GetEncoding("iso-8859-1")
+                .GetBytes(
+                    JsonConvert.SerializeObject(new
+                    {
+                        loggedInUserId = LoggedInUserId,
+                        groupMemberships = result.groups,
+                        expiredGroupMemberships = result.expiredGroups,
+                        user = result.user,
+                        activeLoginMethods = activeLoginMethods,
+                        loginMethods = result.loginMethods,
+                        isMortgageLoansEnabled = NEnv.IsMortgageLoansEnabled,
+                        isUnsecuredLoansEnabled = NEnv.IsUnsecuredLoansEnabled
+                    })));
             return View();
         }
 
@@ -184,53 +179,48 @@ namespace nBackOffice.Controllers
             string providerName,
             string userIdentityAndCredentialsType,
             string providerObjectId
-            )
+        )
         {
             if (!string.IsNullOrEmpty(upwUsername) && upwUsername.Length > 1)
             {
-                var errorMessage = checkDisplayName(upwUsername);
+                var errorMessage = CheckDisplayName(upwUsername);
                 if (!string.IsNullOrEmpty(errorMessage))
                     return Json(new { errorMessage = errorMessage });
             }
 
             if (!string.IsNullOrEmpty(adUsername) && adUsername.Length > 1)
             {
-                var errorResult = adUsername.Substring(0, 1).All(Char.IsLetter);
-                if (errorResult == false)
+                if (adUsername.Substring(0, 1).Any(c => !char.IsLetter(c)))
                     return Json(new { errorMessage = "DisplayName first character must only contain letters" });
 
-                errorResult = adUsername.All(c => Char.IsLetterOrDigit(c) || Char.IsWhiteSpace(c) || Char.IsPunctuation(c) || c == '@');
+                var errorResult = adUsername.All(c =>
+                    char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || char.IsPunctuation(c) || c == '@');
                 if (errorResult == false)
                     return Json(new { errorMessage = "DisplayName must only contain letters/digits and whitespace" });
 
-                errorResult = adUsername.Substring(0, 1) == "\\";
-                if (errorResult == true)
+                if (adUsername.Substring(0, 1) == "\\")
                     return Json(new { errorMessage = "DisplayName first character cant be a \\" });
 
-                errorResult = adUsername.Substring(adUsername.Length - 1, 1) == "\\";
-                if (errorResult == true)
+                if (adUsername.Substring(adUsername.Length - 1, 1) == "\\")
                     return Json(new { errorMessage = "DisplayName last character cant be a \\" });
 
-                errorResult = adUsername.Substring(0, 1) == ".";
-                if (errorResult == true)
+                if (adUsername.Substring(0, 1) == ".")
                     return Json(new { errorMessage = "DisplayName first character cant be a ." });
 
-                errorResult = adUsername.Substring(adUsername.Length - 1, 1) == ".";
-                if (errorResult == true)
+                if (adUsername.Substring(adUsername.Length - 1, 1) == ".")
                     return Json(new { errorMessage = "DisplayName last character cant be a ." });
 
-                errorResult = adUsername.Substring(0, 1) == "@";
-                if (errorResult == true)
+                if (adUsername.Substring(0, 1) == "@")
                     return Json(new { errorMessage = "DisplayName first character cant be a @" });
 
-                errorResult = adUsername.Substring(adUsername.Length - 1, 1) == "@";
-                if (errorResult == true)
+                if (adUsername.Substring(adUsername.Length - 1, 1) == "@")
                     return Json(new { errorMessage = "DisplayName last character cant be a @" });
 
-                int count = adUsername.Count(f => f == '\\');
+                var count = adUsername.Count(f => f == '\\');
                 if (count > 1)
                     return Json(new { errorMessage = "DisplayName can not contain more than 1 \\" });
             }
+
             var request = new
             {
                 userId,
@@ -248,11 +238,9 @@ namespace nBackOffice.Controllers
             {
                 return Json(new { errorMessage = response.ReasonPhrase });
             }
-            else
-            {
-                var result = response.ParseJsonAs<dynamic>();
-                return Json(new { addedLoginMethod = result });
-            }
+
+            var result = response.ParseJsonAs<dynamic>();
+            return Json(new { addedLoginMethod = result });
         }
 
         [HttpPost]
@@ -265,11 +253,9 @@ namespace nBackOffice.Controllers
             {
                 return Json(new { errorMessage = response.ReasonPhrase });
             }
-            else
-            {
-                response.EnsureSuccessStatusCode();
-                return Json(new { });
-            }
+
+            response.EnsureSuccessStatusCode();
+            return Json(new { });
         }
 
         public ActionResult AdministerUsers()
@@ -278,7 +264,7 @@ namespace nBackOffice.Controllers
                 return HttpNotFound();
 
             var result = BeginCallUser().PostJson("User/GetAll", new { }).ParseJsonAs<dynamic>();
-            ViewBag.JsonInitialData = this.EncodeInitialData(new
+            ViewBag.JsonInitialData = EncodeInitialData(new
             {
                 users = result,
                 createUserUrl = Url.Action("CreateUser2"),
@@ -373,7 +359,8 @@ namespace nBackOffice.Controllers
             if (!NEnv.AllowAccessToLegacyUserAdmin)
                 return HttpNotFound(); //New ui calls nUser directly
 
-            var result = BeginCallUser().PostJson("User/GetAll", new { showDeleted = loadDeletedUsers }).ParseJsonAs<dynamic>();
+            var result = BeginCallUser().PostJson("User/GetAll", new { showDeleted = loadDeletedUsers })
+                .ParseJsonAs<dynamic>();
 
             return Json(result);
         }
@@ -399,21 +386,13 @@ namespace nBackOffice.Controllers
                         responseTimeInMs = w.ElapsedMilliseconds
                     });
                 }
-                else
-                {
-                    var status = response.StatusCode.ToString();
-                    return Json(new
-                    {
-                        status = status
-                    });
-                }
+
+                var status = response.StatusCode.ToString();
+                return Json(new { status });
             }
             catch (Exception)
             {
-                return Json(new
-                {
-                    status = "Down"
-                });
+                return Json(new { status = "Down" });
             }
         }
     }

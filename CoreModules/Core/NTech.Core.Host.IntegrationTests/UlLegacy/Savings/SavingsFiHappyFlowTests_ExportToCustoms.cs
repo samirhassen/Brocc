@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
-using nSavings;
-using nSavings.DbModel.BusinessEvents;
 using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Core.Savings.Shared.BusinessEvents;
 using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace NTech.Core.Host.IntegrationTests.UlLegacy.Savings;
 
@@ -57,7 +58,7 @@ public partial class SavingsFiHappyFlowTests
         {
             using(var context = contextFactory.CreateContext())
             {
-                var evt = AddBusinessEvent(nSavings.BusinessEventType.AccountClosure, context);
+                var evt = AddBusinessEvent(BusinessEventType.AccountClosure, context);
                 AddDatedSavingsAccountString(DatedSavingsAccountStringCode.SavingsAccountStatus.ToString(), SavingsAccountStatusCode.Closed.ToString(), context, savingsAccountNr: savingsAccountNr, businessEvent: evt);
                 var h = context.SavingsAccountHeadersQueryable.Single(x => x.SavingsAccountNr == savingsAccountNr);
                 h.Status = SavingsAccountStatusCode.Closed.ToString();

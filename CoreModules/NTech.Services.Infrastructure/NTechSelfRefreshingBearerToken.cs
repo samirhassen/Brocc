@@ -1,10 +1,5 @@
-﻿using Duende.IdentityModel.Client;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System;
+using IdentityModel.Client;
 
 namespace NTech.Services.Infrastructure
 {
@@ -21,54 +16,43 @@ namespace NTech.Services.Infrastructure
 
         public string GetToken()
         {
-            if (currentToken == null || DateTimeOffset.UtcNow >= nextRefreshDate)
-            {
-                if (currentToken == null || DateTimeOffset.UtcNow >= nextRefreshDate)
-                {
-                    var t = getNewTokenAndRefreshDate();
-                    if (t.Item1 == null)
-                        throw new Exception("Could not aquire new token");
-                    nextRefreshDate = t.Item2; //Set to halfway between
-                    currentToken = t.Item1;
-                }
-            }
+            if (currentToken != null && DateTimeOffset.UtcNow < nextRefreshDate) return currentToken;
+            if (currentToken != null && DateTimeOffset.UtcNow < nextRefreshDate) return currentToken;
+            var t = getNewTokenAndRefreshDate();
+            currentToken = t.Item1 ?? throw new Exception("Could not acquire new token");
+            nextRefreshDate = t.Item2; //Set to halfway between
             return currentToken;
         }
 
-        public static NTechSelfRefreshingBearerToken CreateSystemUserBearerTokenWithUsernameAndPassword(NTechServiceRegistry serviceRegistry, Tuple<string, string> usernameAndPassword)
+        public static NTechSelfRefreshingBearerToken CreateSystemUserBearerTokenWithUsernameAndPassword(
+            NTechServiceRegistry serviceRegistry, Tuple<string, string> usernameAndPassword)
         {
-            return CreateSystemUserBearerTokenWithUsernameAndPassword(serviceRegistry, usernameAndPassword.Item1, usernameAndPassword.Item2);
+            return CreateSystemUserBearerTokenWithUsernameAndPassword(serviceRegistry, usernameAndPassword.Item1,
+                usernameAndPassword.Item2);
         }
 
-        public static NTechSelfRefreshingBearerToken CreateSystemUserBearerTokenWithUsernameAndPassword(NTechServiceRegistry serviceRegistry, string username, string password)
+        public static NTechSelfRefreshingBearerToken CreateSystemUserBearerTokenWithUsernameAndPassword(
+            NTechServiceRegistry serviceRegistry, string username, string password)
         {
             return new NTechSelfRefreshingBearerToken(() =>
-            {                
-                var client = new HttpClient();                
-                var token = client.RequestPasswordTokenAsync(new PasswordTokenRequest()
-                {
-                    Address = serviceRegistry.Internal.ServiceUrl("nUser", "id/connect/token").ToString(),
-                    ClientId = "nTechSystemUser",
-                    ClientSecret = "nTechSystemUser",
-                    UserName = username,
-                    Password=password,
-                    Scope= "nTech1"
-                });
+            {
+                var tokenClient = new TokenClient(
+                    serviceRegistry.Internal.ServiceUrl("nUser", "id/connect/token").ToString(),
+                    "nTechSystemUser",
+                    "nTechSystemUser");
+                var token = tokenClient.RequestResourceOwnerPasswordAsync(username, password, scope: "nTech1").Result;
 
-                if (token.Result.IsError)
-                {
-                    throw new Exception("Login error: " + token.Result.Error);
-                }
+                if (token.IsError) throw new Exception($"Login error: {token.Error}");
+
+                long refreshInSeconds;
+                if (token.ExpiresIn <= 0)
+                    refreshInSeconds = 300; //Should never happen but be conservative in this case and refresh often
                 else
-                {
-                    long refreshInSeconds;
-                    if (token.Result.ExpiresIn <= 0)
-                        refreshInSeconds = 300;//Should never happen but be conservative in this case and refresh often
-                    else
-                        refreshInSeconds = (long)Math.Ceiling(((double)token.Result.ExpiresIn) / 2.0d); //Wait until halfway to expiration then refresh
+                    refreshInSeconds =
+                        (long)Math.Ceiling(((double)token.ExpiresIn) /
+                                           2.0d); //Wait until halfway to expiration then refresh
 
-                    return Tuple.Create(token.Result.AccessToken, DateTimeOffset.UtcNow.AddSeconds(refreshInSeconds));
-                }
+                return Tuple.Create(token.AccessToken, DateTimeOffset.UtcNow.AddSeconds(refreshInSeconds));
             });
         }
     }

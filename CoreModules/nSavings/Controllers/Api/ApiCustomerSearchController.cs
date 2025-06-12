@@ -1,9 +1,10 @@
-﻿using nSavings.Code.Services;
+﻿using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.Code.Services;
 using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
 using NTech.Services.Infrastructure;
-using System.Web.Mvc;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiCustomerSearchController : NController
@@ -12,7 +13,9 @@ namespace nSavings.Controllers
         [Route("Api/Savings/CustomerSearch/Find-Customers-Omni")]
         public ActionResult FindCustomersOmni(string searchQuery)
         {
-            var customerClient = LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry);
+            var customerClient =
+                LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance,
+                    NEnv.ServiceRegistry);
             var service = new SavingsCustomerSearchSourceService(new SavingsAccountSearchService(customerClient));
             return Json2(service.FindCustomers(searchQuery));
         }
@@ -21,7 +24,9 @@ namespace nSavings.Controllers
         [Route("Api/Savings/CustomerSearch/Get-Customer-Entities")]
         public ActionResult GetCustomerEntities(int customerId)
         {
-            var customerClient = LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry);
+            var customerClient =
+                LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance,
+                    NEnv.ServiceRegistry);
             var service = new SavingsCustomerSearchSourceService(new SavingsAccountSearchService(customerClient));
             return Json2(service.GetCustomerEntities(customerId));
         }

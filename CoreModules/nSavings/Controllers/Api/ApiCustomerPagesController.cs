@@ -1,22 +1,23 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
-using nSavings.Code.Services;
-using nSavings.DbModel.BusinessEvents;
-using NTech.Banking.BankAccounts.Fi;
-using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
-using NTech.Services.Infrastructure;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.Code;
+using nSavings.Code.Services;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Core.Savings.Shared.Services;
+using NTech.Services.Infrastructure;
+using Serilog;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
-    [NTechApi]
-    [NTechAuthorize()]
+    [NTechApi, NTechAuthorize]
     public class ApiCustomerPagesController : NController
     {
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -30,7 +31,8 @@ namespace nSavings.Controllers
 
         [Route("Api/CustomerPages/FetchCustomerAddressFromTrustedSource")]
         [HttpPost]
-        public ActionResult FetchCustomerAddressFromTrustedSource(string civicRegNumber, int customerId, List<string> itemNames)
+        public ActionResult FetchCustomerAddressFromTrustedSource(string civicRegNumber, int customerId,
+            List<string> itemNames)
         {
             var cc = new CreditReportClient();
 
@@ -55,6 +57,7 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             using (var context = new SavingsContext())
             {
                 var savingsAccounts = context
@@ -84,7 +87,8 @@ namespace nSavings.Controllers
 
                 return Json2(new
                 {
-                    AreWithdrawalsSuspended = WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(customerId.Value),
+                    AreWithdrawalsSuspended =
+                        WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(customerId.Value),
                     SavingsAccounts = savingsAccounts
                 });
             }
@@ -98,6 +102,7 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             var summaries = this
                 .Service
                 .YearlySummary
@@ -116,19 +121,23 @@ namespace nSavings.Controllers
 
         [HttpPost]
         [Route("Api/CustomerPages/EventOrderedSavingsAccountTransactions")]
-        public ActionResult EventOrderedSavingsAccountTransactions(int? customerId, string savingsAccountNr, int? maxCountTransactions, int? startBeforeTransactionId)
+        public ActionResult EventOrderedSavingsAccountTransactions(int? customerId, string savingsAccountNr,
+            int? maxCountTransactions, int? startBeforeTransactionId)
         {
             if (string.IsNullOrWhiteSpace(savingsAccountNr))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr");
             }
+
             if (!customerId.HasValue)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             using (var context = new SavingsContext())
             {
-                var transactions = GetCapitalTransactionsOrderedByEvent(context, customerId.Value, savingsAccountNr, maxCountTransactions, startBeforeTransactionId);
+                var transactions = GetCapitalTransactionsOrderedByEvent(context, customerId.Value, savingsAccountNr,
+                    maxCountTransactions, startBeforeTransactionId);
                 return Json2(new
                 {
                     Transactions = transactions
@@ -138,16 +147,20 @@ namespace nSavings.Controllers
 
         [HttpPost]
         [Route("Api/CustomerPages/LatestActiveSavingsAccountDetails")]
-        public ActionResult LatestActiveSavingsAccountDetails(int? customerId, string accountTypeCode, int? maxTransactionsCount, int? startBeforeTransactionId)
+        public ActionResult LatestActiveSavingsAccountDetails(int? customerId, string accountTypeCode,
+            int? maxTransactionsCount, int? startBeforeTransactionId)
         {
-            return SavingsAccountDetailsI(customerId, null, accountTypeCode, true, maxTransactionsCount, startBeforeTransactionId);
+            return SavingsAccountDetailsI(customerId, null, accountTypeCode, true, maxTransactionsCount,
+                startBeforeTransactionId);
         }
 
         [HttpPost]
         [Route("Api/CustomerPages/SavingsAccountDetails")]
-        public ActionResult SavingsAccountDetails(int? customerId, string savingsAccountNr, int? maxTransactionsCount, int? startBeforeTransactionId)
+        public ActionResult SavingsAccountDetails(int? customerId, string savingsAccountNr, int? maxTransactionsCount,
+            int? startBeforeTransactionId)
         {
-            return SavingsAccountDetailsI(customerId, savingsAccountNr, null, null, maxTransactionsCount, startBeforeTransactionId);
+            return SavingsAccountDetailsI(customerId, savingsAccountNr, null, null, maxTransactionsCount,
+                startBeforeTransactionId);
         }
 
         private class ExternalVariableItem
@@ -166,7 +179,8 @@ namespace nSavings.Controllers
             using (var context = new SavingsContext())
             {
                 var today = Clock.Today;
-                var externalVariablesKey = ApiSavingsAccountDetailsController.GetSavingsAccountDetailsQueryable(context, today)
+                var externalVariablesKey = ApiSavingsAccountDetailsController
+                    .GetSavingsAccountDetailsQueryable(context, today)
                     .Where(x => x.SavingsAccountNr == savingsAccountNr && x.MainCustomerId == customerId.Value)
                     .Select(x => x.ExternalVariablesKey).SingleOrDefault();
 
@@ -175,8 +189,11 @@ namespace nSavings.Controllers
                 if (externalVariablesKey != null)
                 {
                     var kv = this.Service.KeyValueStore(GetCurrentUserMetadata());
-                    var eternalVariablesRaw = kv.GetValue(externalVariablesKey, KeyValueStoreKeySpaceCode.SavingsExternalVariablesV1.ToString());
-                    externalVariables = eternalVariablesRaw == null ? null : JsonConvert.DeserializeObject<List<ExternalVariableItem>>(eternalVariablesRaw);
+                    var eternalVariablesRaw = kv.GetValue(externalVariablesKey,
+                        KeyValueStoreKeySpaceCode.SavingsExternalVariablesV1.ToString());
+                    externalVariables = eternalVariablesRaw == null
+                        ? null
+                        : JsonConvert.DeserializeObject<List<ExternalVariableItem>>(eternalVariablesRaw);
                 }
 
                 return Json2(new
@@ -195,6 +212,7 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             using (var context = new SavingsContext())
             {
                 var accounts = ApiSavingsAccountDetailsController
@@ -203,12 +221,12 @@ namespace nSavings.Controllers
                     .Select(x => new
                     {
                         D = x,
-                        CapitalBalance = (context
-                        .SavingsAccountHeaders
-                        .Where(y => y.SavingsAccountNr == x.SavingsAccountNr)
-                        .SelectMany(y => y.Transactions)
-                        .Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
-                        .Sum(y => (decimal?)y.Amount) ?? 0m)
+                        CapitalBalance = context
+                            .SavingsAccountHeaders
+                            .Where(y => y.SavingsAccountNr == x.SavingsAccountNr)
+                            .SelectMany(y => y.Transactions)
+                            .Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
+                            .Sum(y => (decimal?)y.Amount) ?? 0m
                     })
                     .OrderByDescending(x => x.D.CreatedByBusinessEventId)
                     .ToList()
@@ -225,7 +243,8 @@ namespace nSavings.Controllers
                     .ToList();
                 return Json2(new
                 {
-                    AreWithdrawalsSuspended = WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(customerId.Value),
+                    AreWithdrawalsSuspended =
+                        WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(customerId.Value),
                     SavingsAccounts = accounts
                 });
             }
@@ -241,14 +260,15 @@ namespace nSavings.Controllers
             public decimal WithdrawableAmount { get; set; }
         }
 
-        private IQueryable<WithdrawalSavingsAccountModel> GetWithdrawalSavingsAccountModels(SavingsContext context)
+        private IQueryable<WithdrawalSavingsAccountModel> GetWithdrawalSavingsAccountModels(
+            SavingsContext context)
         {
             return context
                 .SavingsAccountHeaders
                 .Select(x => new WithdrawalSavingsAccountModel
                 {
                     SavingsAccountNr = x.SavingsAccountNr,
-                    AccountTypeCode = x.AccountTypeCode,
+                    AccountTypeCode = x.AccountTypeCode.ToString(),
                     MainCustomerId = x.MainCustomerId,
                     Status = x.Status,
                     ToIban = x
@@ -257,7 +277,9 @@ namespace nSavings.Controllers
                         .OrderByDescending(y => y.BusinessEventId)
                         .Select(y => y.Value)
                         .FirstOrDefault(),
-                    WithdrawableAmount = (x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString()).Sum(y => (decimal?)y.Amount) ?? 0m)
+                    WithdrawableAmount =
+                        (x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
+                            .Sum(y => (decimal?)y.Amount) ?? 0m)
                 });
         }
 
@@ -270,7 +292,8 @@ namespace nSavings.Controllers
             using (var context = new SavingsContext())
             {
                 var accounts = GetWithdrawalSavingsAccountModels(context)
-                    .Where(x => x.MainCustomerId == customerId.Value && x.Status == SavingsAccountStatusCode.Active.ToString())
+                    .Where(x => x.MainCustomerId == customerId.Value &&
+                                x.Status == SavingsAccountStatusCode.Active.ToString())
                     .Select(x => new
                     {
                         x.SavingsAccountNr,
@@ -283,7 +306,8 @@ namespace nSavings.Controllers
                 {
                     Accounts = accounts,
                     UniqueOperationToken = BusinessEventManagerBase.GenerateUniqueOperationKey(),
-                    AreWithdrawalsSuspended = WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(customerId.Value)
+                    AreWithdrawalsSuspended =
+                        WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(customerId.Value)
                 });
             }
         }
@@ -299,7 +323,8 @@ namespace nSavings.Controllers
                 var accounts =
                     ApiSavingsAccountDetailsController
                         .GetSavingsAccountDetailsQueryable(context, Clock.Today)
-                        .Where(x => x.MainCustomerId == customerId.Value && x.Status == SavingsAccountStatusCode.Active.ToString())
+                        .Where(x => x.MainCustomerId == customerId.Value &&
+                                    x.Status == SavingsAccountStatusCode.Active.ToString())
                         .OrderByDescending(x => x.CreatedByBusinessEventId)
                         .Select(x => new
                         {
@@ -346,7 +371,8 @@ namespace nSavings.Controllers
                         IsConnectedToIncomingPayment = x.IncomingPaymentId.HasValue,
                         OutgoingPaymentCustomTransactionMessage = x.OutgoingPayment
                             .Items
-                            .Where(y => y.Name == OutgoingPaymentHeaderItemCode.CustomTransactionMessage.ToString() && !y.IsEncrypted)
+                            .Where(y => y.Name == OutgoingPaymentHeaderItemCode.CustomTransactionMessage.ToString() &&
+                                        !y.IsEncrypted)
                             .Select(y => y.Value)
                             .FirstOrDefault()
                     })
@@ -375,48 +401,49 @@ namespace nSavings.Controllers
             if (!customerId.HasValue)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
 
-            Func<WithdrawalSavingsAccountModel> fetchModel = () =>
-               {
-                   using (var context = new SavingsContext())
-                   {
-                       return GetWithdrawalSavingsAccountModels(context).SingleOrDefault(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr);
-                   }
-               };
-
-            var model = fetchModel();
+            var model = FetchModel();
             if (model == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No such account");
             if (model.ToIban != expectedToIban)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "The default iban appears to have changed. Please relog and try again.");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "The default iban appears to have changed. Please relog and try again.");
 
             var mgr = new WithdrawalBusinessEventManager(CurrentUserId, InformationMetadata);
-            BusinessEvent evt;
-            string failedMessage;
             if (!mgr.TryCreateNew(new WithdrawalBusinessEventManager.WithdrawalRequest
-            {
-                SavingsAccountNr = savingsAccountNr,
-                WithdrawalAmount = withdrawalAmount,
-                CustomCustomerMessageText = customCustomerMessageText,
-                CustomTransactionText = customTransactionText,
-                ToIban = model.ToIban, //Never change this to expectedToIban since the user could potentially influence the expectedToIban
-                UniqueOperationToken = uniqueOperationToken,
-                RequestAuthenticationMethod = requestAuthenticationMethod,
-                RequestIpAddress = requestIpAddress,
-                RequestDate = Clock.Now,
-                RequestedByCustomerId = customerId.Value,
-                RequestedByHandlerUserId = null
-            }, false, false, out failedMessage, out evt))
+                {
+                    SavingsAccountNr = savingsAccountNr,
+                    WithdrawalAmount = withdrawalAmount,
+                    CustomCustomerMessageText = customCustomerMessageText,
+                    CustomTransactionText = customTransactionText,
+                    ToIban = model
+                        .ToIban, //Never change this to expectedToIban since the user could potentially influence the expectedToIban
+                    UniqueOperationToken = uniqueOperationToken,
+                    RequestAuthenticationMethod = requestAuthenticationMethod,
+                    RequestIpAddress = requestIpAddress,
+                    RequestDate = Clock.Now,
+                    RequestedByCustomerId = customerId.Value,
+                    RequestedByHandlerUserId = null
+                }, false, false, out var failedMessage, out _))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
             }
             else
             {
-                model = fetchModel();
+                model = FetchModel();
                 return Json2(new
                 {
                     WithdrawableAmountAfter = model.WithdrawableAmount,
                     NewUniqueOperationToken = BusinessEventManagerBase.GenerateUniqueOperationKey()
                 });
+            }
+
+            WithdrawalSavingsAccountModel FetchModel()
+            {
+                using (var context = new SavingsContext())
+                {
+                    return GetWithdrawalSavingsAccountModels(context).SingleOrDefault(x =>
+                        x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr);
+                }
             }
         }
 
@@ -428,21 +455,29 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             using (var context = new SavingsContext())
             {
                 var a = ApiSavingsAccountDetailsController
-                     .GetSavingsAccountDetailsQueryable(context, Clock.Today)
-                     .Where(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr)
-                     .Select(x => new { x.Status, x.CreatedByBusinessEventId, x.CreatedTransactionDate, x.StatusBusinessEventId, x.AccountTypeCode })
-                     .SingleOrDefault();
+                    .GetSavingsAccountDetailsQueryable(context, Clock.Today)
+                    .Where(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr)
+                    .Select(x => new
+                    {
+                        x.Status, x.CreatedByBusinessEventId, x.CreatedTransactionDate, x.StatusBusinessEventId,
+                        x.AccountTypeCode
+                    })
+                    .SingleOrDefault();
 
                 if (a == null)
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No such account");
 
-                var closedBusinessEventId = a.Status == SavingsAccountStatusCode.Closed.ToString() ? a.StatusBusinessEventId : null;
+                var closedBusinessEventId = a.Status == SavingsAccountStatusCode.Closed.ToString()
+                    ? a.StatusBusinessEventId
+                    : null;
 
                 var interestRates = ChangeInterestRateBusinessEventManager
-                    .GetSavingsAccountFilteredActiveInterestRates(context, savingsAccountNr, a.CreatedTransactionDate, closedBusinessEventId)
+                    .GetSavingsAccountFilteredActiveInterestRates(context, savingsAccountNr, a.CreatedTransactionDate,
+                        closedBusinessEventId)
                     .Select(x => new
                     {
                         x.Id,
@@ -477,17 +512,14 @@ namespace nSavings.Controllers
                     return HttpNotFound();
 
                 var dc = new DocumentClient();
-                byte[] content;
-                string contentType;
-                string fileName;
-                if (dc.TryFetchRaw(archiveKey, out contentType, out fileName, out content))
-                {
-                    var r = new FileStreamResult(new MemoryStream(content), contentType);
-                    r.FileDownloadName = fileName;
-                    return r;
-                }
-                else
+                if (!dc.TryFetchRaw(archiveKey, out var contentType, out var fileName, out var content))
                     return HttpNotFound();
+
+                var r = new FileStreamResult(new MemoryStream(content), contentType)
+                {
+                    FileDownloadName = fileName
+                };
+                return r;
             }
         }
 
@@ -502,7 +534,8 @@ namespace nSavings.Controllers
             if (!year.HasValue)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing year");
 
-            var s = this.Service.YearlySummary.CreateSummaryPdfWithOwnerCheck(savingsAccountNr, year.Value, customerId.Value);
+            var s = this.Service.YearlySummary.CreateSummaryPdfWithOwnerCheck(savingsAccountNr, year.Value,
+                customerId.Value);
             if (s == null)
                 return HttpNotFound();
 
@@ -520,6 +553,7 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             using (var context = new SavingsContext())
             {
                 //NOTE: We dont use archive key here since we want to check the customerid when the user tries to download to prevent getting other users documents
@@ -543,8 +577,9 @@ namespace nSavings.Controllers
         }
 
         private AccountClosureBusinessEventManager CreateAccountClosureBusinessEventManager() =>
-             new AccountClosureBusinessEventManager(this.CurrentUserId, this.InformationMetadata, Service.CustomerRelationsMerge);
-        
+            new AccountClosureBusinessEventManager(this.CurrentUserId, this.InformationMetadata,
+                ControllerServiceFactory.CustomerRelationsMerge);
+
         [HttpPost]
         [Route("Api/CustomerPages/CloseAccountPreviewData")]
         public ActionResult CloseAccountPreviewData(int? customerId, string savingsAccountNr)
@@ -553,16 +588,17 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             if (string.IsNullOrWhiteSpace(savingsAccountNr))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr");
 
             using (var context = new SavingsContext())
             {
                 var a = ApiSavingsAccountDetailsController
-                     .GetSavingsAccountDetailsQueryable(context, Clock.Today)
-                     .Where(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr)
-                     .Select(x => new { x.Status })
-                     .SingleOrDefault();
+                    .GetSavingsAccountDetailsQueryable(context, Clock.Today)
+                    .Where(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr)
+                    .Select(x => new { x.Status })
+                    .SingleOrDefault();
 
                 if (a == null)
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No such account");
@@ -572,16 +608,13 @@ namespace nSavings.Controllers
             }
 
             var mgr = CreateAccountClosureBusinessEventManager();
-            string failedMessage;
 
-            AccountClosureBusinessEventManager.AccountClosurePreviewResult result;
-            if (!mgr.TryPreviewCloseAccount(savingsAccountNr, false, out failedMessage, out result))
+            if (!mgr.TryPreviewCloseAccount(savingsAccountNr, false, out var failedMessage, out var result))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
             }
 
-            IBANFi iban;
-            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out iban, out failedMessage))
+            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out var iban, out failedMessage))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
             }
@@ -611,16 +644,17 @@ namespace nSavings.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             if (string.IsNullOrWhiteSpace(savingsAccountNr))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr");
 
             using (var context = new SavingsContext())
             {
                 var a = ApiSavingsAccountDetailsController
-                     .GetSavingsAccountDetailsQueryable(context, Clock.Today)
-                     .Where(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr)
-                     .Select(x => new { x.Status })
-                     .SingleOrDefault();
+                    .GetSavingsAccountDetailsQueryable(context, Clock.Today)
+                    .Where(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr)
+                    .Select(x => new { x.Status })
+                    .SingleOrDefault();
 
                 if (a == null)
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No such account");
@@ -631,24 +665,22 @@ namespace nSavings.Controllers
 
             var mgr = CreateAccountClosureBusinessEventManager();
 
-            IBANFi iban;
-            string failedMessage;
-            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out iban, out failedMessage))
+            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out var iban, out var failedMessage))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
             }
 
             if (iban.NormalizedValue != expectedToIban)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "The default iban appears to have changed. Please relog and try again.");
-
-            BusinessEvent evt;
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "The default iban appears to have changed. Please relog and try again.");
 
             var isOk = mgr.TryCloseAccount(new AccountClosureBusinessEventManager.AccountClosureRequest
             {
                 UniqueOperationToken = uniqueOperationToken,
                 SavingsAccountNr = savingsAccountNr,
                 IncludeCalculationDetails = true,
-                ToIban = iban.NormalizedValue,  //Never change this to expectedToIban since the user could potentially influence the expectedToIban
+                ToIban = iban
+                    .NormalizedValue, //Never change this to expectedToIban since the user could potentially influence the expectedToIban
                 CustomCustomerMessageText = customCustomerMessageText,
                 CustomTransactionText = customTransactionText,
                 RequestAuthenticationMethod = requestAuthenticationMethod,
@@ -656,7 +688,7 @@ namespace nSavings.Controllers
                 RequestDate = Clock.Now,
                 RequestedByCustomerId = customerId.Value,
                 RequestedByHandlerUserId = null
-            }, false, false, out failedMessage, out evt);
+            }, false, false, out failedMessage, out _);
 
             if (!isOk)
             {
@@ -667,24 +699,32 @@ namespace nSavings.Controllers
             return Json2(new { NewUniqueOperationToken = BusinessEventManagerBase.GenerateUniqueOperationKey() });
         }
 
-        private ActionResult SavingsAccountDetailsI(int? customerId, string savingsAccountNr, string accountTypeCode, bool? latestActive, int? maxTransactionsCount, int? startBeforeTransactionId)
+        private ActionResult SavingsAccountDetailsI(int? customerId, string savingsAccountNr, string accountTypeCode,
+            bool? latestActive, int? maxTransactionsCount, int? startBeforeTransactionId)
         {
             if (!customerId.HasValue)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing customerId");
             }
+
             if (latestActive.GetValueOrDefault() && !string.IsNullOrWhiteSpace(savingsAccountNr))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Cannot specify both a savingsAccountNr and latestActive");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "Cannot specify both a savingsAccountNr and latestActive");
             }
+
             if (!latestActive.GetValueOrDefault() && string.IsNullOrWhiteSpace(savingsAccountNr))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Must specify one of savingsAccountNr and latestActive");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "Must specify one of savingsAccountNr and latestActive");
             }
+
             if (latestActive.GetValueOrDefault() && string.IsNullOrWhiteSpace(accountTypeCode))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Must specify accountTypeCode when using latestActive");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "Must specify accountTypeCode when using latestActive");
             }
+
             using (var context = new SavingsContext())
             {
                 var accountDetailsPre = ApiSavingsAccountDetailsController
@@ -693,18 +733,19 @@ namespace nSavings.Controllers
                     .Select(x => new
                     {
                         D = x,
-                        CapitalBalance = (context
+                        CapitalBalance = context
                             .SavingsAccountHeaders
                             .Where(y => y.SavingsAccountNr == x.SavingsAccountNr)
                             .SelectMany(y => y.Transactions)
                             .Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
-                            .Sum(y => (decimal?)y.Amount) ?? 0m)
+                            .Sum(y => (decimal?)y.Amount) ?? 0m
                     });
 
                 if (latestActive.GetValueOrDefault())
                 {
                     accountDetailsPre = accountDetailsPre
-                        .Where(x => x.D.Status == SavingsAccountStatusCode.Active.ToString() && x.D.AccountTypeCode == accountTypeCode)
+                        .Where(x => x.D.Status == SavingsAccountStatusCode.Active.ToString() &&
+                                    x.D.AccountTypeCode == accountTypeCode)
                         .OrderByDescending(y => y.D.CreatedByBusinessEventId);
                 }
                 else
@@ -727,10 +768,10 @@ namespace nSavings.Controllers
                     }
                 }
 
-                IDictionary<string, YearlyInterestCapitalizationBusinessEventManager.ResultModel> accInterestResult;
-                string accFailedMessage;
                 decimal? accumulatedInterestAmount;
-                if (YearlyInterestCapitalizationBusinessEventManager.TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, Clock, new List<string> { savingsAccountNr }, false, out accInterestResult, out accFailedMessage))
+                if (YearlyInterestCapitalizationBusinessEventManager
+                    .TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, Clock,
+                        new List<string> { savingsAccountNr }, false, out var accInterestResult, out _))
                 {
                     accumulatedInterestAmount = accInterestResult.Single().Value.TotalInterestAmount;
                 }
@@ -739,7 +780,8 @@ namespace nSavings.Controllers
                     accumulatedInterestAmount = null;
                 }
 
-                var transactions = GetCapitalTransactionsOrderedByEvent(context, customerId.Value, savingsAccountNr, maxTransactionsCount, startBeforeTransactionId);
+                var transactions = GetCapitalTransactionsOrderedByEvent(context, customerId.Value, savingsAccountNr,
+                    maxTransactionsCount, startBeforeTransactionId);
 
                 return Json2(new
                 {
@@ -774,20 +816,22 @@ namespace nSavings.Controllers
             public decimal? BalanceAfterAmount { get; set; }
         }
 
-        private IList<SavingsAccountTransactionCustomerPagesModel> GetCapitalTransactionsOrderedByEvent(SavingsContext context, int customerId, string savingsAccountNr, int? maxCountTransactions, int? startBeforeTransactionId)
+        private IList<SavingsAccountTransactionCustomerPagesModel> GetCapitalTransactionsOrderedByEvent(
+            SavingsContext context, int customerId, string savingsAccountNr, int? maxCountTransactions,
+            int? startBeforeTransactionId)
         {
-            if (maxCountTransactions.HasValue && maxCountTransactions.Value <= 0)
-                return new List<SavingsAccountTransactionCustomerPagesModel>(); //Allows callers to opt out of fetching transactions
+            if (maxCountTransactions <= 0)
+                return
+                    new List<SavingsAccountTransactionCustomerPagesModel>(); //Allows callers to opt out of fetching transactions
 
             var transactionsBase = context
                 .LedgerAccountTransactions
-                .Where(x => x.SavingsAccount.MainCustomerId == customerId && x.SavingsAccountNr == savingsAccountNr && x.AccountCode == LedgerAccountTypeCode.Capital.ToString());
+                .Where(x => x.SavingsAccount.MainCustomerId == customerId && x.SavingsAccountNr == savingsAccountNr &&
+                            x.AccountCode == LedgerAccountTypeCode.Capital.ToString());
 
-            IQueryable<LedgerAccountTransaction> transactionsPre;
-            if (startBeforeTransactionId.HasValue)
-                transactionsPre = transactionsBase.Where(x => x.Id < startBeforeTransactionId.Value);
-            else
-                transactionsPre = transactionsBase;
+            var transactionsPre = startBeforeTransactionId.HasValue
+                ? transactionsBase.Where(x => x.Id < startBeforeTransactionId.Value)
+                : transactionsBase;
 
             var transactions = transactionsPre
                 .OrderByDescending(y => y.BusinessEventId)

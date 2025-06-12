@@ -1,8 +1,8 @@
-﻿using NTech.Core.Module.Shared.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NTech.Core.Module.Shared.Database;
 
-namespace nSavings
+namespace NTech.Core.Savings.Shared.DbModel
 {
     public class IncomingPaymentHeader : InfrastructureBaseItem
     {

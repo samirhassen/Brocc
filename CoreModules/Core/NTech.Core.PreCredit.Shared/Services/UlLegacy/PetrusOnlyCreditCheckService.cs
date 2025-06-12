@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 
 namespace NTech.Core.PreCredit.Shared.Services.UlLegacy
 {
@@ -70,7 +69,6 @@ namespace NTech.Core.PreCredit.Shared.Services.UlLegacy
             this.randomNrScoringVariableGenerator = randomNrScoringVariableGenerator;
             this.referenceInterestRateService = referenceInterestRateService;
             civicRegNumberParser = new CivicRegNumberParser(clientConfiguration.Country.BaseCountry);
-           
         }
 
         public const string FallbackRejectionReason = "otherProvenir";

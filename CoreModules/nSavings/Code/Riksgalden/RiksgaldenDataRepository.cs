@@ -1,9 +1,12 @@
-﻿using nSavings.DbModel.BusinessEvents;
-using NTech;
-using NTech.Banking.CivicRegNumbers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using NTech;
+using NTech.Banking.CivicRegNumbers;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.Code.Riksgalden
 {
@@ -14,7 +17,8 @@ namespace nSavings.Code.Riksgalden
         private readonly string clientBaseCountry;
         private readonly IClock clock;
 
-        public RiksgaldenDataRepository(string clientCurrency, CivicRegNumberParser civicRegNumberParser, string clientBaseCountry, IClock clock)
+        public RiksgaldenDataRepository(string clientCurrency, CivicRegNumberParser civicRegNumberParser,
+            string clientBaseCountry, IClock clock)
         {
             this.clientCurrency = clientCurrency;
             this.civicRegNumberParser = civicRegNumberParser;
@@ -46,48 +50,49 @@ namespace nSavings.Code.Riksgalden
         {
             using (var context = new SavingsContext())
             {
-                IDictionary<string, YearlyInterestCapitalizationBusinessEventManager.ResultModel> interestCapResult;
-                string failedMessage;
-                if (!YearlyInterestCapitalizationBusinessEventManager.TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, clock, accountNrs.ToList(), false, out interestCapResult, out failedMessage, maxBusinessEventId: maxBusinessEventId))
+                if (!YearlyInterestCapitalizationBusinessEventManager
+                        .TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, clock, accountNrs.ToList(),
+                            false, out var interestCapResult, out var failedMessage,
+                            maxBusinessEventId: maxBusinessEventId))
                 {
                     throw new Exception(failedMessage);
                 }
+
                 return interestCapResult.ToDictionary(x => x.Key, x => x.Value.TotalInterestAmount);
             }
         }
 
-        private IList<RiksgaldenFileExporter.Customer> GetCustomers(ISet<int> customerIds, out IList<RiksgaldenFileExporter.FiFilialCustomer> fiFilialCustomers)
+        private IList<RiksgaldenFileExporter.Customer> GetCustomers(ISet<int> customerIds,
+            out IList<RiksgaldenFileExporter.FiFilialCustomer> fiFilialCustomers)
         {
             var client = new CustomerClient();
             var customers = new List<RiksgaldenFileExporter.Customer>(customerIds.Count);
 
-            var isFi = this.clientBaseCountry == "FI";
+            var isFi = clientBaseCountry == "FI";
             fiFilialCustomers = isFi ? new List<RiksgaldenFileExporter.FiFilialCustomer>() : null;
 
             foreach (var customerIdGroup in customerIds.ToArray().SplitIntoGroupsOfN(500))
             {
-                var result = client.BulkFetchPropertiesByCustomerIds(new HashSet<int>(customerIdGroup), "civicRegNr", "tin", "firstName", "lastName", "addressCity", "addressCountry", "addressZipcode", "addressStreet");
-
-                Func<string, IDictionary<int, CustomerClient.GetPropertyCustomer>, int, string> getValue = (n, r, cid) =>
-                   r[cid].Properties.SingleOrDefault(x => x.Name.Equals(n, StringComparison.OrdinalIgnoreCase))?.Value;
+                var result = client.BulkFetchPropertiesByCustomerIds(new HashSet<int>(customerIdGroup), "civicRegNr",
+                    "tin", "firstName", "lastName", "addressCity", "addressCountry", "addressZipcode", "addressStreet");
 
                 foreach (var c in customerIdGroup)
                 {
-                    var civicRegNr = civicRegNumberParser.Parse(getValue("civicRegNr", result, c));
-                    var firstName = getValue("firstName", result, c);
-                    var lastName = getValue("lastName", result, c);
+                    var civicRegNr = civicRegNumberParser.Parse(GetValue("civicRegNr", result, c));
+                    var firstName = GetValue("firstName", result, c);
+                    var lastName = GetValue("lastName", result, c);
                     customers.Add(new RiksgaldenFileExporter.Customer
                     {
                         PersonOrgNummer = civicRegNr,
-                        TIN = getValue("tin", result, c),
+                        TIN = GetValue("tin", result, c),
                         CONamn = null,
                         Kundnummer = c.ToString(),
                         Landskod = civicRegNr.Country,
                         Namn = $"{firstName} {lastName}".Trim(),
-                        Ort = getValue("addressCity", result, c),
-                        Postland = getValue("addressCountry", result, c) ?? clientBaseCountry,
-                        Postnummer = getValue("addressZipcode", result, c),
-                        Utdelningsadress = getValue("addressStreet", result, c)
+                        Ort = GetValue("addressCity", result, c),
+                        Postland = GetValue("addressCountry", result, c) ?? clientBaseCountry,
+                        Postnummer = GetValue("addressZipcode", result, c),
+                        Utdelningsadress = GetValue("addressStreet", result, c)
                     });
                     if (isFi)
                     {
@@ -100,7 +105,15 @@ namespace nSavings.Code.Riksgalden
                         });
                     }
                 }
+
+                continue;
+
+                string GetValue(string n, IDictionary<int, CustomerClient.GetPropertyCustomer> r, int cid) =>
+                    r[cid]
+                        .Properties.SingleOrDefault(x => x.Name.Equals(n, StringComparison.OrdinalIgnoreCase))
+                        ?.Value;
             }
+
             return customers;
         }
 
@@ -198,6 +211,7 @@ namespace nSavings.Code.Riksgalden
                             Referens = $"Id {t.Id}"
                         });
                     }
+
                     foreach (var t in a.CompletedPreviousPendingTransactions)
                     {
                         d.Transactions.Add(new RiksgaldenFileExporter.Transaction
@@ -231,7 +245,8 @@ namespace nSavings.Code.Riksgalden
                 //Accounts
                 var accounts = context
                     .SavingsAccountHeaders
-                    .Where(x => x.CreatedByBusinessEventId <= maxBusinessEventId && x.Status != SavingsAccountStatusCode.Closed.ToString())
+                    .Where(x => x.CreatedByBusinessEventId <= maxBusinessEventId &&
+                                x.Status != SavingsAccountStatusCode.Closed.ToString())
                     .OrderBy(x => x.CreatedByBusinessEventId)
                     .Select(x => new
                     {
@@ -268,8 +283,12 @@ namespace nSavings.Code.Riksgalden
                 var accumulatedInterestByAccountNr = GetAccumulatedInterest(accountNrs, maxBusinessEventId);
                 foreach (var a in accounts)
                 {
-                    a.Account.UpplupenRanta = accumulatedInterestByAccountNr.ContainsKey(a.Account.Kontonummer) ? accumulatedInterestByAccountNr[a.Account.Kontonummer] : 0m;
+                    a.Account.UpplupenRanta =
+                        accumulatedInterestByAccountNr.TryGetValue(a.Account.Kontonummer, out var value)
+                            ? value
+                            : 0m;
                 }
+
                 d.Accounts = accounts.Select(x => x.Account).ToList();
                 if (this.clientBaseCountry == "FI")
                 {
@@ -281,16 +300,17 @@ namespace nSavings.Code.Riksgalden
                 }
 
                 //Customers
-                IList<RiksgaldenFileExporter.FiFilialCustomer> fiFilialCustomers;
                 var customerIds = new HashSet<int>(accounts.Select(x => x.MainCustomerId));
-                d.Customers = GetCustomers(customerIds, out fiFilialCustomers);
+                d.Customers = GetCustomers(customerIds, out var fiFilialCustomers);
                 d.FiFilialCustomers = fiFilialCustomers;
 
                 //AccountDistributions 
                 d.AccountDistributions = new List<RiksgaldenFileExporter.AccountDistribution>();
                 foreach (var a in accounts)
                 {
-                    d.AccountDistributions.Add(RiksgaldenFileExporter.AccountDistribution.CreateEqualAmongAll(a.Account.Kontonummer, a.MainCustomerId.ToString(), 1));
+                    d.AccountDistributions.Add(
+                        RiksgaldenFileExporter.AccountDistribution.CreateEqualAmongAll(a.Account.Kontonummer,
+                            a.MainCustomerId.ToString(), 1));
                 }
 
                 //Transactions

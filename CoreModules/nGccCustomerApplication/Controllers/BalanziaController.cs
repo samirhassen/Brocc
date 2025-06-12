@@ -15,7 +15,7 @@ using System.Threading;
 using System.Web;
 using System.Text;
 using Serilog;
-
+using IdentityModel.Client;
 using NTech.Services.Infrastructure;
 
 namespace nGccCustomerApplication.Controllers
@@ -25,11 +25,13 @@ namespace nGccCustomerApplication.Controllers
         [Route("~/")]
         public ActionResult Application(int? amount, int? repaymentTimeInYears, string cc) //cc = campaign code
         {
+            /*
             if(NEnv.RedirectOldApplication)
             {
                 return Redirect("/a/" + (this.Request.QueryString.Keys.Count > 0 ? $"?{this.Request.QueryString.ToString()}" : ""));
             }
-            ViewBag.JsonInitialData = this.EncodeInitialData(new
+            */
+           ViewBag.JsonInitialData = this.EncodeInitialData(new
             {
                 isProduction = NEnv.IsProduction,
                 translateUrl = Url.Action("Translation", "Common"),

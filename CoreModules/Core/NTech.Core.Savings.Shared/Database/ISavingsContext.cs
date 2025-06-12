@@ -1,6 +1,8 @@
-﻿using nSavings;
+﻿using System.Linq;
 using NTech.Core.Module.Shared.Database;
-using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFixed;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace NTech.Core.Savings.Shared.Database
 {
@@ -11,6 +13,7 @@ namespace NTech.Core.Savings.Shared.Database
         IQueryable<IncomingPaymentHeader> IncomingPaymentHeadersQueryable { get; }
         IQueryable<KeyValueItem> KeyValueItemsQueryable { get; }
         IQueryable<OutgoingExportFileHeader> OutgoingExportFileHeadersQueryable { get; }
+        IQueryable<FixedAccountProduct> FixedAccountProductQueryable { get; }
 
         void AddBusinessEvents(params BusinessEvent[] events);
         void AddSavingsAccountHeaders(params SavingsAccountHeader[] accounts);

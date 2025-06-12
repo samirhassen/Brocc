@@ -1,9 +1,10 @@
-﻿using NTech.Services.Infrastructure;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using nSavings.DbModel;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [NTechAuthorize(ValidateAccessToken = true)]
@@ -26,6 +27,7 @@ namespace nSavings.Controllers
             {
                 return Json2(new Dictionary<int, IList<SavingsAccountStatusItem>>());
             }
+
             using (var context = new SavingsContext())
             {
                 var result = context

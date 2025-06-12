@@ -22,21 +22,21 @@ namespace nCustomer
 
         private void Application_Start(object sender, EventArgs e)
         {
-            //AreaRegistration.RegisterAllAreas();
-            //GlobalConfiguration.Configure(WebApiConfig.Register);
-            //RouteConfig.RegisterRoutes(RouteTable.Routes);
-            //RegisterBundles();
-            //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
-            //GlobalFilters.Filters.Add(new NTechAuthorizeAttribute());
-            //GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
-            //GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+            AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            RegisterBundles();
+            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            GlobalFilters.Filters.Add(new NTechAuthorizeAttribute());
+            GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
+            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
 
-            //ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().Single());
-            //ValueProviderFactories.Factories.Add(new Code.JsonNetValueProviderFactory());
+            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().Single());
+            ValueProviderFactories.Factories.Add(new Code.JsonNetValueProviderFactory());
 
-            ////Make sure the db is created
-            //CustomersContext.InitDatabase();
+            //Make sure the db is created
+            CustomersContext.InitDatabase();
         }
 
         private static void RegisterStyles(BundleCollection bundles)

@@ -6,6 +6,7 @@ using NTech.Core.Credit.Shared.Database;
 using NTech.Core.Host.IntegrationTests.Shared;
 using NTech.Core.Host.IntegrationTests.UlLegacy.Utilities;
 using System.Text;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Core.Host.IntegrationTests.UlLegacy
 {

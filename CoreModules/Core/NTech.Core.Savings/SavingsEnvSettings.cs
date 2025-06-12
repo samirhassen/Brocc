@@ -1,4 +1,5 @@
 ﻿using NTech.Banking.BankAccounts.Fi;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Module;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Savings.Shared;

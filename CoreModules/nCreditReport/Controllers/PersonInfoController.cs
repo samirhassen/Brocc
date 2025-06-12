@@ -1,11 +1,11 @@
-﻿using nCreditReport.Code;
-using nCreditReport.Code.BisnodeFi;
-using NTech.Banking.CivicRegNumbers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nCreditReport.Code;
+using nCreditReport.Code.BisnodeFi;
+using NTech.Banking.CivicRegNumbers;
 
 namespace nCreditReport.Controllers
 {
@@ -31,6 +31,31 @@ namespace nCreditReport.Controllers
 
             public static Func<ICivicRegNumber, string, AddressResult> GetAddressProvider(string providerName)
             {
+#if DEBUG
+                //return (c, username) => new AddressResult
+                //{
+                //    SuccessItems = new List<Tuple<string, string>>()
+                //    {
+                //        new Tuple<string, string>("firstName", "ImA"),
+                //        new Tuple<string, string>("lastName", "Person"),
+                //        new Tuple<string, string>("bricRiskOfPaymentRemark", "Small"),
+                //        new Tuple<string, string>("addressStreet", "TheStreet"),
+                //        new Tuple<string, string>("addressZipcode", "12345"),
+                //        new Tuple<string, string>("addressCity", "City"),
+                //        new Tuple<string, string>("addressCountry", "246"),
+                //        new Tuple<string, string>("hasDomesticAddress", "true"),
+                //        new Tuple<string, string>("domesticAddressSinceDate", "2020-02-13"),
+                //        new Tuple<string, string>("hasPosteRestanteAddress", "false"),
+                //        new Tuple<string, string>("hasPostBoxAddress", "false"),
+                //        new Tuple<string, string>("personStatus", "normal")
+                //    },
+                //    IsError = false,
+                //    IsInvalidCredentialsError = false,
+                //    IsTimeoutError = false,
+                //    ErrorMessage = null
+                //};
+#endif
+
                 if (providerName.Equals(BisnodeFiProviderName, StringComparison.OrdinalIgnoreCase))
                 {
                     return (c, username) =>
@@ -46,30 +71,34 @@ namespace nCreditReport.Controllers
                                     IsInvalidCredentialsError = r.IsInvalidCredentialsError
                                 };
                             }
-                            else
+
+                            return new AddressResult
                             {
-                                return new AddressResult
-                                {
-                                    SuccessItems = r
-                                            .SuccessItems
-                                            .Select(x => Tuple.Create(x.Name, x.Value))
-                                            .ToList()
-                                };
-                            }
+                                SuccessItems = r
+                                    .SuccessItems
+                                    .Select(x => Tuple.Create(x.Name, x.Value))
+                                    .ToList()
+                            };
                         });
                     };
                 }
-                else if (providerName.Equals(TestOnlyFiProviderName, StringComparison.OrdinalIgnoreCase) || providerName.Equals(TestOnlySeProviderName, StringComparison.OrdinalIgnoreCase))
+
+                if (providerName.Equals(TestOnlyFiProviderName, StringComparison.OrdinalIgnoreCase) ||
+                    providerName.Equals(TestOnlySeProviderName, StringComparison.OrdinalIgnoreCase))
                 {
                     return (c, _) =>
                     {
                         var cli = new nTestClient();
-                        var addressFields = new List<string> { "addressStreet", "addressCity", "addressZipcode", "addressCountry" };
-                        var properties = new List<string> {
+                        var addressFields = new List<string>
+                            { "addressStreet", "addressCity", "addressZipcode", "addressCountry" };
+                        var properties = new List<string>
+                        {
                             "firstName", "lastName",
-                            "creditreport_personStatus", "creditreport_hasDomesticAddress" };
+                            "creditreport_personStatus", "creditreport_hasDomesticAddress"
+                        };
                         properties.AddRange(addressFields);
-                        var result = cli.GetTestPerson(null, c, properties.ToArray()) ?? new Dictionary<string, string>();
+                        var result = cli.GetTestPerson(null, c, properties.ToArray()) ??
+                                     new Dictionary<string, string>();
 
                         if (result.ContainsKey("creditreport_personStatus"))
                             result["personStatus"] = result["creditreport_personStatus"];
@@ -90,33 +119,29 @@ namespace nCreditReport.Controllers
                                 SuccessItems = result.Select(x => Tuple.Create(x.Key, x.Value)).ToList()
                             };
                         }
-                        else
+
+                        return new AddressResult
                         {
-                            return new AddressResult
-                            {
-                                IsError = false,
-                                IsInvalidCredentialsError = false,
-                                ErrorMessage = null,
-                                SuccessItems = new[] { Tuple.Create("personStatus", "nodata") }.ToList()
-                            };
-                        }
+                            IsError = false,
+                            IsInvalidCredentialsError = false,
+                            ErrorMessage = null,
+                            SuccessItems = new[] { Tuple.Create("personStatus", "nodata") }.ToList()
+                        };
                     };
                 }
-                else
-                    return null;
+
+                return null;
             }
         }
 
         [Route("FetchNameAndAddress")]
         [HttpPost]
-        public ActionResult FetchNameAndAddress(string providerName, string civicRegNr, List<string> requestedItemNames, int? customerId)
+        public ActionResult FetchNameAndAddress(string providerName, string civicRegNr, List<string> requestedItemNames,
+            int? customerId)
         {
             var errors = new List<string>();
-            int userId;
-            string username;
-            string metadata;
 
-            GetUserProperties(errors, out userId, out username, out metadata);
+            GetUserProperties(errors, out _, out var username, out _);
 
             if (string.IsNullOrWhiteSpace(civicRegNr) || !customerId.HasValue)
                 errors.Add("Missing civicRegNr or customerId");
@@ -125,69 +150,64 @@ namespace nCreditReport.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, string.Join(";", errors));
 
             var getAddress = AddressProviderFactory.GetAddressProvider(providerName);
-            if (getAddress != null)
+            if (getAddress == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid providerName");
+            var p = new CivicRegNumberParser(NEnv.ClientCfg.Country.BaseCountry);
+            if (!p.TryParse(civicRegNr, out var c))
             {
-                ICivicRegNumber c;
-                var p = new CivicRegNumberParser(NEnv.ClientCfg.Country.BaseCountry);
-                if (!p.TryParse(civicRegNr, out c))
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid civicRegNr");
-                }
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid civicRegNr");
+            }
 
-                var k = NEnv.EncryptionKeys;
-                var repo = new AddressLookupCacheRepository(k.CurrentKeyName, k.AsDictionary());
-                var cachedItems = repo.GetCachedResult(customerId.Value, providerName, TimeSpan.FromDays(1));
-                if (cachedItems != null)
+            var k = NEnv.EncryptionKeys;
+            var repo = new AddressLookupCacheRepository(k.CurrentKeyName, k.AsDictionary());
+            var cachedItems = repo.GetCachedResult(customerId.Value, providerName, TimeSpan.FromDays(1));
+            if (cachedItems != null)
+            {
+                return Json2(new
                 {
+                    Success = true,
+                    IsFromCache = true,
+                    Items = cachedItems
+                        .Select(x => new
+                        {
+                            Name = x.Key,
+                            Value = x.Value
+                        })
+                        .ToList()
+                });
+            }
+
+            var r = getAddress(c, username);
+            if (r.IsError)
+            {
+                if (r.IsInvalidCredentialsError || r.IsTimeoutError)
                     return Json2(new
                     {
-                        Success = true,
-                        IsFromCache = true,
-                        Items = cachedItems
-                                .Select(x => new
-                                {
-                                    Name = x.Key,
-                                    Value = x.Value
-                                })
-                                .ToList()
+                        Success = false, IsInvalidCredentialsError = r.IsInvalidCredentialsError,
+                        IsTimeoutError = false
                     });
-                }
-
-                var r = getAddress(c, username);
-                if (r.IsError)
-                {
-                    if (r.IsInvalidCredentialsError || r.IsTimeoutError)
-                        return Json2(new { Success = false, IsInvalidCredentialsError = r.IsInvalidCredentialsError, IsTimeoutError = false });
-                    else
-                        return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, r.ErrorMessage);
-                }
-                else
-                {
-                    var resultItems = r
-                            .SuccessItems
-                            .Where(x => !x.Item1.Equals("civicRegNr") && requestedItemNames.Contains(x.Item1, StringComparer.OrdinalIgnoreCase))
-                            .Select(x => new
-                            {
-                                Name = x.Item1,
-                                Value = x.Item2
-                            })
-                            .ToList();
-
-                    repo.StoreCachedResult(customerId.Value, providerName, resultItems.ToDictionary(x => x.Name, x => x.Value), TimeSpan.FromDays(1));
-
-                    return Json2(new
-                    {
-                        Success = true,
-                        IsFromCache = false,
-                        Items = resultItems
-                    });
-                }
-
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, r.ErrorMessage);
             }
-            else
+
+            var resultItems = r
+                .SuccessItems
+                .Where(x => !x.Item1.Equals("civicRegNr") &&
+                            requestedItemNames.Contains(x.Item1, StringComparer.OrdinalIgnoreCase))
+                .Select(x => new
+                {
+                    Name = x.Item1,
+                    Value = x.Item2
+                })
+                .ToList();
+
+            repo.StoreCachedResult(customerId.Value, providerName,
+                resultItems.ToDictionary(x => x.Name, x => x.Value), TimeSpan.FromDays(1));
+
+            return Json2(new
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid providerName");
-            }
+                Success = true,
+                IsFromCache = false,
+                Items = resultItems
+            });
         }
 
         [Route("ClearCache")]
@@ -201,7 +221,8 @@ namespace nCreditReport.Controllers
                 if (customerId.HasValue)
                     r = r.Where(x => x.CustomerId == customerId.Value);
                 else if (!allCustomers.GetValueOrDefault())
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "customerId or allCustomers must be specified");
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                        "customerId or allCustomers must be specified");
 
                 var items = r.ToList();
                 foreach (var i in items)

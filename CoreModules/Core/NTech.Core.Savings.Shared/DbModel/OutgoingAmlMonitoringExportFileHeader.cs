@@ -1,7 +1,7 @@
-﻿using NTech.Core.Module.Shared.Database;
-using System;
+﻿using System;
+using NTech.Core.Module.Shared.Database;
 
-namespace nSavings
+namespace NTech.Core.Savings.Shared.DbModel
 {
     public class OutgoingAmlMonitoringExportFileHeader : InfrastructureBaseItem
     {

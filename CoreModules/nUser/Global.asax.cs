@@ -20,13 +20,13 @@ namespace nUser
 
         private void Application_Start(object sender, EventArgs e)
         {
-            AreaRegistration.RegisterAllAreas();
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
-            GlobalFilters.Filters.Add(new NTechAuthorizeAndPermissionsAttribute());
-            GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
-            GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+            //AreaRegistration.RegisterAllAreas();
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
+            //GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
+            //GlobalFilters.Filters.Add(new NTechAuthorizeAndPermissionsAttribute());
+            //GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
+            //GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
 
             if (NEnv.IsProfilerEnabled)
             {

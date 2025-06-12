@@ -1,15 +1,18 @@
-﻿using NTech;
-using NTech.Services.Infrastructure;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.Code.Services;
+using nSavings.DbModel;
+using NTech;
+using NTech.Services.Infrastructure;
+using Serilog;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [RoutePrefix("Api/PeriodicMaintenance")]
@@ -20,17 +23,14 @@ namespace nSavings.Controllers
         [HttpPost()]
         public ActionResult RunPeriodicMaintenance(IDictionary<string, string> schedulerData = null)
         {
-            Func<string, string> getSchedulerData = s => (schedulerData != null && schedulerData.ContainsKey(s)) ? schedulerData[s] : null;
-
-            var c = new Code.DocumentClient();
             return SavingsContext.RunWithExclusiveLock("ntech.scheduledjobs.savingsperiodicmaintenance",
-                    () => SavingsPeriodicmaintenanceI(),
-                    () => new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Job is already running"));
+                SavingsPeriodicmaintenanceI,
+                () => new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Job is already running"));
         }
 
         private ActionResult SavingsPeriodicmaintenanceI()
         {
-            List<string> errors = new List<string>();
+            var errors = new List<string>();
             var w = Stopwatch.StartNew();
             try
             {
@@ -39,7 +39,7 @@ namespace nSavings.Controllers
                 //Remove expired temporary encryption items
                 ApiEncryptedTemporaryStorageController.DeleteExpiredItems();
                 PopulateCalendarDates(Clock);
-                this.Service.CustomerRelationsMerge.MergeSavingsAccountsToCustomerRelations();
+                ControllerServiceFactory.CustomerRelationsMerge.MergeSavingsAccountsToCustomerRelations();
             }
             catch (Exception ex)
             {
@@ -51,11 +51,12 @@ namespace nSavings.Controllers
                 w.Stop();
             }
 
-            NLog.Information("Savings PeriodicMaintenance finished TotalMilliseconds={totalMilliseconds}", w.ElapsedMilliseconds);
+            NLog.Information("Savings PeriodicMaintenance finished TotalMilliseconds={totalMilliseconds}",
+                w.ElapsedMilliseconds);
 
             //Used by nScheduler
             var warnings = new List<string>();
-            errors?.ForEach(x => warnings.Add(x));
+            errors.ForEach(x => warnings.Add(x));
 
             return Json2(new { errors, totalMilliseconds = w.ElapsedMilliseconds, warnings = warnings });
         }
@@ -66,15 +67,16 @@ namespace nSavings.Controllers
             {
                 //If you change this, make sure that the calendar table is always continous even when jumping back and forth through time
                 if (clock.Today > DateTime.Today.AddYears(20))
-                    throw new Exception("The calendar table cannot support timemachine dates more than 20 years into the future at this point");
+                    throw new Exception(
+                        "The calendar table cannot support timemachine dates more than 20 years into the future at this point");
             }
+
             //Make sure all dates between 1950-01-01 and at least 20 years from now exist
             using (var context = new SavingsContext())
             {
-                Action<DateTime> addTenYearsToCalendar = startFromDate =>
+                void AddTenYearsToCalendar(DateTime startFromDate)
                 {
-                    context.Database.ExecuteSqlCommand(
-@"WITH Dates 
+                    context.Database.ExecuteSqlCommand(@"WITH Dates 
 AS 
 (
 	SELECT	TheDate = @startDate
@@ -87,18 +89,20 @@ insert into CalendarDate
 (TheDate)
 select d.TheDate from Dates d 
 OPTION (MAXRECURSION 6000)", new SqlParameter("@startDate", startFromDate));
-                };
-                int loopGuard = 0;
+                }
+
+                var loopGuard = 0;
                 while (loopGuard++ < 500)
                 {
                     var maxDate = context.CalendarDates.Select(x => (DateTime?)x.TheDate).Max();
                     if (!maxDate.HasValue || maxDate < DateTime.Today.AddYears(20))
                     {
-                        addTenYearsToCalendar(maxDate.HasValue ? maxDate.Value.AddDays(1) : new DateTime(1950, 1, 1));
+                        AddTenYearsToCalendar(maxDate?.AddDays(1) ?? new DateTime(1950, 1, 1));
                     }
                     else
                         break;
                 }
+
                 if (loopGuard > 400)
                     throw new Exception("Hit guard code. Infinite loop detected");
             }

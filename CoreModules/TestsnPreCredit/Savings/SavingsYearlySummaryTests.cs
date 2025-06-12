@@ -60,23 +60,31 @@ namespace TestsnPreCredit.Savings
             var clock = new StrictMock<IClock>();
             if (now.HasValue)
                 clock.Setup(x => x.Today).Returns(now.Value.Date);
-            return new YearlySummaryService(() => { throw new NotImplementedException(); }, () => { throw new NotImplementedException(); }, () => { throw new NotImplementedException(); }, clock.Object, CultureInfo.InvariantCulture); ;
+            return new YearlySummaryService(() => throw new NotImplementedException(),
+                () => throw new NotImplementedException(),
+                () => throw new NotImplementedException(), clock.Object,
+                CultureInfo.InvariantCulture);
+            ;
         }
 
-        private void AssertSummary(List<YearlySummaryService.EventModel> events, int year, YearlySummaryService.SummaryDataModel expected)
+        private void AssertSummary(List<YearlySummaryService.EventModel> events, int year,
+            YearlySummaryService.SummaryDataModel expected)
         {
             YearlySummaryService s = CreateService(now: new DateTime(year + 1, 1, 1));
             YearlySummaryService.SummaryDataModel actual = s.ComputeSummary(events, year);
-            Func<string> desc = () => $"BalanceAfterAmount={actual?.BalanceAfterAmount} vs {expected?.BalanceAfterAmount}, TotalInterestAmount={actual?.TotalInterestAmount} vs {expected?.TotalInterestAmount}, WithheldTaxAmount={actual?.WithheldTaxAmount} vs {expected?.WithheldTaxAmount}";
 
-            Assert.AreEqual(expected?.BalanceAfterAmount, actual?.BalanceAfterAmount, desc());
-            Assert.AreEqual(expected?.TotalInterestAmount, actual?.TotalInterestAmount, desc());
-            Assert.AreEqual(expected?.WithheldTaxAmount, actual?.WithheldTaxAmount, desc());
+            string Desc() =>
+                $"BalanceAfterAmount={actual?.BalanceAfterAmount} vs {expected?.BalanceAfterAmount}, TotalInterestAmount={actual?.TotalInterestAmount} vs {expected?.TotalInterestAmount}, WithheldTaxAmount={actual?.WithheldTaxAmount} vs {expected?.WithheldTaxAmount}";
+
+            Assert.AreEqual(expected?.BalanceAfterAmount, actual?.BalanceAfterAmount, Desc());
+            Assert.AreEqual(expected?.TotalInterestAmount, actual?.TotalInterestAmount, Desc());
+            Assert.AreEqual(expected?.WithheldTaxAmount, actual?.WithheldTaxAmount, Desc());
         }
 
         private void AssertYears(List<YearlySummaryService.EventModel> events, params int[] expectedYears)
         {
-            YearlySummaryService s = CreateService(now: expectedYears.Any() ? new DateTime(expectedYears.Max() + 1, 1, 1) : new DateTime?());
+            YearlySummaryService s =
+                CreateService(now: expectedYears.Any() ? new DateTime(expectedYears.Max() + 1, 1, 1) : new DateTime?());
             var actualYears = s.GetAllYearsWithSummaries(events);
             CollectionAssert.AreEqual(expectedYears, actualYears.ToArray());
         }
@@ -100,7 +108,11 @@ namespace TestsnPreCredit.Savings
                 .E("AccountClosure", "2016-05-23")
                 .Events();
 
-            AssertSummary(events, 2016, new YearlySummaryService.SummaryDataModel { BalanceAfterAmount = 0, TotalInterestAmount = 0, WithheldTaxAmount = 0 });
+            AssertSummary(events, 2016,
+                new YearlySummaryService.SummaryDataModel
+                {
+                    BalanceAfterAmount = 0, TotalInterestAmount = 0, WithheldTaxAmount = 0
+                });
             AssertYears(events, 2016);
         }
 
@@ -110,18 +122,20 @@ namespace TestsnPreCredit.Savings
             var events = HistoryBuilder
                 .New()
                 .E("IncomingPaymentFileImport", "2016-03-12")
-                    .T(100, "Capital", "2016-03-11")
+                .T(100, "Capital", "2016-03-11")
                 .E("AccountClosure", "2016-05-23")
-                    .T(10, "Capital", "2016-05-23") //Interest
-                    .T(10, "CapitalizedInterest", "2016-05-23")
-
-                    .T(3, "WithheldCapitalizedInterestTax", "2016-05-23") //Withheld tax
-                    .T(-3, "Capital", "2016-05-23")
-
-                    .T(-107, "Capital", "2016-05-23") //Withdrawal                    
+                .T(10, "Capital", "2016-05-23") //Interest
+                .T(10, "CapitalizedInterest", "2016-05-23")
+                .T(3, "WithheldCapitalizedInterestTax", "2016-05-23") //Withheld tax
+                .T(-3, "Capital", "2016-05-23")
+                .T(-107, "Capital", "2016-05-23") //Withdrawal                    
                 .Events();
 
-            AssertSummary(events, 2016, new YearlySummaryService.SummaryDataModel { BalanceAfterAmount = 0, TotalInterestAmount = 10, WithheldTaxAmount = 3 });
+            AssertSummary(events, 2016,
+                new YearlySummaryService.SummaryDataModel
+                {
+                    BalanceAfterAmount = 0, TotalInterestAmount = 10, WithheldTaxAmount = 3
+                });
             AssertYears(events, 2016);
         }
 
@@ -131,16 +145,19 @@ namespace TestsnPreCredit.Savings
             var events = HistoryBuilder
                 .New()
                 .E("IncomingPaymentFileImport", "2016-03-12")
-                    .T(100, "Capital", "2016-03-11")
+                .T(100, "Capital", "2016-03-11")
                 .E("YearlyInterestCapitalization", "2017-01-02")
-                    .T(10, "Capital", "2016-12-31") //Interest
-                    .T(10, "CapitalizedInterest", "2016-12-31")
-
-                    .T(3, "WithheldCapitalizedInterestTax", "2016-12-31") //Withheld tax
-                    .T(-3, "Capital", "2016-12-31")
+                .T(10, "Capital", "2016-12-31") //Interest
+                .T(10, "CapitalizedInterest", "2016-12-31")
+                .T(3, "WithheldCapitalizedInterestTax", "2016-12-31") //Withheld tax
+                .T(-3, "Capital", "2016-12-31")
                 .Events();
 
-            AssertSummary(events, 2016, new YearlySummaryService.SummaryDataModel { BalanceAfterAmount = 107, TotalInterestAmount = 10, WithheldTaxAmount = 3 });
+            AssertSummary(events, 2016,
+                new YearlySummaryService.SummaryDataModel
+                {
+                    BalanceAfterAmount = 107, TotalInterestAmount = 10, WithheldTaxAmount = 3
+                });
             AssertYears(events, 2016);
         }
 
@@ -150,19 +167,26 @@ namespace TestsnPreCredit.Savings
             var events = HistoryBuilder
                 .New()
                 .E("IncomingPaymentFileImport", "2016-03-12")
-                    .T(100, "Capital", "2016-03-11")
+                .T(100, "Capital", "2016-03-11")
                 .E("YearlyInterestCapitalization", "2017-01-01")
-                    .T(10, "Capital", "2016-12-31") //Interest
-                    .T(10, "CapitalizedInterest", "2016-12-31")
-
-                    .T(3, "WithheldCapitalizedInterestTax", "2016-12-31") //Withheld tax
-                    .T(-3, "Capital", "2016-12-31")
+                .T(10, "Capital", "2016-12-31") //Interest
+                .T(10, "CapitalizedInterest", "2016-12-31")
+                .T(3, "WithheldCapitalizedInterestTax", "2016-12-31") //Withheld tax
+                .T(-3, "Capital", "2016-12-31")
                 .E("AccountClosure", "2017-01-01")
-                    .T(-107, "Capital", "2017-01-01") //Withdrawal
+                .T(-107, "Capital", "2017-01-01") //Withdrawal
                 .Events();
 
-            AssertSummary(events, 2016, new YearlySummaryService.SummaryDataModel { BalanceAfterAmount = 107, TotalInterestAmount = 10, WithheldTaxAmount = 3 });
-            AssertSummary(events, 2017, new YearlySummaryService.SummaryDataModel { BalanceAfterAmount = 0, TotalInterestAmount = 0, WithheldTaxAmount = 0 });
+            AssertSummary(events, 2016,
+                new YearlySummaryService.SummaryDataModel
+                {
+                    BalanceAfterAmount = 107, TotalInterestAmount = 10, WithheldTaxAmount = 3
+                });
+            AssertSummary(events, 2017,
+                new YearlySummaryService.SummaryDataModel
+                {
+                    BalanceAfterAmount = 0, TotalInterestAmount = 0, WithheldTaxAmount = 0
+                });
             AssertYears(events, 2017, 2016);
         }
     }

@@ -1,11 +1,13 @@
-﻿using nCustomerPages.Code;
-using NTech.Banking.BankAccounts.Fi;
-using NTech.Banking.CivicRegNumbers.Fi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
+using nCustomerPages.Code;
+using NTech.Banking.BankAccounts.Fi;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using CivicRegNumberFi = NTech.Banking.CivicRegNumbers.Fi.CivicRegNumberFi;
 
 namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrations
 {
@@ -16,20 +18,17 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
         protected List<string> errors;
         protected List<string> parsedNames;
         private bool hasBeenCalled;
-        private IDictionary<string, ISet<string>> internalNameDuplicatePreventionSets = new Dictionary<string, ISet<string>>
-        {
-            { "civicRegNr", new HashSet<string>() }
-        };
 
-        protected virtual bool IncludeInternalNamesInErrorMessage
-        {
-            get
+        private IDictionary<string, ISet<string>> internalNameDuplicatePreventionSets =
+            new Dictionary<string, ISet<string>>
             {
-                return true;
-            }
-        }
+                { "civicRegNr", new HashSet<string>() }
+            };
 
-        protected void RequiredCivicRegNumberFi(string externalName, string internalGroup, string internalName, Action<CivicRegNumberFi> afterAdd = null)
+        protected virtual bool IncludeInternalNamesInErrorMessage => true;
+
+        protected void RequiredCivicRegNumberFi(string externalName, string internalGroup, string internalName,
+            Action<CivicRegNumberFi> afterAdd = null)
         {
             RequiredX(externalName, internalGroup, internalName,
                 "Finnish personbeteckning/SSN",
@@ -38,53 +37,37 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                     CivicRegNumberFi c;
                     if (!CivicRegNumberFi.TryParse(s, out c))
                     {
-                        return Tuple.Create(false, (CivicRegNumberFi)null, "Finnish personbeteckning/SSN should have the format DDMMYYSNNNK");
+                        return Tuple.Create(false, (CivicRegNumberFi)null,
+                            "Finnish personbeteckning/SSN should have the format DDMMYYSNNNK");
                     }
-                    else
-                    {
-                        return Tuple.Create(true, c, (string)null);
-                    }
+
+                    return Tuple.Create(true, c, (string)null);
                 },
                 x => x.NormalizedValue,
                 afterAdd: afterAdd);
         }
 
-        protected void RequiredIbanFi(string externalName, string internalGroup, string internalName, Action<IBANFi> afterAdd = null)
+        protected void RequiredIbanFi(string externalName, string internalGroup, string internalName,
+            Action<IBANFi> afterAdd = null)
         {
             RequiredX(externalName, internalGroup, internalName,
                 "Finnish IBAN",
-                s =>
-                {
-                    IBANFi iban;
-                    if (!IBANFi.TryParse(s, out iban))
-                    {
-                        return Tuple.Create(false, (IBANFi)null, "Invalid finnish IBAN. Format should be FI<16 nrs>");
-                    }
-                    else
-                    {
-                        return Tuple.Create(true, iban, (string)null);
-                    }
-                },
+                s => !IBANFi.TryParse(s, out var iban)
+                    ? Tuple.Create(false, (IBANFi)null, "Invalid finnish IBAN. Format should be FI<16 nrs>")
+                    : Tuple.Create(true, iban, (string)null),
                 x => x.NormalizedValue,
                 afterAdd: afterAdd);
         }
 
-        protected void RequiredDecimal(string externalName, string internalGroup, string internalName, Func<decimal, decimal> transformBeforeAdd = null)
+        protected void RequiredDecimal(string externalName, string internalGroup, string internalName,
+            Func<decimal, decimal> transformBeforeAdd = null)
         {
             RequiredX(externalName, internalGroup, internalName,
                 "Decimal",
-                s =>
-                {
-                    decimal d;
-                    if (!decimal.TryParse(s, NumberStyles.Integer | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
-                    {
-                        return Tuple.Create(false, default(decimal), "Decimals should have the format 9999.99");
-                    }
-                    else
-                    {
-                        return Tuple.Create(true, d, (string)null);
-                    }
-                },
+                s => !decimal.TryParse(s, NumberStyles.Integer | NumberStyles.AllowDecimalPoint,
+                    CultureInfo.InvariantCulture, out var d)
+                    ? Tuple.Create(false, default(decimal), "Decimals should have the format 9999.99")
+                    : Tuple.Create(true, d, (string)null),
                 x =>
                 {
                     if (transformBeforeAdd != null)
@@ -93,35 +76,27 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                 });
         }
 
-        protected void RequiredInt(string externalName, string internalGroup, string internalName, Func<int, int> transformBeforeAdd = null)
+        protected void RequiredInt(string externalName, string internalGroup, string internalName,
+            Func<int, int> transformBeforeAdd = null)
         {
             RequiredX(externalName, internalGroup, internalName,
                 "Integer",
-                s =>
+                s => !int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out var i)
+                    ? Tuple.Create(false, default(int), "Integers should have the format 9999")
+                    : Tuple.Create(true, i, (string)null),
+                x =>
                 {
-                    int i;
-                    if (!int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out i))
-                    {
-                        return Tuple.Create(false, default(int), "Integers should have the format 9999");
-                    }
-                    else
-                    {
-                        return Tuple.Create(true, i, (string)null);
-                    }
-                },
-                 x =>
-                 {
-                     if (transformBeforeAdd != null)
-                         x = transformBeforeAdd(x);
-                     return x.ToString(CultureInfo.InvariantCulture);
-                 });
+                    if (transformBeforeAdd != null)
+                        x = transformBeforeAdd(x);
+                    return x.ToString(CultureInfo.InvariantCulture);
+                });
         }
 
-        private bool TryParseEmail(string input, out System.Net.Mail.MailAddress m)
+        private bool TryParseEmail(string input, out MailAddress m)
         {
             try
             {
-                m = new System.Net.Mail.MailAddress(input);
+                m = new MailAddress(input);
                 return true;
             }
             catch
@@ -137,20 +112,19 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                 "Email",
                 s =>
                 {
-                    System.Net.Mail.MailAddress m;
-                    if (!TryParseEmail(s, out m))
+                    if (!TryParseEmail(s, out var m))
                     {
-                        return Tuple.Create(false, (System.Net.Mail.MailAddress)null, "Email addresses should adher to RFC 5322");
+                        return Tuple.Create(false, (MailAddress)null,
+                            "Email addresses should adher to RFC 5322");
                     }
-                    else
-                    {
-                        return Tuple.Create(true, m, (string)null);
-                    }
+
+                    return Tuple.Create(true, m, (string)null);
                 },
                 x => x.Address);
         }
 
-        protected void RequiredEnum<T>(string externalName, string internalGroup, string internalName, Func<T, string> mapToInternal)
+        protected void RequiredEnum<T>(string externalName, string internalGroup, string internalName,
+            Func<T, string> mapToInternal)
         {
             if (!typeof(T).IsEnum)
                 throw new Exception("Program error. Enum type is not an enum");
@@ -165,12 +139,15 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                         if (v.ToString().ToLowerInvariant() == s?.ToLowerInvariant())
                             return Tuple.Create(true, v, (string)null);
                     }
-                    return Tuple.Create(false, default(T), "Enum value should be one of " + string.Join("|", allValues.Select(x => x.ToString())));
+
+                    return Tuple.Create(false, default(T),
+                        "Enum value should be one of " + string.Join("|", allValues.Select(x => x.ToString())));
                 },
                 mapToInternal);
         }
 
-        protected void RequiredString(string externalName, string internalGroup, string internalName, int maxLength, bool filterLinebreaks = true)
+        protected void RequiredString(string externalName, string internalGroup, string internalName, int maxLength,
+            bool filterLinebreaks = true)
         {
             RequiredX(externalName, internalGroup, internalName,
                 "String",
@@ -180,7 +157,8 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                         s = FilterLineBreaks(s);
                     if ((s?.Length ?? 0) > maxLength)
                     {
-                        return Tuple.Create(false, (string)null, $"String({maxLength}) cannot be longer than {maxLength}");
+                        return Tuple.Create(false, (string)null,
+                            $"String({maxLength}) cannot be longer than {maxLength}");
                     }
                     else
                     {
@@ -189,13 +167,16 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                 },
                 x => x);
         }
-        private string FilterLineBreaks(string s)
+
+        private static string FilterLineBreaks(string s)
         {
-            if (s == null) return null;
-            return Regex.Replace(s, @"[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]+", " "); //Remove linebreaks;
+            return s == null
+                ? null
+                : Regex.Replace(s, @"[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]+", " "); //Remove linebreaks;
         }
 
-        protected void OptionalString(string externalName, string internalGroup, string internalName, int maxLength, bool filterLinebreaks = true)
+        protected void OptionalString(string externalName, string internalGroup, string internalName, int maxLength,
+            bool filterLinebreaks = true)
         {
             OptionalX(externalName, internalGroup, internalName,
                 "String",
@@ -205,12 +186,11 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                         s = FilterLineBreaks(s);
                     if ((s?.Length ?? 0) > maxLength)
                     {
-                        return Tuple.Create(false, (string)null, $"String({maxLength}) cannot be longer than {maxLength}");
+                        return Tuple.Create(false, (string)null,
+                            $"String({maxLength}) cannot be longer than {maxLength}");
                     }
-                    else
-                    {
-                        return Tuple.Create(true, s?.Trim(), (string)null);
-                    }
+
+                    return Tuple.Create(true, s?.Trim(), (string)null);
                 },
                 x => x);
         }
@@ -219,49 +199,37 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
         {
             OptionalX<DateTime>(externalName, internalGroup, internalName,
                 "Month",
-                s =>
-                {
-                    DateTime d;
-                    if (!DateTime.TryParseExact(s + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out d))
-                    {
-                        return Tuple.Create(false, default(DateTime), "Months should have the format YYYY-MM");
-                    }
-                    else
-                    {
-                        return Tuple.Create(true, d, (string)null);
-                    }
-                }, x => x.ToString("yyyy-MM"));
+                s => !DateTime.TryParseExact(s + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out var d)
+                    ? Tuple.Create(false, default(DateTime), "Months should have the format YYYY-MM")
+                    : Tuple.Create(true, d, (string)null), x => x.ToString("yyyy-MM"));
         }
 
         protected void OptionalDate(string externalName, string internalGroup, string internalName)
         {
             OptionalX<DateTime>(externalName, internalGroup, internalName,
                 "Date",
-                s =>
-                {
-                    DateTime d;
-                    if (!DateTime.TryParseExact(s, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out d))
-                    {
-                        return Tuple.Create(false, default(DateTime), "Dates should have the format YYYY-MM-DD");
-                    }
-                    else
-                    {
-                        return Tuple.Create(true, d, (string)null);
-                    }
-                }, x => x.ToString("yyyy-MM-dd"));
+                s => !DateTime.TryParseExact(s, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out var d)
+                    ? Tuple.Create(false, default(DateTime), "Dates should have the format YYYY-MM-DD")
+                    : Tuple.Create(true, d, (string)null), x => x.ToString("yyyy-MM-dd"));
         }
 
         private readonly HashSet<string> allowedButIgnoredItems = new HashSet<string>();
+
         protected void AllowedButIgnored(string externalName)
         {
             allowedButIgnoredItems.Add(externalName);
         }
 
-        protected void RequiredX<T>(string externalName, string internalGroup, string internalName, string typeName, Func<string, Tuple<bool, T, string>> parse, Func<T, string> format, Action<T> afterAdd = null)
+        protected void RequiredX<T>(string externalName, string internalGroup, string internalName, string typeName,
+            Func<string, Tuple<bool, T, string>> parse, Func<T, string> format, Action<T> afterAdd = null)
         {
             parsedNames.Add(externalName);
 
-            var mappingToMessage = this.IncludeInternalNamesInErrorMessage ? $" mapping to {internalGroup}.{internalName}" : "";
+            var mappingToMessage = this.IncludeInternalNamesInErrorMessage
+                ? $" mapping to {internalGroup}.{internalName}"
+                : "";
             Action<string> addError = m => errors.Add($"Required {typeName} {externalName}{mappingToMessage}: {m}");
             var hits = externalItems.Where(x => x.Name == externalName).ToList();
             if (hits.Count == 0)
@@ -269,7 +237,8 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                 addError("Is missing");
                 return;
             }
-            else if (hits.Count > 1)
+
+            if (hits.Count > 1)
             {
                 addError("Occurs multiple times");
                 return;
@@ -288,47 +257,36 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                 addError($"Is invalid. {parseResult.Item3}");
                 return;
             }
-            else
+
+            var formattedValue = format(parseResult.Item2);
+            if (internalNameDuplicatePreventionSets != null &&
+                internalNameDuplicatePreventionSets.TryGetValue(internalName, out var ds))
             {
-                var formattedValue = format(parseResult.Item2);
-                if (internalNameDuplicatePreventionSets != null && internalNameDuplicatePreventionSets.ContainsKey(internalName))
+                if (ds.Contains(formattedValue))
                 {
-                    var ds = internalNameDuplicatePreventionSets[internalName];
-                    if (ds.Contains(formattedValue))
-                    {
-                        addError($"Is a duplicate");
-                        return;
-                    }
-                    else
-                        ds.Add(formattedValue);
+                    addError("Is a duplicate");
+                    return;
                 }
 
-                internalItems.Add(new CreditApplicationRequest.Item
-                {
-                    Group = internalGroup,
-                    Name = internalName,
-                    Value = formattedValue
-                });
-                afterAdd?.Invoke(parseResult.Item2);
+                ds.Add(formattedValue);
             }
+
+            internalItems.Add(new CreditApplicationRequest.Item
+            {
+                Group = internalGroup,
+                Name = internalName,
+                Value = formattedValue
+            });
+            afterAdd?.Invoke(parseResult.Item2);
         }
 
         protected void OptionalInt(string externalName, string internalGroup, string internalName)
         {
             OptionalX(externalName, internalGroup, internalName,
                 "Integer",
-                s =>
-                {
-                    int i;
-                    if (!int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out i))
-                    {
-                        return Tuple.Create(false, default(int), "Integers should have the format 9999");
-                    }
-                    else
-                    {
-                        return Tuple.Create(true, i, (string)null);
-                    }
-                },
+                s => !int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out var i)
+                    ? Tuple.Create(false, 0, "Integers should have the format 9999")
+                    : Tuple.Create(true, i, (string)null),
                 x => x.ToString(CultureInfo.InvariantCulture));
         }
 
@@ -338,33 +296,34 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                 "Boolean",
                 s =>
                 {
-                    var value = s?.Trim()?.ToLowerInvariant();
+                    var value = s?.Trim().ToLowerInvariant();
                     if (value != "true" && value != "false")
                     {
-                        return Tuple.Create(false, default(bool), "Booleans should be true or false");
+                        return Tuple.Create(false, false, "Booleans should be true or false");
                     }
-                    else
-                    {
-                        return Tuple.Create(true, value == "true", "Booleans should be true or false");
-                    }
+
+                    return Tuple.Create(true, value == "true", "Booleans should be true or false");
                 },
                 b => b ? "true" : "false");
         }
 
-        protected void OptionalX<T>(string externalName, string internalGroup, string internalName, string typeName, Func<string, Tuple<bool, T, string>> parse, Func<T, string> format)
+        protected void OptionalX<T>(string externalName, string internalGroup, string internalName, string typeName,
+            Func<string, Tuple<bool, T, string>> parse, Func<T, string> format)
         {
             parsedNames.Add(externalName);
 
-            var mappingToMessage = this.IncludeInternalNamesInErrorMessage ? $" mapping to {internalGroup}.{internalName}" : "";
-            Action<string> addError = m => errors.Add($"Optional {typeName} {externalName}{mappingToMessage}: {m}");
+            var mappingToMessage = this.IncludeInternalNamesInErrorMessage
+                ? $" mapping to {internalGroup}.{internalName}"
+                : "";
             var hits = externalItems.Where(x => x.Name == externalName).ToList();
             if (hits.Count == 0)
             {
                 return;
             }
-            else if (hits.Count > 1)
+
+            if (hits.Count > 1)
             {
-                addError("Occurs multiple times");
+                AddError("Occurs multiple times");
                 return;
             }
 
@@ -378,28 +337,30 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
             var parseResult = parse(item.Value);
             if (!parseResult.Item1)
             {
-                addError($"Is invalid. {parseResult.Item3}");
+                AddError($"Is invalid. {parseResult.Item3}");
                 return;
             }
-            else
+
+            internalItems.Add(new CreditApplicationRequest.Item
             {
-                internalItems.Add(new CreditApplicationRequest.Item
-                {
-                    Group = internalGroup,
-                    Name = internalName,
-                    Value = format(parseResult.Item2)
-                });
-            }
+                Group = internalGroup,
+                Name = internalName,
+                Value = format(parseResult.Item2)
+            });
+            return;
+            void AddError(string m) => errors.Add($"Optional {typeName} {externalName}{mappingToMessage}: {m}");
         }
 
         protected abstract Tuple<bool, CreditApplicationRequest> DoTranslate();
 
-        public Tuple<bool, CreditApplicationRequest, List<string>> Translate(ExternalProviderApplicationController.ExternalApplicationRequest externalRequest)
+        public Tuple<bool, CreditApplicationRequest, List<string>> Translate(
+            ExternalProviderApplicationController.ExternalApplicationRequest externalRequest)
         {
             if (hasBeenCalled)
             {
                 throw new Exception("Provider integrations are one time use. Create a new one to call again");
             }
+
             hasBeenCalled = true;
             internalItems = new List<CreditApplicationRequest.Item>();
             errors = new List<string>();
@@ -410,7 +371,8 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
 
             if (externalRequest == null)
             {
-                errors.Add("Request body missing. (Possible cause is missing Content-Type header which should be application/json)");
+                errors.Add(
+                    "Request body missing. (Possible cause is missing Content-Type header which should be application/json)");
                 return Tuple.Create(false, internalRequest, errors);
             }
 
@@ -419,12 +381,14 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
                 return Tuple.Create(false, internalRequest, errors);
             }
 
-            externalItems = externalRequest.Items ?? new List<ExternalProviderApplicationController.ExternalApplicationRequest.Item>();
+            externalItems = externalRequest.Items ??
+                            new List<ExternalProviderApplicationController.ExternalApplicationRequest.Item>();
 
             if (string.IsNullOrWhiteSpace(externalRequest.ExternalId))
             {
                 errors.Add("ExternalId is missing");
             }
+
             internalItems.Add(new CreditApplicationRequest.Item
             {
                 Group = "application",
@@ -434,7 +398,8 @@ namespace nCustomerPages.Controllers.UnsecuredCreditAffiliates.ProviderIntegrati
 
             var result = DoTranslate();
 
-            var unknownItems = externalItems.Where(x => !parsedNames.Contains(x.Name) && !allowedButIgnoredItems.Contains(x.Name));
+            var unknownItems = externalItems.Where(x =>
+                !parsedNames.Contains(x.Name) && !allowedButIgnoredItems.Contains(x.Name));
             if (unknownItems.Any())
             {
                 errors.Add("Unknown items encountered: " + string.Join(", ", unknownItems.Select(x => x.Name)));

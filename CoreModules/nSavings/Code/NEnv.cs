@@ -1,37 +1,29 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
+using nSavings.Code.Riksgalden;
+using nSavings.Code.Trapets;
 using NTech.Banking.BankAccounts.Fi;
 using NTech.Banking.CivicRegNumbers;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Module;
 using NTech.Core.Module.Shared;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Savings.Shared;
+using NTech.Core.Savings.Shared.Services.Utilities;
 using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Services.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace nSavings
+namespace nSavings.Code
 {
     public static class NEnv
     {
-        public static string CurrentServiceName
-        {
-            get
-            {
-                return "nSavings";
-            }
-        }
+        public static string CurrentServiceName => "nSavings";
 
-        public static string NTechCdnUrl
-        {
-            get
-            {
-                return Opt("ntech.cdn.rooturl");
-            }
-        }
+        public static string NTechCdnUrl => Opt("ntech.cdn.rooturl");
 
         public static bool IsBundlingEnabled
         {
@@ -42,13 +34,9 @@ namespace nSavings
             }
         }
 
-        public static string BookKeepingRuleFileName
-        {
-            get
-            {
-                return E.ClientResourceFile("ntech.savings.bookkeeping.rulefile", "Savings-BookkeepingRules.xml", true).FullName;
-            }
-        }
+        public static string BookKeepingRuleFileName =>
+            E.ClientResourceFile("ntech.savings.bookkeeping.rulefile", "Savings-BookkeepingRules.xml", true)
+                .FullName;
 
         public static bool IsProduction
         {
@@ -63,7 +51,8 @@ namespace nSavings
         {
             get
             {
-                return NTechCache.WithCache("nSavings.ClientCfg", TimeSpan.FromMinutes(15), () => ClientConfiguration.CreateUsingNTechEnvironment());
+                return NTechCache.WithCache("nSavings.ClientCfg", TimeSpan.FromMinutes(15),
+                    () => ClientConfiguration.CreateUsingNTechEnvironment());
             }
         }
 
@@ -71,7 +60,8 @@ namespace nSavings
         {
             get
             {
-                return NTechCache.WithCache("BaseCivicRegNumberParser", TimeSpan.FromMinutes(5), () => new CivicRegNumberParser(ClientCfg.Country.BaseCountry));
+                return NTechCache.WithCache("BaseCivicRegNumberParser", TimeSpan.FromMinutes(5),
+                    () => new CivicRegNumberParser(ClientCfg.Country.BaseCountry));
             }
         }
 
@@ -80,70 +70,50 @@ namespace nSavings
         {
             get
             {
-                return NTechCache.WithCache("BaseOcrNumberParser", TimeSpan.FromMinutes(5), () => new OcrNumberParser(ClientCfg.Country.BaseCountry));
+                return NTechCache.WithCache("BaseOcrNumberParser", TimeSpan.FromMinutes(5),
+                    () => new OcrNumberParser(ClientCfg.Country.BaseCountry));
             }
         }
 
-        public static DirectoryInfo SkinningRootFolder => E.ClientResourceDirectory("ntech.skinning.rootfolder", "Skinning", false);
+        public static DirectoryInfo SkinningRootFolder =>
+            E.ClientResourceDirectory("ntech.skinning.rootfolder", "Skinning", false);
 
-        public static FileInfo SkinningCssFile => E.ClientResourceFile("ntech.skinning.cssfile", Path.Combine(SkinningRootFolder.FullName, "css\\skinning.css"), false);
+        public static FileInfo SkinningCssFile => E.ClientResourceFile("ntech.skinning.cssfile",
+            Path.Combine(SkinningRootFolder.FullName, "css\\skinning.css"), false);
 
-        public static bool IsSkinningEnabled => NTechCache.WithCacheS($"ntech.cache.skinningenabled", TimeSpan.FromMinutes(5), () => NEnv.SkinningRootFolder?.Exists ?? false);
+        public static bool IsSkinningEnabled => NTechCache.WithCacheS($"ntech.cache.skinningenabled",
+            TimeSpan.FromMinutes(5), () => SkinningRootFolder?.Exists ?? false);
 
-        public static bool IsSkinningCssEnabled => NTechCache.WithCacheS($"ntech.cache.skinningcssenabled", TimeSpan.FromMinutes(5), () => NEnv.SkinningCssFile?.Exists ?? false);
+        public static bool IsSkinningCssEnabled => NTechCache.WithCacheS($"ntech.cache.skinningcssenabled",
+            TimeSpan.FromMinutes(5), () => SkinningCssFile?.Exists ?? false);
 
-        public static string OutgoingPaymentFilesBankName
-        {
-            get
-            {
-                return Req("ntech.savings.outgoingpayments.bank");
-            }
-        }
+        public static string OutgoingPaymentFilesBankName => Req("ntech.savings.outgoingpayments.bank");
 
         public static DirectoryInfo LogFolder
         {
             get
             {
                 var v = Opt("ntech.logfolder");
-                if (v == null)
-                    return null;
-                return new DirectoryInfo(v);
+                return v == null ? null : new DirectoryInfo(v);
             }
         }
 
-        public static string BookkeepingFileExportProfileName
-        {
-            get
-            {
-                return Opt("ntech.savings.bookkeepingfile.exportprofile");
-            }
-        }
+        public static string BookkeepingFileExportProfileName => Opt("ntech.savings.bookkeepingfile.exportprofile");
 
-        public static string FatcaFileExportProfileName
-        {
-            get
-            {
-                return Opt("ntech.savings.factaexportfile.exportprofile");
-            }
-        }
+        public static string FatcaFileExportProfileName => Opt("ntech.savings.factaexportfile.exportprofile");
 
         public static string OutgoingPaymentFileCustomerMessagePattern =>
             Opt("ntech.savings.outgoingpayments.customermessagepattern");
 
-        public static DanskeBankFiSettings OutgoingPaymentFilesDanskeBankSettings
-        {
-            get
+        public static DanskeBankFiSettings OutgoingPaymentFilesDanskeBankSettings =>
+            new DanskeBankFiSettings
             {
-                return new DanskeBankFiSettings
-                {
-                    FileFormat = Req("ntech.savings.outgoingpayments.danskebankfi.fileformat"),
-                    SendingCompanyId = Req("ntech.savings.outgoingpayments.danskebankfi.sendingcompanyid"),
-                    SendingCompanyName = Req("ntech.savings.outgoingpayments.danskebankfi.sendingcompanyname"),
-                    SendingBankBic = Req("ntech.savings.outgoingpayments.danskebankfi.sendingbankbic"),
-                    SendingBankName = Req("ntech.savings.outgoingpayments.danskebankfi.sendingbankname")
-                };
-            }
-        }
+                FileFormat = Req("ntech.savings.outgoingpayments.danskebankfi.fileformat"),
+                SendingCompanyId = Req("ntech.savings.outgoingpayments.danskebankfi.sendingcompanyid"),
+                SendingCompanyName = Req("ntech.savings.outgoingpayments.danskebankfi.sendingcompanyname"),
+                SendingBankBic = Req("ntech.savings.outgoingpayments.danskebankfi.sendingbankbic"),
+                SendingBankName = Req("ntech.savings.outgoingpayments.danskebankfi.sendingbankname")
+            };
 
         public class DanskeBankFiSettings
         {
@@ -154,39 +124,17 @@ namespace nSavings
             public string SendingBankName { get; set; }
         }
 
-        public static Tuple<string, string> ApplicationAutomationUsernameAndPassword
-        {
-            get
-            {
-                return Tuple.Create(Req("ntech.automationuser.username"), Req("ntech.automationuser.password"));
-            }
-        }
+        public static Tuple<string, string> ApplicationAutomationUsernameAndPassword =>
+            Tuple.Create(Req("ntech.automationuser.username"), Req("ntech.automationuser.password"));
 
-        public static IBANFi DepositsIban
-        {
-            get
-            {
-                return IBANFi.Parse(Req("ntech.savings.depositsiban"));
-            }
-        }
+        public static IBANFi DepositsIban => IBANFi.Parse(Req("ntech.savings.depositsiban"));
 
-        public static IBANFi OutgoingPaymentIban
-        {
-            get
-            {
-                return IBANFi.Parse(Req("ntech.savings.outgoingpaymentiban"));
-            }
-        }
+        public static IBANFi OutgoingPaymentIban => IBANFi.Parse(Req("ntech.savings.outgoingpaymentiban"));
 
-        private static Lazy<IBANToBICTranslator> iBANToBICTranslatorInstance = new Lazy<IBANToBICTranslator>(() => new IBANToBICTranslator());
+        private static Lazy<IBANToBICTranslator> iBANToBICTranslatorInstance =
+            new Lazy<IBANToBICTranslator>(() => new IBANToBICTranslator());
 
-        public static IBANToBICTranslator IBANToBICTranslatorInstance
-        {
-            get
-            {
-                return iBANToBICTranslatorInstance.Value;
-            }
-        }
+        public static IBANToBICTranslator IBANToBICTranslatorInstance => iBANToBICTranslatorInstance.Value;
 
         public static NTechServiceRegistry ServiceRegistry
         {
@@ -199,53 +147,24 @@ namespace nSavings
             }
         }
 
-        public static DirectoryInfo PdfTemplateFolder
-        {
-            get
-            {
-                return E.ClientResourceDirectory("ntech.pdf.templatefolder", "PdfTemplates", true);
-            }
-        }
+        public static DirectoryInfo PdfTemplateFolder =>
+            E.ClientResourceDirectory("ntech.pdf.templatefolder", "PdfTemplates", true);
 
-        public static string AddressProviderName
-        {
-            get
-            {
-                return Req("ntech.savings.addressprovider");
-            }
-        }
+        public static string AddressProviderName => Req("ntech.savings.addressprovider");
 
-        public static bool IsVerboseLoggingEnabled
-        {
-            get
-            {
-                return (Opt("ntech.isverboseloggingenabled") ?? "false") == "true";
-            }
-        }
+        public static bool IsVerboseLoggingEnabled => (Opt("ntech.isverboseloggingenabled") ?? "false") == "true";
 
-        public static bool IsTemplateCacheDisabled
-        {
-            get
-            {
-                return string.Equals((Opt("ntech.savings.disabletemplatecache") ?? "false"), "true", StringComparison.InvariantCultureIgnoreCase);
-            }
-        }
+        public static bool IsTemplateCacheDisabled =>
+            string.Equals(Opt("ntech.savings.disabletemplatecache") ?? "false", "true",
+                StringComparison.InvariantCultureIgnoreCase);
 
         public static FileInfo GetOptionalExcelTemplateFilePath(string filename)
         {
             var d = E.ClientResourceDirectory("ntech.excel.templatefolder", "ExcelTemplates", false);
-            if (d == null)
-                return null;
-            return new FileInfo(Path.Combine(d.FullName, filename));
+            return d == null ? null : new FileInfo(Path.Combine(d.FullName, filename));
         }
 
-        public static List<string> KycScreenReportEmails
-        {
-            get
-            {
-                return Opt("ntech.kycscreen.reportemail")?.Split(';')?.ToList();
-            }
-        }
+        public static List<string> KycScreenReportEmails => Opt("ntech.kycscreen.reportemail")?.Split(';')?.ToList();
 
         public class EncryptionKeySet
         {
@@ -270,45 +189,28 @@ namespace nSavings
             }
         }
 
-        public static EncryptionKeySet EncryptionKeys
-        {
-            get
-            {
-                return JsonConvert.DeserializeObject<EncryptionKeySet>(File.ReadAllText(
-                    E.StaticResourceFile("ntech.encryption.keysfile", "encryptionkeys.txt", true).FullName));
-            }
-        }
+        public static EncryptionKeySet EncryptionKeys =>
+            JsonConvert.DeserializeObject<EncryptionKeySet>(File.ReadAllText(
+                E.StaticResourceFile("ntech.encryption.keysfile", "encryptionkeys.txt", true).FullName));
 
-        public static string TestingOverrideDateFile
-        {
-            get
-            {
-                if (IsProduction)
-                    return null;
-                return Opt("ntech.savings.testing.overridedatefile");
-            }
-        }
+        public static string TestingOverrideDateFile =>
+            IsProduction ? null : Opt("ntech.savings.testing.overridedatefile");
 
         public static string SieFileEnding
         {
             get
             {
-                string sieFileEnding = Opt("ntech.savings.bookkeeping.siefileending");
+                var sieFileEnding = Opt("ntech.savings.bookkeeping.siefileending");
                 if (sieFileEnding != null && sieFileEnding.StartsWith("."))
                 {
                     sieFileEnding = sieFileEnding.Substring(1);
                 }
+
                 return sieFileEnding ?? "si";
             }
         }
 
-        public static string TrapetsAmlExportProfileName
-        {
-            get
-            {
-                return Opt("ntech.trapetsamlreporting.savingsexportprofile");
-            }
-        }
+        public static string TrapetsAmlExportProfileName => Opt("ntech.trapetsamlreporting.savingsexportprofile");
 
         public static decimal MaxAllowedSavingsCustomerBalance
         {
@@ -316,69 +218,45 @@ namespace nSavings
             {
                 var v = Opt("ntech.savings.maxallowedsavingscustomerbalance");
                 if (v != null)
-                    return decimal.Parse(v, System.Globalization.CultureInfo.InvariantCulture);
-                else if (ClientCfg.Country.BaseCurrency == "EUR")
+                    return decimal.Parse(v, CultureInfo.InvariantCulture);
+                if (ClientCfg.Country.BaseCurrency == "EUR")
                     return 100000m;
-                else
-                    throw new NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
         public static string LedgerReportStandardAccountProductName =>
             ClientCfg.OptionalSetting("ntech.savings.ledgerreport.standardaccountproductname");
 
-        public static Code.Trapets.TrapetsKycConfiguration TrapetsAmlConfig
-        {
-            get
-            {
-                return Code.Trapets.TrapetsKycConfiguration.FromXElement(ClientCfg.GetCustomSection("SavingsTrapetsAmlConfiguration"));
-            }
-        }
+        public static TrapetsKycConfiguration TrapetsAmlConfig =>
+            TrapetsKycConfiguration.FromXElement(
+                ClientCfg.GetCustomSection("SavingsTrapetsAmlConfiguration"));
 
-        public static Code.Riksgalden.RiksgaldenConfiguration RiksgaldenConfig
-        {
-            get
-            {
-                return Code.Riksgalden.RiksgaldenConfiguration.Create(ClientCfg);
-            }
-        }
+        public static RiksgaldenConfiguration RiksgaldenConfig => RiksgaldenConfiguration.Create(ClientCfg);
 
-        public static NTechSimpleSettingsCore FinnishCustomsAccountsSettings
-        {
-            get
-            {
-                return
-                    NTechSimpleSettingsCore.ParseSimpleSettingsFile(
-                        E.StaticResourceFile("ntech.savings.finnishcustomsaccounts.settingsfile", "finnishCustomsAccountsSettings.txt", true).FullName);
-            }
-        }
+        public static NTechSimpleSettingsCore FinnishCustomsAccountsSettings =>
+            NTechSimpleSettingsCore.ParseSimpleSettingsFile(
+                E.StaticResourceFile("ntech.savings.finnishcustomsaccounts.settingsfile",
+                    "finnishCustomsAccountsSettings.txt", true).FullName);
 
-        private static NTechEnvironment E
-        {
-            get
-            {
-                return NTechEnvironment.Instance;
-            }
-        }
+        private static NTechEnvironment E => NTechEnvironment.Instance;
 
         public static NTechServiceRegistry ServiceRegistryNormal
         {
             get
             {
                 return NTechCache.WithCache(
-                   "138819bd-fe35-4b25-b104-801150e2dcf601",
+                    "138819bd-fe35-4b25-b104-801150e2dcf601",
                     TimeSpan.FromMinutes(5),
-                    () =>
-                    {
-                        return NTechEnvironment.Instance.ServiceRegistry;
-                    });
+                    () => NTechEnvironment.Instance.ServiceRegistry);
             }
         }
 
         public static ISavingsEnvSettings EnvSettings => SavingsEnvSettings.Instance;
 
         public static IClientConfigurationCore ClientCfgCore =>
-            NTechCache.WithCache("nSavings.ClientCfgCore", TimeSpan.FromMinutes(15), () => ClientConfigurationCoreFactory.CreateUsingNTechEnvironment(E));
+            NTechCache.WithCache("nSavings.ClientCfgCore", TimeSpan.FromMinutes(15),
+                () => ClientConfigurationCoreFactory.CreateUsingNTechEnvironment(E));
 
         private static string Opt(string n)
         {
@@ -393,10 +271,7 @@ namespace nSavings
         private static T? OptT<T>(string n, Func<string, T> parse) where T : struct
         {
             var v = Opt(n);
-            if (v == null)
-                return new T?();
-            else
-                return parse(v);
+            return v == null ? new T?() : parse(v);
         }
     }
 
@@ -404,7 +279,6 @@ namespace nSavings
     {
         private SavingsEnvSettings()
         {
-
         }
 
         public static ISavingsEnvSettings Instance { get; private set; } = new SavingsEnvSettings();

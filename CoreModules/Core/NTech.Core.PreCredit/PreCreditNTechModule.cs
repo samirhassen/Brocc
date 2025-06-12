@@ -33,8 +33,10 @@ namespace NTech.Core.PreCredit
             services.AddScoped<UnsecuredLoanStandardApplicationKycQuestionSessionService>();
             services.AddScoped<ApplicationInfoService>();
             services.AddScoped<PartialCreditApplicationModelRepository>();
-            services.AddScoped<IPartialCreditApplicationModelRepository>(x => x.GetRequiredService<PartialCreditApplicationModelRepository>());
-            services.AddScoped<IPartialCreditApplicationModelRepositoryExtended>(x => x.GetRequiredService<PartialCreditApplicationModelRepository>());
+            services.AddScoped<IPartialCreditApplicationModelRepository>(x =>
+                x.GetRequiredService<PartialCreditApplicationModelRepository>());
+            services.AddScoped<IPartialCreditApplicationModelRepositoryExtended>(x =>
+                x.GetRequiredService<PartialCreditApplicationModelRepository>());
             services.AddScoped<ILinqQueryExpander>(_ => LinqQueryExpanderDoNothing.SharedInstance);
             services.AddScoped<KycQuestionsSessionCompletionCallbackService>();
             services.AddScoped<KycStepAutomation>();
@@ -54,12 +56,11 @@ namespace NTech.Core.PreCredit
 
         public override void OnApplicationStarted(ILogger logger)
         {
-            logger.LogInformation($"Testing precredit ef context");
-            using (var context = new Database.PreCreditContext())
-            {
-                context.CreditApplicationCustomerListMembers.Count();
-                logger.LogInformation($"Testing precredit  ef context: Ok");
-            }
+            logger.LogInformation("Testing precredit ef context");
+
+            using var context = new PreCreditContext();
+            context.CreditApplicationCustomerListMembers.Count();
+            logger.LogInformation("Testing precredit ef context: Ok");
         }
     }
 }

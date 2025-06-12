@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
-using NTech;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.DbModel;
+using NTech;
+using NTech.Core.Savings.Shared.DbModel;
+using Serilog;
 
 namespace nSavings.Code.Services
 {
@@ -43,30 +45,40 @@ namespace nSavings.Code.Services
             {
                 fatcaRequest.Accounts = context
                     .SavingsAccountHeaders
-                    .Where(x => customerIds.Contains(x.MainCustomerId) && x.CreatedByEvent.TransactionDate <= reportingDate)
+                    .Where(x => customerIds.Contains(x.MainCustomerId) &&
+                                x.CreatedByEvent.TransactionDate <= reportingDate)
                     .Select(x => new
                     {
                         x.SavingsAccountNr,
                         x.MainCustomerId,
-                        StatusItem = x.DatedStrings.Where(y => y.TransactionDate <= reportingDate).OrderByDescending(y => y.BusinessEventId).Select(y => new { y.Value, y.TransactionDate }).FirstOrDefault(),
-                        EndOfYearBalance = (x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString() && y.TransactionDate <= reportingDate).Sum(y => (decimal?)y.Amount) ?? 0m),
+                        StatusItem = x.DatedStrings.Where(y => y.TransactionDate <= reportingDate)
+                            .OrderByDescending(y => y.BusinessEventId).Select(y => new { y.Value, y.TransactionDate })
+                            .FirstOrDefault(),
+                        EndOfYearBalance =
+                            (x.Transactions
+                                .Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString() &&
+                                            y.TransactionDate <= reportingDate).Sum(y => (decimal?)y.Amount) ?? 0m),
                         CapitalizationsDuringYear = x
                             .SavingsAccountInterestCapitalizations
                             .Where(y => y.ToDate >= startOfReportingYearDate && y.ToDate <= reportingDate)
                             .Select(y => new
                             {
-                                IsCloseEvent = y.CreatedByEvent.EventType == BusinessEventType.AccountClosure.ToString(),
+                                IsCloseEvent =
+                                    y.CreatedByEvent.EventType == BusinessEventType.AccountClosure.ToString(),
                                 InterestAmount = (x
                                     .Transactions
-                                    .Where(z => z.BusinessEventId == y.CreatedByBusinessEventId && z.AccountCode == LedgerAccountTypeCode.CapitalizedInterest.ToString())
+                                    .Where(z => z.BusinessEventId == y.CreatedByBusinessEventId &&
+                                                z.AccountCode == LedgerAccountTypeCode.CapitalizedInterest.ToString())
                                     .Sum(z => (decimal?)z.Amount) ?? 0m),
                                 CapitalAmount = (x
                                     .Transactions
-                                    .Where(z => z.BusinessEventId == y.CreatedByBusinessEventId && z.AccountCode == LedgerAccountTypeCode.Capital.ToString())
+                                    .Where(z => z.BusinessEventId == y.CreatedByBusinessEventId &&
+                                                z.AccountCode == LedgerAccountTypeCode.Capital.ToString())
                                     .Sum(z => (decimal?)z.Amount) ?? 0m),
                                 WithheldCapitalizedInterestTax = (x
                                     .Transactions
-                                    .Where(z => z.BusinessEventId == y.CreatedByBusinessEventId && z.AccountCode == LedgerAccountTypeCode.WithheldCapitalizedInterestTax.ToString())
+                                    .Where(z => z.BusinessEventId == y.CreatedByBusinessEventId && z.AccountCode ==
+                                        LedgerAccountTypeCode.WithheldCapitalizedInterestTax.ToString())
                                     .Sum(z => (decimal?)z.Amount) ?? 0m)
                             }),
                     })
@@ -109,15 +121,18 @@ namespace nSavings.Code.Services
             c.CreateFatcaExportFile(fatcaRequest, target);
         }
 
-        public OutgoingExportFileHeader CreateAndStoreAndExportFatcaExportFile(DateTime forYearDate, string exportProfileName, int userId, string informationMetadata, Action<OutgoingExportFileHeader.StandardExportResultStatusModel> observeExportResult = null)
+        public OutgoingExportFileHeader CreateAndStoreAndExportFatcaExportFile(DateTime forYearDate,
+            string exportProfileName, int userId, string informationMetadata,
+            Action<OutgoingExportFileHeader.StandardExportResultStatusModel> observeExportResult = null)
         {
             var ms = new MemoryStream();
-            int nrOfAccounts = 0;
-            this.CreateFatcaFileToStream(forYearDate, ms, observeNrOfAccounts: x => nrOfAccounts = x);
+            var nrOfAccounts = 0;
+            CreateFatcaFileToStream(forYearDate, ms, observeNrOfAccounts: x => nrOfAccounts = x);
             ms.Position = 0;
 
             var documentClient = new DocumentClient();
-            var archiveKey = documentClient.ArchiveStore(ms.ToArray(), "application/xml", $"Fatca-{forYearDate.Year}.xml");
+            var archiveKey =
+                documentClient.ArchiveStore(ms.ToArray(), "application/xml", $"Fatca-{forYearDate.Year}.xml");
 
             using (var context = new SavingsContext())
             {
@@ -173,38 +188,46 @@ namespace nSavings.Code.Services
                 }
 
                 var result = pre.Select(x => new
-                {
-                    x.Id,
-                    x.FileArchiveKey,
-                    x.ChangedById,
-                    x.TransactionDate,
-                    x.ExportResultStatus,
-                    x.CustomData
-                })
-                .ToList()
-                .Select(x =>
-                {
-                    var customData = JsonConvert.DeserializeObject<FatcaExportCustomDataModel>(x.CustomData);
-                    return new FatcaExportFileModel
                     {
-                        Id = x.Id,
-                        TransactionDate = x.TransactionDate,
-                        ArchiveKey = x.FileArchiveKey,
-                        ExportResult = x.ExportResultStatus == null ? null : JsonConvert.DeserializeObject<OutgoingExportFileHeader.StandardExportResultStatusModel>(x.ExportResultStatus),
-                        ForYearDate = customData.ForYearDate,
-                        NrOfAccounts = customData.NrOfAccounts,
-                        UserId = x.ChangedById,
-                        UserDisplayName = getUserDisplayNameByUserId(x.ChangedById.ToString()),
-                        ArchiveDocumentUrl = x.FileArchiveKey == null ? null : urlHelper.Action("ArchiveDocument", "ApiArchiveDocument", new { key = x.FileArchiveKey, setFileDownloadName = true })
-                    };
-                })
-                .ToList();
+                        x.Id,
+                        x.FileArchiveKey,
+                        x.ChangedById,
+                        x.TransactionDate,
+                        x.ExportResultStatus,
+                        x.CustomData
+                    })
+                    .ToList()
+                    .Select(x =>
+                    {
+                        var customData = JsonConvert.DeserializeObject<FatcaExportCustomDataModel>(x.CustomData);
+                        return new FatcaExportFileModel
+                        {
+                            Id = x.Id,
+                            TransactionDate = x.TransactionDate,
+                            ArchiveKey = x.FileArchiveKey,
+                            ExportResult = x.ExportResultStatus == null
+                                ? null
+                                : JsonConvert
+                                    .DeserializeObject<OutgoingExportFileHeader.StandardExportResultStatusModel>(
+                                        x.ExportResultStatus),
+                            ForYearDate = customData.ForYearDate,
+                            NrOfAccounts = customData.NrOfAccounts,
+                            UserId = x.ChangedById,
+                            UserDisplayName = getUserDisplayNameByUserId(x.ChangedById.ToString()),
+                            ArchiveDocumentUrl = x.FileArchiveKey == null
+                                ? null
+                                : urlHelper.Action("ArchiveDocument", "ApiArchiveDocument",
+                                    new { key = x.FileArchiveKey, setFileDownloadName = true })
+                        };
+                    })
+                    .ToList();
 
                 return result;
             }
         }
 
-        private static OutgoingExportFileHeader.StandardExportResultStatusModel Export(string archiveKey, string exportProfileName)
+        private static OutgoingExportFileHeader.StandardExportResultStatusModel Export(string archiveKey,
+            string exportProfileName)
         {
             var r = new OutgoingExportFileHeader.StandardExportResultStatusModel
             {
@@ -219,13 +242,11 @@ namespace nSavings.Code.Services
                 return r;
 
             var documentClient = new DocumentClient();
-            List<string> errors = new List<string>();
+            var errors = new List<string>();
             try
             {
-                int timeInMs;
-                List<string> successProfileNames;
-                List<string> failedProfileNames;
-                var isSuccess = documentClient.TryExportArchiveFile(archiveKey, exportProfileName, out successProfileNames, out failedProfileNames, out timeInMs);
+                var isSuccess = documentClient.TryExportArchiveFile(archiveKey, exportProfileName,
+                    out var successProfileNames, out var failedProfileNames, out var timeInMs);
 
                 if (failedProfileNames != null && failedProfileNames.Count > 0)
                     r.Warnings.Add("Failed profiles: " + string.Join(", ", failedProfileNames));
@@ -253,7 +274,11 @@ namespace nSavings.Code.Services
     public interface IFatcaExportService
     {
         void CreateFatcaFileToStream(DateTime forYearDate, Stream target, Action<int> observeNrOfAccounts = null);
-        OutgoingExportFileHeader CreateAndStoreAndExportFatcaExportFile(DateTime forYearDate, string exportProfileName, int userId, string informationMetadata, Action<OutgoingExportFileHeader.StandardExportResultStatusModel> observeExportResult = null);
+
+        OutgoingExportFileHeader CreateAndStoreAndExportFatcaExportFile(DateTime forYearDate, string exportProfileName,
+            int userId, string informationMetadata,
+            Action<OutgoingExportFileHeader.StandardExportResultStatusModel> observeExportResult = null);
+
         List<FatcaExportFileModel> GetFatcaExportFiles(Tuple<int, int> pageSizeAndNr = null);
     }
 

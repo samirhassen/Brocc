@@ -28,21 +28,28 @@ namespace nGccCustomerApplication.Controllers
 
             try
             {
-                service.LogEvent(sessionKey, "application", $"downloading shared data for token {session.ApplicationDirectToken} and applicant {session.ApplicantNr}");
-                var result = await service.HandleCalculationCallback(sessionKey, Request, downloadDataPdf: false, downloadRulePdf: true, "application");
-                service.LogEvent(sessionKey, "application", $"saving shared data for token {session.ApplicationDirectToken} and applicant {session.ApplicantNr} to application");
+                service.LogEvent(sessionKey, "application",
+                    $"downloading shared data for token {session.ApplicationDirectToken} and applicant {session.ApplicantNr}");
+                var result = await service.HandleCalculationCallback(sessionKey, Request, downloadDataPdf: false,
+                    downloadRulePdf: true, "application");
+                service.LogEvent(sessionKey, "application",
+                    $"saving shared data for token {session.ApplicationDirectToken} and applicant {session.ApplicantNr} to application");
                 var preCreditClient = new PreCreditClientWrapperDirectPart();
                 var documentClient = new DocumentClient();
-                var pdfArchiveKey = documentClient.ArchiveStore(result.RulePdf, "application/pdf", $"psd2-rule-{session.ApplicationNr}-{session.ApplicantNr}.pdf");
-                var rawDataArchiveKey = documentClient.ArchiveStore(Encoding.UTF8.GetBytes(result.RuleEngineData), "application/json", $"psd2-{session.ApplicationNr}-{session.ApplicantNr}.json");
-                preCreditClient.UpdateBankAccountDataShareData(session.ApplicationNr, session.ApplicantNr, rawDataArchiveKey, pdfArchiveKey);
+                var pdfArchiveKey = documentClient.ArchiveStore(result.RulePdf, "application/pdf",
+                    $"psd2-rule-{session.ApplicationNr}-{session.ApplicantNr}.pdf");
+                var rawDataArchiveKey = documentClient.ArchiveStore(Encoding.UTF8.GetBytes(result.RuleEngineData),
+                    "application/json", $"psd2-{session.ApplicationNr}-{session.ApplicantNr}.json");
+                preCreditClient.UpdateBankAccountDataShareData(session.ApplicationNr, session.ApplicantNr,
+                    rawDataArchiveKey, pdfArchiveKey);
 
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception ex)
             {
                 NLog.Error(ex, $"Direct-Sharing session callback error {sessionKey}");
-                service.LogEvent(sessionKey, "application", "calculation-callback error" + Environment.NewLine + ex.ToString());
+                service.LogEvent(sessionKey, "application",
+                    "calculation-callback error" + Environment.NewLine + ex.ToString());
                 return new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
@@ -58,6 +65,8 @@ namespace nGccCustomerApplication.Controllers
             public string ApplicationNr { get; set; }
             public string ApplicationDirectToken { get; set; }
         }
-        internal static readonly ConcurrentDictionary<string, ApplicationSession> ApplicationSessionsBySessionKey = new ConcurrentDictionary<string, ApplicationSession>();
+
+        internal static readonly ConcurrentDictionary<string, ApplicationSession> ApplicationSessionsBySessionKey =
+            new ConcurrentDictionary<string, ApplicationSession>();
     }
 }

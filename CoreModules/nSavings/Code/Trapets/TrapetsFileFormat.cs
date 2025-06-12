@@ -1,30 +1,26 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Newtonsoft.Json;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.Code.Trapets
 {
     public class TrapetsFileFormat
     {
-        private T[] SkipNulls<T>(params T[] ts) where T : class
-        {
-            return ts.Where(x => x != null).ToArray();
-        }
-
         private class TrapetsXmlModel
         {
-            private Dictionary<string, List<XElement>> Items = new Dictionary<string, List<XElement>>();
+            private readonly Dictionary<string, List<XElement>> items = new Dictionary<string, List<XElement>>();
 
             public class Item
             {
                 public Item(XElement e, TrapetsXmlModel parent)
                 {
-                    this.Parent = parent;
-                    this.Element = e;
+                    Parent = parent;
+                    Element = e;
                 }
 
                 private TrapetsXmlModel Parent { get; set; }
@@ -35,8 +31,10 @@ namespace nSavings.Code.Trapets
                     if (value.HasValue)
                     {
                         //‘####.####’ with a precision of 16 and a scale of 4. “.” is decimal separator. No thousand separator or any other separator should be used.
-                        Element.SetAttributeValue(name, Math.Round(value.Value, 4).ToString(CultureInfo.InvariantCulture));
+                        Element.SetAttributeValue(name,
+                            Math.Round(value.Value, 4).ToString(CultureInfo.InvariantCulture));
                     }
+
                     return this;
                 }
 
@@ -47,6 +45,7 @@ namespace nSavings.Code.Trapets
                         //“yyyy-MM-dd HH:mm:ss”, example: 2015-01-01 12:00:00 (time part may be omitted if not available, i.e. yyyy-MM-dd)
                         Element.SetAttributeValue(name, value.Value.ToString("yyyy-MM-dd"));
                     }
+
                     return this;
                 }
 
@@ -57,6 +56,7 @@ namespace nSavings.Code.Trapets
                         //“yyyy-MM-dd HH:mm:ss”, example: 2015-01-01 12:00:00 (time part may be omitted if not available, i.e. yyyy-MM-dd)
                         Element.SetAttributeValue(name, value.Value.ToString("yyyy-MM-dd HH:mm:ss"));
                     }
+
                     return this;
                 }
 
@@ -66,6 +66,7 @@ namespace nSavings.Code.Trapets
                     {
                         Element.SetAttributeValue(name, value.Trim());
                     }
+
                     return this;
                 }
 
@@ -75,6 +76,7 @@ namespace nSavings.Code.Trapets
                     {
                         Element.SetAttributeValue(name, value.Value.ToString(CultureInfo.InvariantCulture));
                     }
+
                     return this;
                 }
 
@@ -85,6 +87,7 @@ namespace nSavings.Code.Trapets
                         //0 | 1
                         Element.SetAttributeValue(name, value.Value ? "1" : "0");
                     }
+
                     return this;
                 }
 
@@ -98,24 +101,25 @@ namespace nSavings.Code.Trapets
             {
                 var e = new XElement(name);
                 var i = new Item(e, this);
-                if (!Items.ContainsKey(wrapperName))
-                    Items[wrapperName] = new List<XElement>();
-                Items[wrapperName].Add(e);
+                if (!items.ContainsKey(wrapperName))
+                    items[wrapperName] = new List<XElement>();
+                items[wrapperName].Add(e);
                 return i;
             }
 
             public XDocument ToDocument()
             {
                 var root = new XElement("transfer");
-                foreach (var wrapperName in this.Items.Keys)
+                foreach (var wrapperName in this.items.Keys)
                 {
                     var wrapperElement = new XElement(wrapperName);
                     root.Add(wrapperElement);
-                    foreach (var e in this.Items[wrapperName])
+                    foreach (var e in this.items[wrapperName])
                     {
                         wrapperElement.Add(e);
                     }
                 }
+
                 return new XDocument(root);
             }
         }
@@ -123,7 +127,7 @@ namespace nSavings.Code.Trapets
         private XDocument CreateFile(TrapetsDomainModel model, DateTime deliveryDate, TrapetsKycConfiguration config)
         {
             Func<DateTime, string> formatDatetime = a => a.ToString("yyyy-MM-dd");
-            Func<decimal, string> formatDecimal = a => a.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            Func<decimal, string> formatDecimal = a => a.ToString(CultureInfo.InvariantCulture);
 
             var xml = new TrapetsXmlModel();
 
@@ -166,8 +170,12 @@ namespace nSavings.Code.Trapets
 
                 string taxCountry;
                 var taxCountriesRaw = x.Item.Taxcountries;
-                var taxCountries = taxCountriesRaw == null ? null : JsonConvert.DeserializeAnonymousType(taxCountriesRaw, new[] { new { countryIsoCode = "", taxNumber = "" } });
-                if (taxCountries != null && taxCountries.Length > 0 && !taxCountries.Any(y => y.countryIsoCode == NEnv.ClientCfg.Country.BaseCountry))
+                var taxCountries = taxCountriesRaw == null
+                    ? null
+                    : JsonConvert.DeserializeAnonymousType(taxCountriesRaw,
+                        new[] { new { countryIsoCode = "", taxNumber = "" } });
+                if (taxCountries != null && taxCountries.Length > 0 &&
+                    taxCountries.All(y => y.countryIsoCode != NEnv.ClientCfg.Country.BaseCountry))
                     taxCountry = taxCountries.Select(y => y.countryIsoCode).First();
                 else
                     taxCountry = NEnv.ClientCfg.Country.BaseCountry;
@@ -222,7 +230,10 @@ namespace nSavings.Code.Trapets
                     .DateAttr("Timestamp", t.TransactionDate)
                     .StringAttr("TransID", t.Id.ToString())
                     .StringAttr("AccountID", $"{t.SavingsAccountNr}{config.IdSuffix}")
-                    .StringAttr("TransactionTypeID", t.IsConnectedToIncomingPayment ? "Inbetalning via bankkonto" : (t.IsConnectedToOutgoingPayment ? "Utbetalning inhemsk bank" : "Unknown"))
+                    .StringAttr("TransactionTypeID",
+                        t.IsConnectedToIncomingPayment
+                            ? "Inbetalning via bankkonto"
+                            : (t.IsConnectedToOutgoingPayment ? "Utbetalning inhemsk bank" : "Unknown"))
                     .StringAttr("CurrencyCode", NEnv.ClientCfg.Country.BaseCurrency)
                     .DecimalAttr("Amount", t.Amount)
                     .DecimalAttr("AmountBaseCurrency", t.Amount);
@@ -231,7 +242,8 @@ namespace nSavings.Code.Trapets
             return xml.ToDocument();
         }
 
-        public void WithTemporaryExportFile(TrapetsDomainModel model, DateTime deliveryDate, Action<string> withFile, TrapetsKycConfiguration config)
+        public void WithTemporaryExportFile(TrapetsDomainModel model, DateTime deliveryDate, Action<string> withFile,
+            TrapetsKycConfiguration config)
         {
             var document = CreateFile(model, deliveryDate, config);
             var tmp = Path.Combine(Path.GetTempPath(), $"TrapetsAmlExport_{Guid.NewGuid().ToString()}.xml");
@@ -242,7 +254,14 @@ namespace nSavings.Code.Trapets
             }
             finally
             {
-                try { System.IO.File.Delete(tmp); } catch { /*ignored*/ }
+                try
+                {
+                    File.Delete(tmp);
+                }
+                catch
+                {
+                    /*ignored*/
+                }
             }
         }
     }

@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json.Serialization;
-using NTech.Services.Infrastructure;
+﻿using System;
 using System.Web.Mvc;
+using Newtonsoft.Json.Serialization;
+using NTech.Services.Infrastructure;
+using NTech.Services.Infrastructure.NTechWs;
 
 namespace NTech.Legacy.Module.Shared.Infrastructure
 {
@@ -13,19 +15,22 @@ namespace NTech.Legacy.Module.Shared.Infrastructure
     /// Add this to a service using in Global_asax Application_Start like this:
     /// GlobalFilters.Filters.Add(new ConvertJsonToCamelCaseActionFilterAttribute());
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class ConvertJsonToCamelCaseActionFilterAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var preseveCaseHeaderValue = filterContext.HttpContext.Request.Headers["X-NTech-Force-CamelCase"];
-            if (preseveCaseHeaderValue == "1" && filterContext.Result is JsonNetActionResult jsonResult)
+            var preserveCaseHeaderValue = filterContext.HttpContext.Request.Headers["X-NTech-Force-CamelCase"];
+            switch (preserveCaseHeaderValue)
             {
-                jsonResult.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                case "1" when filterContext.Result is JsonNetActionResult jsonResult:
+                    jsonResult.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    break;
+                case "1"
+                    when filterContext.Result is RawJsonActionResult:
+                    break;
             }
-            else if (preseveCaseHeaderValue == "1" && filterContext.Result is NTech.Services.Infrastructure.NTechWs.RawJsonActionResult jsonResult2)
-            {
 
-            }
             base.OnActionExecuted(filterContext);
         }
     }

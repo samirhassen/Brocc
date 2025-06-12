@@ -4,6 +4,7 @@ using nCredit.DbModel.BusinessEvents;
 using nCredit.DbModel.BusinessEvents.NewCredit;
 using NTech.Banking.BankAccounts;
 using NTech.Banking.BankAccounts.Fi;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Credit.Database;
 using NTech.Core.Host.IntegrationTests.UlLegacy;
 

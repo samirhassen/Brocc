@@ -1,4 +1,4 @@
-﻿<div class="content">    
+﻿<div class="content">
     <div class="status pt-3 pb-3">
         <div class="col-md-offset-1 col-md-10">
             <div class="item done">
@@ -10,56 +10,135 @@
             <div class="item">
                 <p translate="ssa_signering">Signering</p>
             </div>
-        </div>        
+        </div>
         <div class="clearfix"></div>
     </div>
     <div class="col-md-offset-1 col-md-10">
         <div class="pb-3">
-            <form novalidate name="f.applicationform">   
+            <form novalidate name="f.applicationform">
+                <div class="editblock" style="margin-bottom: 1.2rem;"
+                     ng-if="fixedRateProducts && fixedRateProducts.length > 0">
+                    <h2 translate="ssa_kontotyp">Välj kontotyp</h2>
+                    <div class="form-group">
+                        <div class="account-type-grid">
+                            <div id="account-type-flex" class="account-type-option"
+                                 title="{{ mode === 'hasactiveaccount' ? 'You already have an active savings account' : '' }}"
+                                 ng-class="{'selected': accountType === 'flex', 'disabled': mode === 'hasactiveaccount'}"
+                                 ng-click="mode === 'hasactiveaccount' && (accountType = 'flex')">
+                                <span translate="ssa_kontotyp_flex">Flexibel ränta</span>
+                                <span style="grid-column: 3">{{ flexInterestRate }}%</span>
+                                <span class="account-type-description"
+                                      translate="ssa_kontotyp_flex_description">
+                                    Lorem ipsum dolor sit amet, consectetur.
+                                </span>
+                            </div>
+                            <div id="account-type-fixed" class="account-type-option"
+                                 ng-class="{'selected': accountType === 'fixed'}"
+                                 ng-click="accountType = 'fixed'">
+                                <span translate="ssa_kontotyp_fast">Fast ränta</span>
+                                <span style="grid-column: 3">Från {{ fixedRateProducts[0].interestRatePercent
+                                    }}%</span>
+                                <span class="account-type-description"
+                                      translate="ssa_kontotyp_fixed_description">
+                                    Lorem ipsum dolor sit amet, consectetur.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="fixed-product-grid" ng-if="accountType === 'fixed'">
+                            <div ng-repeat="product in fixedRateProducts track by product.id"
+                                 id="{{ 'fixed-product-' + product.id }}"
+                                 class="fixed-product"
+                                 ng-click="selectProduct(product.id)"
+                                 ng-class="{'selected': selectedProduct === product.id}">
+                                <span class="fp-rate">{{ product.interestRatePercent }}%</span>
+                                <span class="fp-length">{{ product.termInMonths }} månader</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="editblock">
+                    <h2 translate="ssa_kontouppgifter">Kontouppgifter</h2>
                     <div>
                         <div class="form-horizontal pb-3">
                             <div class="form-group">
                                 <label class="control-label col-sm-6" translate="ssa_civicnr">Personbeteckning</label>
-                                <div class="col-md-4 col-sm-5"><p class="form-control-static">{{loggedInCivicRegNr}}</p></div>
+                                <div class="col-md-4 col-sm-5">
+                                    <p class="form-control-static">{{ loggedInCivicRegNr }}</p>
+                                </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : hasError('customerFirstName') }">
                                 <label class="control-label col-sm-6" translate="ssa_firstname">Förnamn</label>
-                                <div class="col-md-3 col-sm-5" ng-if="namesEditModel"><input ng-model="namesEditModel.customerFirstName" name="customerFirstName" required type="text" class="form-control"></div>
-                                <div class="col-md-3 col-sm-5" ng-if="namesViewModel"><p class="form-control-static">{{namesViewModel.customerFirstName}}</p></div>
+                                <div class="col-md-3 col-sm-5" ng-if="namesEditModel">
+                                    <input
+                                        ng-model="namesEditModel.customerFirstName" name="customerFirstName" required
+                                        type="text" class="form-control"></div>
+                                <div class="col-md-3 col-sm-5" ng-if="namesViewModel">
+                                    <p class="form-control-static">
+                                        {{namesViewModel.customerFirstName}}</p></div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : hasError('customerLastName') }">
                                 <label class="control-label col-sm-6" translate="ssa_lastname">Efternamn</label>
-                                <div class="col-md-3 col-sm-5" ng-if="namesEditModel"><input ng-model="namesEditModel.customerLastName" name="customerLastName" required type="text" class="form-control"></div>
-                                <div class="col-md-3 col-sm-5" ng-if="namesViewModel"><p class="form-control-static">{{namesViewModel.customerLastName}}</p></div>
+                                <div class="col-md-3 col-sm-5" ng-if="namesEditModel">
+                                    <input
+                                        ng-model="namesEditModel.customerLastName" name="customerLastName" required
+                                        type="text" class="form-control"></div>
+                                <div class="col-md-3 col-sm-5" ng-if="namesViewModel">
+                                    <p class="form-control-static">
+                                        {{namesViewModel.customerLastName}}</p></div>
                             </div>
                         </div>
                         <div class="form-horizontal pb-3">
                             <div class="form-group" ng-class="{ 'has-error' : hasError('customerAddressStreet') }">
                                 <label class="control-label col-sm-6" translate="ssa_streetadr">Gata</label>
-                                <div class="col-md-3 col-sm-5" ng-if="addressEditModel"><input ng-model="addressEditModel.customerAddressStreet" name="customerAddressStreet" required type="text" class="form-control"></div>
-                                <div class="col-md-3 col-sm-5" ng-if="addressViewModel"><p class="form-control-static">{{addressViewModel.customerAddressStreet}}</p></div>
+                                <div class="col-md-3 col-sm-5" ng-if="addressEditModel">
+                                    <input
+                                        ng-model="addressEditModel.customerAddressStreet" name="customerAddressStreet"
+                                        required type="text" class="form-control"></div>
+                                <div class="col-md-3 col-sm-5" ng-if="addressViewModel">
+                                    <p class="form-control-static">
+                                        {{addressViewModel.customerAddressStreet}}</p></div>
 
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : hasError('customerAddressZipcode') }">
                                 <label class="control-label col-sm-6" translate="ssa_zipcode">Postnummer</label>
-                                <div class="col-md-3 col-sm-5" ng-if="addressEditModel"><input ng-model="addressEditModel.customerAddressZipcode" name="customerAddressZipcode" required type="text" class="form-control"></div>
-                                <div class="col-md-3 col-sm-5" ng-if="addressViewModel"><p class="form-control-static">{{addressViewModel.customerAddressZipcode}}</p></div>
+                                <div class="col-md-3 col-sm-5" ng-if="addressEditModel">
+                                    <input
+                                        ng-model="addressEditModel.customerAddressZipcode" name="customerAddressZipcode"
+                                        required type="text" class="form-control"></div>
+                                <div class="col-md-3 col-sm-5" ng-if="addressViewModel">
+                                    <p class="form-control-static">
+                                        {{addressViewModel.customerAddressZipcode}}</p></div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : hasError('customerAddressCity') }">
                                 <label class="control-label col-sm-6" translate="ssa_city">Ort</label>
-                                <div class="col-md-3 col-sm-5" ng-if="addressEditModel"><input ng-model="addressEditModel.customerAddressCity" name="customerAddressCity" required type="text" class="form-control"></div>
-                                <div class="col-md-3 col-sm-5" ng-if="addressViewModel"><p class="form-control-static">{{addressViewModel.customerAddressCity}}</p></div>
+                                <div class="col-md-3 col-sm-5" ng-if="addressEditModel">
+                                    <input
+                                        ng-model="addressEditModel.customerAddressCity" name="customerAddressCity"
+                                        required type="text" class="form-control"></div>
+                                <div class="col-md-3 col-sm-5" ng-if="addressViewModel">
+                                    <p class="form-control-static">
+                                        {{addressViewModel.customerAddressCity}}</p></div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : hasError('customerEmail') }">
                                 <label class="control-label col-sm-6" translate="ssa_email">E-post</label>
-                                <div class="col-md-3 col-sm-5" ng-if="contactEditModel"><input ng-model="contactEditModel.customerEmail" name="customerEmail" required custom-validate="isValidEmail" type="text" class="form-control"></div>
-                                <div class="col-md-3 col-sm-5" ng-if="contactViewModel"><p class="form-control-static">{{contactViewModel.customerEmail}}</p></div>
+                                <div class="col-md-3 col-sm-5" ng-if="contactEditModel">
+                                    <input
+                                        ng-model="contactEditModel.customerEmail" name="customerEmail" required
+                                        custom-validate="isValidEmail" type="text" class="form-control"></div>
+                                <div class="col-md-3 col-sm-5" ng-if="contactViewModel">
+                                    <p class="form-control-static">
+                                        {{contactViewModel.customerEmail}}</p></div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : hasError('customerPhone') }">
                                 <label class="control-label col-sm-6" translate="ssa_phone">Telefonnummer</label>
-                                <div class="col-md-3 col-sm-5" ng-if="contactEditModel"><input ng-model="contactEditModel.customerPhone" name="customerPhone" required custom-validate="isValidPhoneNr" type="text" class="form-control"></div>
-                                <div class="col-md-3 col-sm-5" ng-if="contactViewModel"><p class="form-control-static">{{contactViewModel.customerPhone}}</p></div>
+                                <div class="col-md-3 col-sm-5" ng-if="contactEditModel">
+                                    <input
+                                        ng-model="contactEditModel.customerPhone" name="customerPhone" required
+                                        custom-validate="isValidPhoneNr" type="text" class="form-control"></div>
+                                <div class="col-md-3 col-sm-5" ng-if="contactViewModel">
+                                    <p class="form-control-static">
+                                        {{contactViewModel.customerPhone}}</p></div>
                             </div>
                         </div>
                     </div>
@@ -67,13 +146,20 @@
                     <div class="pb-3 pt-3">
                         <div class="row">
                             <div class="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8">
-                                <div ng-if="applicationEditModel" class="form-group pb-1" ng-class="{ 'has-error' : hasError('withdrawalIban') }">
-                                    <label class="control-label" translate="ssa_withdrawaliban">IBAN för mottagarkonto vid uttag</label>
-                                    <input type="text" ng-model="applicationEditModel.withdrawalIban" autocomplete="off" name="withdrawalIban" required custom-validate="isValidIBAN" class="form-control" />
+                                <div ng-if="applicationEditModel" class="form-group pb-1"
+                                     ng-class="{ 'has-error' : hasError('withdrawalIban') }">
+                                    <label class="control-label" translate="ssa_withdrawaliban">IBAN för mottagarkonto
+                                        vid uttag</label>
+                                    <input type="text" ng-model="applicationEditModel.withdrawalIban" autocomplete="off"
+                                           name="withdrawalIban" required custom-validate="isValidIBAN"
+                                           class="form-control"/>
                                 </div>
-                                <div ng-if="productQuestionsEditModel" class="checkbox" ng-class="{ 'has-error' : hasError('customerConsent') }">
+                                <div ng-if="productQuestionsEditModel" class="checkbox"
+                                     ng-class="{ 'has-error' : hasError('customerConsent') }">
                                     <label class="control-label">
-                                        <input ng-model="productQuestionsEditModel.customerConsent" name="customerConsent" ng-required="!productQuestionsEditModel.customerConsent" type="checkbox">
+                                        <input ng-model="productQuestionsEditModel.customerConsent"
+                                               name="customerConsent"
+                                               ng-required="!productQuestionsEditModel.customerConsent" type="checkbox">
                                         <span>{{kycQuestions.savings_customerConsent.text[currentLanguage()]}}</span>
                                     </label>
                                 </div>
@@ -81,16 +167,21 @@
                         </div>
                     </div>
                     <div class="p3 row">
-                        <div class="text-center"><button class="n-main-btn n-green-btn" ng-click="apply(application, $event)" translate="ssa_kycandsign">Kundkännedom och signering</button></div>
+                        <div class="text-center">
+                            <button class="n-main-btn n-green-btn" ng-click="apply(application, $event)"
+                                    translate="ssa_kycandsign">Kundkännedom och signering
+                            </button>
+                        </div>
                     </div>
                     <div class="pt-3 text-center" ng-if="isTest">
-                        <button ng-click="loadLastSuccessfulTestApplication($event)">(TEST) Fyll i från förra ansökan</button>
+                        <button ng-click="loadLastSuccessfulTestApplication($event)">(TEST) Fyll i från förra ansökan
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
     <div class="clearfix"></div>
-    
+
 </div>
 <div class="clearfix"></div>

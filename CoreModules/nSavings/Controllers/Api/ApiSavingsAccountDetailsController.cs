@@ -1,12 +1,15 @@
-﻿using nSavings.DbModel.BusinessEvents;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiSavingsAccountDetailsController : NController
@@ -28,60 +31,61 @@ namespace nSavings.Controllers
             public string ExternalVariablesKey { get; set; }
         }
 
-        public static IQueryable<SavingsAccountDetailsModel> GetSavingsAccountDetailsQueryable(SavingsContext context, DateTime today)
+        public static IQueryable<SavingsAccountDetailsModel> GetSavingsAccountDetailsQueryable(SavingsContext context,
+            DateTime today)
         {
             var rates = ChangeInterestRateBusinessEventManager.GetPerAccountActiveInterestRates(context);
 
             return context
-                    .SavingsAccountHeaders
-                    .Select(x => new SavingsAccountDetailsModel
-                    {
-                        SavingsAccountNr = x.SavingsAccountNr,
-                        AccountTypeCode = x.AccountTypeCode,
-                        MainCustomerId = x.MainCustomerId,
-                        CreatedByBusinessEventId = x.CreatedByBusinessEventId,
-                        PendingWithdrawalAccountChangeId = x
-                            .SavingsAccountWithdrawalAccountChanges
-                            .Where(y => !y.CommitedOrCancelledByEventId.HasValue)
-                            .OrderByDescending(y => y.Id)
-                            .Select(y => (int?)y.Id)
-                            .FirstOrDefault(),
-                        InitialAgreementArchiveKey = x
-                            .DatedStrings
-                            .Where(y => y.Name == DatedSavingsAccountStringCode.SignedInitialAgreementArchiveKey.ToString())
-                            .OrderByDescending(y => y.BusinessEventId).Select(y => y.Value)
-                            .FirstOrDefault(),
-                        OcrDepositReference = x
-                            .DatedStrings
-                            .Where(y => y.Name == DatedSavingsAccountStringCode.OcrDepositReference.ToString())
-                            .OrderByDescending(y => y.BusinessEventId).Select(y => y.Value)
-                            .FirstOrDefault(),
-                        Status = x.Status,
-                        StatusDate = x
-                            .DatedStrings
-                            .Where(y => y.Name == DatedSavingsAccountStringCode.SavingsAccountStatus.ToString())
-                            .OrderByDescending(y => y.BusinessEventId)
-                            .Select(y => (DateTime?)y.TransactionDate)
-                            .FirstOrDefault(),
-                        StatusBusinessEventId = x
-                            .DatedStrings
-                            .Where(y => y.Name == DatedSavingsAccountStringCode.SavingsAccountStatus.ToString())
-                            .OrderByDescending(y => y.BusinessEventId)
-                            .Select(y => (int?)y.BusinessEventId)
-                            .FirstOrDefault(),
-                        CreatedTransactionDate = x.CreatedByEvent.TransactionDate,
-                        InterestRatePercent = rates
-                            .Where(y => y.SavingsAccountNr == x.SavingsAccountNr && y.ValidFromDate <= today)
-                            .OrderByDescending(y => y.ValidFromDate)
-                            .Select(y => (decimal?)y.InterestRatePercent)
-                            .FirstOrDefault(),
-                        ExternalVariablesKey = x
-                            .DatedStrings
-                            .Where(y => y.Name == DatedSavingsAccountStringCode.ExternalVariablesKey.ToString())
-                            .OrderByDescending(y => y.BusinessEventId)
-                            .Select(y => y.Value)
-                            .FirstOrDefault(),
-                    });
+                .SavingsAccountHeaders
+                .Select(x => new SavingsAccountDetailsModel
+                {
+                    SavingsAccountNr = x.SavingsAccountNr,
+                    AccountTypeCode = x.AccountTypeCode.ToString(),
+                    MainCustomerId = x.MainCustomerId,
+                    CreatedByBusinessEventId = x.CreatedByBusinessEventId,
+                    PendingWithdrawalAccountChangeId = x
+                        .SavingsAccountWithdrawalAccountChanges
+                        .Where(y => !y.CommitedOrCancelledByEventId.HasValue)
+                        .OrderByDescending(y => y.Id)
+                        .Select(y => (int?)y.Id)
+                        .FirstOrDefault(),
+                    InitialAgreementArchiveKey = x
+                        .DatedStrings
+                        .Where(y => y.Name == DatedSavingsAccountStringCode.SignedInitialAgreementArchiveKey.ToString())
+                        .OrderByDescending(y => y.BusinessEventId).Select(y => y.Value)
+                        .FirstOrDefault(),
+                    OcrDepositReference = x
+                        .DatedStrings
+                        .Where(y => y.Name == DatedSavingsAccountStringCode.OcrDepositReference.ToString())
+                        .OrderByDescending(y => y.BusinessEventId).Select(y => y.Value)
+                        .FirstOrDefault(),
+                    Status = x.Status,
+                    StatusDate = x
+                        .DatedStrings
+                        .Where(y => y.Name == DatedSavingsAccountStringCode.SavingsAccountStatus.ToString())
+                        .OrderByDescending(y => y.BusinessEventId)
+                        .Select(y => (DateTime?)y.TransactionDate)
+                        .FirstOrDefault(),
+                    StatusBusinessEventId = x
+                        .DatedStrings
+                        .Where(y => y.Name == DatedSavingsAccountStringCode.SavingsAccountStatus.ToString())
+                        .OrderByDescending(y => y.BusinessEventId)
+                        .Select(y => (int?)y.BusinessEventId)
+                        .FirstOrDefault(),
+                    CreatedTransactionDate = x.CreatedByEvent.TransactionDate,
+                    InterestRatePercent = rates
+                        .Where(y => y.SavingsAccountNr == x.SavingsAccountNr && y.ValidFromDate <= today)
+                        .OrderByDescending(y => y.ValidFromDate)
+                        .Select(y => (decimal?)y.InterestRatePercent)
+                        .FirstOrDefault(),
+                    ExternalVariablesKey = x
+                        .DatedStrings
+                        .Where(y => y.Name == DatedSavingsAccountStringCode.ExternalVariablesKey.ToString())
+                        .OrderByDescending(y => y.BusinessEventId)
+                        .Select(y => y.Value)
+                        .FirstOrDefault(),
+                });
         }
 
         [HttpPost]
@@ -109,7 +113,8 @@ namespace nSavings.Controllers
                         x.InterestRatePercent,
                         CapitalTransactions = context
                             .LedgerAccountTransactions
-                            .Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString() && y.SavingsAccountNr == x.SavingsAccountNr)
+                            .Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString() &&
+                                        y.SavingsAccountNr == x.SavingsAccountNr)
                             .Select(y => new
                             {
                                 y.BusinessEventId,
@@ -161,8 +166,9 @@ namespace nSavings.Controllers
                     createdTransactionDate = accountData.CreatedTransactionDate,
                     initialAgreementArchiveKey = accountData.InitialAgreementArchiveKey,
                     initialAgreementArchiveLink = accountData.InitialAgreementArchiveKey == null
-                                            ? null
-                                            : Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = accountData.InitialAgreementArchiveKey }),
+                        ? null
+                        : Url.Action("ArchiveDocument", "ApiArchiveDocument",
+                            new { key = accountData.InitialAgreementArchiveKey }),
                     status = accountData.Status,
                     interestRatePercent = accountData.InterestRatePercent,
                     capitalBalance = capitalTransactions.Sum(x => (decimal?)x.amount) ?? 0m,
@@ -170,13 +176,16 @@ namespace nSavings.Controllers
                     ocrDepositReference = accountData.OcrDepositReference,
                     depositsIban = NEnv.DepositsIban,
                     pendingWithdrawalAccountChangeId = accountData.PendingWithdrawalAccountChangeId,
-                    areWithdrawalsSuspended = WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(accountData.MainCustomerId)
+                    areWithdrawalsSuspended =
+                        WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(accountData.MainCustomerId)
                 };
 
-                IDictionary<string, YearlyInterestCapitalizationBusinessEventManager.ResultModel> accInterestResult;
-                string accFailedMessage;
                 decimal? accumulatedInterestAmount;
-                if (YearlyInterestCapitalizationBusinessEventManager.TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, Clock, new List<string> { savingsAccountNr }, false, out accInterestResult, out accFailedMessage))
+                if (YearlyInterestCapitalizationBusinessEventManager
+                    .TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, Clock,
+                        new List<string> { savingsAccountNr }, false,
+                        out var accInterestResult,
+                        out var accFailedMessage))
                 {
                     accumulatedInterestAmount = accInterestResult.Single().Value.TotalInterestAmount;
                 }
@@ -189,7 +198,8 @@ namespace nSavings.Controllers
                 {
                     accumulatedAmount = accumulatedInterestAmount,
                     failedMessage = accFailedMessage,
-                    detailsExcelLink = Url.Action("CreateReport", "ApiSavingsAccountFutureInterestReport", new { savingsAccountNr = savingsAccountNr, format = "excel", toDate = today.AddDays(-1) })
+                    detailsExcelLink = Url.Action("CreateReport", "ApiSavingsAccountFutureInterestReport",
+                        new { savingsAccountNr = savingsAccountNr, format = "excel", toDate = today.AddDays(-1) })
                 };
 
                 return Json2(new
@@ -208,30 +218,30 @@ namespace nSavings.Controllers
             using (var context = new SavingsContext())
             {
                 var outgoingPaymentItemsToFetch = new[]
-                    {
-                        OutgoingPaymentHeaderItemCode.CustomTransactionMessage,
-                        OutgoingPaymentHeaderItemCode.CustomerMessage,
-                        OutgoingPaymentHeaderItemCode.RequestIpAddress,
-                        OutgoingPaymentHeaderItemCode.RequestAuthenticationMethod,
-                        OutgoingPaymentHeaderItemCode.RequestDate,
-                        OutgoingPaymentHeaderItemCode.RequestedByCustomerId,
-                        OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId
-                    }.Select(x => x.ToString()).ToList();
+                {
+                    OutgoingPaymentHeaderItemCode.CustomTransactionMessage,
+                    OutgoingPaymentHeaderItemCode.CustomerMessage,
+                    OutgoingPaymentHeaderItemCode.RequestIpAddress,
+                    OutgoingPaymentHeaderItemCode.RequestAuthenticationMethod,
+                    OutgoingPaymentHeaderItemCode.RequestDate,
+                    OutgoingPaymentHeaderItemCode.RequestedByCustomerId,
+                    OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId
+                }.Select(x => x.ToString()).ToList();
 
                 var incomingPaymentItemsToFetch = new[]
-                    {
-                        IncomingPaymentHeaderItemCode.NoteText,
-                        IncomingPaymentHeaderItemCode.OcrReference,
-                        IncomingPaymentHeaderItemCode.ExternalId,
-                        IncomingPaymentHeaderItemCode.ClientAccountIban,
-                        IncomingPaymentHeaderItemCode.CustomerName,
-                        IncomingPaymentHeaderItemCode.CustomerAddressCountry,
-                        IncomingPaymentHeaderItemCode.CustomerAddressStreetName,
-                        IncomingPaymentHeaderItemCode.CustomerAddressBuildingNumber,
-                        IncomingPaymentHeaderItemCode.CustomerAddressPostalCode,
-                        IncomingPaymentHeaderItemCode.CustomerAddressTownName,
-                        IncomingPaymentHeaderItemCode.CustomerAddressLines
-                    }.Select(x => x.ToString()).ToList(); ;
+                {
+                    IncomingPaymentHeaderItemCode.NoteText,
+                    IncomingPaymentHeaderItemCode.OcrReference,
+                    IncomingPaymentHeaderItemCode.ExternalId,
+                    IncomingPaymentHeaderItemCode.ClientAccountIban,
+                    IncomingPaymentHeaderItemCode.CustomerName,
+                    IncomingPaymentHeaderItemCode.CustomerAddressCountry,
+                    IncomingPaymentHeaderItemCode.CustomerAddressStreetName,
+                    IncomingPaymentHeaderItemCode.CustomerAddressBuildingNumber,
+                    IncomingPaymentHeaderItemCode.CustomerAddressPostalCode,
+                    IncomingPaymentHeaderItemCode.CustomerAddressTownName,
+                    IncomingPaymentHeaderItemCode.CustomerAddressLines
+                }.Select(x => x.ToString()).ToList();
 
                 var tr = context
                     .LedgerAccountTransactions
@@ -250,23 +260,31 @@ namespace nSavings.Controllers
                         x.BusinessEvent.EventType,
                         IsConnectedToOutgoingPayment = x.OutgoingPaymentId.HasValue,
                         IsConnectedToIncomingPayment = x.IncomingPaymentId.HasValue,
-                        OutgoingPaymentItems = x.OutgoingPayment.Items.Where(y => outgoingPaymentItemsToFetch.Contains(y.Name)),
-                        IncomingPaymentItems = x.IncomingPayment.Items.Where(y => incomingPaymentItemsToFetch.Contains(y.Name))
+                        OutgoingPaymentItems =
+                            x.OutgoingPayment.Items.Where(y => outgoingPaymentItemsToFetch.Contains(y.Name)),
+                        IncomingPaymentItems =
+                            x.IncomingPayment.Items.Where(y => incomingPaymentItemsToFetch.Contains(y.Name))
                     })
                     .SingleOrDefault();
+
+                if (tr == null)
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No such transaction");
 
                 var encryptedIds = new HashSet<long>();
 
                 var outgoingPaymentItems = tr?.OutgoingPaymentItems?.ToList() ?? new List<OutgoingPaymentHeaderItem>();
-                outgoingPaymentItems.Where(x => x.IsEncrypted).ToList().ForEach(x => encryptedIds.Add(long.Parse(x.Value)));
+                outgoingPaymentItems.Where(x => x.IsEncrypted).ToList()
+                    .ForEach(x => encryptedIds.Add(long.Parse(x.Value)));
 
                 var incomingPaymentItems = tr?.IncomingPaymentItems?.ToList() ?? new List<IncomingPaymentHeaderItem>();
-                incomingPaymentItems.Where(x => x.IsEncrypted).ToList().ForEach(x => encryptedIds.Add(long.Parse(x.Value)));
+                incomingPaymentItems.Where(x => x.IsEncrypted).ToList()
+                    .ForEach(x => encryptedIds.Add(long.Parse(x.Value)));
 
                 IDictionary<long, string> decryptedValues;
                 if (encryptedIds.Any())
                 {
-                    decryptedValues = EncryptionContext.Load(context, encryptedIds.ToArray(), NEnv.EncryptionKeys.AsDictionary());
+                    decryptedValues = EncryptionContext.Load(context, encryptedIds.ToArray(),
+                        NEnv.EncryptionKeys.AsDictionary());
                 }
                 else
                 {
@@ -274,21 +292,23 @@ namespace nSavings.Controllers
                 }
 
                 var outgoingPaymentDetails = tr.IsConnectedToOutgoingPayment
-                    ? outgoingPaymentItems.ToDictionary(x => x.Name, x => x.IsEncrypted ? decryptedValues[long.Parse(x.Value)] : x.Value)
+                    ? outgoingPaymentItems.ToDictionary(x => x.Name,
+                        x => x.IsEncrypted ? decryptedValues[long.Parse(x.Value)] : x.Value)
                     : null;
 
                 var incomingPaymentDetails = tr.IsConnectedToIncomingPayment
-                    ? incomingPaymentItems.ToDictionary(x => x.Name, x => x.IsEncrypted ? decryptedValues[long.Parse(x.Value)] : x.Value)
+                    ? incomingPaymentItems.ToDictionary(x => x.Name,
+                        x => x.IsEncrypted ? decryptedValues[long.Parse(x.Value)] : x.Value)
                     : null;
 
-                if (outgoingPaymentDetails?.ContainsKey(OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId.ToString()) ?? false)
+                if (outgoingPaymentDetails?.ContainsKey(
+                        OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId.ToString()) ?? false)
                 {
-                    outgoingPaymentDetails["RequestedByHandlerUserName"] = GetUserDisplayNameByUserId(outgoingPaymentDetails[OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId.ToString()]);
+                    outgoingPaymentDetails["RequestedByHandlerUserName"] = GetUserDisplayNameByUserId(
+                        outgoingPaymentDetails[OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId.ToString()]);
                     outgoingPaymentDetails.Remove(OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId.ToString());
                 }
 
-                if (tr == null)
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No such transaction");
                 return Json2(new
                 {
                     tr.Id,
@@ -302,8 +322,12 @@ namespace nSavings.Controllers
                     BusinessEventType = tr.EventType,
                     tr.IsConnectedToOutgoingPayment,
                     tr.IsConnectedToIncomingPayment,
-                    OutgoingPaymentDetailsItems = outgoingPaymentDetails?.Select(x => new { Name = x.Key, Value = x.Value })?.ToList(),
-                    IncomingPaymentDetailsItems = incomingPaymentDetails?.Select(x => new { Name = x.Key, Value = x.Value })?.ToList()
+                    OutgoingPaymentDetailsItems = outgoingPaymentDetails
+                        ?.Select(x => new { Name = x.Key, x.Value })
+                        .ToList(),
+                    IncomingPaymentDetailsItems = incomingPaymentDetails
+                        ?.Select(x => new { Name = x.Key, x.Value })
+                        .ToList()
                 });
             }
         }

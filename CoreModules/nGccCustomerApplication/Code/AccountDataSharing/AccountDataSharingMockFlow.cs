@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Text;
 using System.Threading;
-using System.Web;
+using Newtonsoft.Json;
 
 namespace nGccCustomerApplication.Code.AccountDataSharing
 {
@@ -20,11 +17,14 @@ namespace nGccCustomerApplication.Code.AccountDataSharing
                 Thread.Sleep(callbackDelay);
 
                 var pdf = CreateMinimalPdf($"PSD2 for applicant {applicantNr} at {DateTime.Now}");
-                var pdfArchiveKey = documentClient.ArchiveStore(pdf, "application/pdf", $"psd2-{state.ApplicationNr}-{applicantNr}.pdf");
+                var pdfArchiveKey = documentClient.ArchiveStore(pdf, "application/pdf",
+                    $"psd2-{state.ApplicationNr}-{applicantNr}.pdf");
                 var rawData = JsonConvert.SerializeObject(new { todo = "account data json from SAT" });
-                var rawDataArchiveKey = documentClient.ArchiveStore(Encoding.UTF8.GetBytes(rawData), "application/json", $"psd2-{state.ApplicationNr}-{applicantNr}.json");
-                
-                preCreditClient.UpdateBankAccountDataShareData(state.ApplicationNr, applicantNr, rawDataArchiveKey, pdfArchiveKey);
+                var rawDataArchiveKey = documentClient.ArchiveStore(Encoding.UTF8.GetBytes(rawData), "application/json",
+                    $"psd2-{state.ApplicationNr}-{applicantNr}.json");
+
+                preCreditClient.UpdateBankAccountDataShareData(state.ApplicationNr, applicantNr,
+                    rawDataArchiveKey, pdfArchiveKey);
             });
         }
 

@@ -18,6 +18,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using static nCredit.DbModel.BusinessEvents.NewCreditNotificationBusinessEventManager.CoNotificationPrintContext;
 using static nCredit.DbModel.BusinessEvents.NewCreditNotificationBusinessEventManager.SingleCreditNotificationPrintContext;
 

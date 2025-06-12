@@ -1,13 +1,18 @@
-﻿using NTech.Services.Infrastructure.NTechWs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using nSavings.Code;
+using nSavings.Controllers.Api;
+using nSavings.DbModel;
+using NTech.Services.Infrastructure.NTechWs;
 
 namespace nSavings.WebserviceMethods
 {
-    public class CreateAndSendFinnishCustomsExportMethod : TypedWebserviceMethod<CreateAndSendFinnishCustomsExportMethod.Request, CreateAndSendFinnishCustomsExportMethod.Response>
+    public class CreateAndSendFinnishCustomsExportMethod : TypedWebserviceMethod<
+        CreateAndSendFinnishCustomsExportMethod.Request, CreateAndSendFinnishCustomsExportMethod.Response>
     {
         public override string Path => "FinnishCustomsAccounts/CreateExportFile";
 
-        public override bool IsEnabled => NEnv.ClientCfg.IsFeatureEnabled("ntech.feature.savingsCustomsAccountsExport.v1");
+        public override bool IsEnabled =>
+            NEnv.ClientCfg.IsFeatureEnabled("ntech.feature.savingsCustomsAccountsExport.v1");
 
         protected override Response DoExecuteTyped(NTechWebserviceMethodRequestContext requestContext, Request request)
         {
@@ -18,11 +23,12 @@ namespace nSavings.WebserviceMethods
                 {
                     string archiveKey = null;
                     var errors = new List<string>();
-                    requestContext.Service().FinnishCustomsAccounts(requestContext.CurrentUserMetadataCore()).CreateAndDeliverUpdate(
-                        requestContext.CurrentUserMetadataCore(),
-                        observeArchiveKey: x => archiveKey = x,
-                        skipDeliver: request.SkipDeliver,
-                        observeError: errors.Add);
+                    requestContext.Service().FinnishCustomsAccounts(requestContext.CurrentUserMetadataCore())
+                        .CreateAndDeliverUpdate(
+                            requestContext.CurrentUserMetadataCore(),
+                            observeArchiveKey: x => archiveKey = x,
+                            skipDeliver: request.SkipDeliver,
+                            observeError: errors.Add);
 
                     return new Response
                     {
@@ -31,7 +37,7 @@ namespace nSavings.WebserviceMethods
                         Warnings = new List<string>()
                     };
                 },
-                    () => Error("Job is already running", httpStatusCode: 400, errorCode: "jobIsAlreadyRunning"));
+                () => Error("Job is already running", httpStatusCode: 400, errorCode: "jobIsAlreadyRunning"));
         }
 
         public class Request

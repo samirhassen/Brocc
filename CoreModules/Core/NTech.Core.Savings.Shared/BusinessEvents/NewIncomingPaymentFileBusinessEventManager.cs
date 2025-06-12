@@ -1,17 +1,16 @@
-﻿using nSavings.Code;
-using NTech.Banking.BankAccounts.Fi;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NTech.Banking.IncomingPaymentFiles;
-using NTech.Core;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Module.Shared.Services;
-using NTech.Core.Savings.Shared;
 using NTech.Core.Savings.Shared.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings.DbModel.BusinessEvents
+namespace NTech.Core.Savings.Shared.BusinessEvents
 {
     public class NewIncomingPaymentFileBusinessEventManager : BusinessEventManagerBaseCore
     {

@@ -1,5 +1,4 @@
-﻿
-using Duende.IdentityModel.Client;
+﻿using IdentityModel.Client;
 using NTech.Core.Customer.Shared.Services;
 using NTech.Services.Infrastructure;
 using Serilog;
@@ -37,24 +36,20 @@ namespace nCustomer.Code
         {
             return NTechCache.WithCache("nCustomerEventAutomation.2923423a55a-9a86-44af-a230-b504b3749164", TimeSpan.FromMinutes(3), () =>
             {
-                var client = new HttpClient();
-                var credentials = NEnv.ApplicationAutomationUsernameAndPassword;
-                var token = client.RequestPasswordTokenAsync(new PasswordTokenRequest()
-                {
-                    Address = NEnv.ServiceRegistry.Internal.ServiceUrl("nUser", "id/connect/token").ToString(),
-                    ClientId = "nTechSystemUser",
-                    ClientSecret = "nTechSystemUser",
-                    UserName = credentials.Item1,
-                    Password = credentials.Item2,
-                    Scope = "nTech1"
-                });
+                var tokenClient = new TokenClient(
+                                        new Uri(new Uri(NEnv.ServiceRegistry.Internal["nUser"]), "id/connect/token").ToString(),
+                                        "nTechSystemUser",
+                                        "nTechSystemUser");
 
-                if (token.Result.IsError)
+                var credentials = NEnv.ApplicationAutomationUsernameAndPassword;
+                var token = tokenClient.RequestResourceOwnerPasswordAsync(credentials.Item1, credentials.Item2, scope: "nTech1").Result;
+
+                if (token.IsError)
                 {
-                    throw new Exception("Bearer token login failed in nCustomer event automation :" + token.Result.Error);
+                    throw new Exception("Bearer token login failed in nCustomer event automation :" + token.Error);
                 }
 
-                return token.Result.AccessToken;
+                return token.AccessToken;
             });
         }
 
@@ -83,7 +78,7 @@ namespace nCustomer.Code
                 var client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.SetBearerToken(AquireBearerToken());                
+                client.SetBearerToken(AquireBearerToken());
                 client.BaseAddress = new Uri(sr.Internal[serviceName]);
                 try
                 {

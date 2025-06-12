@@ -1,13 +1,16 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using NTech;
-using NTech.Banking.BankAccounts.Fi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using NTech;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Savings.Shared.DbModel;
 
 namespace nSavings.Code.Services
 {
@@ -19,7 +22,9 @@ namespace nSavings.Code.Services
         private readonly Func<DocumentClient> createDocumentClient;
         private readonly CultureInfo formattingCulture;
 
-        public YearlySummaryService(Func<SavingsContext> createContext, Func<CustomerClient> createCustomerClient, Func<DocumentClient> createDocumentClient, IClock clock, CultureInfo formattingCulture)
+        public YearlySummaryService(Func<SavingsContext> createContext,
+            Func<CustomerClient> createCustomerClient, Func<DocumentClient> createDocumentClient, IClock clock,
+            CultureInfo formattingCulture)
         {
             this.createContext = createContext;
             this.createCustomerClient = createCustomerClient;
@@ -80,7 +85,11 @@ namespace nSavings.Code.Services
 
             var nextYear = year + 1;
             var capitalizationEventId = events
-                .Where(x => (x.BusinessEventTypeCode == BusinessEventType.AccountClosure.ToString() && x.TransactionDate.Year == year) || (x.BusinessEventTypeCode == BusinessEventType.YearlyInterestCapitalization.ToString() && x.TransactionDate.Year == nextYear))
+                .Where(x =>
+                    (x.BusinessEventTypeCode == BusinessEventType.AccountClosure.ToString() &&
+                     x.TransactionDate.Year == year) ||
+                    (x.BusinessEventTypeCode == BusinessEventType.YearlyInterestCapitalization.ToString() &&
+                     x.TransactionDate.Year == nextYear))
                 .OrderByDescending(x => x.BusinessEventId)
                 .Select(x => (int?)x.BusinessEventId)
                 .FirstOrDefault();
@@ -91,9 +100,17 @@ namespace nSavings.Code.Services
             return new SummaryDataModel
             {
                 BalanceAfterAmount = allTransactions
-                    .Where(x => x.BusinessEventId <= capitalizationEventId.Value && x.AccountTypeCode == LedgerAccountTypeCode.Capital.ToString()).Sum(x => (decimal?)x.Amount) ?? 0m,
-                TotalInterestAmount = allTransactions.Where(x => x.BusinessEventId <= capitalizationEventId.Value && x.BookKeepingDate.Year == year && x.AccountTypeCode == LedgerAccountTypeCode.CapitalizedInterest.ToString()).Sum(x => (decimal?)x.Amount) ?? 0m,
-                WithheldTaxAmount = allTransactions.Where(x => x.BusinessEventId <= capitalizationEventId.Value && x.BookKeepingDate.Year == year && x.AccountTypeCode == LedgerAccountTypeCode.WithheldCapitalizedInterestTax.ToString()).Sum(x => (decimal?)x.Amount) ?? 0m,
+                    .Where(x => x.BusinessEventId <= capitalizationEventId.Value &&
+                                x.AccountTypeCode == LedgerAccountTypeCode.Capital.ToString())
+                    .Sum(x => (decimal?)x.Amount) ?? 0m,
+                TotalInterestAmount = allTransactions
+                    .Where(x => x.BusinessEventId <= capitalizationEventId.Value && x.BookKeepingDate.Year == year &&
+                                x.AccountTypeCode == LedgerAccountTypeCode.CapitalizedInterest.ToString())
+                    .Sum(x => (decimal?)x.Amount) ?? 0m,
+                WithheldTaxAmount = allTransactions
+                    .Where(x => x.BusinessEventId <= capitalizationEventId.Value && x.BookKeepingDate.Year == year &&
+                                x.AccountTypeCode == LedgerAccountTypeCode.WithheldCapitalizedInterestTax.ToString())
+                    .Sum(x => (decimal?)x.Amount) ?? 0m,
             };
         }
 
@@ -102,8 +119,12 @@ namespace nSavings.Code.Services
             return events
                 .Select(x => new
                 {
-                    CloseYear = x.BusinessEventTypeCode == BusinessEventType.AccountClosure.ToString() ? new int?(x.TransactionDate.Year) : null,
-                    CapYear = x.BusinessEventTypeCode == BusinessEventType.YearlyInterestCapitalization.ToString() ? new int?(x.TransactionDate.Year - 1) : null
+                    CloseYear = x.BusinessEventTypeCode == BusinessEventType.AccountClosure.ToString()
+                        ? new int?(x.TransactionDate.Year)
+                        : null,
+                    CapYear = x.BusinessEventTypeCode == BusinessEventType.YearlyInterestCapitalization.ToString()
+                        ? new int?(x.TransactionDate.Year - 1)
+                        : null
                 })
                 .Select(x => x.CloseYear ?? x.CapYear)
                 .Where(x => x.HasValue)
@@ -111,7 +132,8 @@ namespace nSavings.Code.Services
                 .Distinct()
                 .OrderByDescending(x => x)
                 .ToList()
-                .Where(x => x < clock.Today.Year) //Closed accounts are not visible as yearly summaries until the following year to mirror other accounts
+                .Where(x => x < clock.Today
+                    .Year) //Closed accounts are not visible as yearly summaries until the following year to mirror other accounts
                 .ToList();
         }
 
@@ -142,14 +164,15 @@ namespace nSavings.Code.Services
                         BusinessEventId = y.Id,
                         BusinessEventTypeCode = y.EventType,
                         TransactionDate = y.TransactionDate,
-                        Transactions = y.CreatedLedgerTransactions.Where(z => z.SavingsAccountNr == x.SavingsAccountNr).Select(z => new TransactionModel
-                        {
-                            AccountTypeCode = z.AccountCode,
-                            Amount = z.Amount,
-                            BookKeepingDate = z.BookKeepingDate,
-                            BusinessEventId = z.BusinessEventId,
-                            BusinessEventTypeCode = y.EventType,
-                        })
+                        Transactions = y.CreatedLedgerTransactions.Where(z => z.SavingsAccountNr == x.SavingsAccountNr)
+                            .Select(z => new TransactionModel
+                            {
+                                AccountTypeCode = z.AccountCode,
+                                Amount = z.Amount,
+                                BookKeepingDate = z.BookKeepingDate,
+                                BusinessEventId = z.BusinessEventId,
+                                BusinessEventTypeCode = y.EventType,
+                            })
                     })
                 );
         }
@@ -158,7 +181,8 @@ namespace nSavings.Code.Services
         {
             using (var context = createContext())
             {
-                var events = GetEventsModel(context).Where(x => x.SavingsAccountNr == savingsAccountNr).ToList().Select(x => x.ToEventModel()).ToList();
+                var events = GetEventsModel(context).Where(x => x.SavingsAccountNr == savingsAccountNr).ToList()
+                    .Select(x => x.ToEventModel()).ToList();
                 return GetAllYearsWithSummaries(events);
             }
         }
@@ -180,6 +204,7 @@ namespace nSavings.Code.Services
                     result[savingsAccountNr] = GetAllYearsWithSummaries(events);
                 }
             }
+
             return result;
         }
 
@@ -201,7 +226,7 @@ namespace nSavings.Code.Services
 
                 customerId = events.First().MainCustomerId;
 
-                endOfYearInterestRate = DbModel.BusinessEvents.ChangeInterestRateBusinessEventManager
+                endOfYearInterestRate = ChangeInterestRateBusinessEventManager
                     .GetPerAccountActiveInterestRates(context)
                     .Where(x => x.TransactionDate.Year <= year && x.SavingsAccountNr == savingsAccountNr)
                     .OrderByDescending(x => x.Id)
@@ -211,7 +236,9 @@ namespace nSavings.Code.Services
                 //NOTE: These this makes no sense but the client wants this to be end of year even on closed accounts so not tied to the business event.
                 iban = context
                     .DatedSavingsAccountStrings
-                    .Where(y => y.SavingsAccountNr == savingsAccountNr && y.Name == DatedSavingsAccountStringCode.WithdrawalIban.ToString() && y.TransactionDate.Year <= year)
+                    .Where(y => y.SavingsAccountNr == savingsAccountNr &&
+                                y.Name == DatedSavingsAccountStringCode.WithdrawalIban.ToString() &&
+                                y.TransactionDate.Year <= year)
                     .OrderByDescending(y => y.BusinessEventId).Select(y => y.Value)
                     .FirstOrDefault();
 
@@ -224,8 +251,6 @@ namespace nSavings.Code.Services
             var contactInfo = cc.FetchCustomerContactInfo(customerId, true, true);
 
             var f = formattingCulture;
-            IBANFi b;
-
             return new PdfRenderContext
             {
                 printDate = clock.Now.ToString("d", f),
@@ -237,7 +262,7 @@ namespace nSavings.Code.Services
                 fullName = $"{contactInfo?.firstName} {contactInfo?.lastName}",
                 savingsAccountNr = savingsAccountNr,
                 summaryDate = new DateTime(year + 1, 1, 1).AddDays(-1).ToString("d", f),
-                withdrawalIban = IBANFi.TryParse(iban, out b) ? b?.GroupsOfFourValue : iban,
+                withdrawalIban = IBANFi.TryParse(iban, out var b) ? b?.GroupsOfFourValue : iban,
                 balanceAmount = (summaryData?.BalanceAfterAmount)?.ToString("C", f),
                 interestAmount = (summaryData?.TotalInterestAmount)?.ToString("C", f),
                 withheldTaxAmount = (summaryData?.WithheldTaxAmount)?.ToString("C", f)
@@ -254,7 +279,9 @@ namespace nSavings.Code.Services
             var renderContext = CreateRenderContext(savingsAccountNr, year, forcedCustomerId);
             if (renderContext == null)
                 return null;
-            var m = JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(renderContext), new ExpandoObjectConverter()) as IDictionary<string, object>;
+            IDictionary<string, object> m = JsonConvert.DeserializeObject<ExpandoObject>(
+                JsonConvert.SerializeObject(renderContext),
+                new ExpandoObjectConverter());
             var dc = createDocumentClient();
             return dc.PdfRenderDirect("savings-yearlysummary", m);
         }

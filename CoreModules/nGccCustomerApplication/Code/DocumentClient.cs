@@ -1,13 +1,6 @@
-﻿using Newtonsoft.Json;
-using NTech.Services.Infrastructure;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using System.Web;
+using NTech.Services.Infrastructure;
 
 namespace nGccCustomerApplication.Code
 {
@@ -30,15 +23,15 @@ namespace nGccCustomerApplication.Code
         {
             return Begin()
                 .PostJson("Archive/Store", new
-                    {
-                        MimeType = mimeType,
-                        FileName = filename,
-                        Base64EncodedFileData = Convert.ToBase64String(fileData)
-                    })
+                {
+                    MimeType = mimeType,
+                    FileName = filename,
+                    Base64EncodedFileData = Convert.ToBase64String(fileData)
+                })
                 .ParseJsonAs<ArchiveStoreResult>()
                 .Key;
         }
-        
+
         public byte[] FetchRawWithFilename(string key, out string contentType, out string filename)
         {
             using (var ms = new MemoryStream())

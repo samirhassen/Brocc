@@ -1,12 +1,14 @@
-﻿using nSavings.DbModel.BusinessEvents;
-using NTech.Legacy.Module.Shared.Infrastructure;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.DbModel;
+using NTech.Core.Savings.Shared.BusinessEvents;
+using NTech.Legacy.Module.Shared.Infrastructure;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiCreateManualPaymentController : NController
@@ -18,11 +20,12 @@ namespace nSavings.Controllers
             public string NoteText { get; set; }
         }
 
-        [Route("Api/Payments/CreateManual")]
-        [HttpPost]
+        [HttpPost, Route("Api/Payments/CreateManual")]
         public ActionResult Create(int? initiatedByUserId, CreateManualPaymentRequest[] requests)
         {
-            if (requests == null || requests.Length == 0 || requests.Any(x => x.Amount <= 0m) || requests.Any(x => string.IsNullOrWhiteSpace(x.NoteText)) || requests.Any(x => !x.BookKeepingDate.HasValue))
+            if (requests == null || requests.Length == 0 || requests.Any(x => x.Amount <= 0m) ||
+                requests.Any(x => string.IsNullOrWhiteSpace(x.NoteText)) ||
+                requests.Any(x => !x.BookKeepingDate.HasValue))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             if (NEnv.IsProduction)
@@ -36,7 +39,8 @@ namespace nSavings.Controllers
 
             using (var context = new SavingsContext())
             {
-                var m = new NewManualIncomingPaymentBatchBusinessEventManager(GetCurrentUserMetadata(), CoreClock.SharedInstance, NEnv.ClientCfgCore);
+                var m = new NewManualIncomingPaymentBatchBusinessEventManager(GetCurrentUserMetadata(),
+                    CoreClock.SharedInstance, NEnv.ClientCfgCore);
                 var payments = requests.Select(x => new NewManualIncomingPaymentBatchBusinessEventManager.ManualPayment
                 {
                     Amount = x.Amount,

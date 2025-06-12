@@ -1,7 +1,7 @@
-﻿using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.IO;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace nSavings.Code
 {
@@ -21,13 +21,16 @@ namespace nSavings.Code
                 zipStream.IsStreamOwner = false;
                 foreach (var (fileName, fileData) in fileNamesAndData)
                 {
-                    var entry = new ZipEntry(fileName);
-                    entry.DateTime = DateTime.Now;
+                    var entry = new ZipEntry(fileName)
+                    {
+                        DateTime = DateTime.Now
+                    };
                     zipStream.PutNextEntry(entry);
                     StreamUtils.Copy(fileData, zipStream, new byte[4096]);
                     zipStream.CloseEntry();
                 }
             }
+
             resultStream.Position = 0;
             return resultStream;
         }

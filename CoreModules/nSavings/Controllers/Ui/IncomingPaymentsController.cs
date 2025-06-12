@@ -1,7 +1,7 @@
-﻿using NTech.Services.Infrastructure;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [NTechAuthorizeSavingsMiddle]
     public class IncomingPaymentsController : NController
@@ -10,7 +10,7 @@ namespace nSavings.Controllers
         [Route("Ui/IncomingPayments/ImportFile")]
         public ActionResult ImportFile()
         {
-            ViewBag.JsonInitialData = this.EncodeInitialData(new
+            ViewBag.JsonInitialData = EncodeInitialData(new
             {
                 getFileDataUrl = Url.Action("GetFileData", "ApiIncomingPayments"),
                 importFileUrl = Url.Action("ImportFile", "ApiIncomingPayments")

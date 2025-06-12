@@ -3,15 +3,15 @@ var app = angular.module('app', ['pascalprecht.translate', 'ngCookies', 'ntech.f
 ntech.angular.setupTranslation(app)
 
 class SavingsAccountApplicationCtr {
-    static $inject = ['$scope', '$http', '$q', '$timeout', '$translate']
+    static readonly $inject = ['$scope', '$http', '$q', '$timeout', '$translate']
 
     apiClient: NTechCustomerPagesApi.ApiClient
-    
+
     constructor(
         $scope: SavingsAccountApplicationNs.ILocalScope,
-        private $http: ng.IHttpService,
-        private $q: ng.IQService,
-        private $timeout: ng.ITimeoutService,
+        private readonly $http: ng.IHttpService,
+        private readonly $q: ng.IQService,
+        private readonly $timeout: ng.ITimeoutService,
         $translate: any
     ) {
         this.apiClient = new NTechCustomerPagesApi.ApiClient(msg => toastr.error(msg), $http, $q)
@@ -21,24 +21,35 @@ class SavingsAccountApplicationCtr {
         $scope.savingsAccountOverviewUrl = initialDataTyped.savingsAccountOverviewUrl
         $scope.isTest = initialDataTyped.isProduction === false
         $scope.loggedInCivicRegNr = initialDataTyped.civicRegNr
+        $scope.fixedRateProducts = initialDataTyped.fixedInterestProducts;
+        $scope.flexInterestRate = initialDataTyped.interestRatePercent;
+        $scope.fixedRateProducts.sort((a, b) => a.termInMonths - b.termInMonths);
+
+        $scope.selectedProduct = $scope.fixedRateProducts[0].id
+        $scope.accountType = initialDataTyped.customerApplicationStatus === "CustomerHasAnActiveAccount" ? 'fixed' : 'flex';
+        $scope.selectProduct = (id: string) => {
+            $scope.selectedProduct = id;
+            $scope.fixedRateProducts = angular.copy($scope.fixedRateProducts);
+        }
 
         $scope.currentLanguage = () => {
             return $translate.use()
         }
 
         let getModeBasedOnStatus = (status: string) => {
-            if (status === 'CustomerIsAMinor') {
-                return 'rejectedminor'
-            } else if (status === 'WaitingForClient') {
-                return 'beingprocessed'
-            } else if (status === 'CustomerHasAnActiveAccount') {
-                return 'hasactiveaccount'
-            } else {
-                return 'application'
+            switch (status) {
+                case 'CustomerIsAMinor':
+                    return 'rejectedminor';
+                case 'WaitingForClient':
+                    return 'beingprocessed';
+                case 'CustomerHasAnActiveAccount':
+                    return 'hasactiveaccount';
+                default:
+                    return 'application';
             }
         }
 
-        let isNullOrWhitespace = (input : any) => {
+        let isNullOrWhitespace = (input: any) => {
             if (typeof input === 'undefined' || input == null) return true;
 
             if (typeof input === 'string') {
@@ -60,7 +71,7 @@ class SavingsAccountApplicationCtr {
             if (isNullOrWhitespace(value))
                 return true
 
-            var i = value.indexOf('@')
+            const i = value.indexOf('@');
             return value.length >= 3 && i > 0 && i < (value.length - 1)
         }
 
@@ -75,10 +86,10 @@ class SavingsAccountApplicationCtr {
         let isExistingCustomer: boolean = false
         let isTrustedInfoEditable: boolean = false
 
-        if ($scope.mode == 'application') {
+        if ($scope.mode == 'application' || $scope.mode == 'hasactiveaccount') {
             $scope.f = {}
             $scope.hasError = (n) => {
-                return $scope.f.applicationform.$submitted && $scope.f.applicationform[n] && $scope.f.applicationform[n].$invalid
+                return $scope.f.applicationform.$submitted && $scope.f.applicationform[n]?.$invalid;
             }
 
             if (initialDataTyped.existingCustomer) {
@@ -97,7 +108,7 @@ class SavingsAccountApplicationCtr {
                 }
                 $scope.applicationEditModel = {}
                 isExistingCustomer = true
-            } else if (initialDataTyped.trustedSourceLookupCustomer && initialDataTyped.trustedSourceLookupCustomer.contact) {
+            } else if (initialDataTyped.trustedSourceLookupCustomer?.contact) {
                 $scope.namesViewModel = {
                     customerFirstName: initialDataTyped.trustedSourceLookupCustomer.contact.customerFirstName,
                     customerLastName: initialDataTyped.trustedSourceLookupCustomer.contact.customerLastName
@@ -117,6 +128,7 @@ class SavingsAccountApplicationCtr {
                 isTrustedInfoEditable = true
             }
         }
+
         $scope.cancel = (evt: Event) => {
             if (evt) {
                 evt.preventDefault()
@@ -126,7 +138,8 @@ class SavingsAccountApplicationCtr {
                 document.location.href = initialDataTyped.cancelUrl
             })
         }
-        $scope.apply = (applicationModel: any, evt: Event) => {
+
+        $scope.apply = (_applicationModel: any, evt: Event) => {
             if (evt) {
                 evt.preventDefault()
             }
@@ -143,7 +156,7 @@ class SavingsAccountApplicationCtr {
                 if (!source)
                     return
                 angular.forEach(source, (v, k) => {
-                    ii.push({ Name: String(k), Value: v })
+                    ii.push({Name: String(k), Value: v})
                 })
             }
 
@@ -160,8 +173,19 @@ class SavingsAccountApplicationCtr {
                 addAllFieldsUsingFieldName(applicationItems, $scope.applicationEditModel)
             }
 
-            var contactInfoLookupResultEncryptionKey = ""
-            if (initialDataTyped && initialDataTyped.trustedSourceLookupCustomer) {
+            switch ($scope.accountType) {
+                case 'fixed':
+                    applicationItems.push({Name: "savingsAccountTypeCode", Value: "FixedInterestAccount"});
+                    applicationItems.push({Name: "fixedInterestProduct", Value: $scope.selectedProduct});
+                    break;
+                case 'flex':
+                default:
+                    applicationItems.push({Name: "savingsAccountTypeCode", Value: "StandardAccount"});
+                    break;
+            }
+
+            let contactInfoLookupResultEncryptionKey = "";
+            if (initialDataTyped?.trustedSourceLookupCustomer) {
                 contactInfoLookupResultEncryptionKey = initialDataTyped.trustedSourceLookupCustomer.contactInfoLookupResultEncryptionKey
             }
             let application = {
@@ -190,9 +214,9 @@ class SavingsAccountApplicationCtr {
                 if (evt) {
                     evt.preventDefault()
                 }
-                var last = localStorage.getItem(SavingsAccountApplicationNs.getTestApplicationStorageKey(isExistingCustomer, isTrustedInfoEditable))
+                const last = localStorage.getItem(SavingsAccountApplicationNs.getTestApplicationStorageKey(isExistingCustomer, isTrustedInfoEditable));
                 if (last) {
-                    var a = JSON.parse(last)
+                    const a = JSON.parse(last);
                     if (a.namesEditModel) {
                         $scope.namesEditModel = a.namesEditModel
                     }
@@ -213,7 +237,6 @@ class SavingsAccountApplicationCtr {
 
 app.controller('savingsAccountApplicationCtr', SavingsAccountApplicationCtr);
 
-
 module SavingsAccountApplicationNs {
     export function getTestApplicationStorageKey(isExistingCustomer: boolean, isTrustedInfoEditable: boolean) {
         let testCacheKeyPrefix: string = (isExistingCustomer ? 'e' : 'n') + (isTrustedInfoEditable ? 'c' : '_')
@@ -221,6 +244,9 @@ module SavingsAccountApplicationNs {
     }
 
     export interface ILocalScope {
+        selectProduct: (id: string) => void;
+        fixedRateProducts: SavingsAccountApplicationNs.FixedRateProductModel[];
+        flexInterestRate: number,
         currentLanguage: () => any
         savingsAccountOverviewUrl: string
         isTest: boolean
@@ -228,6 +254,8 @@ module SavingsAccountApplicationNs {
         isValidIBAN: (value: any) => boolean
         isValidEmail: (value: any) => boolean
         isValidPhoneNr: (value: any) => boolean
+        accountType: string
+        selectedProduct: string
         mode: string
         f: any
         hasError: (value: any) => boolean
@@ -247,14 +275,22 @@ module SavingsAccountApplicationNs {
     export interface IinitialDataTyped {
         isProduction: boolean
         civicRegNr: string
-        interestRatePercent : number
+        interestRatePercent: number,
+        fixedInterestProducts: FixedRateProductModel[],
         existingCustomer: ExistingCustomerModel
-        trustedSourceLookupCustomer : any
-        translation : any
+        trustedSourceLookupCustomer: any
+        translation: any
         customerApplicationStatus: string
         savingsAccountOverviewUrl: string
         cancelUrl: string
         externalApplicationVariables: NTechCustomerPagesApi.ApplicationItem[]
+    }
+
+    export interface FixedRateProductModel {
+        id: string,
+        name: string,
+        interestRatePercent: number,
+        termInMonths: number
     }
 
     export interface ExistingCustomerModel {

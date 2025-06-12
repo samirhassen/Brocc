@@ -6,6 +6,7 @@ using NTech.Core.Customer.Shared.Settings.BankAccount;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Module.Shared.Services;
 using System;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Core.Credit.Shared.Services
 {

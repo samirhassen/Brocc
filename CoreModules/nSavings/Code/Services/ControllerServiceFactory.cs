@@ -1,17 +1,19 @@
-﻿using nSavings.Code.Services.FinnishCustomsAccounts;
+﻿using System;
+using System.Globalization;
+using System.Web.Mvc;
+using nSavings.Code.Services.FinnishCustomsAccounts;
+using nSavings.DbModel;
 using NTech;
 using NTech.Core.Module;
-using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Module.Shared.Services;
 using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.Services;
+using NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts;
 using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
 using NTech.Legacy.Module.Shared.Services;
 using NTech.Services.Infrastructure.NTechWs;
-using System;
-using System.Globalization;
-using System.Web.Mvc;
 
 namespace nSavings.Code.Services
 {
@@ -34,13 +36,15 @@ namespace nSavings.Code.Services
             this.wsUrlService = wsUrlService;
         }
 
-        public EncryptionService GetEncryptionService(INTechCurrentUserMetadata currentUser)
+        public static EncryptionService GetEncryptionService(INTechCurrentUserMetadata currentUser)
         {
             var encryptionKeys = NEnv.EncryptionKeys;
-            return new EncryptionService(encryptionKeys.CurrentKeyName, encryptionKeys.AsDictionary(), CoreClock.SharedInstance, currentUser);
+            return new EncryptionService(encryptionKeys.CurrentKeyName, encryptionKeys.AsDictionary(),
+                CoreClock.SharedInstance, currentUser);
         }
 
-        public KeyValueStoreService KeyValueStore(INTechCurrentUserMetadata user) => new KeyValueStoreService(ContextFactory, CoreClock.SharedInstance, user);
+        public KeyValueStoreService KeyValueStore(INTechCurrentUserMetadata user) =>
+            new KeyValueStoreService(ContextFactory, CoreClock.SharedInstance, user);
 
         public IYearlySummaryService YearlySummary
         {
@@ -55,46 +59,41 @@ namespace nSavings.Code.Services
             }
         }
 
-        public INTechWsUrlService WsUrl
-        {
-            get
-            {
-                return wsUrlService.Value;
-            }
-        }
+        public INTechWsUrlService WsUrl => wsUrlService.Value;
 
-        public IFatcaExportService FatcaExport
-        {
-            get
-            {
-                return new FatcaExportService(clock, this.getUserDisplayNameByUserId, this.urlHelper);
-            }
-        }
+        public IFatcaExportService FatcaExport =>
+            new FatcaExportService(clock, getUserDisplayNameByUserId, urlHelper);
 
-        public ICustomerRelationsMergeService CustomerRelationsMerge
-        {
-            get
-            {
-                return new CustomerRelationsMergeService(
-                    LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry));
-            }
-        }
+        public static ICustomerRelationsMergeService CustomerRelationsMerge =>
+            new CustomerRelationsMergeService(
+                LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance,
+                    NEnv.ServiceRegistry));
 
-        private FinnishCustomsFileFormat CustomsFileFormat(INTechCurrentUserMetadata currentUser) => 
+        private FinnishCustomsFileFormat CustomsFileFormat(INTechCurrentUserMetadata currentUser) =>
             new FinnishCustomsFileFormat(KeyValueStore(currentUser));
 
         public FinnishCustomsAccountsService FinnishCustomsAccounts(INTechCurrentUserMetadata currentUser)
         {
-            string GetArchiveDocumentUrl(string archiveKey) =>
-                archiveKey == null ? null : urlHelper.Action("ArchiveDocument", "ApiArchiveDocument", new { key = archiveKey, setFileDownloadName = true });
-            var customerClient = LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry);
-            var documentClient = LegacyServiceClientFactory.CreateDocumentClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry);
+            var customerClient =
+                LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance,
+                    NEnv.ServiceRegistry);
+            var documentClient =
+                LegacyServiceClientFactory.CreateDocumentClient(LegacyHttpServiceSystemUser.SharedInstance,
+                    NEnv.ServiceRegistry);
             var settings = new Lazy<NTechSimpleSettingsCore>(() => NEnv.FinnishCustomsAccountsSettings);
-            var ws = new FinnishCustomsAccountsWebservice(settings, !NEnv.IsProduction, FinnishCustomsMigrationManagerLegacy.SharedInstance);
+            var ws = new FinnishCustomsAccountsWebservice(settings, !NEnv.IsProduction,
+                FinnishCustomsMigrationManagerLegacy.SharedInstance);
             return new FinnishCustomsAccountsService(
                 CoreClock.SharedInstance, getUserDisplayNameByUserId, GetArchiveDocumentUrl,
                 settings, CustomsFileFormat(currentUser), customerClient, ws, SerilogLoggingService.SharedInstance,
-                NEnv.ClientCfgCore, documentClient, FinnishCustomsMigrationManagerLegacy.SharedInstance, ContextFactory);
+                NEnv.ClientCfgCore, documentClient, FinnishCustomsMigrationManagerLegacy.SharedInstance,
+                ContextFactory);
+
+            string GetArchiveDocumentUrl(string archiveKey) =>
+                archiveKey == null
+                    ? null
+                    : urlHelper.Action("ArchiveDocument", "ApiArchiveDocument",
+                        new { key = archiveKey, setFileDownloadName = true });
         }
 
         public SavingsContextFactory ContextFactory => new SavingsContextFactory(

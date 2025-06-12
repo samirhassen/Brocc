@@ -1,15 +1,19 @@
-﻿using NTech.Core.Module.Shared.Clients;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using nSavings.DbModel;
+using NTech.Core.Module.Shared.Clients;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Core.Savings.Shared.Services;
 
 namespace nSavings.Code.Services
 {
     public class CustomerRelationsMergeService : ICustomerRelationsMergeService
     {
-        private readonly NTech.Core.Module.Shared.Clients.ICustomerClient customerClient;
+        private readonly ICustomerClient customerClient;
 
-        public CustomerRelationsMergeService(NTech.Core.Module.Shared.Clients.ICustomerClient customerClient)
+        public CustomerRelationsMergeService(ICustomerClient customerClient)
         {
             this.customerClient = customerClient;
         }
@@ -26,10 +30,10 @@ namespace nSavings.Code.Services
             }
 
             var nonClosedStatusCodes = new List<string>
-                {
-                    SavingsAccountStatusCode.Active.ToString(),
-                    SavingsAccountStatusCode.FrozenBeforeActive.ToString()
-                };
+            {
+                SavingsAccountStatusCode.Active.ToString(),
+                SavingsAccountStatusCode.FrozenBeforeActive.ToString()
+            };
 
             foreach (var savingsAccountNrGroup in savingsAccountNrs.SplitIntoGroupsOfN(500))
             {
@@ -57,7 +61,8 @@ namespace nSavings.Code.Services
                         {
                             CustomerId = x.MainCustomerId,
                             RelationId = x.SavingsAccountNr,
-                            RelationType = $"SavingsAccount_{(x.AccountTypeCode ?? SavingsAccountTypeCode.StandardAccount.ToString())}",
+                            RelationType =
+                                $"SavingsAccount_{x.AccountTypeCode.ToString()}",
                             StartDate = x.StartDate,
                             EndDate = nonClosedStatusCodes.Contains(x.Status) ? null : x.StatusDate
                         })

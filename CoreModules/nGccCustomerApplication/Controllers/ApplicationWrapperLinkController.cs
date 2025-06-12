@@ -15,11 +15,10 @@ using System.Threading;
 using System.Web;
 using System.Text;
 using Serilog;
-
+using IdentityModel.Client;
 
 namespace nGccCustomerApplication.Controllers
 {
-    [CustomerPagesAuthorize(AllowEmptyRole = true)]
     public class ApplicationWrapperLinkController : NController
     {
         [Route("application-wrapper-link")]

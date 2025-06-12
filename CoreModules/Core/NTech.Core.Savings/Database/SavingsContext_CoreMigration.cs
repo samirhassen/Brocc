@@ -1,5 +1,6 @@
-﻿using nSavings;
-using NTech.Core.Savings.Shared.Database;
+﻿using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace NTech.Core.Savings.Database
 {

@@ -1,17 +1,22 @@
-﻿using NTech.Banking.BankAccounts.Fi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.DbModel.BusinessEvents
 {
     public class ChangeWithdrawalAccountBusinessEventManager : BusinessEventManagerBase
     {
-        public ChangeWithdrawalAccountBusinessEventManager(int userId, string informationMetadata) : base(userId, informationMetadata)
+        public ChangeWithdrawalAccountBusinessEventManager(int userId, string informationMetadata) : base(userId,
+            informationMetadata)
         {
         }
 
-        public bool TryInitiateChangeWithdrawalIbanFi(string savingsAccountNr, IBANFi withdrawalIban, string powerOfAttorneyArchiveDocumentKey, out string failedMessage, out SavingsAccountWithdrawalAccountChange result)
+        public bool TryInitiateChangeWithdrawalIbanFi(string savingsAccountNr, IBANFi withdrawalIban,
+            string powerOfAttorneyArchiveDocumentKey, out string failedMessage,
+            out SavingsAccountWithdrawalAccountChange result)
         {
             if (withdrawalIban == null)
             {
@@ -19,12 +24,15 @@ namespace nSavings.DbModel.BusinessEvents
                 failedMessage = "Missing withdrawalIban";
                 return false;
             }
+
             using (var context = new SavingsContext())
             {
-                if (context.SavingsAccountWithdrawalAccountChanges.Any(x => x.SavingsAccountNr == savingsAccountNr && !x.CommitedOrCancelledByEventId.HasValue))
+                if (context.SavingsAccountWithdrawalAccountChanges.Any(x =>
+                        x.SavingsAccountNr == savingsAccountNr && !x.CommitedOrCancelledByEventId.HasValue))
                 {
                     result = null;
-                    failedMessage = "There is already a pending withdrawal account change on this account. Commit or cancel that first.";
+                    failedMessage =
+                        "There is already a pending withdrawal account change on this account. Commit or cancel that first.";
                     return false;
                 }
 
@@ -37,10 +45,12 @@ namespace nSavings.DbModel.BusinessEvents
                     return false;
                 }
 
-                if (h.Status != SavingsAccountStatusCode.Active.ToString() && h.Status != SavingsAccountStatusCode.FrozenBeforeActive.ToString())
+                if (h.Status != SavingsAccountStatusCode.Active.ToString() &&
+                    h.Status != SavingsAccountStatusCode.FrozenBeforeActive.ToString())
                 {
                     result = null;
-                    failedMessage = "Account is not Active or FrozenBeforeActive"; //Allow frozen to make changing the account a possible fraud mitigation measure before allowing access to the account
+                    failedMessage =
+                        "Account is not Active or FrozenBeforeActive"; //Allow frozen to make changing the account a possible fraud mitigation measure before allowing access to the account
                     return false;
                 }
 
@@ -56,7 +66,11 @@ namespace nSavings.DbModel.BusinessEvents
                 FillInInfrastructureFields(result);
                 context.SavingsAccountWithdrawalAccountChanges.Add(result);
 
-                AddComment($"External account change initiated.", BusinessEventType.InitiateWithdrawalAccountChange, context, savingsAccount: h, attachmentArchiveKeys: powerOfAttorneyArchiveDocumentKey == null ? null : new List<string> { powerOfAttorneyArchiveDocumentKey });
+                AddComment($"External account change initiated.", BusinessEventType.InitiateWithdrawalAccountChange,
+                    context, savingsAccount: h,
+                    attachmentArchiveKeys: powerOfAttorneyArchiveDocumentKey == null
+                        ? null
+                        : new List<string> { powerOfAttorneyArchiveDocumentKey });
 
                 context.SaveChanges();
 
@@ -65,7 +79,8 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        public bool TryCommitChangeWithdrawalIbanFi(int savingsAccountWithdrawalAccountChangeId, out string failedMessage, out SavingsAccountWithdrawalAccountChange result)
+        public bool TryCommitChangeWithdrawalIbanFi(int savingsAccountWithdrawalAccountChangeId,
+            out string failedMessage, out SavingsAccountWithdrawalAccountChange result)
         {
             using (var context = new SavingsContext())
             {
@@ -90,25 +105,33 @@ namespace nSavings.DbModel.BusinessEvents
 
                 var h = change.SavingsAccount;
 
-                if (h.Status != SavingsAccountStatusCode.Active.ToString() && h.Status != SavingsAccountStatusCode.FrozenBeforeActive.ToString())
+                if (h.Status != SavingsAccountStatusCode.Active.ToString() &&
+                    h.Status != SavingsAccountStatusCode.FrozenBeforeActive.ToString())
                 {
                     result = null;
-                    failedMessage = "Account is not Active or FrozenBeforeActive"; //Allow frozen to make changing the account a possible fraud mitigation measure before allowing access to the account
+                    failedMessage =
+                        "Account is not Active or FrozenBeforeActive"; //Allow frozen to make changing the account a possible fraud mitigation measure before allowing access to the account
                     return false;
                 }
 
                 var evt = AddBusinessEvent(BusinessEventType.WithdrawalAccountChange, context);
 
-                AddDatedSavingsAccountString(DatedSavingsAccountStringCode.WithdrawalIban.ToString(), change.NewWithdrawalIban, h, evt, context);
+                AddDatedSavingsAccountString(DatedSavingsAccountStringCode.WithdrawalIban.ToString(),
+                    change.NewWithdrawalIban, h, evt, context);
 
                 change.CommitedOrCancelledByEvent = evt;
 
                 if (!string.IsNullOrWhiteSpace(change.PowerOfAttorneyDocumentArchiveKey))
                 {
-                    AddSavingsAccountDocument(SavingsAccountDocumentTypeCode.WithdrawalAccountChangeAgreement, change.PowerOfAttorneyDocumentArchiveKey, evt, context, savingsAccount: h);
+                    AddSavingsAccountDocument(SavingsAccountDocumentTypeCode.WithdrawalAccountChangeAgreement,
+                        change.PowerOfAttorneyDocumentArchiveKey, evt, context, savingsAccount: h);
                 }
 
-                AddComment($"External account changed.", BusinessEventType.WithdrawalAccountChange, context, savingsAccount: h, attachmentArchiveKeys: change.PowerOfAttorneyDocumentArchiveKey == null ? null : new List<string> { change.PowerOfAttorneyDocumentArchiveKey });
+                AddComment($"External account changed.", BusinessEventType.WithdrawalAccountChange, context,
+                    savingsAccount: h,
+                    attachmentArchiveKeys: change.PowerOfAttorneyDocumentArchiveKey == null
+                        ? null
+                        : new List<string> { change.PowerOfAttorneyDocumentArchiveKey });
 
                 context.SaveChanges();
 
@@ -119,7 +142,8 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        public bool TryCancelChangeWithdrawalIbanFi(int savingsAccountWithdrawalAccountChangeId, out string failedMessage, out SavingsAccountWithdrawalAccountChange result)
+        public bool TryCancelChangeWithdrawalIbanFi(int savingsAccountWithdrawalAccountChangeId,
+            out string failedMessage, out SavingsAccountWithdrawalAccountChange result)
         {
             using (var context = new SavingsContext())
             {
@@ -148,7 +172,8 @@ namespace nSavings.DbModel.BusinessEvents
 
                 change.CommitedOrCancelledByEvent = evt;
 
-                AddComment($"External account change cancelled.", BusinessEventType.CancelWithdrawalAccountChange, context, savingsAccount: h);
+                AddComment($"External account change cancelled.", BusinessEventType.CancelWithdrawalAccountChange,
+                    context, savingsAccount: h);
 
                 context.SaveChanges();
 
@@ -184,52 +209,63 @@ namespace nSavings.DbModel.BusinessEvents
         public static IQueryable<AccountChangeHistoryModel> GetWithdrawalAccountHistoryQuery(SavingsContext context)
         {
             return context.SavingsAccountHeaders.Select(x => new
-            {
-                Initial = new AccountChangeHistoryModel
                 {
-                    IsInitial = true,
-                    PendingChangeId = new int?(),
-                    SavingsAccountNr = x.SavingsAccountNr,
-                    InitiatedBusinessEventId = x.CreatedByBusinessEventId,
-                    InitiatedBusinessEventType = x.CreatedByEvent.EventType,
-                    InitiatedByUserId = x.CreatedByEvent.ChangedById,
-                    InitiatedTransactionDate = x.CreatedByEvent.TransactionDate,
-                    CommittedOrCancelledByUserId = x.CreatedByEvent.ChangedById,
-                    CommittedOrCancelledDate = x.CreatedByEvent.TransactionDate,
-                    IsPending = false,
-                    IsCancelled = false,
-                    IsCommited = true,
-                    WithdrawalAccount = x
-                        .DatedStrings
-                        .Where(y => y.Name == DatedSavingsAccountStringCode.WithdrawalIban.ToString() && y.BusinessEventId == x.CreatedByBusinessEventId)
-                        .Select(y => y.Value)
-                        .FirstOrDefault(),
-                    PowerOfAttorneyDocumentArchiveKey = x
-                        .DatedStrings
-                        .Where(y => y.Name == DatedSavingsAccountStringCode.SignedInitialAgreementArchiveKey.ToString() && y.BusinessEventId == x.CreatedByBusinessEventId)
-                        .Select(y => y.Value)
-                        .FirstOrDefault(),
-                },
-                Changes = x.SavingsAccountWithdrawalAccountChanges.Select(y => new AccountChangeHistoryModel
-                {
-                    IsInitial = false,
-                    PendingChangeId = !y.CommitedOrCancelledByEventId.HasValue ? y.Id : new int?(),
-                    SavingsAccountNr = x.SavingsAccountNr,
-                    InitiatedBusinessEventId = y.InitiatedByBusinessEventId,
-                    InitiatedBusinessEventType = y.InitiatedByEvent.EventType,
-                    InitiatedByUserId = y.InitiatedByEvent.ChangedById,
-                    InitiatedTransactionDate = y.InitiatedByEvent.TransactionDate,
-                    CommittedOrCancelledByUserId = y.CommitedOrCancelledByEventId.HasValue ? (int?)y.CommitedOrCancelledByEvent.ChangedById : null,
-                    CommittedOrCancelledDate = y.CommitedOrCancelledByEventId.HasValue ? (DateTime?)y.CommitedOrCancelledByEvent.TransactionDate : null,
-                    IsPending = !y.CommitedOrCancelledByEventId.HasValue,
-                    IsCancelled = y.CommitedOrCancelledByEventId.HasValue && y.CommitedOrCancelledByEvent.EventType != BusinessEventType.WithdrawalAccountChange.ToString(),
-                    IsCommited = y.CommitedOrCancelledByEventId.HasValue && y.CommitedOrCancelledByEvent.EventType == BusinessEventType.WithdrawalAccountChange.ToString(),
-                    WithdrawalAccount = y.NewWithdrawalIban,
-                    PowerOfAttorneyDocumentArchiveKey = y.PowerOfAttorneyDocumentArchiveKey
+                    Initial = new AccountChangeHistoryModel
+                    {
+                        IsInitial = true,
+                        PendingChangeId = null,
+                        SavingsAccountNr = x.SavingsAccountNr,
+                        InitiatedBusinessEventId = x.CreatedByBusinessEventId,
+                        InitiatedBusinessEventType = x.CreatedByEvent.EventType,
+                        InitiatedByUserId = x.CreatedByEvent.ChangedById,
+                        InitiatedTransactionDate = x.CreatedByEvent.TransactionDate,
+                        CommittedOrCancelledByUserId = x.CreatedByEvent.ChangedById,
+                        CommittedOrCancelledDate = x.CreatedByEvent.TransactionDate,
+                        IsPending = false,
+                        IsCancelled = false,
+                        IsCommited = true,
+                        WithdrawalAccount = x
+                            .DatedStrings
+                            .Where(y => y.Name == DatedSavingsAccountStringCode.WithdrawalIban.ToString() &&
+                                        y.BusinessEventId == x.CreatedByBusinessEventId)
+                            .Select(y => y.Value)
+                            .FirstOrDefault(),
+                        PowerOfAttorneyDocumentArchiveKey = x
+                            .DatedStrings
+                            .Where(y =>
+                                y.Name == DatedSavingsAccountStringCode.SignedInitialAgreementArchiveKey.ToString() &&
+                                y.BusinessEventId == x.CreatedByBusinessEventId)
+                            .Select(y => y.Value)
+                            .FirstOrDefault(),
+                    },
+                    Changes = x.SavingsAccountWithdrawalAccountChanges.Select(y => new AccountChangeHistoryModel
+                    {
+                        IsInitial = false,
+                        PendingChangeId = !y.CommitedOrCancelledByEventId.HasValue ? y.Id : new int?(),
+                        SavingsAccountNr = x.SavingsAccountNr,
+                        InitiatedBusinessEventId = y.InitiatedByBusinessEventId,
+                        InitiatedBusinessEventType = y.InitiatedByEvent.EventType,
+                        InitiatedByUserId = y.InitiatedByEvent.ChangedById,
+                        InitiatedTransactionDate = y.InitiatedByEvent.TransactionDate,
+                        CommittedOrCancelledByUserId = y.CommitedOrCancelledByEventId.HasValue
+                            ? (int?)y.CommitedOrCancelledByEvent.ChangedById
+                            : null,
+                        CommittedOrCancelledDate = y.CommitedOrCancelledByEventId.HasValue
+                            ? (DateTime?)y.CommitedOrCancelledByEvent.TransactionDate
+                            : null,
+                        IsPending = !y.CommitedOrCancelledByEventId.HasValue,
+                        IsCancelled = y.CommitedOrCancelledByEventId.HasValue &&
+                                      y.CommitedOrCancelledByEvent.EventType !=
+                                      BusinessEventType.WithdrawalAccountChange.ToString(),
+                        IsCommited = y.CommitedOrCancelledByEventId.HasValue &&
+                                     y.CommitedOrCancelledByEvent.EventType ==
+                                     BusinessEventType.WithdrawalAccountChange.ToString(),
+                        WithdrawalAccount = y.NewWithdrawalIban,
+                        PowerOfAttorneyDocumentArchiveKey = y.PowerOfAttorneyDocumentArchiveKey
+                    })
                 })
-            })
-            .SelectMany(x => x.Changes.Concat(new[] { x.Initial }))
-            .Where(x => x.WithdrawalAccount != null);
+                .SelectMany(x => x.Changes.Concat(new[] { x.Initial }))
+                .Where(x => x.WithdrawalAccount != null);
         }
     }
 }

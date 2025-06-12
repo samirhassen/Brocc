@@ -1,9 +1,9 @@
-﻿using nSavings.Code;
+﻿using System.Web.Mvc;
+using nSavings.Code;
 using nSavings.WebserviceMethods.Reports;
 using NTech.Services.Infrastructure;
-using System.Web.Mvc;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [NTechAuthorizeSavingsHigh]
     public class ReportsController : NController
@@ -11,7 +11,7 @@ namespace nSavings.Controllers
         [Route("Ui/Reports")]
         public ActionResult Index()
         {
-            ViewBag.JsonInitialData = this.EncodeInitialData(new
+            ViewBag.JsonInitialData = EncodeInitialData(new
             {
                 reportUrls = new
                 {
@@ -21,7 +21,9 @@ namespace nSavings.Controllers
                     dailyOutgoingPayments = Url.Action("Get", "ApiReportsDailyOutgoingPayments"),
                     providerFeedback = Url.Action("GetProviderFeedback", "ApiReportsProviderFeedback"),
                     unplacedBalance = Service.WsUrl.CreateGetUrl("Reports/GetUnplacedBalance"),
-                    amlReportingAidFi = AmlReportingAidReportMethod.IsReportEnabled ? Service.WsUrl.CreateGetUrl("Reports/GetAmlReportingAidLegacy") : null
+                    amlReportingAidFi = AmlReportingAidReportMethod.IsReportEnabled
+                        ? Service.WsUrl.CreateGetUrl("Reports/GetAmlReportingAidLegacy")
+                        : null
                 },
                 lastDwUpdateAgeInDays = new SchedulerClient().FetchLastSuccessAgeInDaysByTag("UpdateDataWarehouse"),
                 today = Clock.Today

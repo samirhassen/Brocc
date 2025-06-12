@@ -1,14 +1,17 @@
-﻿using NTech.Core.Module.Shared.Services;
+﻿using System;
+using System.Collections.Generic;
+using CommonMark;
+using NTech.Core.Module.Shared.Services;
 using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
 using NTech.Services.Infrastructure.Email;
-using System;
-using System.Collections.Generic;
+using Nustache.Core;
 
 namespace nCredit.Code.Email
 {
     public static class EmailServiceFactory
     {
-        private static Lazy<INTechEmailServiceFactory> sharedInstance = new Lazy<INTechEmailServiceFactory>(() => new EmailServiceFactoryImpl());
+        private static Lazy<INTechEmailServiceFactory> sharedInstance =
+            new Lazy<INTechEmailServiceFactory>(() => new EmailServiceFactoryImpl());
 
         public static INTechEmailService CreateEmailService() => SharedInstance.CreateEmailService();
 
@@ -21,7 +24,7 @@ namespace nCredit.Code.Email
             public INTechEmailService CreateEmailService()
             {
                 var renderer = new EmailRenderer(
-                    x => CommonMark.CommonMarkConverter.Convert(x),
+                    x => CommonMarkConverter.Convert(x),
                     ReplaceMustacheMines);
                 var factory = new NTechEmailServiceFactory(renderer);
                 return factory.CreateEmailService();
@@ -38,7 +41,7 @@ namespace nCredit.Code.Email
 
                 mines = service.ExtendContextWithCommonContext(mines);
 
-                return Nustache.Core.Render.StringToString(template, mines);
+                return Render.StringToString(template, mines);
             }
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace nSavings.Code
+namespace NTech.Core.Savings.Shared.Services.Utilities
 {
     public interface IOcrNumber
     {

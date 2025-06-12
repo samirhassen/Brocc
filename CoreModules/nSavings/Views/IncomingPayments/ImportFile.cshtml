@@ -1,4 +1,5 @@
-﻿@using NWebsec.Mvc.HttpHeaders.Csp
+﻿@using nSavings.Code
+@using NWebsec.Mvc.HttpHeaders.Csp
 @{
     ViewBag.Title = "Savings - Incoming Payments - Import File";
     ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" id=\"importfileApp\" ng-cloak";
@@ -7,13 +8,14 @@
 
 @section Scripts {
     <script @Html.CspScriptNonce()>
-        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+        const initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'));
     </script>
     @Scripts.Render("~/Content/js/bundle-incomingpayments-importfile")
 }
 
 <div class="pt-1 pb-2">
-    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span
+                class="glyphicon glyphicon-arrow-left"></span></a></div>
     <h1 class="adjusted">Savings: Import incoming payment file</h1>
 </div>
 
@@ -26,14 +28,16 @@
                     <div class="row">
                         <div class="col-xs-7">
                             <select name="fileformat" ng-model="fileFormatName" class="form-control">
-                                <option value="camt.054.001.02">BankToCustomerDebitCreditNotificationV02 (camt.054.001.02)</option>
+                                <option value="camt.054.001.02">BankToCustomerDebitCreditNotificationV02
+                                    (camt.054.001.02)
+                                </option>
                             </select>
                         </div>
                         <div class="col-xs-5" style="margin-top: 7px;">
                             <span class="n-main-btn n-blue-btn" ng-click="selectFile($event)">
                                 Select file <span class="glyphicon glyphicon-paperclip"></span>
                             </span>
-                            <input type="file" id="file" name="file" style="display:none" />
+                            <input type="file" id="file" name="file" style="display:none"/>
                         </div>
                     </div>
                 </div>
@@ -75,19 +79,30 @@
             </div>
             <div class="pt-3">
                 <div ng-show="candidateFile.data.hasBeenImported" class="text-center pb-2">
-                    <label class="col-xs-12">Warning! This file has been imported before. Allow it to be imported again?</label>
-                    <input class="col-xs-12" type="checkbox" ng-model="forceImport" name="forceImport" ng-init="forceImport=false" />
+                    <label class="col-xs-12">Warning! This file has been imported before. Allow it to be imported
+                        again?</label>
+                    <input class="col-xs-12" type="checkbox" ng-model="forceImport" name="forceImport"
+                           ng-init="forceImport=false"/>
                 </div>
                 <div ng-show="candidateFile.data.hasUnexpectedIbans" class="text-center pb-2">
-                    <label class="col-xs-12">Warning! This file has unexpected accounts. Allow it to be imported anyway?</label>
-                    <input class="col-xs-12" type="checkbox" ng-model="forceImportIban" name="forceImportIban" ng-init="forceImportIban=false" />
+                    <label class="col-xs-12">Warning! This file has unexpected accounts. Allow it to be imported
+                        anyway?</label>
+                    <input class="col-xs-12" type="checkbox" ng-model="forceImportIban" name="forceImportIban"
+                           ng-init="forceImportIban=false"/>
                 </div>
                 <div ng-show="candidateFile.data.outgoingPayments" class="text-center pb-2">
-                    <label class="col-xs-12">Warning! This file has {{candidateFile.data.outgoingPayments.nrOfSkippedOutgoingPayments}} outgoing payments totalling {{candidateFile.data.outgoingPayments.amountOfSkippedOutgoingPayments | currency}}. Allow it to be imported skipping the outgoing payments?</label>
-                    <input class="col-xs-12" type="checkbox" ng-model="skipOutgoingPayments" name="skipOutgoingPayments" ng-init="skipOutgoingPayments=false" />
+                    <label class="col-xs-12">Warning! This file has
+                        {{candidateFile.data.outgoingPayments.nrOfSkippedOutgoingPayments}} outgoing payments totalling
+                        {{candidateFile.data.outgoingPayments.amountOfSkippedOutgoingPayments | currency}}. Allow it to
+                        be imported skipping the outgoing payments?</label>
+                    <input class="col-xs-12" type="checkbox" ng-model="skipOutgoingPayments" name="skipOutgoingPayments"
+                           ng-init="skipOutgoingPayments=false"/>
                 </div>
                 <div class="text-center">
-                    <button class="n-main-btn n-green-btn" ng-click="importFile($event)" ng-disabled="(candidateFile.data.hasBeenImported && !forceImport) || (candidateFile.data.hasUnexpectedIbans && !forceImportIban) || (candidateFile.data.outgoingPayments && !skipOutgoingPayments) ">Import</button>
+                    <button class="n-main-btn n-green-btn" ng-click="importFile($event)"
+                            ng-disabled="(candidateFile.data.hasBeenImported && !forceImport) || (candidateFile.data.hasUnexpectedIbans && !forceImportIban) || (candidateFile.data.outgoingPayments && !skipOutgoingPayments) ">
+                        Import
+                    </button>
                 </div>
             </div>
         </div>

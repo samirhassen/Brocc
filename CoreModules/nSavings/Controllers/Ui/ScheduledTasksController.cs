@@ -1,8 +1,11 @@
-﻿using NTech.Services.Infrastructure;
+﻿using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.Controllers.Api;
+using nSavings.DbModel;
+using NTech.Services.Infrastructure;
 using NTech.Services.Infrastructure.Email;
-using System.Web.Mvc;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [NTechAuthorizeSavingsHigh]
     public class ScheduledTasksController : NController
@@ -24,7 +27,8 @@ namespace nSavings.Controllers
             c.ViewBag.IsTreasuryAmlExportEnabled = NEnv.ClientCfg.IsFeatureEnabled("ntech.feature.Treasuryaml.v1");
             c.ViewBag.TreasuryAmlExportUrl = c.Url.Action("TreasuryAmlExport", "ScheduledTasks", new { });
 
-            c.ViewBag.IsCustomsAccountsExportEnabled = NEnv.ClientCfg.IsFeatureEnabled("ntech.feature.savingsCustomsAccountsExport.v1");
+            c.ViewBag.IsCustomsAccountsExportEnabled =
+                NEnv.ClientCfg.IsFeatureEnabled("ntech.feature.savingsCustomsAccountsExport.v1");
             c.ViewBag.CustomsAccountsExportUrl = c.Url.Action("CustomsAccountsExport", "ScheduledTasks", new { });
         }
 
@@ -36,7 +40,7 @@ namespace nSavings.Controllers
 
             using (var context = new SavingsContext())
             {
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     pending = new
                     {
@@ -59,7 +63,7 @@ namespace nSavings.Controllers
 
             using (var context = new SavingsContext())
             {
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     exportProfileName = "Cm1",
                     today = Clock.Today.ToString("yyyy-MM-dd"),
@@ -77,7 +81,7 @@ namespace nSavings.Controllers
 
             using (var context = new SavingsContext())
             {
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     exportProfileName = "Treasury",
                     today = Clock.Today.ToString("yyyy-MM-dd"),
@@ -93,7 +97,7 @@ namespace nSavings.Controllers
         {
             SetMenu(this, "CustomsAccountsExport");
 
-            ViewBag.JsonInitialData = this.EncodeInitialData(new
+            ViewBag.JsonInitialData = EncodeInitialData(new
             {
                 today = Clock.Today.ToString("yyyy-MM-dd"),
                 skipDeliver = NEnv.FinnishCustomsAccountsSettings.OptBool("skipDeliver")
@@ -108,7 +112,7 @@ namespace nSavings.Controllers
 
             using (var context = new SavingsContext())
             {
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     exportProfileName = NEnv.TrapetsAmlExportProfileName,
                     createExportUrl = Url.Action("CreateExport", "ApiTrapetsAmlExport"),
@@ -125,7 +129,7 @@ namespace nSavings.Controllers
 
             using (var context = new SavingsContext())
             {
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     exportProfileName = NEnv.FatcaFileExportProfileName,
                     today = Clock.Today
@@ -147,10 +151,11 @@ namespace nSavings.Controllers
 
             using (var context = new SavingsContext())
             {
-                var activeResult = ApiDailyKycScreenController.GetActiveCustomerIdsAndAlreadyScreenedCount(context, screenDate);
+                var activeResult =
+                    ApiDailyKycScreenController.GetActiveCustomerIdsAndAlreadyScreenedCount(context, screenDate);
 
                 ViewBag.ShowTestEmails = !NEnv.IsProduction && NTechEmailServiceFactory.HasEmailProvider;
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     pending = new
                     {

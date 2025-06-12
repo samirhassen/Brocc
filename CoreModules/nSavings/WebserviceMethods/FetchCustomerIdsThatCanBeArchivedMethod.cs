@@ -1,7 +1,8 @@
-﻿using NTech.Services.Infrastructure.NTechWs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using nSavings.DbModel;
+using NTech.Services.Infrastructure.NTechWs;
 
 namespace nSavings.WebserviceMethods
 {
@@ -11,7 +12,8 @@ namespace nSavings.WebserviceMethods
     /// 
     /// Only the ones that all modules think can be archived will be archived.
     /// </summary>
-    public class FetchCustomerIdsThatCanBeArchivedMethod : TypedWebserviceMethod<FetchCustomerIdsThatCanBeArchivedMethod.Request, FetchCustomerIdsThatCanBeArchivedMethod.Response>
+    public class FetchCustomerIdsThatCanBeArchivedMethod : TypedWebserviceMethod<
+        FetchCustomerIdsThatCanBeArchivedMethod.Request, FetchCustomerIdsThatCanBeArchivedMethod.Response>
     {
         public override string Path => "Savings/Fetch-CustomerIds-That-Can-Be-Archived";
 
@@ -24,7 +26,9 @@ namespace nSavings.WebserviceMethods
                 var candidateCustomerIds = request.CandidateCustomerIds.ToHashSet();
 
                 //We veto any customer that we have ever seen. This is likely to be relaxed as the archiving feature is built out.
-                var accountMainCustomerIds = context.SavingsAccountHeaders.Where(x => candidateCustomerIds.Contains(x.MainCustomerId)).Select(x => x.MainCustomerId).ToHashSet();
+                var accountMainCustomerIds = context.SavingsAccountHeaders
+                    .Where(x => candidateCustomerIds.Contains(x.MainCustomerId)).Select(x => x.MainCustomerId)
+                    .ToHashSet();
                 candidateCustomerIds.ExceptWith(accountMainCustomerIds);
 
                 return new Response
@@ -41,8 +45,7 @@ namespace nSavings.WebserviceMethods
 
         public class Request
         {
-            [Required]
-            public List<int> CandidateCustomerIds { get; set; }
+            [Required] public List<int> CandidateCustomerIds { get; set; }
         }
     }
 }

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NTech.UnitTests</RootNamespace>
     <AssemblyName>NTech.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -217,12 +217,6 @@
     <Compile Include="Credit\SatExportTests.cs" />
     <Compile Include="FewItemsCacheTests.cs" />
     <Compile Include="Fraud\StandardFraudControlEngineTests.cs" />
-    <Compile Include="Mortgageloans\Actual360_Interest_Annuity_Compensation.cs" />
-    <Compile Include="Mortgageloans\AmortizationBasisTests.cs" />
-    <Compile Include="Mortgageloans\MortageLoanInterestRateScenarios.cs" />
-    <Compile Include="Mortgageloans\MortgageLoanAmortizationTests.cs" />
-    <Compile Include="Mortgageloans\PerLoanDueDateNotificationTests.cs" />
-    <Compile Include="Mortgageloans\ScoringRuleTestBase.cs" />
     <Compile Include="NTechFormattingTests.cs" />
     <Compile Include="CustomerCheckStatusHandlerTests.cs" />
     <Compile Include="EInvoiceFi\EInvoiceFiFtpTests.cs" />
@@ -245,7 +239,6 @@
     <Compile Include="PartialModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportingPercentageTests.cs" />
-    <Compile Include="Mortgageloans\RseKonsumenternasTests.cs" />
     <Compile Include="SatFiParserTests.cs" />
     <Compile Include="SatFiCreditReportParserTests.cs" />
     <Compile Include="Savings\SavingsTests.cs" />
@@ -266,9 +259,7 @@
     <Compile Include="XmlDiffHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
+    <None Include=".editorconfig" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -326,6 +317,14 @@
     <ProjectReference Include="..\nPreCredit\nPreCredit.csproj">
       <Project>{1672852c-264e-4fd1-955c-b7d700f77517}</Project>
       <Name>nPreCredit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nSavings\nSavings.csproj">
+      <Project>{19EF2C91-E5C8-4EDA-9B16-4B61BE9A47DF}</Project>
+      <Name>nSavings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nScheduler\nScheduler.csproj">
+      <Project>{a3d6721b-d08e-4680-98cf-d158b2445fd2}</Project>
+      <Name>nScheduler</Name>
     </ProjectReference>
     <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
       <Project>{cbdcff22-e5de-4e52-9e4b-5e79f781f962}</Project>

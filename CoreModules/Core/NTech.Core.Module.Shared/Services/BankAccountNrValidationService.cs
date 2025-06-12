@@ -5,6 +5,7 @@ using NTech.Banking.Conversion;
 using NTech.Core.Module.Shared.Infrastructure;
 using System;
 using System.Collections.Generic;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Core.Module.Shared.Services
 {

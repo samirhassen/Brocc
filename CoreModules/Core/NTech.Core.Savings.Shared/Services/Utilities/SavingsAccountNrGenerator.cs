@@ -1,28 +1,29 @@
-﻿using NTech.Core.Savings.Shared.Database;
-using System;
+﻿using System;
 using System.Linq;
+using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings.Code
+namespace NTech.Core.Savings.Shared.Services.Utilities
 {
     public class SavingsAccountNrGenerator
     {
-        private readonly SavingsContextFactory contextFactory;
-        private Lazy<string> savingsAccountNrPrefix;
+        private readonly SavingsContextFactory _contextFactory;
+        private readonly Lazy<string> _savingsAccountNrPrefix;
 
         public SavingsAccountNrGenerator(SavingsContextFactory contextFactory)
         {
-            this.contextFactory = contextFactory;
-            this.savingsAccountNrPrefix = new Lazy<string>(() => "S");
+            _contextFactory = contextFactory;
+            _savingsAccountNrPrefix = new Lazy<string>(() => "S");
         }
 
         private string FormatSavingsAccountNr(long id)
         {
-            return string.Concat(savingsAccountNrPrefix.Value, id.ToString());
+            return string.Concat(_savingsAccountNrPrefix.Value, id.ToString());
         }
 
         public string GenerateNewSavingsAccountNr()
         {
-            using (var context = contextFactory.CreateContext())
+            using (var context = _contextFactory.CreateContext())
             {
                 var seq = new SavingsAccountKeySequence();
                 context.AddSavingsAccountKeySequences(seq);
@@ -36,12 +37,13 @@ namespace nSavings.Code
             var seqs = Enumerable.Range(1, count).Select(x => new SavingsAccountKeySequence()).ToArray();
             foreach (var g in seqs.SplitIntoGroupsOfN(1000))
             {
-                using (var context = contextFactory.CreateContext())
+                using (var context = _contextFactory.CreateContext())
                 {
                     context.AddSavingsAccountKeySequences(g.ToArray());
                     context.SaveChanges();
                 }
             }
+
             return seqs.Select(x => x.Id).Select(FormatSavingsAccountNr).ToArray();
         }
     }

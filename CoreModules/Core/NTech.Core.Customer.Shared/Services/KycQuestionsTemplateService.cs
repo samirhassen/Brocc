@@ -1,43 +1,48 @@
-﻿using NTech.Core.Customer.Shared.Database;
-using NTech.Core.Customer.Shared.Models;
-using NTech.Core.Module.Shared.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using nCustomer.DbModel;
+using NTech.Core.Customer.Shared.Database;
+using NTech.Core.Customer.Shared.Models;
+using NTech.Core.Module.Shared.Infrastructure;
 
 namespace NTech.Core.Customer.Shared.Services
 {
     public class KycQuestionsTemplateService
     {
-        private readonly CustomerContextFactory contextFactory;
-        private readonly ICustomerEnvSettings envSettings;
-        private readonly IClientConfigurationCore clientConfiguration;
+        private readonly CustomerContextFactory _contextFactory;
+        private readonly ICustomerEnvSettings _envSettings;
+        private readonly IClientConfigurationCore _clientConfiguration;
 
-        public KycQuestionsTemplateService(CustomerContextFactory contextFactory, ICustomerEnvSettings envSettings, IClientConfigurationCore clientConfiguration)
+        public KycQuestionsTemplateService(CustomerContextFactory contextFactory, ICustomerEnvSettings envSettings,
+            IClientConfigurationCore clientConfiguration)
         {
-            this.contextFactory = contextFactory;
-            this.envSettings = envSettings;
-            this.clientConfiguration = clientConfiguration;
+            _contextFactory = contextFactory;
+            _envSettings = envSettings;
+            _clientConfiguration = clientConfiguration;
         }
 
         private HashSet<string> GetActiveRelationTypes()
         {
             var relationTypes = new HashSet<string>();
 
-            if (clientConfiguration.IsFeatureEnabled("ntech.feature.unsecuredloans"))
+            if (_clientConfiguration.IsFeatureEnabled("ntech.feature.unsecuredloans"))
             {
                 relationTypes.Add("Credit_UnsecuredLoan");
             }
-            if (clientConfiguration.IsFeatureEnabled("ntech.feature.savings"))
+
+            if (_clientConfiguration.IsFeatureEnabled("ntech.feature.savings"))
             {
                 relationTypes.Add("SavingsAccount_StandardAccount");
             }
-            if (clientConfiguration.IsFeatureEnabled("ntech.feature.mortgageloans"))
+
+            if (_clientConfiguration.IsFeatureEnabled("ntech.feature.mortgageloans"))
             {
                 relationTypes.Add("Credit_MortgageLoan");
             }
-            if (clientConfiguration.IsFeatureEnabled("ntech.feature.companyloans"))
+
+            if (_clientConfiguration.IsFeatureEnabled("ntech.feature.companyloans"))
             {
                 relationTypes.Add("Credit_CompanyLoan");
             }
@@ -47,7 +52,7 @@ namespace NTech.Core.Customer.Shared.Services
 
         public KycQuestionsTemplateInitialDataResponse GetInitialData()
         {
-            using (var context = contextFactory.CreateContext())
+            using (var context = _contextFactory.CreateContext())
             {
                 var templates = context
                     .KycQuestionTemplatesQueryable
@@ -61,8 +66,10 @@ namespace NTech.Core.Customer.Shared.Services
                     .ToList();
 
                 var activeRelationTypes = GetActiveRelationTypes();
-                var defaultQuestionSetsByRelationType = envSettings.DefaultKycQuestionsSets ?? new Dictionary<string, KycQuestionsTemplate>();
-                foreach(var nonActiveStandardRelationType in defaultQuestionSetsByRelationType.Keys.Except(activeRelationTypes).ToList())
+                var defaultQuestionSetsByRelationType = _envSettings.DefaultKycQuestionsSets ??
+                                                        new Dictionary<string, KycQuestionsTemplate>();
+                foreach (var nonActiveStandardRelationType in defaultQuestionSetsByRelationType.Keys
+                             .Except(activeRelationTypes).ToList())
                 {
                     defaultQuestionSetsByRelationType.Remove(nonActiveStandardRelationType);
                 }
@@ -92,27 +99,22 @@ namespace NTech.Core.Customer.Shared.Services
                 {
                     ActiveProducts = relationTypes.Select(relationType =>
                     {
-                        KycQuestionsTemplate currentTemplate;
-
                         var latestQuestionData = latestQuestionDataByRelationType.Opt(relationType);
-                        if (latestQuestionData != null)
-                        {
-                            currentTemplate = KycQuestionsTemplate.Parse(latestQuestionData);
-                        }
-                        else
-                        {
-                            currentTemplate = defaultQuestionSetsByRelationType.Opt(relationType);
-                        }
+                        var currentTemplate = latestQuestionData != null
+                            ? KycQuestionsTemplate.Parse(latestQuestionData)
+                            : defaultQuestionSetsByRelationType.Opt(relationType);
 
                         return new KycQuestionsTemplateInitialDataResponse.ActiveProductModel
                         {
                             RelationType = relationType,
                             CurrentQuestionsTemplate = currentTemplate,
-                            HistoricalModels = templates.Where(x => x.RelationType == relationType).OrderByDescending(x => x.Id).Select(x => new KycQuestionsTemplateInitialDataResponse.HistoricalModel
-                            {
-                                Id = x.Id,
-                                Date = x.CreatedDate
-                            }).ToList()
+                            HistoricalModels = templates.Where(x => x.RelationType == relationType)
+                                .OrderByDescending(x => x.Id).Select(x =>
+                                    new KycQuestionsTemplateInitialDataResponse.HistoricalModel
+                                    {
+                                        Id = x.Id,
+                                        Date = x.CreatedDate
+                                    }).ToList()
                         };
                     }).ToList()
                 };
@@ -123,20 +125,20 @@ namespace NTech.Core.Customer.Shared.Services
         {
             if (!KycQuestionsTemplate.TryParse(request?.ModelData, out var failedMessage, out var questionSet))
             {
-                throw new NTechCoreWebserviceException(failedMessage) { IsUserFacing = true, ErrorCode = "invalidQuestionsModel", ErrorHttpStatusCode = 400 };
+                throw new NTechCoreWebserviceException(failedMessage)
+                    { IsUserFacing = true, ErrorCode = "invalidQuestionsModel", ErrorHttpStatusCode = 400 };
             }
 
             questionSet.Version = questionSet.Version ?? Guid.NewGuid().ToString();
 
-            using (var context = contextFactory.CreateContext())
+            using (var context = _contextFactory.CreateContext())
             {
-                var template = new nCustomer.DbModel.KycQuestionTemplate
+                var template = new KycQuestionTemplate
                 {
                     CreatedByUserId = context.CurrentUser.UserId,
                     CreatedDate = context.CoreClock.Now,
                     ModelData = questionSet.Serialize(),
                     RelationType = request.RelationType
-
                 };
                 context.AddKycQuestionTemplates(template);
                 context.SaveChanges();
@@ -152,11 +154,12 @@ namespace NTech.Core.Customer.Shared.Services
         public GetModelDataResponse GetModelData(GetModelDataRequest request)
         {
             var id = request.Id.Value;
-            using (var context = contextFactory.CreateContext())
+            using (var context = _contextFactory.CreateContext())
             {
                 return new GetModelDataResponse
                 {
-                    ModelData = context.KycQuestionTemplatesQueryable.SingleOrDefault(x => x.RemovedByUserId == null && x.Id == id)?.ModelData
+                    ModelData = context.KycQuestionTemplatesQueryable
+                        .SingleOrDefault(x => x.RemovedByUserId == null && x.Id == id)?.ModelData
                 };
             }
         }
@@ -174,8 +177,7 @@ namespace NTech.Core.Customer.Shared.Services
 
     public class GetModelDataRequest
     {
-        [Required]
-        public int? Id { get; set; }
+        [Required] public int? Id { get; set; }
     }
 
     public class GetModelDataResponse
@@ -185,10 +187,8 @@ namespace NTech.Core.Customer.Shared.Services
 
     public class SaveQuestionsRequest
     {
-        [Required]
-        public string RelationType { get; set; }
-        [Required]
-        public string ModelData { get; set; }
+        [Required] public string RelationType { get; set; }
+        [Required] public string ModelData { get; set; }
     }
 
     public class SaveQuestionsResponse

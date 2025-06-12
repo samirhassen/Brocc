@@ -1,10 +1,14 @@
-﻿using nSavings.Code;
-using nSavings.Code.Services;
-using NTech.Banking.BankAccounts.Fi;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
+using nSavings.Code;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Savings.Shared.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Core.Savings.Shared.Services;
 
 namespace nSavings.DbModel.BusinessEvents
 {
@@ -12,7 +16,8 @@ namespace nSavings.DbModel.BusinessEvents
     {
         private readonly ICustomerRelationsMergeService customerRelationsMergeService;
 
-        public AccountClosureBusinessEventManager(int userId, string informationMetadata, ICustomerRelationsMergeService customerRelationsMergeService) : base(userId, informationMetadata)
+        public AccountClosureBusinessEventManager(int userId, string informationMetadata,
+            ICustomerRelationsMergeService customerRelationsMergeService) : base(userId, informationMetadata)
         {
             this.customerRelationsMergeService = customerRelationsMergeService;
         }
@@ -37,6 +42,7 @@ namespace nSavings.DbModel.BusinessEvents
             public decimal CapitalBalanceBefore { get; set; }
             public decimal WithdrawalAmount { get; set; }
             public CapItem CapitalizedInterest { get; set; }
+
             public class CapItem
             {
                 public decimal InterestAmount { get; set; }
@@ -47,43 +53,46 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        public bool TryPreviewCloseAccount(string savingsAccountNr, bool allowCheckpoint, out string failedMessage, out AccountClosurePreviewResult result)
+        public bool TryPreviewCloseAccount(string savingsAccountNr, bool allowCheckpoint, out string failedMessage,
+            out AccountClosurePreviewResult result)
         {
             using (var context = new SavingsContext())
             {
-                ClosureData d;
-                if (TryComputeData(context, allowCheckpoint, savingsAccountNr, out failedMessage, out d))
+                if (TryComputeData(context, allowCheckpoint, savingsAccountNr, out failedMessage, out var d))
                 {
                     result = new AccountClosurePreviewResult
                     {
                         CapitalBalanceBefore = d.CapitalBalanceBefore,
-                        CapitalizedInterest = d.CapitalizationResult.IsCapitalizationNeeded() ? new AccountClosurePreviewResult.CapItem
-                        {
-                            InterestAmount = d.CapitalizationResult.TotalInterestAmount,
-                            ShouldBeWithheldForTaxAmount = d.CapitalizationResult.ShouldBeWithheldForTaxAmount,
-                            FromInterestDate = d.CapitalizationResult.FromDate,
-                            ToInterestDate = d.CapitalizationResult.ToDate,
-                            NrOfInterestDays = d.CapitalizationResult.InterestAmountParts.Count
-                        } : null,
-                        WithdrawalAmount = d.CapitalBalanceBefore + d.CapitalizationResult.TotalInterestAmount - d.CapitalizationResult.ShouldBeWithheldForTaxAmount
+                        CapitalizedInterest = d.CapitalizationResult.IsCapitalizationNeeded()
+                            ? new AccountClosurePreviewResult.CapItem
+                            {
+                                InterestAmount = d.CapitalizationResult.TotalInterestAmount,
+                                ShouldBeWithheldForTaxAmount = d.CapitalizationResult.ShouldBeWithheldForTaxAmount,
+                                FromInterestDate = d.CapitalizationResult.FromDate,
+                                ToInterestDate = d.CapitalizationResult.ToDate,
+                                NrOfInterestDays = d.CapitalizationResult.InterestAmountParts.Count
+                            }
+                            : null,
+                        WithdrawalAmount = d.CapitalBalanceBefore + d.CapitalizationResult.TotalInterestAmount -
+                                           d.CapitalizationResult.ShouldBeWithheldForTaxAmount
                     };
                     return true;
                 }
-                else
-                {
-                    result = null;
-                    return false;
-                }
+
+                result = null;
+                return false;
             }
         }
 
-        public bool TryCloseAccount(AccountClosureRequest request, bool allowSkipUniqueOperationToken, bool allowCheckpoint, out string failedMessage, out BusinessEvent evt)
+        public bool TryCloseAccount(AccountClosureRequest request, bool allowSkipUniqueOperationToken,
+            bool allowCheckpoint, out string failedMessage, out BusinessEvent evt)
         {
             try
             {
                 var r = EncryptionContext.WithEncryption(ec =>
                 {
-                    var result = TryCloseAccountI(ec, request, allowSkipUniqueOperationToken, allowCheckpoint, out var fm, out var e);
+                    var result = TryCloseAccountI(ec, request, allowSkipUniqueOperationToken, allowCheckpoint,
+                        out var fm, out var e);
                     ec.Context.SaveChanges();
 
                     return Tuple.Create(result, fm, e);
@@ -93,8 +102,8 @@ namespace nSavings.DbModel.BusinessEvents
                 {
                     try
                     {
-
-                        customerRelationsMergeService.MergeSavingsAccountsToCustomerRelations(onlySavingsAccountNrs: new HashSet<string>
+                        customerRelationsMergeService.MergeSavingsAccountsToCustomerRelations(
+                            onlySavingsAccountNrs: new HashSet<string>
                             {
                                 request.SavingsAccountNr
                             });
@@ -109,16 +118,14 @@ namespace nSavings.DbModel.BusinessEvents
                 evt = r.Item3;
                 return r.Item1;
             }
-            catch (System.Data.Entity.Infrastructure.DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
-                if (ex?.FormatException()?.Contains("OutgoingPaymentHeader_UniqueToken_UIdx") ?? false)
-                {
-                    failedMessage = "Operation token has already been used. Generate a new one and try again if this call is not a duplicate.";
-                    evt = null;
-                    return false;
-                }
-                else
-                    throw;
+                if (!(ex.FormatException()?.Contains("OutgoingPaymentHeader_UniqueToken_UIdx") ?? false)) throw;
+
+                failedMessage =
+                    "Operation token has already been used. Generate a new one and try again if this call is not a duplicate.";
+                evt = null;
+                return false;
             }
         }
 
@@ -132,11 +139,11 @@ namespace nSavings.DbModel.BusinessEvents
                     .Select(x => new
                     {
                         WithdrawalIban = x
-                                .DatedStrings
-                                .Where(y => y.Name == DatedSavingsAccountStringCode.WithdrawalIban.ToString())
-                                .OrderByDescending(y => y.BusinessEventId)
-                                .Select(y => y.Value)
-                                .FirstOrDefault(),
+                            .DatedStrings
+                            .Where(y => y.Name == DatedSavingsAccountStringCode.WithdrawalIban.ToString())
+                            .OrderByDescending(y => y.BusinessEventId)
+                            .Select(y => y.Value)
+                            .FirstOrDefault(),
                     })
                     .SingleOrDefault();
 
@@ -161,7 +168,8 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        private bool TryCloseAccountI(EncryptionContext encryptionContext, AccountClosureRequest request, bool allowSkipUniqueOperationToken, bool allowCheckpoint, out string failedMessage, out BusinessEvent evt)
+        private bool TryCloseAccountI(EncryptionContext encryptionContext, AccountClosureRequest request,
+            bool allowSkipUniqueOperationToken, bool allowCheckpoint, out string failedMessage, out BusinessEvent evt)
         {
             var context = encryptionContext.Context;
 
@@ -172,11 +180,13 @@ namespace nSavings.DbModel.BusinessEvents
                 failedMessage = "Missing toIban";
                 return false;
             }
+
             if (string.IsNullOrWhiteSpace(request.SavingsAccountNr))
             {
                 failedMessage = "Missing savings account nr";
                 return false;
             }
+
             if (string.IsNullOrWhiteSpace(request.UniqueOperationToken) && !allowSkipUniqueOperationToken)
             {
                 failedMessage = "Missing uniqueOperationToken";
@@ -193,6 +203,7 @@ namespace nSavings.DbModel.BusinessEvents
             {
                 return false;
             }
+
             var h = cd.Account;
 
             evt = AddBusinessEvent(BusinessEventType.AccountClosure, context);
@@ -203,15 +214,14 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            string mainCustomerName;
-            if (!TryGetCustomerNameFromCustomerCard(h.MainCustomerId, out mainCustomerName, out failedMessage))
+            if (!TryGetCustomerNameFromCustomerCard(h.MainCustomerId, out var mainCustomerName, out failedMessage))
             {
                 return false;
             }
 
-            ///////////////////////////////////
-            /// Capitalize interest ///////////
-            ///////////////////////////////////
+            ///////////////////////////
+            /// Capitalize interest ///
+            ///////////////////////////
             string calculationDetailsDocumentArchiveKey = null;
 
             var ir = cd.CapitalizationResult;
@@ -229,26 +239,31 @@ namespace nSavings.DbModel.BusinessEvents
                 if (request.IncludeCalculationDetails.GetValueOrDefault())
                 {
                     var dc = new DocumentClient();
-                    c.CalculationDetailsDocumentArchiveKey = dc.CreateXlsxToArchive(ir.ToDocumentClientExcelRequest(), $"AccountClosureInterestCapitalizationCalculationDetails_{ir.ToDate.ToString("yyyy")}.xlsx");
+                    c.CalculationDetailsDocumentArchiveKey = dc.CreateXlsxToArchive(ir.ToDocumentClientExcelRequest(),
+                        $"AccountClosureInterestCapitalizationCalculationDetails_{ir.ToDate:yyyy}.xlsx");
                     calculationDetailsDocumentArchiveKey = c.CalculationDetailsDocumentArchiveKey;
                 }
+
                 if (ir.TotalInterestAmount > 0m)
                 {
                     AddTransaction(context, LedgerAccountTypeCode.Capital, ir.TotalInterestAmount, evt, Clock.Today,
                         savingsAccountNr: request.SavingsAccountNr,
                         interestFromDate: ir.ToDate.AddDays(1),
                         businessEventRoleCode: "CapitalizedInterest");
-                    AddTransaction(context, LedgerAccountTypeCode.CapitalizedInterest, ir.TotalInterestAmount, evt, Clock.Today,
+                    AddTransaction(context, LedgerAccountTypeCode.CapitalizedInterest, ir.TotalInterestAmount, evt,
+                        Clock.Today,
                         savingsAccountNr: request.SavingsAccountNr);
                 }
 
                 if (ir.ShouldBeWithheldForTaxAmount > 0m)
                 {
-                    AddTransaction(context, LedgerAccountTypeCode.Capital, -ir.ShouldBeWithheldForTaxAmount, evt, Clock.Today,
+                    AddTransaction(context, LedgerAccountTypeCode.Capital, -ir.ShouldBeWithheldForTaxAmount, evt,
+                        Clock.Today,
                         savingsAccountNr: request.SavingsAccountNr,
                         interestFromDate: ir.ToDate.AddDays(1),
                         businessEventRoleCode: "WithheldTax");
-                    AddTransaction(context, LedgerAccountTypeCode.WithheldCapitalizedInterestTax, ir.ShouldBeWithheldForTaxAmount, evt, Clock.Today,
+                    AddTransaction(context, LedgerAccountTypeCode.WithheldCapitalizedInterestTax,
+                        ir.ShouldBeWithheldForTaxAmount, evt, Clock.Today,
                         savingsAccountNr: request.SavingsAccountNr);
                 }
             }
@@ -257,7 +272,8 @@ namespace nSavings.DbModel.BusinessEvents
             /// Withdrawal          ///////////
             ///////////////////////////////////
 
-            var capitalBalanceAfterInterest = cd.CapitalBalanceBefore + ir.TotalInterestAmount - ir.ShouldBeWithheldForTaxAmount;
+            var capitalBalanceAfterInterest =
+                cd.CapitalBalanceBefore + ir.TotalInterestAmount - ir.ShouldBeWithheldForTaxAmount;
             OutgoingPaymentHeader op = null;
             if (capitalBalanceAfterInterest > 0m)
             {
@@ -282,63 +298,68 @@ namespace nSavings.DbModel.BusinessEvents
                     savingsAccountNr: request.SavingsAccountNr,
                     outgoingPayment: op);
 
+                var hasCustomCustomerMessagText = !string.IsNullOrWhiteSpace(request.CustomCustomerMessageText);
+                AddItem(OutgoingPaymentHeaderItemCode.CustomerMessage, hasCustomCustomerMessagText
+                    ? request.CustomCustomerMessageText
+                    : NewIncomingPaymentFileBusinessEventManager.GetOutgoingPaymentFileCustomerMessage(NEnv.EnvSettings,
+                        eventName: "Closed", contextNumber: request.SavingsAccountNr), hasCustomCustomerMessagText);
+                if (!string.IsNullOrWhiteSpace(request.CustomTransactionText))
+                    AddItem(OutgoingPaymentHeaderItemCode.CustomTransactionMessage, request.CustomTransactionText,
+                        true);
+                AddItem(OutgoingPaymentHeaderItemCode.CustomerName, mainCustomerName, true);
+                AddItem(OutgoingPaymentHeaderItemCode.FromIban, NEnv.OutgoingPaymentIban.NormalizedValue, false);
+                AddItem(OutgoingPaymentHeaderItemCode.ToIban, parsedIban.NormalizedValue, false);
+                AddItem(OutgoingPaymentHeaderItemCode.SavingsAccountNr, request.SavingsAccountNr, false);
+                if (request.RequestIpAddress != null)
+                    AddItem(OutgoingPaymentHeaderItemCode.RequestIpAddress, request.RequestIpAddress, true);
+                if (request.RequestAuthenticationMethod != null)
+                    AddItem(OutgoingPaymentHeaderItemCode.RequestAuthenticationMethod,
+                        request.RequestAuthenticationMethod, false);
+                if (request.RequestDate.HasValue)
+                    AddItem(OutgoingPaymentHeaderItemCode.RequestDate,
+                        request.RequestDate.Value.ToString("o", CultureInfo.InvariantCulture), false);
+                if (request.RequestedByCustomerId.HasValue)
+                    AddItem(OutgoingPaymentHeaderItemCode.RequestedByCustomerId,
+                        request.RequestedByCustomerId.Value.ToString(), false);
+                if (request.RequestedByHandlerUserId.HasValue)
+                    AddItem(OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId,
+                        request.RequestedByHandlerUserId.Value.ToString(), false);
+
                 //Items
-                Action<OutgoingPaymentHeaderItemCode, string, bool> addItem = (name, value, isEncrypted) =>
+                void AddItem(OutgoingPaymentHeaderItemCode name, string value, bool isEncrypted)
                 {
                     var item = new OutgoingPaymentHeaderItem
-                    {
-                        IsEncrypted = isEncrypted,
-                        OutgoingPayment = op,
-                        Name = name.ToString(),
-                        Value = value
-                    };
+                        { IsEncrypted = isEncrypted, OutgoingPayment = op, Name = name.ToString(), Value = value };
                     FillInInfrastructureFields(item);
                     op.Items.Add(item);
                     context.OutgoingPaymentHeaderItems.Add(item);
-                };
-                var hasCustomCustomerMessagText = !string.IsNullOrWhiteSpace(request.CustomCustomerMessageText);
-                addItem(OutgoingPaymentHeaderItemCode.CustomerMessage, hasCustomCustomerMessagText
-                    ? request.CustomCustomerMessageText
-                    : NewIncomingPaymentFileBusinessEventManager.GetOutgoingPaymentFileCustomerMessage(NEnv.EnvSettings,
-                            eventName: "Closed", contextNumber: request.SavingsAccountNr), hasCustomCustomerMessagText);
-                if (!string.IsNullOrWhiteSpace(request.CustomTransactionText))
-                    addItem(OutgoingPaymentHeaderItemCode.CustomTransactionMessage, request.CustomTransactionText, true);
-                addItem(OutgoingPaymentHeaderItemCode.CustomerName, mainCustomerName, true);
-                addItem(OutgoingPaymentHeaderItemCode.FromIban, NEnv.OutgoingPaymentIban.NormalizedValue, false);
-                addItem(OutgoingPaymentHeaderItemCode.ToIban, parsedIban.NormalizedValue, false);
-                addItem(OutgoingPaymentHeaderItemCode.SavingsAccountNr, request.SavingsAccountNr, false);
-                if (request.RequestIpAddress != null)
-                    addItem(OutgoingPaymentHeaderItemCode.RequestIpAddress, request.RequestIpAddress, true);
-                if (request.RequestAuthenticationMethod != null)
-                    addItem(OutgoingPaymentHeaderItemCode.RequestAuthenticationMethod, request.RequestAuthenticationMethod, false);
-                if (request.RequestDate.HasValue)
-                    addItem(OutgoingPaymentHeaderItemCode.RequestDate, request.RequestDate.Value.ToString("o", CultureInfo.InvariantCulture), false);
-                if (request.RequestedByCustomerId.HasValue)
-                    addItem(OutgoingPaymentHeaderItemCode.RequestedByCustomerId, request.RequestedByCustomerId.Value.ToString(), false);
-                if (request.RequestedByHandlerUserId.HasValue)
-                    addItem(OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId, request.RequestedByHandlerUserId.Value.ToString(), false);
+                }
             }
 
             SetStatus(h, SavingsAccountStatusCode.Closed, evt, context);
 
-            var comment = $"Account closed with balance before interest capitalization of {cd.CapitalBalanceBefore.ToString("C", CommentFormattingCulture)}.";
+            var comment =
+                $"Account closed with balance before interest capitalization of {cd.CapitalBalanceBefore.ToString("C", CommentFormattingCulture)}.";
             if (ir.IsCapitalizationNeeded())
             {
-                comment += $" Capitalized interest amount: {ir.TotalInterestAmount.ToString("C", CommentFormattingCulture)}. Withheld tax: {ir.ShouldBeWithheldForTaxAmount.ToString("C", CommentFormattingCulture)}";
+                comment +=
+                    $" Capitalized interest amount: {ir.TotalInterestAmount.ToString("C", CommentFormattingCulture)}. Withheld tax: {ir.ShouldBeWithheldForTaxAmount.ToString("C", CommentFormattingCulture)}";
             }
 
             AddComment(comment,
                 BusinessEventType.AccountClosure,
                 context,
                 savingsAccountNr: request.SavingsAccountNr,
-                attachmentArchiveKeys: calculationDetailsDocumentArchiveKey == null ? null : new List<string> { calculationDetailsDocumentArchiveKey });
+                attachmentArchiveKeys: calculationDetailsDocumentArchiveKey == null
+                    ? null
+                    : new List<string> { calculationDetailsDocumentArchiveKey });
 
             ////////////////////////////////////////////////
             //////////////// Handle encryption /////////////
             ////////////////////////////////////////////////
             if (op != null)
             {
-                var itemsToEncrypt = op.Items.Where(x => x.IsEncrypted == true).ToArray();
+                var itemsToEncrypt = op.Items.Where(x => x.IsEncrypted).ToArray();
                 if (itemsToEncrypt.Length > 0)
                 {
                     var enc = NEnv.EncryptionKeys;
@@ -363,7 +384,8 @@ namespace nSavings.DbModel.BusinessEvents
             public SavingsAccountHeader Account { get; set; }
         }
 
-        private bool TryComputeData(SavingsContext context, bool allowCheckpoint, string savingsAccountNr, out string failedMessage, out ClosureData result)
+        private bool TryComputeData(SavingsContext context, bool allowCheckpoint, string savingsAccountNr,
+            out string failedMessage, out ClosureData result)
         {
             result = null;
 
@@ -373,7 +395,9 @@ namespace nSavings.DbModel.BusinessEvents
                 .Select(x => new
                 {
                     Account = x,
-                    CapitalBalance = x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString()).Sum(y => (decimal?)y.Amount) ?? 0m,
+                    CapitalBalance =
+                        x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
+                            .Sum(y => (decimal?)y.Amount) ?? 0m,
                     x.MainCustomerId
                 })
                 .SingleOrDefault();
@@ -396,8 +420,9 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            IDictionary<string, YearlyInterestCapitalizationBusinessEventManager.ResultModel> interestCapResult;
-            if (!YearlyInterestCapitalizationBusinessEventManager.TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, Clock, new List<string> { savingsAccountNr }, true, out interestCapResult, out failedMessage))
+            if (!YearlyInterestCapitalizationBusinessEventManager
+                    .TryComputeAccumulatedInterestAssumingAccountIsClosedToday(context, Clock,
+                        new List<string> { savingsAccountNr }, true, out var interestCapResult, out failedMessage))
             {
                 return false;
             }
