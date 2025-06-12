@@ -1,0 +1,1648 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props')" />
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1672852C-264E-4FD1-955C-B7D700F77517}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nPreCredit</RootNamespace>
+    <AssemblyName>nPreCredit</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac, Version=6.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.6.3.0\lib\netstandard2.0\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=6.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.6.0.0\lib\net472\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="IdentityModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentityModel.1.13.0\lib\net45\IdentityModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IdentityServer3.AccessTokenValidation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentityServer3.AccessTokenValidation.2.15.1\lib\net45\IdentityServer3.AccessTokenValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit.EntityFramework, Version=1.0.3.0, Culture=neutral, PublicKeyToken=b6c8cfc71f7a6a80, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.EntityFramework.1.0.3.0\lib\net461\LinqKit.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.2.33, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.2.206221351\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Jwt, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Jwt.3.0.1\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OpenIdConnect, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OpenIdConnect.3.0.0\lib\net45\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\nTest.RandomDataSource\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Nustache.Core, Version=1.16.0.1, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nustache.1.16.0.1\lib\net20\Nustache.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
+    </Reference>
+    <Reference Include="NWebsec.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.Core.3.0.0\lib\net45\NWebsec.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NWebsec.Mvc, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.Mvc.6.0.0\lib\net45\NWebsec.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Polly, Version=5.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Polly.5.0.6\lib\net45\Polly.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.4.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.PeriodicBatching, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.PeriodicBatching.2.1.0\lib\net45\Serilog.Sinks.PeriodicBatching.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.7.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\nPreCredit.dll" />
+    <Content Include="bin\nPreCredit.pdb" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\credit-monitoring.css" />
+    <Content Include="Content\css\magellan.css" />
+    <Content Include="Content\css\other.css" />
+    <Content Include="Content\css\toastr.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\img\arrow-down.png" />
+    <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\naktergal-logo.png" />
+    <Content Include="Content\jsexternal\angular-locale_sv-se.js" />
+    <Content Include="Content\jsexternal\angular-sanitize.js" />
+    <Content Include="Content\jsexternal\jquery-ui-position-only.js" />
+    <Content Include="Content\jsexternal\jquery.flexselect.js" />
+    <Content Include="Content\jsexternal\libphonenumber.js" />
+    <Content Include="Content\jsexternal\liquidmetal.js" />
+    <Content Include="Content\jsexternal\angular-cookies.min.js" />
+    <Content Include="Content\jsexternal\angular-locale_fi-fi.js" />
+    <Content Include="Content\jsexternal\angular-resource.min.js" />
+    <Content Include="Content\jsexternal\angular-translate-loader-url.min.js" />
+    <Content Include="Content\jsexternal\angular-translate-storage-cookie.min.js" />
+    <Content Include="Content\jsexternal\angular-translate-storage-local.min.js" />
+    <Content Include="Content\jsexternal\angular-translate.min.js" />
+    <Content Include="Content\jsexternal\angular.min.js" />
+    <Content Include="Content\jsexternal\bootstrap.js" />
+    <Content Include="Content\jsexternal\jquery-1.12.4.js" />
+    <Content Include="Content\jsexternal\moment.js" />
+    <Content Include="Content\jsexternal\toastr.min.js" />
+    <Content Include="Content\jsexternal\underscore.js" />
+    <TypeScriptCompile Include="Content\ts\components\affiliateReportingLog-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationDataEditor-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationFreeformDocuments-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationDocuments-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationComments-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationCheckpoints-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationOtherApplications-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\archivedUnsecuredLoanApplication-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationCustomerList-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\campaign-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanApproveAgreement-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanAuthorizedSignatoryCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanAuditAgreement-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanCollateralCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanFreeformDocuments-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationItemEditor-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\listAndBuyCreditReportForCustomer-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\campaigns-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\manualDocumentsToSign-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationCreateWorkList-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationCollateral-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckHelper.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualSettlementHandle-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualSettlement-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualSignAgreement-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualAuditApproveAgreement-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanOtherConnectedApplications-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanLead-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanKyc-Component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanDualCustomerRoleHelper.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanDualCollateralCompact-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\pageHeader-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationCollateralEdit-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\complexListWithCustomer-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualDocuments-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckView-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckNew-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDualCreditCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationRaw-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationDocuments-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationSearchWrapper-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationEditor-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\complex-application-list-helper.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationDataSource-helper.ts" />
+    <TypeScriptCompile Include="Content\ts\components\addRemoveList-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\navigationTarget-helper.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationAssignedHandlers-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\workflow-helper.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanAgreement-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanFraudCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanKyc-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanApplication-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanApplicationSearch-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanApproveApplications-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanInitialCreditCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanInitialCreditCheckView-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanInitialCreditCheckRecommendation-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanInitialCreditCheckNew-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\companyLoans\companyLoanAdditionalQuestions-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanAmortization-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationBasis-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationHouseholdIncome-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationWorkList-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanScoringResult-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageLoanApplicationDynamic-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\simpleTable-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationObjectInfo-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationObjectValuationManualSearch-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\toggleBlock-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\twoColumnInformationBlock-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationDirectDebitCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\simpleForm-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationObjectValuationNew-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationObjectValuation-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationSettlement-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationSearch-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\modalDialog-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationStatusBlock-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationAdditionalQuestions-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationFinalCreditCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationInitialCreditCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationFraudCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\mortgageLoans\mortgageApplicationCustomerCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\applicationCustomerinfo-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\unsecuredApplicationAdditionalQuestions-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\unsecuredApplicationCreditCheckStatus-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\unsecuredApplicationCustomerCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\unsecuredApplicationFraudCheck-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\unsecuredCreditCheckOtherApplications-component.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\ApiHost\apiHost.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\MortgageApplicationAmortization\mortgage-application-amortization.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\MortgageApplicationValuation\mortgage-application-valuation.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\ArchivedUnsecuredLoanApplication\archived-unsecured-loan-application.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\component-host.ts" />
+    <TypeScriptCompile Include="Content\ts\infrastructure\ntech.controllerbase.ts" />
+    <TypeScriptCompile Include="Content\ts\companyloan-precredit-api-client.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\angular-fileupload.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.booleans.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.dates.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.linq.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\common\ntech.navigationtarget.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechInput-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTablePager-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechTestFunctions-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\components\ntechWsDocs-component.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.componentservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.controllerbase.template.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.eventhost.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httpinterceptor.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.localstorageservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\components\infrastructure\ntech.loggingservice.ts" />
+    <TypeScriptCompile Include="Content\ts\ntech_shared\legacy\ntech.js.shared.ts" />
+    <TypeScriptCompile Include="Content\ts\precredit-api-client.ts" />
+    <TypeScriptCompile Include="Content\ts\componentsbase.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditManagement\creditapplication_documentcheckstatus.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\DocumentCheck\newDocumentCheck.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditApplicationEdit\editValue.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditCheck\decisionDetailsBasisPopupSupport.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditCheck\viewCreditCheck.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditDecision\creditapplicationsToApprove.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditHandlerLimitSettings\creditHandlerLimitSettings-index.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditManagementMonitor\CreditManagementMonitor-index.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\CreditManagement\creditapplication.ts" />
+    <Content Include="Content\js\companyloan-precredit-api-client.js" />
+    <Content Include="Content\js\componentsbase.js" />
+    <Content Include="Content\js\components\addRemoveList-component.js" />
+    <Content Include="Content\js\components\affiliateReportingLog-component.js" />
+    <Content Include="Content\js\components\applicationAssignedHandlers-component.js" />
+    <Content Include="Content\js\components\applicationCheckpoints-component.js" />
+    <Content Include="Content\js\components\applicationComments-component.js" />
+    <Content Include="Content\js\components\applicationCustomerinfo-component.js" />
+    <Content Include="Content\js\components\applicationCustomerList-component.js" />
+    <Content Include="Content\js\components\applicationDataEditor-component.js" />
+    <Content Include="Content\js\components\applicationDataSource-helper.js" />
+    <Content Include="Content\js\components\applicationDocuments-component.js" />
+    <Content Include="Content\js\components\applicationEditor-component.js" />
+    <Content Include="Content\js\components\applicationFraudCheck-component.js" />
+    <Content Include="Content\js\components\applicationFreeformDocuments-component.js" />
+    <Content Include="Content\js\components\applicationItemEditor-component.js" />
+    <Content Include="Content\js\components\applicationOtherApplications-component.js" />
+    <Content Include="Content\js\components\applicationStatusBlock-component.js" />
+    <Content Include="Content\js\components\archivedUnsecuredLoanApplication-component.js" />
+    <Content Include="Content\js\components\campaign-component.js" />
+    <Content Include="Content\js\components\campaigns-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAdditionalQuestions-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAgreement-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApplication-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApplicationSearch-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApproveAgreement-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanApproveApplications-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAuditAgreement-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanAuthorizedSignatoryCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanCollateralCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanFraudCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanFreeformDocuments-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheck-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheckNew-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheckRecommendation-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanInitialCreditCheckView-component.js" />
+    <Content Include="Content\js\components\companyLoans\companyLoanKyc-component.js" />
+    <Content Include="Content\js\components\complex-application-list-helper.js" />
+    <Content Include="Content\js\components\complexListWithCustomer-component.js" />
+    <Content Include="Content\js\components\listAndBuyCreditReportForCustomer-component.js" />
+    <Content Include="Content\js\components\manualDocumentsToSign-component.js" />
+    <Content Include="Content\js\components\modalDialog-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationAdditionalQuestions-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationCollateralEdit-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationCustomerCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationDirectDebitCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationDocuments-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationFinalCreditCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationInitialCreditCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectInfo-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectValuation-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectValuationManualSearch-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationObjectValuationNew-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationSearch-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageApplicationSettlement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanAmortization-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationBasis-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationCollateral-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationCreateWorkList-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualAuditApproveAgreement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheck-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckHelper.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckNew-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualCreditCheckView-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualDocuments-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualSettlement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualSettlementHandle-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDualSignAgreement-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationDynamic-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationHouseholdIncome-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationRaw-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationSearchWrapper-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanApplicationWorkList-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanDualCollateralCompact-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanDualCustomerRoleHelper.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanKyc-Component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanLead-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanOtherConnectedApplications-component.js" />
+    <Content Include="Content\js\components\mortgageLoans\mortgageLoanScoringResult-component.js" />
+    <Content Include="Content\js\components\navigationTarget-helper.js" />
+    <Content Include="Content\js\components\pageHeader-component.js" />
+    <Content Include="Content\js\components\simpleForm-component.js" />
+    <Content Include="Content\js\components\simpleTable-component.js" />
+    <Content Include="Content\js\components\toggleBlock-component.js" />
+    <Content Include="Content\js\components\twoColumnInformationBlock-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationAdditionalQuestions-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationCreditCheckStatus-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationCustomerCheck-component.js" />
+    <Content Include="Content\js\components\unsecuredApplicationFraudCheck-component.js" />
+    <Content Include="Content\js\components\unsecuredCreditCheckOtherApplications-component.js" />
+    <Content Include="Content\js\components\workflow-helper.js" />
+    <Content Include="Content\js\controllers\ApiHost\apiHost.js" />
+    <Content Include="Content\js\controllers\ArchivedUnsecuredLoanApplication\archived-unsecured-loan-application.js" />
+    <Content Include="Content\js\controllers\component-host.js" />
+    <Content Include="Content\js\controllers\CreditApplicationEdit\editValue.js" />
+    <Content Include="Content\js\controllers\CreditCheck\decisionDetailsBasisPopupSupport.js" />
+    <Content Include="Content\js\controllers\CreditCheck\viewCreditCheck.js" />
+    <Content Include="Content\js\controllers\CreditDecision\creditapplicationsToApprove.js" />
+    <Content Include="Content\js\controllers\CreditHandlerLimitSettings\creditHandlerLimitSettings-index.js" />
+    <Content Include="Content\js\controllers\CreditManagementMonitor\CreditManagementMonitor-index.js" />
+    <Content Include="Content\js\controllers\CreditManagement\creditapplication.js" />
+    <Content Include="Content\js\controllers\CreditManagement\creditapplications.js" />
+    <Content Include="Content\js\controllers\CreditManagement\creditapplication_documentcheckstatus.js" />
+    <Content Include="Content\js\controllers\CustomerService\applicationsearch.js" />
+    <Content Include="Content\js\controllers\CustomerService\applicationtoservice.js" />
+    <Content Include="Content\js\controllers\DocumentCheck\newDocumentCheck.js" />
+    <Content Include="Content\js\controllers\FraudCheck\new.js" />
+    <Content Include="Content\js\controllers\FraudCheck\sharedbetweenNewAndView.js" />
+    <Content Include="Content\js\controllers\FraudCheck\view.js" />
+    <Content Include="Content\js\controllers\HandleCheckpoints\index.js" />
+    <Content Include="Content\js\controllers\MortgageApplicationAmortization\mortgage-application-amortization.js" />
+    <Content Include="Content\js\controllers\MortgageApplicationValuation\mortgage-application-valuation.js" />
+    <Content Include="Content\js\infrastructure\ntech.controllerbase.js" />
+    <Content Include="Content\js\legacy-globals.js" />
+    <Content Include="Content\js\ntech-forms.js" />
+    <Content Include="Content\js\ntech_shared\common\angular-fileupload.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.booleans.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.dates.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.linq.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.navigationtarget.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechInput-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTablePager-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTestFunctions-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechWsDocs-component.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.componentservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.controllerbase.template.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.eventhost.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httpinterceptor.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.localstorageservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.loggingservice.js" />
+    <Content Include="Content\js\ntech_shared\legacy\ntech.js.shared.js" />
+    <Content Include="Content\js\precredit-api-client.js" />
+    <Content Include="Content\ts\controllers\CreditManagement\creditapplications.js" />
+    <Content Include="Content\ts\controllers\CustomerService\applicationsearch.js" />
+    <Content Include="Content\ts\controllers\CustomerService\applicationtoservice.js" />
+    <TypeScriptCompile Include="Content\ts\controllers\FraudCheck\new.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\FraudCheck\sharedbetweenNewAndView.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\FraudCheck\view.ts" />
+    <Content Include="Content\ts\controllers\HandleCheckpoints\index.js" />
+    <Content Include="Content\ts\ntech-forms.js" />
+    <Content Include="Global.asax" />
+    <EmbeddedResource Include="Migrations\201609010626254_AddedOneTimeTokens.resx">
+      <DependentUpon>201609010626254_AddedOneTimeTokens.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701120905469_AddedIndices.resx">
+      <DependentUpon>201701120905469_AddedIndices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702070834402_ExplicitAutomationFlagOnCreditDecision.resx">
+      <DependentUpon>201702070834402_ExplicitAutomationFlagOnCreditDecision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702081055023_FixedBadCommentEventType.resx">
+      <DependentUpon>201702081055023_FixedBadCommentEventType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707051057339_AddedPerformanceIndices.resx">
+      <DependentUpon>201707051057339_AddedPerformanceIndices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707070934211_AddedStatusToApplicationHeader.resx">
+      <DependentUpon>201707070934211_AddedStatusToApplicationHeader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708091042302_AddedHandlerLimitLevel.resx">
+      <DependentUpon>201708091042302_AddedHandlerLimitLevel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708101249563_AddedApprovalBatches.resx">
+      <DependentUpon>201708101249563_AddedApprovalBatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708140804133_ApplicationChangeLog.resx">
+      <DependentUpon>201708140804133_ApplicationChangeLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708140910415_AddedAdditionalInfoFlag.resx">
+      <DependentUpon>201708140910415_AddedAdditionalInfoFlag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708140943171_AddedApplicationsFilterIndex.resx">
+      <DependentUpon>201708140943171_AddedApplicationsFilterIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708141018256_AddedUiFilterDate.resx">
+      <DependentUpon>201708141018256_AddedUiFilterDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708210648251_AddedCreditAppItemPerfIndices.resx">
+      <DependentUpon>201708210648251_AddedCreditAppItemPerfIndices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708310538336_DroppedApplicationStatusAgain.resx">
+      <DependentUpon>201708310538336_DroppedApplicationStatusAgain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708310754139_AddedAdditionalQuestionsTracking.resx">
+      <DependentUpon>201708310754139_AddedAdditionalQuestionsTracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709190629253_AddedCustomerCheckpoint.resx">
+      <DependentUpon>201709190629253_AddedCustomerCheckpoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712131112577_AddedCancellations.resx">
+      <DependentUpon>201712131112577_AddedCancellations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712150743274_AddedPerfIndexForCreditDecisions.resx">
+      <DependentUpon>201712150743274_AddedPerfIndexForCreditDecisions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801261027361_AddedPauseItem.resx">
+      <DependentUpon>201801261027361_AddedPauseItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802070833457_AddedCreditDecisionSearchTerms.resx">
+      <DependentUpon>201802070833457_AddedCreditDecisionSearchTerms.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802121403454_AddedCreditManagementMonitorIndex.resx">
+      <DependentUpon>201802121403454_AddedCreditManagementMonitorIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804231213325_AddedApplicationType.resx">
+      <DependentUpon>201804231213325_AddedApplicationType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804270956406_AddedMortgageLoanExtensions.resx">
+      <DependentUpon>201804270956406_AddedMortgageLoanExtensions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805041059211_AddedAdditionalQuestionsStatus.resx">
+      <DependentUpon>201805041059211_AddedAdditionalQuestionsStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805081015295_AddedCreditApplicationDocuments.resx">
+      <DependentUpon>201805081015295_AddedCreditApplicationDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805150527146_KeyValueItemAdded.resx">
+      <DependentUpon>201805150527146_KeyValueItemAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806070811484_AddedMortageLoanDocumentCheckStatus.resx">
+      <DependentUpon>201806070811484_AddedMortageLoanDocumentCheckStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806110919425_Added-InitialCreditCheckStatus.resx">
+      <DependentUpon>201806110919425_Added-InitialCreditCheckStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806140758073_AddedMortgageFinalCreditCheck.resx">
+      <DependentUpon>201806140758073_AddedMortgageFinalCreditCheck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808081103117_AddedDirectDebitCheckStatus.resx">
+      <DependentUpon>201808081103117_AddedDirectDebitCheckStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808151102402_AddedCreditDecisionType.resx">
+      <DependentUpon>201808151102402_AddedCreditDecisionType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901090749461_AddedApplicationPauseItem.resx">
+      <DependentUpon>201901090749461_AddedApplicationPauseItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901301011113_AddedArchival.resx">
+      <DependentUpon>201901301011113_AddedArchival.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902190638436_AddedDwUpdatePerfIdx.resx">
+      <DependentUpon>201902190638436_AddedDwUpdatePerfIdx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902190748328_AddedAffiliateReporting.resx">
+      <DependentUpon>201902190748328_AddedAffiliateReporting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907081020314_AddedApplicationList.resx">
+      <DependentUpon>201907081020314_AddedApplicationList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908210633041_AddedCreditApplicationCustomerList.resx">
+      <DependentUpon>201908210633041_AddedCreditApplicationCustomerList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001080838524_AddedHistoryEvent.resx">
+      <DependentUpon>202001080838524_AddedHistoryEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002060724184_AddedDecisionItems.resx">
+      <DependentUpon>202002060724184_AddedDecisionItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002210911544_AddedComplexApplicationList.resx">
+      <DependentUpon>202002210911544_AddedComplexApplicationList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003101430366_AddedTableApplicationReportCasheRow.resx">
+      <DependentUpon>202003101430366_AddedTableApplicationReportCasheRow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004071229135_AddedCustomerIdToApplicationDocument.resx">
+      <DependentUpon>202004071229135_AddedCustomerIdToApplicationDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004200902152_addTableManualSignature.resx">
+      <DependentUpon>202004200902152_addTableManualSignature.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004210750351_addTableManualSignature1.resx">
+      <DependentUpon>202004210750351_addTableManualSignature1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004220645476_addTableManualSignature2.resx">
+      <DependentUpon>202004220645476_addTableManualSignature2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007060825243_AddedDocumentSubType.resx">
+      <DependentUpon>202007060825243_AddedDocumentSubType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010010625072_AddedWorkLists.resx">
+      <DependentUpon>202010010625072_AddedWorkLists.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011270823330_AddedAbTestingExperiment.resx">
+      <DependentUpon>202011270823330_AddedAbTestingExperiment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011300851073_AddedCampaigns.resx">
+      <DependentUpon>202011300851073_AddedCampaigns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105060903133_AddedCustomerArchivePerfIndex.resx">
+      <DependentUpon>202105060903133_AddedCustomerArchivePerfIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202109200932009_AddedStandardPolicyFilterRuleSet.resx">
+      <DependentUpon>202109200932009_AddedStandardPolicyFilterRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205110725339_AddedDocumentVerified.resx">
+      <DependentUpon>202205110725339_AddedDocumentVerified.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="Migrations\201609090721137_PreventDupesInCreditApplicationItem.resx">
+      <DependentUpon>201609090721137_PreventDupesInCreditApplicationItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609161214049_AddedCommentAttachment.resx">
+      <DependentUpon>201609161214049_AddedCommentAttachment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610100541015_AddedApplicationCancelled.resx">
+      <DependentUpon>201610100541015_AddedApplicationCancelled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610130917109_AddedFraudControl.resx">
+      <DependentUpon>201610130917109_AddedFraudControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611151135035_AddedSystemItem.resx">
+      <DependentUpon>201611151135035_AddedSystemItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <TypeScriptCompile Include="Content\ts\legacy-globals.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\DependancyInjectionConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup1.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Code\AffiliateReporting\Eone\EoneDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Eone\EoneSettingsModel.cs" />
+    <Compile Include="Code\AffiliateReporting\Eone\EoneWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Eone\IEoneWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Etua\EtuaDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Etua\EtuaWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Etua\EtuaSettingsModel.cs" />
+    <Compile Include="Code\AffiliateReporting\Etua\IEtuaWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Lendo\ILendoWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Lendo\LendoDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Lendo\LendoSettingsModel.cs" />
+    <Compile Include="Code\AffiliateReporting\Lendo\LendoWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\ResendAffiliateReportingEventMethod.cs" />
+    <Compile Include="Code\AffiliateReporting\FetchAffiliateReportingEventsForApplicationMethod.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateCallbackDispatcherBase.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateCallbackDispatcherFactory.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateCallbackSettingsModel.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateReportingLogger.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateCallbackThrottlingPolicy.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateEventProcessor.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateReportingBackgroundTimer.cs" />
+    <Compile Include="Code\AffiliateReporting\AddAffiliateReportingLoanPaidOutMethod.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateReportingEventSubscriber.cs" />
+    <Compile Include="Code\AffiliateReporting\AffiliateReportingInjectionConfig.cs" />
+    <Compile Include="Code\AffiliateReporting\CompositeAffiliateCallbackThrottlingPolicy.cs" />
+    <Compile Include="Code\AffiliateReporting\DbThrottlingPolicyDataSource.cs" />
+    <Compile Include="Code\AffiliateReporting\FileSystemAffiliateDataSource.cs" />
+    <Compile Include="Code\AffiliateReporting\HandleEventResult.cs" />
+    <Compile Include="Code\AffiliateReporting\IAffiliateCallbackDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\IAffiliateCallbackDispatcherFactory.cs" />
+    <Compile Include="Code\AffiliateReporting\IAffiliateReportingLogger.cs" />
+    <Compile Include="Code\AffiliateReporting\IAffiliateCallbackThrottlingPolicy.cs" />
+    <Compile Include="Code\AffiliateReporting\IAffiliateDataSource.cs" />
+    <Compile Include="Code\AffiliateReporting\IAffiliateEventProcessor.cs" />
+    <Compile Include="Code\AffiliateReporting\IThrottlingPolicyDataSource.cs" />
+    <Compile Include="Code\AffiliateReporting\JsonAffiliateWebserviceBase.cs" />
+    <Compile Include="Code\AffiliateReporting\Salus\ISalusWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Salus\SalusDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Salus\SalusSettingsModel.cs" />
+    <Compile Include="Code\AffiliateReporting\Salus\SalusWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Self\SelfDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Sortter\ISortterWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Sortter\SortterDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Sortter\SortterWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Standard\IStandardWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Standard\StandardDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Standard\StandardSettingsModel.cs" />
+    <Compile Include="Code\AffiliateReporting\Standard\StandardWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Telefinans\ITelefinansWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Telefinans\TelefinansDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Telefinans\TelefinansWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Vertaaensin\IVertaaensinWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Vertaaensin\VertaaensinDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Vertaaensin\VertaaensinWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Zmarta\IZmartaWebservice.cs" />
+    <Compile Include="Code\AffiliateReporting\Zmarta\ZmartaDispatcher.cs" />
+    <Compile Include="Code\AffiliateReporting\Zmarta\ZmartaSettingsModel.cs" />
+    <Compile Include="Code\AffiliateReporting\Zmarta\ZmartaWebservice.cs" />
+    <Compile Include="Code\Agreements\AgreementSigningProvider.cs" />
+    <Compile Include="Code\Agreements\LoanAgreementPdfBuilderFactory.cs" />
+    <Compile Include="Code\AutoMapperHelper.cs" />
+    <Compile Include="Code\BalanziaSe\BalanziaSeDiRegistration.cs" />
+    <Compile Include="Code\BalanziaSe\BalanziaSeScoringProcessDataSource.cs" />
+    <Compile Include="Code\Balanzia\BalanziaFiDiRegistration.cs" />
+    <Compile Include="Code\Bofink\BofinkScoringDataSource.cs" />
+    <Compile Include="Code\Clients\SignicatSigningClientFactory.cs" />
+    <Compile Include="Code\Clients\UcBvCreditReportClient.cs" />
+    <Compile Include="Code\Clients\CommonSignatureClient.cs" />
+    <Compile Include="Code\Clients\DataWarehouseClient.cs" />
+    <Compile Include="Code\Clients\ICreditClient.cs" />
+    <Compile Include="Code\Clients\IUcBvCreditReportClient.cs" />
+    <Compile Include="Code\Clients\IDocumentClient.cs" />
+    <Compile Include="Code\Clients\UserClient.cs" />
+    <Compile Include="Code\Clients\nPreCreditClient.cs" />
+    <Compile Include="Code\ElectronicSignatures\ElectronicSignatureProvider.cs" />
+    <Compile Include="Code\Eventing\SettingChangedEventSubscriber.cs" />
+    <Compile Include="Code\MortgageLoans\MortgageLoanScoringSetup.cs" />
+    <Compile Include="Code\Plugins\AlterApplication\AlterApplicationRequestTranslatorBase.cs" />
+    <Compile Include="Code\Plugins\AlterApplication\PluginMortgageLoanSubmitAdditionalQuestionsRequestTranslator.cs" />
+    <Compile Include="Code\Plugins\CreateApplication\PluginCompanyLoanApplicationRequestTranslator.cs" />
+    <Compile Include="Code\Plugins\CreateApplication\PluginMortgageLoanApplicationRequestTranslator.cs" />
+    <Compile Include="Code\ProviderDisplayNames.cs" />
+    <Compile Include="Code\Quarter.cs" />
+    <Compile Include="Code\Services\AbTestingService.cs" />
+    <Compile Include="Code\Services\AdditionalQuestionsDocumentModel.cs" />
+    <Compile Include="Code\Services\ApplicationAssignedHandlerService.cs" />
+    <Compile Include="Code\Services\BankAccountDataShareService.cs" />
+    <Compile Include="Code\Services\CampaignCodeService.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanAgreementPrintContextModel.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanAgreementSignatureService.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanAgreementService.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanSignatureSessionModel.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanWorkflowService.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanApplicationApprovalService.cs" />
+    <Compile Include="Code\Services\CustomerCheckPointService.cs" />
+    <Compile Include="Code\Services\PreCreditContextFactoryService.cs" />
+    <Compile Include="Code\Services\PreCreditCustomerSearchService.cs" />
+    <Compile Include="Code\Services\LockedAgreementService.cs" />
+    <Compile Include="Code\BluestepFi\BluestepFiScoringDataSource.cs" />
+    <Compile Include="Code\Services\MortgageLoanStandard\MortgageLoanStandardWorkflowService.cs" />
+    <Compile Include="Code\Services\MortgageLoanStandard\MortgageLoanStandardCreditCheckService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanApplicationAlterationService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanApplicationInitialCreditCheckService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanDualAgreementPrintContextModel.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanDualApplicationAndPoaService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanDualAgreementService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanApplicationCreationService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanLeadsWorkListService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanWaterfallDataService.cs" />
+    <Compile Include="Code\Services\NewUnsecuredLoans\UnsecuredLoanStandardAgreementPrintContext.cs" />
+    <Compile Include="Code\Services\NewUnsecuredLoans\UnsecuredLoanStandardAgreementService.cs" />
+    <Compile Include="Code\Services\NewUnsecuredLoans\Waterfall\StepWaterfallStateCode.cs" />
+    <Compile Include="Code\Services\NewUnsecuredLoans\Waterfall\UnsecuredLoanStandardWaterfallService.cs" />
+    <Compile Include="Code\Services\NewUnsecuredLoans\Waterfall\WaterfallApplicationModel.cs" />
+    <Compile Include="Code\Services\NewUnsecuredLoans\Waterfall\WaterfallPeriodTypeCode.cs" />
+    <Compile Include="Code\Services\SharedStandard\MarkdownTemplateRenderingServiceLegacyPreCredit.cs" />
+    <Compile Include="Code\Services\SharedStandard\StandardHtmlTemplateService.cs" />
+    <Compile Include="Code\Services\SharedStandard\LoanStandardApplicationSearchService.cs" />
+    <Compile Include="Code\Services\SharedStandard\LoanStandardCustomerRelationService.cs" />
+    <Compile Include="Code\Services\SwedishDirectDebitConsentDocumentService.cs" />
+    <Compile Include="Code\Services\SharedStandard\LtlDataTables.cs" />
+    <Compile Include="Code\Services\UnsecuredLoans\UnsecuredLoanInitialCreditDecisionRecommendationModel.cs" />
+    <Compile Include="Code\Services\UnsecuredLoans\UnsecuredLoanCreditDecisionModel.cs" />
+    <Compile Include="Code\Agreements\AdditionalLoanAgreementPdfBuilder.cs" />
+    <Compile Include="Code\Eventing\TimeMachineEventSubscriber.cs" />
+    <Compile Include="Code\ICreditApplicationTypeHandler.cs" />
+    <Compile Include="Code\MortgageLoans\MortgageLoanNotificationSettingsModel.cs" />
+    <Compile Include="Code\RijndaelCryptoProvider.cs" />
+    <Compile Include="Code\Email\EmailServiceFactory.cs" />
+    <Compile Include="Code\Eventing\CreditCheckAutomationHandler.cs" />
+    <Compile Include="Code\Eventing\EventSubscriberBase.cs" />
+    <Compile Include="Code\JsonNetValueProviderFactory.cs" />
+    <Compile Include="Code\KycQuestions.cs" />
+    <Compile Include="Code\Clients\AbstractServiceClient.cs" />
+    <Compile Include="Code\Clients\CustomerClient.cs" />
+    <Compile Include="Code\Clients\nDocumentClient.cs" />
+    <Compile Include="Code\NEnv.cs" />
+    <Compile Include="Code\Clients\CreditClient.cs" />
+    <Compile Include="Code\Services\AdServiceIntegrationService.cs" />
+    <Compile Include="Code\Services\ApplicationArchiveService.cs" />
+    <Compile Include="Code\Services\ApplicationDocumentMethods.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanApplicationSearchService.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanCreditCheckService.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanRejectionScoringSetup.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanWorkflowService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanAmortizationService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanApplicationBasisService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanCreditCheckBase.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanObjectService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanApplicationDirectDebitCheckService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanCurrentLoansService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanWorkListService.cs" />
+    <Compile Include="Code\Services\OtherApplicationsService.cs" />
+    <Compile Include="Code\Services\PartialCreditApplicationModelService.cs" />
+    <Compile Include="Code\Services\PublishEventService.cs" />
+    <Compile Include="Code\Services\ServiceException.cs" />
+    <Compile Include="Code\Services\ShowInfoOnNextPageLoadService.cs" />
+    <Compile Include="Code\Services\UcbvService.cs" />
+    <Compile Include="Code\Services\CustomerInfoService.cs" />
+    <Compile Include="Code\Services\EncryptedTemporaryStorageService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageApplicationRejectionService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanApplicationValuationService.cs" />
+    <Compile Include="Code\Services\ProviderInfoService.cs" />
+    <Compile Include="Code\Services\ApplicationWaitingForAdditionalInformationService.cs" />
+    <Compile Include="Code\Services\ApplicationCancellationService.cs" />
+    <Compile Include="Code\Services\MortgageLoans\MortgageLoanApplicationCreditCheckService.cs" />
+    <Compile Include="Code\Services\CustomerOfficialDataService.cs" />
+    <Compile Include="App_Start\ServicesConfig.cs" />
+    <Compile Include="Code\Services\FraudModelService.cs" />
+    <Compile Include="Code\Services\UrlService.cs" />
+    <Compile Include="Code\Services\WorkListService.cs" />
+    <Compile Include="Code\ClientSqlOnetimeScriptRunner.cs" />
+    <Compile Include="Code\StandardFraudControlEngine.cs" />
+    <Compile Include="Code\StandardPolicyFilters\DataSources\MortgageLoanStandardApplicationPolicyFilterDataSource.cs" />
+    <Compile Include="Code\StandardPolicyFilters\DataSources\MortgageLoanStandardApplicationPolicyFilterDataSourceFactory.cs" />
+    <Compile Include="Code\CreditRecommendationModels\MortgageLoanStandardCreditRecommendationModel.cs" />
+    <Compile Include="Code\Translations.cs" />
+    <Compile Include="Controllers\Api\ApiAbTestController.cs" />
+    <Compile Include="Controllers\Api\ApiApplicationCustomerIdsByCreditNrsController.cs" />
+    <Compile Include="Controllers\Api\ApiCustomerSearchController.cs" />
+    <Compile Include="Controllers\Api\ApiGatewayController.cs" />
+    <Compile Include="Controllers\Api\ApiManualSignaturesController.cs" />
+    <Compile Include="Controllers\Api\ApiSignaturePostbackController..cs" />
+    <Compile Include="Controllers\Api\ApiBankAccountNrController.cs" />
+    <Compile Include="Controllers\Api\ApiEncryptedTemporaryStorageController.cs" />
+    <Compile Include="Controllers\Api\ApiHostController.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController_Dimension_CreditApplicationArchival.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController_Fact_CreditApplicationLatestCreditDecision.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController_Fact_CreditApplicationFinalDecision.cs" />
+    <Compile Include="Controllers\Api\ApplicationCancellationController.cs" />
+    <Compile Include="Controllers\Api\ApplicationDocumentsController.cs" />
+    <Compile Include="Controllers\Api\MortgageLoanWorkListController.cs" />
+    <Compile Include="Controllers\Api\OtherApplicationsController.cs" />
+    <Compile Include="Controllers\Api\ProviderInfoController.cs" />
+    <Compile Include="Controllers\Api\ApplicationWaitingForAdditionalInformationController.cs" />
+    <Compile Include="Controllers\Api\CustomerInfoComponentController.cs" />
+    <Compile Include="Controllers\Api\ApplicationInfoController.cs" />
+    <Compile Include="Controllers\Api\ApplicationCommentsController.cs" />
+    <Compile Include="Controllers\Api\ApplicationCheckpointController.cs" />
+    <Compile Include="Controllers\Api\FraudControlController.cs" />
+    <Compile Include="Controllers\Api\CustomerInfoController.cs" />
+    <Compile Include="Controllers\Api\CreditHandlerLimitController.cs" />
+    <Compile Include="Controllers\Api\ApiKeyValueStoreController.cs" />
+    <Compile Include="Controllers\Api\ApiCreditDecisionDetailsController.cs" />
+    <Compile Include="Controllers\Api\ApiFetchAmlMonitoringKycQuestionsController.cs" />
+    <Compile Include="Controllers\Api\ApiSatForApplicationController.cs" />
+    <Compile Include="Controllers\Api\ApiCreditApplicationAddSignedAgreementController.cs" />
+    <Compile Include="Controllers\Api\ApiCreditApplicationUpdateController.cs" />
+    <Compile Include="Controllers\Api\ApiProviderReportingApplicationStateController.cs" />
+    <Compile Include="Controllers\Api\ApiApplicationNrByCreditNrController.cs" />
+    <Compile Include="Controllers\Api\ApiPeriodicMaintenanceController.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController_Fact_CurrentCreditDecisionEffectiveInterestRate.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController_Fact_CreditApplicationCancellation.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController_Fact_CreditApplicationSnapshot.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController_Dimension_CreditApplication.cs" />
+    <Compile Include="Controllers\Api\ApiUpdateDataWarehouseController.cs" />
+    <Compile Include="Controllers\Api\ApiCreditApplicationWrapperDirectController.cs" />
+    <Compile Include="Controllers\Api\CreditApplicationAdditionalQuestionsController.cs" />
+    <Compile Include="Controllers\Api\ApiCreditManagementController.cs" />
+    <Compile Include="Controllers\Api\CreditApplicationProviderController.cs" />
+    <Compile Include="Code\LoanCreditApplicationTypeHandlerFactory.cs" />
+    <Compile Include="Code\UnsecuredLoans\UnsecuredCreditApplicationTypeHandler.cs" />
+    <Compile Include="Controllers\CompanyLoans\CompanyLoansHighSharedUiController.cs" />
+    <Compile Include="Controllers\CompanyLoans\CompanyLoansMiddleSharedUiController.cs" />
+    <Compile Include="Controllers\CreditApplicationEditController.cs" />
+    <Compile Include="Controllers\CreditApplicationLinkController.cs" />
+    <Compile Include="Controllers\SharedUiControllerBase.cs" />
+    <Compile Include="Controllers\MortgageLoans\MortgageLoansMiddleSharedUiController.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\ApiArchiveCustomersController.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\ArchivedUnsecuredLoanApplicationController.cs" />
+    <Compile Include="Controllers\MiddleSharedUiController.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_AdditionalQuestions.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_AgreementSigningLink.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_Application.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_Applications.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_Approve.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_ArchiveDocument.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_Cancel.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_CreditCheck.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_Fraud.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_ManuallyAddAgreementDocument.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController_Reject.cs" />
+    <Compile Include="DbModel\PreCreditContextExtendedBase.cs" />
+    <Compile Include="DbModel\Repository\BaseRepository.cs" />
+    <Compile Include="DbModel\Repository\LinqKitQueryExpander.cs" />
+    <Compile Include="Migrations\201901090749461_AddedApplicationPauseItem.cs" />
+    <Compile Include="Migrations\201901090749461_AddedApplicationPauseItem.Designer.cs">
+      <DependentUpon>201901090749461_AddedApplicationPauseItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901301011113_AddedArchival.cs" />
+    <Compile Include="Migrations\201901301011113_AddedArchival.Designer.cs">
+      <DependentUpon>201901301011113_AddedArchival.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902190638436_AddedDwUpdatePerfIdx.cs" />
+    <Compile Include="Migrations\201902190638436_AddedDwUpdatePerfIdx.Designer.cs">
+      <DependentUpon>201902190638436_AddedDwUpdatePerfIdx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902190748328_AddedAffiliateReporting.cs" />
+    <Compile Include="Migrations\201902190748328_AddedAffiliateReporting.Designer.cs">
+      <DependentUpon>201902190748328_AddedAffiliateReporting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907081020314_AddedApplicationList.cs" />
+    <Compile Include="Migrations\201907081020314_AddedApplicationList.Designer.cs">
+      <DependentUpon>201907081020314_AddedApplicationList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908210633041_AddedCreditApplicationCustomerList.cs" />
+    <Compile Include="Migrations\201908210633041_AddedCreditApplicationCustomerList.Designer.cs">
+      <DependentUpon>201908210633041_AddedCreditApplicationCustomerList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001080838524_AddedHistoryEvent.cs" />
+    <Compile Include="Migrations\202001080838524_AddedHistoryEvent.Designer.cs">
+      <DependentUpon>202001080838524_AddedHistoryEvent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002060724184_AddedDecisionItems.cs" />
+    <Compile Include="Migrations\202002060724184_AddedDecisionItems.Designer.cs">
+      <DependentUpon>202002060724184_AddedDecisionItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002210911544_AddedComplexApplicationList.cs" />
+    <Compile Include="Migrations\202002210911544_AddedComplexApplicationList.Designer.cs">
+      <DependentUpon>202002210911544_AddedComplexApplicationList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003101430366_AddedTableApplicationReportCasheRow.cs" />
+    <Compile Include="Migrations\202003101430366_AddedTableApplicationReportCasheRow.Designer.cs">
+      <DependentUpon>202003101430366_AddedTableApplicationReportCasheRow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004071229135_AddedCustomerIdToApplicationDocument.cs" />
+    <Compile Include="Migrations\202004071229135_AddedCustomerIdToApplicationDocument.Designer.cs">
+      <DependentUpon>202004071229135_AddedCustomerIdToApplicationDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004200902152_addTableManualSignature.cs" />
+    <Compile Include="Migrations\202004200902152_addTableManualSignature.Designer.cs">
+      <DependentUpon>202004200902152_addTableManualSignature.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004210750351_addTableManualSignature1.cs" />
+    <Compile Include="Migrations\202004210750351_addTableManualSignature1.Designer.cs">
+      <DependentUpon>202004210750351_addTableManualSignature1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004220645476_addTableManualSignature2.cs" />
+    <Compile Include="Migrations\202004220645476_addTableManualSignature2.Designer.cs">
+      <DependentUpon>202004220645476_addTableManualSignature2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007060825243_AddedDocumentSubType.cs" />
+    <Compile Include="Migrations\202007060825243_AddedDocumentSubType.Designer.cs">
+      <DependentUpon>202007060825243_AddedDocumentSubType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202010010625072_AddedWorkLists.cs" />
+    <Compile Include="Migrations\202010010625072_AddedWorkLists.Designer.cs">
+      <DependentUpon>202010010625072_AddedWorkLists.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011270823330_AddedAbTestingExperiment.cs" />
+    <Compile Include="Migrations\202011270823330_AddedAbTestingExperiment.Designer.cs">
+      <DependentUpon>202011270823330_AddedAbTestingExperiment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011300851073_AddedCampaigns.cs" />
+    <Compile Include="Migrations\202011300851073_AddedCampaigns.Designer.cs">
+      <DependentUpon>202011300851073_AddedCampaigns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105060903133_AddedCustomerArchivePerfIndex.cs" />
+    <Compile Include="Migrations\202105060903133_AddedCustomerArchivePerfIndex.Designer.cs">
+      <DependentUpon>202105060903133_AddedCustomerArchivePerfIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202109200932009_AddedStandardPolicyFilterRuleSet.cs" />
+    <Compile Include="Migrations\202109200932009_AddedStandardPolicyFilterRuleSet.Designer.cs">
+      <DependentUpon>202109200932009_AddedStandardPolicyFilterRuleSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205110725339_AddedDocumentVerified.cs" />
+    <Compile Include="Migrations\202205110725339_AddedDocumentVerified.designer.cs">
+      <DependentUpon>202205110725339_AddedDocumentVerified.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WebserviceMethods\Campaigns\CreateCampaignCodeMethod.cs" />
+    <Compile Include="WebserviceMethods\Campaigns\DeleteCampaignCodeMethod.cs" />
+    <Compile Include="WebserviceMethods\Campaigns\DeleteOrInactivateCampaignMethod.cs" />
+    <Compile Include="WebserviceMethods\Campaigns\FetchCampaignsMethod.cs" />
+    <Compile Include="WebserviceMethods\Campaigns\CreateCampaignMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchListCustomersWithKycStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\KycScreenByApplicationNumberMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\RemoveSignedCompanyLoanAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\AttachSignedCompanyLoanAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\ApproveCollateralStepMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\CustomerPages\AnswerKycQuestionsForCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\SetFreeEditApplicationListMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\ToggleOwnershipCheckApprovedMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\ConnectApplicationToCreditCollateralMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\CreateApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\CustomerPages\FetchApplicationsForCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\CustomerPages\FetchApplicationForCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\EditApplicationGeneralDataMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\EditMortgageLoanStandardPropertyMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\FetchApplicationInitialDataMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\NewCreditCheckMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\AddPropertyValuationMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\SetMortgageLoanStandardCurrentCreditDecisionMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\ApproveWaitingForAdditionalInfoStepMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\ActiveApplicationsListMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoanStandard\CustomerPages\FetchLoanApplicationKycStatusForCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\FetchSearchLoanStandardWorkListDataPageMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\PolicyFilters\FetchLoansPolicyFilterRuleSetsMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\SearchLoanStandardByOmniValueMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\ApplicationAutomation\ApplicationAutomationSteps\FraudStepAutomation.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\ApplicationAutomation\ApplicationAutomationHandler.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\ApplicationAutomation\ApplicationAutomationSteps\AgreementStepAutomation.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\ApplicationAutomation\ApplicationAutomationSteps\CreditDecisionStepAutomation.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CancelDirectDebitSignatureSessionMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CreateAgreementPdfMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CreateSwedishDirectDebitConsentDocumentMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CreateUnsecuredLoanApplicationFromCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CustomerPages\CustomerConfirmBankAccountsMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CustomerPages\CustomerConfirmDirectDebitAccountInfoMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CustomerPages\SaveDirectDebitAccountAndOwnerMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\FetchRegisterApplicationInitialDataMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\SetDirectDebitLoanTermsMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\UnsecuredLoanStandardWaterfallReportMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\PolicyFilters\ChangePolicyFilterSetSlotMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\PolicyFilters\CreateOrEditPolicyFilterSetMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\PolicyFilters\CreateTestPolicyFilterSetMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\BuyNewCreditReportLoanMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CancelUnsecuredLoanStandardAgreementSignatureSessionMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\PolicyFilters\FormatPolicyFilterRulesForDisplayMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\NewCreditCheckMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\UnsecuredLoanStandardApproveFraudStepMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CustomerPages\UnsecuredLoanApplicationEditBankAccountsForCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CustomerPages\FetchUnsecuredLoanApplicationForCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CustomerPages\FetchUnsecuredLoanApplicationsForCustomerPagesMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\HasOrHasHadUnsecuredLoanApplicationsMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\UnsecuredLoanStandardCreateLoanMethod .cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CreateUnsecuredLoanStandardAgreementSignatureSessionMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\UnsecuredLoanStandardSetSignedAgreementManuallyMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\UnsecuredLoanStandardApproveAgreementStepMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\LoanStandardApproveKycStepMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\UnsecuredLoanStandardApproveCustomerOfferDecisionStepMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\SetUnsecuredLoanStandardCustomerCreditDecisionMethod.cs" />
+    <Compile Include="WebserviceMethods\ValidateBankAccountNrBatchMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchCreditReportProvidersMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchApplicationAssignedHandlersMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchApplicationConsentAnswersMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchCommonReportParametersMethod.cs" />
+    <Compile Include="WebserviceMethods\FilterOutCustomersWithInactiveApplicationsMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\MortgageLoanWaterfallReportMethod.cs" />
+    <Compile Include="WebserviceMethods\AbTestExperimentStatusReportMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\EditLoanStandardHouseholdEconomyMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\EditUnsecuredLoanApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\EditLoanStandardApplicantMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\SetUnsecuredLoanStandardCurrentCreditDecisionMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\CreateUnsecuredLoanApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\SetApplicationAssignedHandlersMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\ApplicationRejectionReasonsReportMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\ApproveCompanyLoanApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\CalculatePaymentPlanMethod.cs" />
+    <Compile Include="WebserviceMethods\EditApplicationDataBatchedMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CompleteMortgageLoanLeadMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\FetchMortgageLoanLeadsWorkListItemStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\FetchMortgageLoanLeadsWorkListStatusesMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\MortgageLoanApplicationsReportMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CreateMortgageLoanApplicationAndPoaPdfMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CreateLockedCompanyLoanAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CreateCompanyLoanAgreementPdfMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CreateCompanyLoanAgreementPrintContextMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CheckHandlerLimitsMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchCompanyLoanFinalDecisionBatchItemsMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchCompanyLoanFinalDecisionBatchesMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CancelCompanyLoanAgreementSignatureSessionMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\GetOrCreateCompanyLoanAgreementSignatureSessionMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchCompanyLoanWorkflowStepNamesMethod.cs" />
+    <Compile Include="Code\Plugins\CreateApplication\PluginScoringProcessFactory.cs" />
+    <Compile Include="WebserviceMethods\ApproveLockedAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchItemBasedCreditDecisionMethod.cs" />
+    <Compile Include="WebserviceMethods\CreateItemBasedCreditDecisionMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CreateLockedMortgageLoanAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\FetchMortgageLoanDualApplicationSignatureStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\FetchMortgageLoanDualAgreementSignatureStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CreateMortgageLoanDualAgreementPdfMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\FetchMortgageLoanApplicationAdditionalQuestionsStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CreateMortgageLoanDualSettlementPaymentsFileMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CreateMortgageLoanDualLoanMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\SearchMortgageLoanByOmniValueMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\InitializeMortgageLoanDualSettlementPaymentsMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\SubmitMortgageLoanApplicationAdditionalQuestionsMethod.cs" />
+    <Compile Include="WebserviceMethods\RemoveLockedAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\GetLockedAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\EditApplicationDataMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchApplicationEditDataMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchCustomerIdsByApplicationNrMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\SetMortgageLoanWorkflowStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\SendTemplateEmailMethod.cs" />
+    <Compile Include="WebserviceMethods\SwitchApplicationListStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\SetCompanyLoanWorkflowStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchCompanyLoanApplicationAdditionalQuestionsAnswers.cs" />
+    <Compile Include="WebserviceMethods\FetchCustomerApplicationListMembersMethod.cs" />
+    <Compile Include="WebserviceMethods\RemoveCustomerFromApplicationListMethod.cs" />
+    <Compile Include="WebserviceMethods\ArchiveApplicationsBulkMethod.cs" />
+    <Compile Include="Code\Services\CompanyLoans\CompanyLoanCustomerCardUpdateService.cs" />
+    <Compile Include="WebserviceMethods\AddCustomerToApplicationListMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\SubmitCompanyLoanApplicationAdditionalQuestionsMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchCompanyLoanApplicationAdditionalQuestionsStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchAffiliatesMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CreateCompanyLoanApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CommitCompanyLoanInitialScoreDecisionMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchCompanyLoanCurrentCreditDecisionMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\CreateCompanyLoanInitialScoreMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\FetchCompanyLoanWorkListDataPageMethod.cs" />
+    <Compile Include="WebserviceMethods\CompanyLoans\SearchCompanyLoanByOmniValueMethod.cs" />
+    <Compile Include="WebserviceMethods\CustomerKycScreenMethod.cs" />
+    <Compile Include="WebserviceMethods\ArchiveSingleApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchDataSourceItemsMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CreateMortgageLoanApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\FetchFinalCreditCheckStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\FetchInitialCreditCheckStatusMethod.cs" />
+    <Compile Include="Controllers\DocumentCheckController.cs" />
+    <Compile Include="Controllers\MortgageLoans\MortgageApplicationAmortizationHostController.cs" />
+    <Compile Include="Controllers\CreditManagementMonitorController.cs" />
+    <Compile Include="Controllers\CreditHandlerLimitSettingsController.cs" />
+    <Compile Include="Code\CreditManagementMonitorRepository.cs" />
+    <Compile Include="Code\ReportingPercentageHelper.cs" />
+    <Compile Include="Controllers\TestLatestEmailsListController.cs" />
+    <Compile Include="Controllers\FraudCheckController.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditCheckController.cs" />
+    <Compile Include="Controllers\CreditDecisionController.cs" />
+    <Compile Include="Controllers\UnsecuredLoans\CreditManagementController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\NController.cs" />
+    <Compile Include="Controllers\ScheduledTasksController.cs" />
+    <Compile Include="Controllers\SkinningController.cs" />
+    <Compile Include="DbModel\PreCreditContextExtended.cs" />
+    <Compile Include="DbModel\ChangeTrackingDbContext.cs" />
+    <Compile Include="DbModel\PreCreditContext.cs" />
+    <Compile Include="DbModel\Repository\SystemItemRepository.cs" />
+    <Compile Include="DbModel\Repository\LegacyUnsecuredCreditApplicationDbWriter.cs" />
+    <Compile Include="DbModel\Repository\EncryptionContext.cs" />
+    <Compile Include="DbModel\Repository\CreditDecisionRepository.cs" />
+    <Compile Include="DbModel\Repository\CustomerServiceRepository.cs" />
+    <Compile Include="DbModel\Repository\CreditManagementRepository.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606271030354_CreditApplicationAdded.cs" />
+    <Compile Include="Migrations\201606271030354_CreditApplicationAdded.Designer.cs">
+      <DependentUpon>201606271030354_CreditApplicationAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607041021496_CreditApplicationHeaderAdded.cs" />
+    <Compile Include="Migrations\201607041021496_CreditApplicationHeaderAdded.Designer.cs">
+      <DependentUpon>201607041021496_CreditApplicationHeaderAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607071003072_RenamedAffiliateNameToProviderName.cs" />
+    <Compile Include="Migrations\201607071003072_RenamedAffiliateNameToProviderName.Designer.cs">
+      <DependentUpon>201607071003072_RenamedAffiliateNameToProviderName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607140751054_AddedInformationMetadata.cs" />
+    <Compile Include="Migrations\201607140751054_AddedInformationMetadata.Designer.cs">
+      <DependentUpon>201607140751054_AddedInformationMetadata.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607210801072_AdddedEncryptedValue.cs" />
+    <Compile Include="Migrations\201607210801072_AdddedEncryptedValue.Designer.cs">
+      <DependentUpon>201607210801072_AdddedEncryptedValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607210852488_SwitchedApplicatonToEncryptedValue.cs" />
+    <Compile Include="Migrations\201607210852488_SwitchedApplicatonToEncryptedValue.Designer.cs">
+      <DependentUpon>201607210852488_SwitchedApplicatonToEncryptedValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607211153136_CreditCheckApprovedMovedToTriState.cs" />
+    <Compile Include="Migrations\201607211153136_CreditCheckApprovedMovedToTriState.Designer.cs">
+      <DependentUpon>201607211153136_CreditCheckApprovedMovedToTriState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607220529145_CreditAppBoolToStatus.cs" />
+    <Compile Include="Migrations\201607220529145_CreditAppBoolToStatus.Designer.cs">
+      <DependentUpon>201607220529145_CreditAppBoolToStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607220801213_AddedCreditDecisions.cs" />
+    <Compile Include="Migrations\201607220801213_AddedCreditDecisions.Designer.cs">
+      <DependentUpon>201607220801213_AddedCreditDecisions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608171001511_AddedIsRejected.cs" />
+    <Compile Include="Migrations\201608171001511_AddedIsRejected.Designer.cs">
+      <DependentUpon>201608171001511_AddedIsRejected.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608180958003_AddedApplicationComments.cs" />
+    <Compile Include="Migrations\201608180958003_AddedApplicationComments.Designer.cs">
+      <DependentUpon>201608180958003_AddedApplicationComments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609010626254_AddedOneTimeTokens.cs" />
+    <Compile Include="Migrations\201609010626254_AddedOneTimeTokens.Designer.cs">
+      <DependentUpon>201609010626254_AddedOneTimeTokens.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609090721137_PreventDupesInCreditApplicationItem.cs" />
+    <Compile Include="Migrations\201609090721137_PreventDupesInCreditApplicationItem.Designer.cs">
+      <DependentUpon>201609090721137_PreventDupesInCreditApplicationItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609161214049_AddedCommentAttachment.cs" />
+    <Compile Include="Migrations\201609161214049_AddedCommentAttachment.Designer.cs">
+      <DependentUpon>201609161214049_AddedCommentAttachment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610100541015_AddedApplicationCancelled.cs" />
+    <Compile Include="Migrations\201610100541015_AddedApplicationCancelled.Designer.cs">
+      <DependentUpon>201610100541015_AddedApplicationCancelled.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610130917109_AddedFraudControl.cs" />
+    <Compile Include="Migrations\201610130917109_AddedFraudControl.Designer.cs">
+      <DependentUpon>201610130917109_AddedFraudControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611151135035_AddedSystemItem.cs" />
+    <Compile Include="Migrations\201611151135035_AddedSystemItem.Designer.cs">
+      <DependentUpon>201611151135035_AddedSystemItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701120905469_AddedIndices.cs" />
+    <Compile Include="Migrations\201701120905469_AddedIndices.Designer.cs">
+      <DependentUpon>201701120905469_AddedIndices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702070834402_ExplicitAutomationFlagOnCreditDecision.cs" />
+    <Compile Include="Migrations\201702070834402_ExplicitAutomationFlagOnCreditDecision.Designer.cs">
+      <DependentUpon>201702070834402_ExplicitAutomationFlagOnCreditDecision.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702081055023_FixedBadCommentEventType.cs" />
+    <Compile Include="Migrations\201702081055023_FixedBadCommentEventType.Designer.cs">
+      <DependentUpon>201702081055023_FixedBadCommentEventType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707051057339_AddedPerformanceIndices.cs" />
+    <Compile Include="Migrations\201707051057339_AddedPerformanceIndices.Designer.cs">
+      <DependentUpon>201707051057339_AddedPerformanceIndices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707070934211_AddedStatusToApplicationHeader.cs" />
+    <Compile Include="Migrations\201707070934211_AddedStatusToApplicationHeader.Designer.cs">
+      <DependentUpon>201707070934211_AddedStatusToApplicationHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708091042302_AddedHandlerLimitLevel.cs" />
+    <Compile Include="Migrations\201708091042302_AddedHandlerLimitLevel.Designer.cs">
+      <DependentUpon>201708091042302_AddedHandlerLimitLevel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708101249563_AddedApprovalBatches.cs" />
+    <Compile Include="Migrations\201708101249563_AddedApprovalBatches.Designer.cs">
+      <DependentUpon>201708101249563_AddedApprovalBatches.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708140804133_ApplicationChangeLog.cs" />
+    <Compile Include="Migrations\201708140804133_ApplicationChangeLog.Designer.cs">
+      <DependentUpon>201708140804133_ApplicationChangeLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708140910415_AddedAdditionalInfoFlag.cs" />
+    <Compile Include="Migrations\201708140910415_AddedAdditionalInfoFlag.Designer.cs">
+      <DependentUpon>201708140910415_AddedAdditionalInfoFlag.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708140943171_AddedApplicationsFilterIndex.cs" />
+    <Compile Include="Migrations\201708140943171_AddedApplicationsFilterIndex.Designer.cs">
+      <DependentUpon>201708140943171_AddedApplicationsFilterIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708141018256_AddedUiFilterDate.cs" />
+    <Compile Include="Migrations\201708141018256_AddedUiFilterDate.Designer.cs">
+      <DependentUpon>201708141018256_AddedUiFilterDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708210648251_AddedCreditAppItemPerfIndices.cs" />
+    <Compile Include="Migrations\201708210648251_AddedCreditAppItemPerfIndices.Designer.cs">
+      <DependentUpon>201708210648251_AddedCreditAppItemPerfIndices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708310538336_DroppedApplicationStatusAgain.cs" />
+    <Compile Include="Migrations\201708310538336_DroppedApplicationStatusAgain.Designer.cs">
+      <DependentUpon>201708310538336_DroppedApplicationStatusAgain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708310754139_AddedAdditionalQuestionsTracking.cs" />
+    <Compile Include="Migrations\201708310754139_AddedAdditionalQuestionsTracking.Designer.cs">
+      <DependentUpon>201708310754139_AddedAdditionalQuestionsTracking.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709190629253_AddedCustomerCheckpoint.cs" />
+    <Compile Include="Migrations\201709190629253_AddedCustomerCheckpoint.Designer.cs">
+      <DependentUpon>201709190629253_AddedCustomerCheckpoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712131112577_AddedCancellations.cs" />
+    <Compile Include="Migrations\201712131112577_AddedCancellations.Designer.cs">
+      <DependentUpon>201712131112577_AddedCancellations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712150743274_AddedPerfIndexForCreditDecisions.cs" />
+    <Compile Include="Migrations\201712150743274_AddedPerfIndexForCreditDecisions.Designer.cs">
+      <DependentUpon>201712150743274_AddedPerfIndexForCreditDecisions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801261027361_AddedPauseItem.cs" />
+    <Compile Include="Migrations\201801261027361_AddedPauseItem.Designer.cs">
+      <DependentUpon>201801261027361_AddedPauseItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802070833457_AddedCreditDecisionSearchTerms.cs" />
+    <Compile Include="Migrations\201802070833457_AddedCreditDecisionSearchTerms.Designer.cs">
+      <DependentUpon>201802070833457_AddedCreditDecisionSearchTerms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802121403454_AddedCreditManagementMonitorIndex.cs" />
+    <Compile Include="Migrations\201802121403454_AddedCreditManagementMonitorIndex.Designer.cs">
+      <DependentUpon>201802121403454_AddedCreditManagementMonitorIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804231213325_AddedApplicationType.cs" />
+    <Compile Include="Migrations\201804231213325_AddedApplicationType.Designer.cs">
+      <DependentUpon>201804231213325_AddedApplicationType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804270956406_AddedMortgageLoanExtensions.cs" />
+    <Compile Include="Migrations\201804270956406_AddedMortgageLoanExtensions.Designer.cs">
+      <DependentUpon>201804270956406_AddedMortgageLoanExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805041059211_AddedAdditionalQuestionsStatus.cs" />
+    <Compile Include="Migrations\201805041059211_AddedAdditionalQuestionsStatus.Designer.cs">
+      <DependentUpon>201805041059211_AddedAdditionalQuestionsStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805081015295_AddedCreditApplicationDocuments.cs" />
+    <Compile Include="Migrations\201805081015295_AddedCreditApplicationDocuments.Designer.cs">
+      <DependentUpon>201805081015295_AddedCreditApplicationDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805150527146_KeyValueItemAdded.cs" />
+    <Compile Include="Migrations\201805150527146_KeyValueItemAdded.Designer.cs">
+      <DependentUpon>201805150527146_KeyValueItemAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806070811484_AddedMortageLoanDocumentCheckStatus.cs" />
+    <Compile Include="Migrations\201806070811484_AddedMortageLoanDocumentCheckStatus.Designer.cs">
+      <DependentUpon>201806070811484_AddedMortageLoanDocumentCheckStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806110919425_Added-InitialCreditCheckStatus.cs" />
+    <Compile Include="Migrations\201806110919425_Added-InitialCreditCheckStatus.Designer.cs">
+      <DependentUpon>201806110919425_Added-InitialCreditCheckStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806140758073_AddedMortgageFinalCreditCheck.cs" />
+    <Compile Include="Migrations\201806140758073_AddedMortgageFinalCreditCheck.Designer.cs">
+      <DependentUpon>201806140758073_AddedMortgageFinalCreditCheck.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808081103117_AddedDirectDebitCheckStatus.cs" />
+    <Compile Include="Migrations\201808081103117_AddedDirectDebitCheckStatus.Designer.cs">
+      <DependentUpon>201808081103117_AddedDirectDebitCheckStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808151102402_AddedCreditDecisionType.cs" />
+    <Compile Include="Migrations\201808151102402_AddedCreditDecisionType.Designer.cs">
+      <DependentUpon>201808151102402_AddedCreditDecisionType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebserviceMethods\SharedStandard\FindRandomUnsecuredLoanStandardApplicationMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoans\CancelUnsecuredLoanAgreementSignatureSessionMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoans\CreateUnsecuredLoanAgreementMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoansStandard\FetchUnsecuredLoansApplicationInitialDataMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoans\UpdateBankAccountDataShareDataMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoans\DashboardDailyAggregatesMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoans\FetchAdditionalQuestionsApplicationStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoans\FetchUnsecuredApplicationCreditCheckStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\UnsecuredLoans\FetchCustomerKycScreeningStatusMethod.cs" />
+    <Compile Include="WebserviceMethods\MortgageLoans\CreateMortgageLoanLeadsWorkListMethod.cs" />
+    <Compile Include="WebserviceMethods\WorkLists\TryCloseWorkListMethod.cs" />
+    <Compile Include="WebserviceMethods\WorkLists\TryCompleteOrReplaceWorkListItemMethod.cs" />
+    <Compile Include="WebserviceMethods\WorkLists\TryTakeWorkListItemMethod.cs" />
+    <Compile Include="WebserviceMethods\WorkLists\CreateOrAddToWorkListMethod.cs" />
+    <Compile Include="WebserviceMethods\WorkLists\CreateWorkListReportMethod.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Common\Error.cshtml" />
+    <Content Include="Views\CreditManagement\CreditApplications.cshtml" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\CreditManagement\CreditApplication.cshtml" />
+    <Content Include="Views\CreditDecision\CreditApplicationsToApprove.cshtml" />
+    <Content Include="Views\Common\Loggedout.cshtml" />
+    <Content Include="Views\CreditCheck\View.cshtml" />
+    <Content Include="nprecredit.appsettings.config" />
+    <Content Include="nprecredit.connectionstrings.config" />
+    <Content Include="nprecredit.appsettings.debug.config" />
+    <Content Include="nprecredit.connectionstrings.debug.config" />
+    <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="packages.lock.json" />
+    <None Include="Properties\PublishProfiles\LocalDev.pubxml" />
+    <Content Include="Views\FraudCheck\New.cshtml" />
+    <Content Include="Views\FraudCheck\View.cshtml" />
+    <Content Include="Views\TestLatestEmailsList\List.cshtml" />
+    <Content Include="Views\CreditCheck\DecisionBasisDetailsPopup.cshtml" />
+    <Content Include="Views\CreditApplicationEdit\EditValue.cshtml" />
+    <Content Include="Views\CreditHandlerLimitSettings\Index.cshtml" />
+    <Content Include="Views\CreditDecision\CreditApplicationsToApprove_History.cshtml" />
+    <Content Include="Views\CreditApplicationEdit\ViewValue.cshtml" />
+    <Content Include="Views\HandleCheckpoints\Index.cshtml" />
+    <Content Include="Views\CreditManagement\CreditApplications_TestFunctions.cshtml" />
+    <Content Include="Views\CreditManagementMonitor\Index.cshtml" />
+    <Content Include="tsconfig.json" />
+    <Content Include="Views\DocumentCheck\NewOrView.cshtml" />
+    <Content Include="Views\DocumentCheck\NewOrView_StatedApplicantInfo.cshtml" />
+    <Content Include="Views\DocumentCheck\NewOrView_ConfirmedApplicantInfo.cshtml" />
+    <Content Include="Views\DocumentCheck\NewOrView_Documents.cshtml" />
+    <Content Include="Views\CreditManagement\Component_DocumentCheckStatus.cshtml" />
+    <Content Include="Views\Shared\Components.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationCustomerInfo.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationCustomerCheck.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationFraudCheck.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationComments.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationCheckpoints.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationStatusBlock.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationDocuments.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationInitialCreditCheck.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationAdditionalQuestions.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ModalDialog.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationFinalCreditCheck.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationSearch.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationSettlement.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationObjectValuation.cshtml" />
+    <Content Include="Views\MortgageApplicationValuation\ValuationHost.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationObjectValuationNew.cshtml" />
+    <Content Include="Views\Shared\Components\Component_SimpleForm.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationDirectDebitCheck.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationOtherApplications.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationObjectInfo.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationObjectValuationManualSearch.cshtml" />
+    <Content Include="Views\Shared\Components\Component_SimpleTable.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageLoanScoringResult.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageLoanAmortization.cshtml" />
+    <Content Include="Views\MortgageApplicationAmortizationHost\New.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageLoanApplicationBasis.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageLoanApplicationHouseholdIncome.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageLoanApplicationWorkList.cshtml" />
+    <Content Include="Views\ApiHost\Docs.cshtml" />
+    <Content Include="Views\Shared\Components\Component_UnsecuredApplicationFraudCheck.cshtml" />
+    <Content Include="Views\Shared\Components\Component_UnsecuredApplicationAdditionalQuestions.cshtml" />
+    <Content Include="Views\Shared\Components\Component_UnsecuredApplicationCreditCheckStatus.cshtml" />
+    <Content Include="Views\ArchivedUnsecuredLoanApplication\Index.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ArchivedUnsecuredLoanApplication.cshtml" />
+    <Content Include="Views\Shared\Components\Component_UnsecuredCreditCheckOtherApplications.cshtml" />
+    <Content Include="Views\Shared\Components\Component_AffiliateReportingLog.cshtml" />
+    <Content Include="Views\Shared\Components\Component_UnsecuredApplicationCustomerCheck.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanApplicationSearch.cshtml" />
+    <Content Include="Views\Shared\ComponentHostUi.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanApplication.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanInitialCreditCheck.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanInitialCreditCheckNew.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanInitialCreditCheckRecommendation.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanInitialCreditCheckView.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanApproveApplications.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanAdditionalQuestions.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationFreeformDocuments.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationCustomerList.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanKyc.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanFraudCheck.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanAgreement.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ApplicationDataEditor.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageLoanApplicationDynamic.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationDocuments.cshtml" />
+    <Content Include="Views\Shared\Components\MortgageLoans\Component_MortgageApplicationSearchWrapper.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanAuditAgreement.cshtml" />
+    <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanApproveAgreement.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Code\Datasources\" />
+    <Folder Include="Code\PartialModels\" />
+    <Folder Include="Code\Scoring\" />
+    <Folder Include="Code\Services\LegacyUnsecuredLoans\" />
+    <Folder Include="Content\ts-typings\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\FetchApplicationConsentAnswersMethod\" />
+    <Folder Include="Views\MortgageLoansMiddleSharedUi\" />
+    <Folder Include="WebserviceMethods\Validation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201606271030354_CreditApplicationAdded.resx">
+      <DependentUpon>201606271030354_CreditApplicationAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607041021496_CreditApplicationHeaderAdded.resx">
+      <DependentUpon>201607041021496_CreditApplicationHeaderAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607071003072_RenamedAffiliateNameToProviderName.resx">
+      <DependentUpon>201607071003072_RenamedAffiliateNameToProviderName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607140751054_AddedInformationMetadata.resx">
+      <DependentUpon>201607140751054_AddedInformationMetadata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607210801072_AdddedEncryptedValue.resx">
+      <DependentUpon>201607210801072_AdddedEncryptedValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607210852488_SwitchedApplicatonToEncryptedValue.resx">
+      <DependentUpon>201607210852488_SwitchedApplicatonToEncryptedValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607211153136_CreditCheckApprovedMovedToTriState.resx">
+      <DependentUpon>201607211153136_CreditCheckApprovedMovedToTriState.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607220529145_CreditAppBoolToStatus.resx">
+      <DependentUpon>201607220529145_CreditAppBoolToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607220801213_AddedCreditDecisions.resx">
+      <DependentUpon>201607220801213_AddedCreditDecisions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608171001511_AddedIsRejected.resx">
+      <DependentUpon>201608171001511_AddedIsRejected.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608180958003_AddedApplicationComments.resx">
+      <DependentUpon>201608180958003_AddedApplicationComments.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
+      <Project>{bdf0291f-c4c0-43eb-a346-0160f22f0822}</Project>
+      <Name>NTech.Core.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\NTech.Core.PreCredit.Shared\NTech.Core.PreCredit.Shared.csproj">
+      <Project>{c0142fa8-38b4-480f-a639-e95c6668e9b1}</Project>
+      <Name>NTech.Core.PreCredit.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
+      <Project>{8e8913c4-048d-4af1-9344-9494e917da35}</Project>
+      <Name>NTech.Banking.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Legacy.Module.Shared\NTech.Legacy.Module.Shared.csproj">
+      <Project>{a13c3d12-61ff-4b5f-b334-2897f3868479}</Project>
+      <Name>NTech.Legacy.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
+      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
+      <Name>NTech.Services.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>
+            xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+            xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+            xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+
+            if $(ConfigurationName) == Debug (
+            xcopy /Q /Y "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+            xcopy /Q /Y "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
+            )
+        </PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>
