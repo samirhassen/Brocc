@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props')" />
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{19EF2C91-E5C8-4EDA-9B16-4B61BE9A47DF}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nSavings</RootNamespace>
+    <AssemblyName>nSavings</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="IdentityModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentityModel.1.13.0\lib\net45\IdentityModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IdentityServer3.AccessTokenValidation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentityServer3.AccessTokenValidation.2.15.1\lib\net45\IdentityServer3.AccessTokenValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="jose-jwt, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\jose-jwt.4.0.0\lib\net472\jose-jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.0.0.127, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.1.0.0\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.2.33, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.2.206221351\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Jwt, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Jwt.3.0.1\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OpenIdConnect, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OpenIdConnect.3.0.0\lib\net45\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Nustache.Core, Version=1.16.0.4, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nustache.1.16.0.4\lib\net20\Nustache.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NWebsec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.6.0.0\lib\net45\NWebsec.dll</HintPath>
+    </Reference>
+    <Reference Include="NWebsec.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.Core.3.0.0\lib\net45\NWebsec.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NWebsec.Mvc, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.Mvc.6.0.0\lib\net45\NWebsec.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.4.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.PeriodicBatching, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.PeriodicBatching.2.1.0\lib\net45\Serilog.Sinks.PeriodicBatching.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\magellan.css" />
+    <Content Include="Content\css\other.css" />
+    <Content Include="Content\css\toastr.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\naktergal-logo.png" />
+    <Content Include="Content\jsexternal\angular-cookies.min.js" />
+    <Content Include="Content\jsexternal\angular-translate-loader-url.min.js" />
+    <Content Include="Content\jsexternal\angular-translate-storage-cookie.min.js" />
+    <Content Include="Content\jsexternal\angular-translate-storage-local.min.js" />
+    <Content Include="Content\jsexternal\angular-translate.min.js" />
+    <Content Include="Content\js\components-old\customerinfo.js" />
+    <Content Include="Content\js\componentsbase.js" />
+    <Content Include="Content\js\components\modalDialog-component.js" />
+    <Content Include="Content\js\components\savingsAccountDocuments-component.js" />
+    <Content Include="Content\js\controllers\AccountCreationRemarks\accountcreationremarks-index.js" />
+    <Content Include="Content\js\controllers\ApiHost\apiHost.js" />
+    <Content Include="Content\js\controllers\BookkeepingFiles\index.js" />
+    <Content Include="Content\js\controllers\DailyKycScreen\index.js" />
+    <Content Include="Content\js\controllers\FatcaExport\index.js" />
+    <Content Include="Content\js\controllers\IncomingPayments\importfile.js" />
+    <Content Include="Content\js\controllers\InterestRateChange\interestratechange-index.js" />
+    <Content Include="Content\js\controllers\ManualPayment\index.js" />
+    <Content Include="Content\js\controllers\OutgoingPayments\index.js" />
+    <Content Include="Content\js\controllers\Reports\index.js" />
+    <Content Include="Content\js\controllers\Riksgalden\index.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\changeexternalaacountmanagement.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-accountclosure.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-customer.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-details.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-index.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-search.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-withdrawalaccount.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-withdrawalaccountchange.js" />
+    <Content Include="Content\js\controllers\SavingsAccount\savingsaccount-withdrawals.js" />
+    <Content Include="Content\js\controllers\ScheduledTasks\cm1amlexport.js" />
+    <Content Include="Content\js\controllers\ScheduledTasks\customsAccountsExport.js" />
+    <Content Include="Content\js\controllers\ScheduledTasks\treasuryamlexport.js" />
+    <Content Include="Content\js\controllers\Shared\savingsAccountComments.js" />
+    <Content Include="Content\js\controllers\TrapetsAmlExport\trapetsamlexport.js" />
+    <Content Include="Content\js\controllers\UnplacedPayments\unplacedpayment-main.js" />
+    <Content Include="Content\js\controllers\UnplacedPayments\unplacedpayment-place.js" />
+    <Content Include="Content\js\controllers\UnplacedPayments\unplacedpayment-repay.js" />
+    <Content Include="Content\js\infrastructure\ntech.controllerbase.js" />
+    <Content Include="Content\js\legacy-globals.js" />
+    <Content Include="Content\js\ntech-forms.js" />
+    <Content Include="Content\js\ntech_shared\common\angular-fileupload.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.booleans.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.dates.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.linq.js" />
+    <Content Include="Content\js\ntech_shared\common\ntech.navigationtarget.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechInput-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTablePager-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechTestFunctions-component.js" />
+    <Content Include="Content\js\ntech_shared\components\components\ntechWsDocs-component.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.componentservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.controllerbase.template.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.eventhost.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httpinterceptor.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.httptrafficcopservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.localstorageservice.js" />
+    <Content Include="Content\js\ntech_shared\components\infrastructure\ntech.loggingservice.js" />
+    <Content Include="Content\js\ntech_shared\legacy\ntech.js.shared.js" />
+    <Content Include="Content\js\savings-api-client.js" />
+    <Content Include="Content\ts\controllers\AccountCreationRemarks\accountcreationremarks-index.js" />
+    <Content Include="Content\ts\controllers\BookkeepingFiles\index.js" />
+    <Content Include="Content\ts\controllers\DailyKycScreen\index.js" />
+    <Content Include="Content\ts\controllers\IncomingPayments\importfile.js" />
+    <TypeScriptCompile Include="Content\ts\componentsbase.ts" />
+    <TypeScriptCompile Include="Content\ts\components\modalDialog-component.ts" />
+    <TypeScriptCompile Include="Content\ts\components\savingsAccountDocuments-component.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\ApiHost\apiHost.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\FatcaExport\index.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\InterestRateChange\interestratechange-index.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\ManualPayment\index.ts" />
+    <Content Include="Content\ts\controllers\OutgoingPayments\index.js" />
+    <Content Include="Content\ts\controllers\Reports\index.js" />
+    <Content Include="Content\ts\controllers\SavingsAccount\savingsaccount-accountclosure.js" />
+    <TypeScriptCompile Include="Content\ts\controllers\Riksgalden\index.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\SavingsAccount\changeexternalaacountmanagement.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\SavingsAccount\savingsaccount-customer.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\SavingsAccount\savingsaccount-details.ts" />
+    <Content Include="Content\ts\controllers\SavingsAccount\savingsaccount-index.js" />
+    <Content Include="Content\ts\controllers\SavingsAccount\savingsaccount-search.js" />
+    <Content Include="Content\ts\controllers\SavingsAccount\savingsaccount-withdrawalaccount.js" />
+    <Content Include="Content\ts\controllers\SavingsAccount\savingsaccount-withdrawalaccountchange.js" />
+    <Content Include="Content\ts\controllers\SavingsAccount\savingsaccount-withdrawals.js" />
+    <TypeScriptCompile Include="Content\ts\controllers\ScheduledTasks\customsAccountsExport.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\ScheduledTasks\treasuryamlexport.ts" />
+    <TypeScriptCompile Include="Content\ts\controllers\Shared\savingsAccountComments.ts" />
+    <Content Include="Content\ts\controllers\ScheduledTasks\cm1amlexport.js" />
+    <Content Include="Content\ts\controllers\TrapetsAmlExport\trapetsamlexport.js" />
+    <Content Include="Content\ts\controllers\UnplacedPayments\unplacedpayment-main.js" />
+    <Content Include="Content\ts\controllers\UnplacedPayments\unplacedpayment-place.js" />
+    <Content Include="Content\ts\controllers\UnplacedPayments\unplacedpayment-repay.js" />
+    <Content Include="Content\ts\ntech-forms.js" />
+    <Content Include="Content\jsexternal\angular-locale_fi-fi.js" />
+    <Content Include="Content\jsexternal\angular-locale_sv-se.js" />
+    <Content Include="Content\jsexternal\angular-resource.min.js" />
+    <Content Include="Content\jsexternal\angular-route.js" />
+    <Content Include="Content\jsexternal\angular-sanitize.js" />
+    <Content Include="Content\jsexternal\angular.min.js" />
+    <Content Include="Content\jsexternal\bootstrap.js" />
+    <Content Include="Content\jsexternal\download.js" />
+    <Content Include="Content\jsexternal\jquery-1.12.4.js" />
+    <Content Include="Content\jsexternal\jquery.flexselect.js" />
+    <Content Include="Content\jsexternal\liquidmetal.js" />
+    <Content Include="Content\jsexternal\moment.js" />
+    <Content Include="Content\jsexternal\toastr.min.js" />
+    <Content Include="Content\jsexternal\underscore.js" />
+    <Content Include="Global.asax" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <TypeScriptCompile Include="Content\ts\savings-api-client.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup1.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Code\AbstractServiceClient.cs" />
+    <Compile Include="Code\CreditReportClient.cs" />
+    <Compile Include="Code\CustomerClient.cs" />
+    <Compile Include="Code\DocumentClient.cs" />
+    <Compile Include="Code\Email\EmailServiceFactory.cs" />
+    <Compile Include="Code\Eventing\SavingsEventCode.cs" />
+    <Compile Include="Code\Eventing\EventSubscriberBase.cs" />
+    <Compile Include="Code\Eventing\TimeMachineEventSubscriber.cs" />
+    <Compile Include="Code\Fileformats\OutgoingPaymentFileFormat_Pain_001_001_3.cs" />
+    <Compile Include="Code\Services\FinnishCustomsAccounts\FinnishCustomsMigrationManagerLegacy.cs" />
+    <Compile Include="Code\Services\SavingsAccountSearchService.cs" />
+    <Compile Include="Code\Services\SavingsCustomerSearchSourceService.cs" />
+    <Compile Include="Code\NEnv.cs" />
+    <Compile Include="Code\NtechCurrentUserMetadata.cs" />
+    <Compile Include="Code\nUser\IUserClient.cs" />
+    <Compile Include="Code\nUser\UserClient.cs" />
+    <Compile Include="Code\RijndaelCryptoProvider.cs" />
+    <Compile Include="Code\Riksgalden\RiksgaldenConfiguration.cs" />
+    <Compile Include="Code\Riksgalden\RiksgaldenDataRepository.cs" />
+    <Compile Include="Code\Riksgalden\RiksgaldenFileBuilder.cs" />
+    <Compile Include="Code\Riksgalden\RiksgaldenFileExporter.cs" />
+    <Compile Include="Code\SchedulerClient.cs" />
+    <Compile Include="Code\Services\ControllerServiceFactory.cs" />
+    <Compile Include="Code\Services\CustomerRelationsMergeService.cs" />
+    <Compile Include="Code\Services\FatcaExportService.cs" />
+    <Compile Include="Code\Services\YearlySummaryService.cs" />
+    <Compile Include="Code\Trapets\TrapetsDomainModel.cs" />
+    <Compile Include="Code\Trapets\TrapetsFileFormat.cs" />
+    <Compile Include="Code\Trapets\TrapetsKycConfiguration.cs" />
+    <Compile Include="Code\Treasury\TreasuryDomainModel.cs" />
+    <Compile Include="Code\Treasury\TreasuryFileFormat.cs" />
+    <Compile Include="Code\ZipFiles.cs" />
+    <Compile Include="Controllers\Api\ApiChangeWithdrawalAccountController.cs" />
+    <Compile Include="Controllers\Api\ApiBookkeepingFilesController.cs" />
+    <Compile Include="Controllers\Api\ApiCreateManualPaymentController.cs" />
+    <Compile Include="Controllers\Api\ApiCustomerSearchController.cs" />
+    <Compile Include="Controllers\Api\ApiSavingsInvoicingMetricsExportController.cs" />
+    <Compile Include="Controllers\Api\ApiCustomerPagesController.cs" />
+    <Compile Include="Controllers\Api\ApiArchiveDocumentController.cs" />
+    <Compile Include="Controllers\Api\ApiAccountClosureController.cs" />
+    <Compile Include="Controllers\Api\ApiDailyKycScreenController.cs" />
+    <Compile Include="Controllers\Api\ApiDocumentsController.cs" />
+    <Compile Include="Controllers\Api\ApiGatewayController.cs" />
+    <Compile Include="Controllers\Api\ApiHostController.cs" />
+    <Compile Include="Controllers\Api\ApiYearlySummariesController.cs" />
+    <Compile Include="Controllers\Api\ApiOutgoingPaymentsController.cs" />
+    <Compile Include="Controllers\Api\ApiTrapetsAmlExportController.cs" />
+    <Compile Include="Controllers\Api\ApiUnplacedPaymentsController.cs" />
+    <Compile Include="Controllers\Api\ApiWithdrawalController.cs" />
+    <Compile Include="Controllers\Api\ApiSavingsAccountCustomerDetailsController.cs" />
+    <Compile Include="Controllers\Api\ApiSavingsAccountInterestHistoryController.cs" />
+    <Compile Include="Controllers\Api\ApiSavingsAccountDetailsController.cs" />
+    <Compile Include="Controllers\Api\ApiSavingsAccountSearchController.cs" />
+    <Compile Include="Controllers\Api\ApiIncomingPaymentsController.cs" />
+    <Compile Include="Controllers\Api\ApiInterestRateController.cs" />
+    <Compile Include="Controllers\Api\ApiInterestRateChangeController.cs" />
+    <Compile Include="Controllers\Api\ApiPeriodicMaintenanceController.cs" />
+    <Compile Include="Controllers\Api\ApiTestFindRandomSavingsAccountController.cs" />
+    <Compile Include="Controllers\Api\ApiYearlyInterestCapitalizationController.cs" />
+    <Compile Include="Controllers\Api\ApiSavingsAccountFutureInterestReportController.cs" />
+    <Compile Include="Controllers\Api\ApiSavingsAccountCommentsController.cs" />
+    <Compile Include="Controllers\Api\ApiGetStatusSavingsAccountsController.cs" />
+    <Compile Include="Controllers\Api\ApiCreateSavingsAccountController.cs" />
+    <Compile Include="Controllers\Api\ApiEncryptedTemporaryStorageController.cs" />
+    <Compile Include="Controllers\Api\ApiNewSavingsAccountNumberController.cs" />
+    <Compile Include="Controllers\Api\Cm1AmlExportController.cs" />
+    <Compile Include="Controllers\Api\Reports\ApiReportsProviderFeedbackController.cs" />
+    <Compile Include="Controllers\Api\Reports\ApiInterestRateReportsController.cs" />
+    <Compile Include="Controllers\Api\Reports\ApiReportsDailyOutgoingPaymentsController.cs" />
+    <Compile Include="Controllers\Api\TreasuryAmlExportController.cs" />
+    <Compile Include="Controllers\Ui\ManualPaymentController.cs" />
+    <Compile Include="DbModel\BusinessEvents\AccountActivationManagerBase.cs" />
+    <Compile Include="DbModel\BusinessEvents\FixedAccountProductBusinessEventManager.cs" />
+    <Compile Include="DbModel\BusinessEvents\InMemoryInterestChangeManager.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\NController.cs" />
+    <Compile Include="Controllers\SkinningController.cs" />
+    <Compile Include="Controllers\Ui\ScheduledTasksController.cs" />
+    <Compile Include="Controllers\Ui\OutgoingPaymentsController.cs" />
+    <Compile Include="Controllers\Ui\ReportsController.cs" />
+    <Compile Include="Controllers\Ui\TestLatestEmailsListController.cs" />
+    <Compile Include="Controllers\Ui\RiksgaldenController.cs" />
+    <Compile Include="DbModel\BusinessEvents\ChangeWithdrawalAccountBusinessEventManager.cs" />
+    <Compile Include="DbModel\BusinessEvents\BookKeepingFileManager.cs" />
+    <Compile Include="DbModel\BusinessEvents\NewOutgoingPaymentFileBusinessEventManager.cs" />
+    <Compile Include="Controllers\Ui\SavingsAccountController.cs" />
+    <Compile Include="Controllers\Ui\IncomingPaymentsController.cs" />
+    <Compile Include="Controllers\Ui\InterestRateChangeController.cs" />
+    <Compile Include="Controllers\Ui\AccountCreationRemarksController.cs" />
+    <Compile Include="Controllers\Ui\UnplacedPaymentsController.cs" />
+    <Compile Include="DbModel\BusinessEvents\BusinessEventManagerBase.cs" />
+    <Compile Include="DbModel\BusinessEvents\LatestItemCache.cs" />
+    <Compile Include="DbModel\BusinessEvents\AccountClosureBusinessEventManager.cs" />
+    <Compile Include="DbModel\BusinessEvents\WithdrawalBusinessEventManager.cs" />
+    <Compile Include="DbModel\BusinessEvents\RunningTotalCache.cs" />
+    <Compile Include="DbModel\BusinessEvents\YearlyInterestCapitalizationBusinessEventManager.cs" />
+    <Compile Include="DbModel\BusinessEvents\ChangeInterestRateBusinessEventManager.cs" />
+    <Compile Include="DbModel\BusinessEvents\ResolveAccountCreationRemarksBusinessEventManager.cs" />
+    <Compile Include="DbModel\DbException\EntityNotFoundException.cs" />
+    <Compile Include="DbModel\DbException\ValidationException.cs" />
+    <Compile Include="DbModel\EncryptionContext.cs" />
+    <Compile Include="DbModel\ChangeTrackingDbContext.cs" />
+    <Compile Include="DbModel\Repository\SystemItemRepository.cs" />
+    <Compile Include="DbModel\SavingsContext_CoreMigration.cs" />
+    <Compile Include="DbModel\SavingsContext.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710051256003_Initial.cs" />
+    <Compile Include="Migrations\201710051256003_Initial.Designer.cs">
+      <DependentUpon>201710051256003_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710060909047_AddedCreationRemarks.cs" />
+    <Compile Include="Migrations\201710060909047_AddedCreationRemarks.Designer.cs">
+      <DependentUpon>201710060909047_AddedCreationRemarks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710090806157_AddedSharedInterestRate.cs" />
+    <Compile Include="Migrations\201710090806157_AddedSharedInterestRate.Designer.cs">
+      <DependentUpon>201710090806157_AddedSharedInterestRate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710100734217_AddedIncomingPayments.cs" />
+    <Compile Include="Migrations\201710100734217_AddedIncomingPayments.Designer.cs">
+      <DependentUpon>201710100734217_AddedIncomingPayments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710100820369_OcrNrStartingPoint.cs" />
+    <Compile Include="Migrations\201710100820369_OcrNrStartingPoint.Designer.cs">
+      <DependentUpon>201710100820369_OcrNrStartingPoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710100826405_RemovedValidFromDate.cs" />
+    <Compile Include="Migrations\201710100826405_RemovedValidFromDate.Designer.cs">
+      <DependentUpon>201710100826405_RemovedValidFromDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710110852467_AddedYearlyInterestCapitalization.cs" />
+    <Compile Include="Migrations\201710110852467_AddedYearlyInterestCapitalization.Designer.cs">
+      <DependentUpon>201710110852467_AddedYearlyInterestCapitalization.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710121128024_Added-TemporaryEncryptedItem.cs" />
+    <Compile Include="Migrations\201710121128024_Added-TemporaryEncryptedItem.Designer.cs">
+      <DependentUpon>201710121128024_Added-TemporaryEncryptedItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710161125424_AddedOutgoingPayments.cs" />
+    <Compile Include="Migrations\201710161125424_AddedOutgoingPayments.Designer.cs">
+      <DependentUpon>201710161125424_AddedOutgoingPayments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710181133288_AddedBusinessEventRoleCode.cs" />
+    <Compile Include="Migrations\201710181133288_AddedBusinessEventRoleCode.Designer.cs">
+      <DependentUpon>201710181133288_AddedBusinessEventRoleCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710260822332_AddedBookkeepingFile.cs" />
+    <Compile Include="Migrations\201710260822332_AddedBookkeepingFile.Designer.cs">
+      <DependentUpon>201710260822332_AddedBookkeepingFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710271222268_DailyKycScreen.cs" />
+    <Compile Include="Migrations\201710271222268_DailyKycScreen.Designer.cs">
+      <DependentUpon>201710271222268_DailyKycScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711010742562_AddedWithdrawalAccountChange.cs" />
+    <Compile Include="Migrations\201711010742562_AddedWithdrawalAccountChange.Designer.cs">
+      <DependentUpon>201711010742562_AddedWithdrawalAccountChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711020928416_AddedKycQuestions.cs" />
+    <Compile Include="Migrations\201711020928416_AddedKycQuestions.Designer.cs">
+      <DependentUpon>201711020928416_AddedKycQuestions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711071145574_AddedSavingsAccountDocument.cs" />
+    <Compile Include="Migrations\201711071145574_AddedSavingsAccountDocument.Designer.cs">
+      <DependentUpon>201711071145574_AddedSavingsAccountDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802151000074_AddedAmlExport.cs" />
+    <Compile Include="Migrations\201802151000074_AddedAmlExport.Designer.cs">
+      <DependentUpon>201802151000074_AddedAmlExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802151124324_PerformancePass1.cs" />
+    <Compile Include="Migrations\201802151124324_PerformancePass1.Designer.cs">
+      <DependentUpon>201802151124324_PerformancePass1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802260942159_AddedCalendarDate.cs" />
+    <Compile Include="Migrations\201802260942159_AddedCalendarDate.Designer.cs">
+      <DependentUpon>201802260942159_AddedCalendarDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804110655299_AddedSeparateNewAccountInterestRates.cs" />
+    <Compile Include="Migrations\201804110655299_AddedSeparateNewAccountInterestRates.Designer.cs">
+      <DependentUpon>201804110655299_AddedSeparateNewAccountInterestRates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804180607299_AddedWithdrawalAccountChangeDualitySupport.cs" />
+    <Compile Include="Migrations\201804180607299_AddedWithdrawalAccountChangeDualitySupport.Designer.cs">
+      <DependentUpon>201804180607299_AddedWithdrawalAccountChangeDualitySupport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809251054466_AddedKeyValueItem.cs" />
+    <Compile Include="Migrations\201809251054466_AddedKeyValueItem.Designer.cs">
+      <DependentUpon>201809251054466_AddedKeyValueItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902270817376_AddedExportFiles.cs" />
+    <Compile Include="Migrations\201902270817376_AddedExportFiles.Designer.cs">
+      <DependentUpon>201902270817376_AddedExportFiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001070709051_AddedCustomerSecureMessageId.cs" />
+    <Compile Include="Migrations\202001070709051_AddedCustomerSecureMessageId.Designer.cs">
+      <DependentUpon>202001070709051_AddedCustomerSecureMessageId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002201443583_AddedFielProviderNameToOutgoingAmlMonitoringExportFileHeader.cs" />
+    <Compile Include="Migrations\202002201443583_AddedFielProviderNameToOutgoingAmlMonitoringExportFileHeader.Designer.cs">
+      <DependentUpon>202002201443583_AddedFielProviderNameToOutgoingAmlMonitoringExportFileHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202505191112371_AddFixedProduct.cs" />
+    <Compile Include="Migrations\202505191112371_AddFixedProduct.Designer.cs">
+      <DependentUpon>202505191112371_AddFixedProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202505191120512_UpdateFixedRateProduct.cs" />
+    <Compile Include="Migrations\202505191120512_UpdateFixedRateProduct.Designer.cs">
+      <DependentUpon>202505191120512_UpdateFixedRateProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202505191136509_FixedProductAuditLog.cs" />
+    <Compile Include="Migrations\202505191136509_FixedProductAuditLog.Designer.cs">
+      <DependentUpon>202505191136509_FixedProductAuditLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202505191142018_LinkFixedProductAuditLogToBusinessEvent.cs" />
+    <Compile Include="Migrations\202505191142018_LinkFixedProductAuditLogToBusinessEvent.Designer.cs">
+      <DependentUpon>202505191142018_LinkFixedProductAuditLogToBusinessEvent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202505191345203_AddFixedProductUpdatedByName.cs" />
+    <Compile Include="Migrations\202505191345203_AddFixedProductUpdatedByName.Designer.cs">
+      <DependentUpon>202505191345203_AddFixedProductUpdatedByName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202505220723273_SwitchFixedProductResponseStructure.cs" />
+    <Compile Include="Migrations\202505220723273_SwitchFixedProductResponseStructure.Designer.cs">
+      <DependentUpon>202505220723273_SwitchFixedProductResponseStructure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506021137276_AddAccountMaturityInformation.cs" />
+    <Compile Include="Migrations\202506021137276_AddAccountMaturityInformation.Designer.cs">
+      <DependentUpon>202506021137276_AddAccountMaturityInformation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\FixedAccountProductService.cs" />
+    <Compile Include="ViewModel\FixedRateProduct\Common\AuditLogItem.cs" />
+    <Compile Include="ViewModel\FixedRateProduct\Common\ProductViewModel.cs" />
+    <Compile Include="ViewModel\FixedRateProduct\FixedRateProductManagementViewModel.cs" />
+    <Compile Include="ViewModel\FixedRateProduct\ProductItemsViewModel.cs" />
+    <Compile Include="WebserviceMethods\FetchCustomerIdsThatCanBeArchivedMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchFinnishCustomsExportFilesMethod.cs" />
+    <Compile Include="WebserviceMethods\CreateAndSendFinnishCustomsExportMethod.cs" />
+    <Compile Include="WebserviceMethods\FetchFatcaExportFilesMethod.cs" />
+    <Compile Include="WebserviceMethods\KeyValueStoreGetMethod.cs" />
+    <Compile Include="WebserviceMethods\KeyValueStoreRemoveMethod.cs" />
+    <Compile Include="WebserviceMethods\CreateFatcaExportFileMethod.cs" />
+    <Compile Include="WebserviceMethods\Reports\AmlReportingAidReportMethod.cs" />
+    <Compile Include="WebserviceMethods\Reports\CreateFatcaReportMethod.cs" />
+    <Compile Include="WebserviceMethods\UsernameByUserIdMethod.cs" />
+    <Compile Include="WebserviceMethods\Reports\SavingsLedgerReportMethod.cs" />
+    <Compile Include="WebserviceMethods\Reports\UnplacedBalanceReportMethod.cs" />
+    <Compile Include="WebserviceMethods\KeyValueStoreSetMethod.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Common\Error.cshtml" />
+    <Content Include="nsavings.appsettings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="nsavings.connectionstrings.config" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\Common\Loggedout.cshtml" />
+    <Content Include="Views\Shared\UserMessage.cshtml" />
+    <Content Include="Views\AccountCreationRemarks\Index.cshtml" />
+    <Content Include="Views\Shared\SavingsAccountComments.cshtml" />
+    <Content Include="Views\InterestRateChange\Index.cshtml" />
+    <Content Include="Views\IncomingPayments\ImportFile.cshtml" />
+    <Content Include="Views\SavingsAccount\Index.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_Search.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_Customer.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_Details.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_Withdrawals.cshtml" />
+    <Content Include="Views\UnplacedPayments\Place.cshtml" />
+    <Content Include="Views\UnplacedPayments\Place_Place.cshtml" />
+    <Content Include="Views\UnplacedPayments\Place_Repay.cshtml" />
+    <Content Include="Views\UnplacedPayments\Index.cshtml" />
+    <Content Include="Views\OutgoingPayments\Index.cshtml" />
+    <Content Include="Views\ScheduledTasks\BookkeepingFiles.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_Details_AccountDetails.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_AccountClosure.cshtml" />
+    <Content Include="Views\TestLatestEmailsList\List.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_WithdrawalAccount.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_WithdrawalAccountChange.cshtml" />
+    <Content Include="tsconfig.json" />
+    <Content Include="Views\Shared\Component_CustomerInfo.cshtml" />
+    <Content Include="Views\Riksgalden\Index.cshtml" />
+    <Content Include="Views\ScheduledTasks\_ScheduledTaskLayout.cshtml" />
+    <Content Include="Views\ScheduledTasks\HideShowExecuteButton.cshtml" />
+    <Content Include="Views\ScheduledTasks\TrapetsAmlExport.cshtml" />
+    <Content Include="Views\ScheduledTasks\DailyKycScreen.cshtml" />
+    <Content Include="Views\InterestRateChange\Index_Calculate.cshtml" />
+    <Content Include="Views\InterestRateChange\Index_Preview.cshtml" />
+    <Content Include="Views\InterestRateChange\Index_Pending.cshtml" />
+    <Content Include="Views\InterestRateChange\Index_UpcomingChanges.cshtml" />
+    <Content Include="Views\SavingsAccount\Index_WithdrawalAccount_History.cshtml" />
+    <Content Include="Views\SavingsAccount\ChangeExternalAccountManagement.cshtml" />
+    <Content Include="Views\ManualPayment\Index.cshtml" />
+    <Content Include="Views\Shared\Components.cshtml" />
+    <Content Include="Views\Shared\Components\Component_ModalDialog.cshtml" />
+    <Content Include="Views\Shared\Components\Component_SavingsAccountDocuments.cshtml" />
+    <Content Include="Views\ApiHost\Docs.cshtml" />
+    <Content Include="Views\ScheduledTasks\FatcaExport.cshtml" />
+    <Content Include="Views\ScheduledTasks\Cm1AmlExport.cshtml" />
+    <Content Include="Views\ScheduledTasks\TreasuryAmlExport.cshtml" />
+    <Content Include="Views\ScheduledTasks\CustomsAccountsExport.cshtml" />
+    <Content Include="nsavings.connectionstrings.debug.config" />
+    <Content Include="nsavings.appsettings.debug.config" />
+    <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Code\Cm1\" />
+    <Folder Include="DbModel\Model\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201710051256003_Initial.resx">
+      <DependentUpon>201710051256003_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710060909047_AddedCreationRemarks.resx">
+      <DependentUpon>201710060909047_AddedCreationRemarks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710090806157_AddedSharedInterestRate.resx">
+      <DependentUpon>201710090806157_AddedSharedInterestRate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710100734217_AddedIncomingPayments.resx">
+      <DependentUpon>201710100734217_AddedIncomingPayments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710100820369_OcrNrStartingPoint.resx">
+      <DependentUpon>201710100820369_OcrNrStartingPoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710100826405_RemovedValidFromDate.resx">
+      <DependentUpon>201710100826405_RemovedValidFromDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710110852467_AddedYearlyInterestCapitalization.resx">
+      <DependentUpon>201710110852467_AddedYearlyInterestCapitalization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710121128024_Added-TemporaryEncryptedItem.resx">
+      <DependentUpon>201710121128024_Added-TemporaryEncryptedItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710161125424_AddedOutgoingPayments.resx">
+      <DependentUpon>201710161125424_AddedOutgoingPayments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710181133288_AddedBusinessEventRoleCode.resx">
+      <DependentUpon>201710181133288_AddedBusinessEventRoleCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710260822332_AddedBookkeepingFile.resx">
+      <DependentUpon>201710260822332_AddedBookkeepingFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710271222268_DailyKycScreen.resx">
+      <DependentUpon>201710271222268_DailyKycScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711010742562_AddedWithdrawalAccountChange.resx">
+      <DependentUpon>201711010742562_AddedWithdrawalAccountChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711020928416_AddedKycQuestions.resx">
+      <DependentUpon>201711020928416_AddedKycQuestions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711071145574_AddedSavingsAccountDocument.resx">
+      <DependentUpon>201711071145574_AddedSavingsAccountDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802151000074_AddedAmlExport.resx">
+      <DependentUpon>201802151000074_AddedAmlExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802151124324_PerformancePass1.resx">
+      <DependentUpon>201802151124324_PerformancePass1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802260942159_AddedCalendarDate.resx">
+      <DependentUpon>201802260942159_AddedCalendarDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804110655299_AddedSeparateNewAccountInterestRates.resx">
+      <DependentUpon>201804110655299_AddedSeparateNewAccountInterestRates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804180607299_AddedWithdrawalAccountChangeDualitySupport.resx">
+      <DependentUpon>201804180607299_AddedWithdrawalAccountChangeDualitySupport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809251054466_AddedKeyValueItem.resx">
+      <DependentUpon>201809251054466_AddedKeyValueItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902270817376_AddedExportFiles.resx">
+      <DependentUpon>201902270817376_AddedExportFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001070709051_AddedCustomerSecureMessageId.resx">
+      <DependentUpon>202001070709051_AddedCustomerSecureMessageId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002201443583_AddedFielProviderNameToOutgoingAmlMonitoringExportFileHeader.resx">
+      <DependentUpon>202002201443583_AddedFielProviderNameToOutgoingAmlMonitoringExportFileHeader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202505191112371_AddFixedProduct.resx">
+      <DependentUpon>202505191112371_AddFixedProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202505191120512_UpdateFixedRateProduct.resx">
+      <DependentUpon>202505191120512_UpdateFixedRateProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202505191136509_FixedProductAuditLog.resx">
+      <DependentUpon>202505191136509_FixedProductAuditLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202505191142018_LinkFixedProductAuditLogToBusinessEvent.resx">
+      <DependentUpon>202505191142018_LinkFixedProductAuditLogToBusinessEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202505191345203_AddFixedProductUpdatedByName.resx">
+      <DependentUpon>202505191345203_AddFixedProductUpdatedByName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202505220723273_SwitchFixedProductResponseStructure.resx">
+      <DependentUpon>202505220723273_SwitchFixedProductResponseStructure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506021137276_AddAccountMaturityInformation.resx">
+      <DependentUpon>202506021137276_AddAccountMaturityInformation.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Content\ts\components-old\customerinfo.ts" />
+    <TypeScriptCompile Include="Content\ts\infrastructure\ntech.controllerbase.ts" />
+    <TypeScriptCompile Include="Content\ts\legacy-globals.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
+      <Project>{bdf0291f-c4c0-43eb-a346-0160f22f0822}</Project>
+      <Name>NTech.Core.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\NTech.Core.Savings.Shared\NTech.Core.Savings.Shared.csproj">
+      <Project>{7e053319-5ff6-4887-a3e3-a55a71a64688}</Project>
+      <Name>NTech.Core.Savings.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
+      <Project>{8e8913c4-048d-4af1-9344-9494e917da35}</Project>
+      <Name>NTech.Banking.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Legacy.Module.Shared\NTech.Legacy.Module.Shared.csproj">
+      <Project>{a13c3d12-61ff-4b5f-b334-2897f3868479}</Project>
+      <Name>NTech.Legacy.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
+      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
+      <Name>NTech.Services.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+            xcopy /Q /Y /s /i "$(SolutionDir)NTech.Ts.Shared\dist" "$(ProjectDir)Content\ts\ntech_shared"
+            xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\css" "$(ProjectDir)Content\css"
+            xcopy /Q /Y /s /i "$(SolutionDir)NTech.Styles.Shared\img" "$(ProjectDir)Content\img"
+
+            if $(ConfigurationName) == Debug (
+            xcopy /Q /Y "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).appsettings.debug.config" "$(ProjectDir)"
+            xcopy /Q /Y "C:\Naktergal\MagellanCurrentConfiguration\$(ProjectName).connectionstrings.debug.config" "$(ProjectDir)"
+            )
+        </PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.4.9.5\build\Microsoft.TypeScript.MSBuild.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>
