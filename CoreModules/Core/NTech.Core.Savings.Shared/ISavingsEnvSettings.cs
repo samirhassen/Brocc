@@ -13,5 +13,6 @@ namespace NTech.Core.Savings.Shared
         decimal MaxAllowedSavingsCustomerBalance { get; }
         string OutgoingPaymentFileCustomerMessagePattern { get; }
         IBANFi OutgoingPaymentIban { get; }
+        int IncomingPaymentDepositeGracePeriodInDays { get; }
     }
 }

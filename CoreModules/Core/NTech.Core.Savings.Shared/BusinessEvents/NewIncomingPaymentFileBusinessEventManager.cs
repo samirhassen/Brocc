@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using NTech.Banking.IncomingPaymentFiles;
 using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Module.Shared.Clients;
@@ -32,7 +33,7 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
 
         public IncomingPaymentFileHeader ImportIncomingPaymentFile(ISavingsContext context, IncomingPaymentFileWithOriginal paymentfile, IDocumentClient documentClient, out string placementMessage, bool skipAutoPlace = false)
         {
-            if(!context.HasCurrentTransaction)
+            if (!context.HasCurrentTransaction)
                 throw new Exception("Needs an ambient transaction");
 
             var futureBookKeepingDateDates = paymentfile
@@ -65,6 +66,7 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
                 {
                     x.SavingsAccountNr,
                     x.MainCustomerId,
+                    x.CreatedByEvent,
                     x.Status,
                     OcrNr = x
                             .DatedStrings
@@ -75,7 +77,7 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
                 })
                 .Where(x => allOcrsInPaymentFile.Contains(x.OcrNr))
                 .ToList()
-                .ToDictionary(x => x.OcrNr, x => new { x.SavingsAccountNr, x.MainCustomerId, x.Status });
+                .ToDictionary(x => x.OcrNr, x => new { x.SavingsAccountNr, x.MainCustomerId, x.Status, x.CreatedByEvent.EventDate });
 
             var customerIds = savingsAccountNrByOcr.Values.Select(x => x.MainCustomerId).Distinct().ToList();
             var accountBalanceByCustomerId = GetCurrentBalanceByCustomerId(context, customerIds);
@@ -107,6 +109,8 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
             int placedCount = 0;
             int unplacedCount = 0;
             var maxAllowedSavingsCustomerBalance = envSettings.MaxAllowedSavingsCustomerBalance;
+            var incomingPaymentDepositeGracePeriodInDays = envSettings.IncomingPaymentDepositeGracePeriodInDays;
+
             foreach (var externalPayment in pms)
             {
                 var pmt = new IncomingPaymentHeader
@@ -141,7 +145,20 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
 
                 if (!skipAutoPlace && externalPayment.Match != null)
                 {
+
                     var currentCustomerBalance = accountBalanceByCustomerId[externalPayment.Match.MainCustomerId];
+
+                    int gracePeriodDaysDiff = (Clock.Now.Date - externalPayment.Match.EventDate.Date).Days;
+
+                    if (gracePeriodDaysDiff > incomingPaymentDepositeGracePeriodInDays)
+                    {
+                        notPlacedReasonsMessage = "Not allowed to import payment file, It is exceded grace period";
+                    }
+
+                    if (externalPayment.Match.Status != SavingsAccountStatusCode.Active.ToString())
+                    {
+                        notPlacedReasonsMessage = "Savings account is not active";
+                    }
 
                     if (externalPayment.Match.Status != SavingsAccountStatusCode.Active.ToString())
                     {
@@ -327,7 +344,7 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
             repaymentAmount = Math.Round(repaymentAmount, 2);
             leaveUnplacedAmount = Math.Round(leaveUnplacedAmount, 2);
 
-            using(var context = contextFactory.CreateContext())
+            using (var context = contextFactory.CreateContext())
             {
                 context.BeginTransaction();
                 try
@@ -457,7 +474,7 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
                     context.RollbackTransaction();
                     throw;
                 }
-            }            
+            }
         }
 
         public static bool HasTransactionBlockCheckpoint(int customerId, ICustomerClient customerClient)

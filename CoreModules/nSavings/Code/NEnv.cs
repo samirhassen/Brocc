@@ -225,6 +225,9 @@ namespace nSavings.Code
             }
         }
 
+        public static int IncomingPaymentDepositeGracePeriodIndays => Convert.ToInt32(Req("ntech.savings.incomingpayments.depositsgraceperiodindays"));
+
+            
         public static string LedgerReportStandardAccountProductName =>
             ClientCfg.OptionalSetting("ntech.savings.ledgerreport.standardaccountproductname");
 
@@ -290,5 +293,7 @@ namespace nSavings.Code
         public decimal MaxAllowedSavingsCustomerBalance => NEnv.MaxAllowedSavingsCustomerBalance;
         public string OutgoingPaymentFileCustomerMessagePattern => NEnv.OutgoingPaymentFileCustomerMessagePattern;
         public IBANFi OutgoingPaymentIban => NEnv.OutgoingPaymentIban;
+
+        public int IncomingPaymentDepositeGracePeriodIndays => NEnv.IncomingPaymentDepositeGracePeriodIndays;
     }
 }

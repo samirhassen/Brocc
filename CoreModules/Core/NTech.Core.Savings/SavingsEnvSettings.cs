@@ -55,5 +55,13 @@ namespace NTech.Core.Savings
                 return IBANFi.Parse(Req("ntech.savings.outgoingpaymentiban"));
             }
         }
+
+        public int IncomingPaymentDepositeGracePeriodInDays
+        {
+            get
+            {
+                return Convert.ToInt32(Req("ntech.savings.incomingpayments.depositsgraceperiodindays"));
+            }
+        }
     }
 }
