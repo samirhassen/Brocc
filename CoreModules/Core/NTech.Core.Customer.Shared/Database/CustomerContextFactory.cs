@@ -7,13 +7,13 @@ namespace NTech.Core.Customer.Shared.Database
     /// </summary>
     public class CustomerContextFactory
     {
-        private readonly Func<ICustomerContextExtended> createContext;
+        private readonly Func<ICustomerContextExtended> _createContext;
 
         public CustomerContextFactory(Func<ICustomerContextExtended> createContext)
         {
-            this.createContext = createContext;
+            _createContext = createContext;
         }
 
-        public ICustomerContextExtended CreateContext() => createContext();
+        public ICustomerContextExtended CreateContext() => _createContext();
     }
 }

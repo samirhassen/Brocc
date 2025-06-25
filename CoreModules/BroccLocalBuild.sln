@@ -103,6 +103,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.Services.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nGccCustomerApplication", "nGccCustomerApplication\nGccCustomerApplication.csproj", "{FF2DA027-CB58-49AA-B484-AA61B2CB4CAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brocc.Savings.Tests", "Brocc.Savings.Tests\Brocc.Savings.Tests.csproj", "{644425E2-43E3-44AE-999E-1D04B89D3598}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -249,6 +251,10 @@ Global
 		{FF2DA027-CB58-49AA-B484-AA61B2CB4CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF2DA027-CB58-49AA-B484-AA61B2CB4CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF2DA027-CB58-49AA-B484-AA61B2CB4CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{644425E2-43E3-44AE-999E-1D04B89D3598}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{644425E2-43E3-44AE-999E-1D04B89D3598}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{644425E2-43E3-44AE-999E-1D04B89D3598}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{644425E2-43E3-44AE-999E-1D04B89D3598}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -289,6 +295,7 @@ Global
 		{8E8913C4-048D-4AF1-9344-9494E917DA35} = {0D359DED-5BE9-48BA-AEFD-5C52800B545C}
 		{EC01086D-AB48-4F92-AB30-0563F6CB2B28} = {0D359DED-5BE9-48BA-AEFD-5C52800B545C}
 		{FF2DA027-CB58-49AA-B484-AA61B2CB4CAE} = {FAFC099B-5D8B-4D1A-A0B6-2781DFA837AD}
+		{644425E2-43E3-44AE-999E-1D04B89D3598} = {AD9AEF1E-0A7B-42F2-8F76-BD6A5A78876B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F89D344-237A-4F8C-B214-E5821A41840D}

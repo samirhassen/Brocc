@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Banking.BankAccounts
 {

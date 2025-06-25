@@ -1,7 +1,8 @@
-﻿using NTech.Core.Module.Shared.Database;
-using System;
+﻿using System;
+using NTech.Core.Module.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings
+namespace NTech.Core.Savings.Shared.DbModel
 {
     public enum LedgerAccountTypeCode
     {

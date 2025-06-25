@@ -1,15 +1,16 @@
-﻿using IdentityServer3.Core.Models;
-using NTech.Services.Infrastructure;
-using nUser.DbModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services.Default;
+using NTech.Services.Infrastructure;
+using nUser.DbModel;
 
 namespace nUser.Code
 {
-    public class NTechUserService : IdentityServer3.Core.Services.Default.UserServiceBase
+    public class NTechUserService : UserServiceBase
     {
         public class NTechUser
         {
@@ -23,14 +24,15 @@ namespace nUser.Code
         {
             return GetUser(
                 c
-                .Users
-                .Where(x => x.AuthenticationMechanisms.Any(y =>
-                    !y.RemovedDate.HasValue
-                    && y.AuthenticationProvider == provider
-                    && y.UserIdentity == id)), md);
+                    .Users
+                    .Where(x => x.AuthenticationMechanisms.Any(y =>
+                        !y.RemovedDate.HasValue
+                        && y.AuthenticationProvider == provider
+                        && y.UserIdentity == id)), md);
         }
 
-        public static NTechUser GetUserWithUsernamePasswordLogin(UsersContext c, string username, string plaintextPassword, ProviderMetadata md)
+        public static NTechUser GetUserWithUsernamePasswordLogin(UsersContext c, string username,
+            string plaintextPassword, ProviderMetadata md)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(plaintextPassword))
                 return null;
@@ -40,15 +42,16 @@ namespace nUser.Code
                 .Include("User")
                 .Include("User.GroupMemberships")
                 .Where(x => !x.RemovedById.HasValue)
-                .SingleOrDefault(x => x.AuthenticationType == "UsernamePassword" && x.AuthenticationProvider == "Local" && x.UserIdentity == username);
+                .SingleOrDefault(x =>
+                    x.AuthenticationType == "UsernamePassword" && x.AuthenticationProvider == "Local" &&
+                    x.UserIdentity == username);
 
             if (am == null)
                 return null;
 
-            if (!PasswordHasher.IsValid(plaintextPassword, am.Credentials))
-                return null;
-
-            return GetUser(new User[] { am.User }.AsQueryable(), md);
+            return PasswordHasher.IsValid(plaintextPassword, am.Credentials)
+                ? GetUser(new[] { am.User }.AsQueryable(), md)
+                : null;
         }
 
         public static IQueryable<UserServiceModel> GetUserQueryBase(IQueryable<User> all)
@@ -62,11 +65,12 @@ namespace nUser.Code
                     Id = x.Id,
                     ConsentedDate = x.ConsentedDate,
                     Groups = x.GroupMemberships.Where(y =>
-                        y.StartDate < DateTime.Now
-                        && y.EndDate > DateTime.Now
-                        && y.ApprovedDate.HasValue
-                        && !y.GroupMembershipCancellation.Any(z => z.CommittedById.HasValue))
-                        .Select(y => new UserServiceModel.GroupModel { ForProduct = y.ForProduct, GroupName = y.GroupName })
+                            y.StartDate < DateTime.Now
+                            && y.EndDate > DateTime.Now
+                            && y.ApprovedDate.HasValue
+                            && !y.GroupMembershipCancellation.Any(z => z.CommittedById.HasValue))
+                        .Select(y => new UserServiceModel.GroupModel
+                            { ForProduct = y.ForProduct, GroupName = y.GroupName })
                 });
         }
 
@@ -81,10 +85,11 @@ namespace nUser.Code
                 Subject = user.Id.ToString(),
                 Name = user.DisplayName,
                 ConsentedDate = user.ConsentedDate,
-                Claims = new List<Tuple<string, string>>()
+                Claims = new List<Tuple<string, string>>
+                {
+                    Tuple.Create("ntech.username", user.DisplayName)
+                }
             };
-
-            u.Claims.Add(Tuple.Create("ntech.username", user.DisplayName));
 
             if (!string.IsNullOrWhiteSpace(user.ProviderName))
             {
@@ -114,19 +119,23 @@ namespace nUser.Code
                     else
                     {
                         u.Claims.Add(Tuple.Create("ntech.role", $"{g.ForProduct}.{g.GroupName}"));
-                        if (g.ForProduct == "ConsumerCreditFi")
+                        switch (g.ForProduct)
                         {
-                            //TODO: Add support for separate savings permission
-                            u.Claims.Add(Tuple.Create("ntech.role", $"ConsumerSavingsFi.{g.GroupName}"));
-                            if (NEnv.IsMortgageLoansEnabled)
+                            case "ConsumerCreditFi":
                             {
-                                //TODO: Add support for separate mortgage loans permission
-                                u.Claims.Add(Tuple.Create("ntech.role", $"MortgageLoan.{g.GroupName}"));
+                                //TODO: Add support for separate savings permission
+                                u.Claims.Add(Tuple.Create("ntech.role", $"ConsumerSavingsFi.{g.GroupName}"));
+                                if (NEnv.IsMortgageLoansEnabled)
+                                {
+                                    //TODO: Add support for separate mortgage loans permission
+                                    u.Claims.Add(Tuple.Create("ntech.role", $"MortgageLoan.{g.GroupName}"));
+                                }
+
+                                break;
                             }
-                        }
-                        else if (g.ForProduct == "ConsumerCredit")
-                        {
-                            u.Claims.Add(Tuple.Create("ntech.role", $"ConsumerSavings.{g.GroupName}"));
+                            case "ConsumerCredit":
+                                u.Claims.Add(Tuple.Create("ntech.role", $"ConsumerSavings.{g.GroupName}"));
+                                break;
                         }
                     }
                 }
@@ -157,46 +166,40 @@ namespace nUser.Code
 
         private ProviderMetadata GetProviderMetadataByExternalIdentity(ExternalIdentity id)
         {
-            if (id?.Provider == "Google")
+            switch (id?.Provider)
             {
-                return new ProviderMetadata
-                {
-                    ProviderAuthenticationLevel = "UsernamePassword",
-                    UserIdentityClaimName = "email"
-                };
-            }
-            else if (id?.Provider == "Windows")
-            {
-                return new ProviderMetadata
-                {
-                    ProviderAuthenticationLevel = "ActiveDirectory",
-                    UserIdentityClaimName = "name"
-                };
-            }
-            else if (id?.Provider == "AzureAd")
-            {
-                return new ProviderMetadata
-                {
-                    ProviderAuthenticationLevel = "AzureAd",
-                    UserIdentityClaimName = "oid"
-                };
-            }
-            else
-            {
-                return new ProviderMetadata
-                {
-                    ProviderAuthenticationLevel = "UsernamePassword", //Assume the worst
-                    UserIdentityClaimName = null
-                };
+                case "Google":
+                    return new ProviderMetadata
+                    {
+                        ProviderAuthenticationLevel = "UsernamePassword",
+                        UserIdentityClaimName = "email"
+                    };
+                case "Windows":
+                    return new ProviderMetadata
+                    {
+                        ProviderAuthenticationLevel = "ActiveDirectory",
+                        UserIdentityClaimName = "name"
+                    };
+                case "AzureAd":
+                    return new ProviderMetadata
+                    {
+                        ProviderAuthenticationLevel = "AzureAd",
+                        UserIdentityClaimName = "oid"
+                    };
+                default:
+                    return new ProviderMetadata
+                    {
+                        ProviderAuthenticationLevel = "UsernamePassword", //Assume the worst
+                        UserIdentityClaimName = null
+                    };
             }
         }
 
-        private string GetUserIdentityByProvider(ProviderMetadata p, ExternalIdentity id)
+        private static string GetUserIdentityByProvider(ProviderMetadata p, ExternalIdentity id)
         {
-            if (p.UserIdentityClaimName != null)
-                return id?.Claims?.Where(x => x.Type == p.UserIdentityClaimName).Select(x => x.Value).FirstOrDefault();
-            else
-                return id?.ProviderId;
+            return p.UserIdentityClaimName != null
+                ? id?.Claims?.Where(x => x.Type == p.UserIdentityClaimName).Select(x => x.Value).FirstOrDefault()
+                : id?.ProviderId;
         }
 
         public override Task AuthenticateExternalAsync(ExternalAuthenticationContext context)
@@ -217,6 +220,7 @@ namespace nUser.Code
                         identityProvider: context.ExternalIdentity.Provider);
                 }
             }
+
             return Task.FromResult(0);
         }
 
@@ -224,7 +228,8 @@ namespace nUser.Code
         {
             using (var db = new UsersContext())
             {
-                var u = GetUserWithUsernamePasswordLogin(db, context?.UserName, context?.Password, new ProviderMetadata { ProviderAuthenticationLevel = "UsernamePassword" });
+                var u = GetUserWithUsernamePasswordLogin(db, context?.UserName, context?.Password,
+                    new ProviderMetadata { ProviderAuthenticationLevel = "UsernamePassword" });
                 if (u != null)
                 {
                     context.AuthenticateResult = new AuthenticateResult(
@@ -233,10 +238,11 @@ namespace nUser.Code
                         ToClaims(u.Claims));
                 }
             }
+
             return Task.FromResult(0);
         }
 
-        private Claim[] ToClaims(IEnumerable<Tuple<string, string>> t)
+        private static Claim[] ToClaims(IEnumerable<Tuple<string, string>> t)
         {
             return t.Select(x => new Claim(x.Item1, x.Item2)).ToArray();
         }
@@ -244,11 +250,11 @@ namespace nUser.Code
         public override Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var uid = context?.Subject?.FindFirst("sub")?.Value;
-            if (IsActiveUser(uid))
-            {
-                context.AllClaimsRequested = true;
-                context.IssuedClaims = context.Subject.Claims;
-            }
+            if (!IsActiveUser(uid)) return Task.FromResult(0);
+
+            context.AllClaimsRequested = true;
+            context.IssuedClaims = context.Subject.Claims;
+
             return Task.FromResult(0);
         }
 
@@ -261,18 +267,17 @@ namespace nUser.Code
             if (NTechCache.Get<string>(key) == "1")
                 return true;
 
-            int uid;
-            bool isActive = false;
-            if (int.TryParse(userId, out uid))
+            if (!int.TryParse(userId, out var uid)) return false;
+
+            bool isActive;
+            using (var db = new UsersContext())
             {
-                using (var db = new UsersContext())
-                {
-                    isActive = db.Users.Any(x => x.Id == uid);
-                }
-                if (isActive)
-                {
-                    NTechCache.Set(key, "1", TimeSpan.FromMinutes(15));
-                }
+                isActive = db.Users.Any(x => x.Id == uid);
+            }
+
+            if (isActive)
+            {
+                NTechCache.Set(key, "1", TimeSpan.FromMinutes(15));
             }
 
             return isActive;
@@ -307,8 +312,10 @@ namespace nUser.Code
             if (groups == null)
                 return result;
 
-            var consumerCreditFiGroups = groups.Where(x => x.ForProduct == "ConsumerCreditFi").Select(x => x.GroupName).ToHashSet();
-            var consumerCreditGroups = groups.Where(x => x.ForProduct == "ConsumerCredit").Select(x => x.GroupName).ToHashSet();
+            var consumerCreditFiGroups = groups.Where(x => x.ForProduct == "ConsumerCreditFi").Select(x => x.GroupName)
+                .ToHashSet();
+            var consumerCreditGroups =
+                groups.Where(x => x.ForProduct == "ConsumerCredit").Select(x => x.GroupName).ToHashSet();
 
             foreach (var group in groups)
             {
@@ -322,12 +329,14 @@ namespace nUser.Code
             return result;
         }
 
-        public static IQueryable<UserServiceModel> FilterByExpandedGroup(IQueryable<UserServiceModel> query, string forProduct, string groupName)
+        public static IQueryable<UserServiceModel> FilterByExpandedGroup(IQueryable<UserServiceModel> query,
+            string forProduct, string groupName)
         {
             if (forProduct == "ConsumerCredit" || forProduct == "ConsumerCreditFi")
-                return query.Where(x => x.Groups.Any(y => (y.ForProduct == "ConsumerCredit" || y.ForProduct == "ConsumerCreditFi") && y.GroupName == groupName));
-            else
-                return query.Where(x => x.Groups.Any(y => y.ForProduct == forProduct && y.GroupName == groupName));
+                return query.Where(x => x.Groups.Any(y =>
+                    (y.ForProduct == "ConsumerCredit" || y.ForProduct == "ConsumerCreditFi") &&
+                    y.GroupName == groupName));
+            return query.Where(x => x.Groups.Any(y => y.ForProduct == forProduct && y.GroupName == groupName));
         }
 
         public class GroupModel

@@ -1,11 +1,4 @@
-﻿using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
-using Microsoft.Owin.Security.Google;
-using Microsoft.Owin.Security.WsFederation;
-using Owin;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.IO;
@@ -13,6 +6,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.OpenIdConnect;
+using Microsoft.Owin.Security.WsFederation;
+using Owin;
 
 namespace nUser.Code
 {
@@ -40,7 +41,7 @@ namespace nUser.Code
                     DisplayName = "Näktergal Financial Systems",
                     Required = true,
                     Name = "nTech1",
-                    Description =  NEnv.ConsentText,
+                    Description = NEnv.ConsentText,
                     Type = ScopeType.Resource,
                     Claims = new List<ScopeClaim>
                     {
@@ -56,10 +57,9 @@ namespace nUser.Code
                     Name = "nTechPreCredit1",
                     Type = ScopeType.Resource,
                     IncludeAllClaimsForUser = true
-                }
+                },
+                StandardScopes.OpenId
             };
-
-            scopes.Add(StandardScopes.OpenId);
 
             return scopes;
         }
@@ -138,8 +138,10 @@ namespace nUser.Code
             {
                 var uri = new Uri(s.Value).ToString();
                 yield return uri;
-                yield return uri.Substring(0, uri.Length - 1); //Trailing slash that randomly gets appened by the auth framework
+                yield return
+                    uri.Substring(0, uri.Length - 1); //Trailing slash that randomly gets appened by the auth framework
             }
+
             if (isEmbeddedBackOffice)
             {
                 var uri = NEnv.ServiceRegistry.External.ServiceUrl("nBackOffice", "s/login-complete").ToString();
@@ -158,23 +160,24 @@ namespace nUser.Code
 
         private static string CreateTemporaryEmbeddedViewsFolder()
         {
-            Func<string, string> readEmbeddedFile = name =>
-                {
-                    using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream($"nUser.EmbeddedFileSystemIdentityServerViews.{name}"))
-                    using (var r = new StreamReader(s, Encoding.UTF8))
-                    {
-                        return r.ReadToEnd();
-                    }
-                };
-
             var p = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(p);
 
-            File.WriteAllText(Path.Combine(p, "_authorizeresponse.html"), readEmbeddedFile("_authorizeresponse.html"));
-            File.WriteAllText(Path.Combine(p, "_layout.html"), readEmbeddedFile("_layout.html"));
-            File.WriteAllText(Path.Combine(p, "_consent.html"), readEmbeddedFile("_consent.html"));
+            File.WriteAllText(Path.Combine(p, "_authorizeresponse.html"), ReadEmbeddedFile("_authorizeresponse.html"));
+            File.WriteAllText(Path.Combine(p, "_layout.html"), ReadEmbeddedFile("_layout.html"));
+            File.WriteAllText(Path.Combine(p, "_consent.html"), ReadEmbeddedFile("_consent.html"));
 
             return p;
+
+            string ReadEmbeddedFile(string name)
+            {
+                using (var s = Assembly.GetExecutingAssembly()
+                           .GetManifestResourceStream($"nUser.EmbeddedFileSystemIdentityServerViews.{name}"))
+                using (var r = new StreamReader(s, Encoding.UTF8))
+                {
+                    return r.ReadToEnd();
+                }
+            }
         }
 
         private static string GetPublicOrigin()
@@ -184,11 +187,11 @@ namespace nUser.Code
             return null;
         }
 
-        public static void RegisterStartup(Owin.IAppBuilder app)
+        public static void RegisterStartup(IAppBuilder app)
         {
             var factory = new IdentityServerServiceFactory()
-                                               .UseInMemoryClients(GetClients())
-                                               .UseInMemoryScopes(GetScopes());
+                .UseInMemoryClients(GetClients())
+                .UseInMemoryScopes(GetScopes());
 
             var userService = new NTechUserService();
             factory.UserService = new Registration<IUserService>(resolver => userService);
@@ -198,15 +201,15 @@ namespace nUser.Code
 
             var viewOptions = new DefaultViewServiceOptions
             {
-                CacheViews = true
+                CacheViews = true,
+                CustomViewDirectory = CreateTemporaryEmbeddedViewsFolder()
             };
 
-            viewOptions.CustomViewDirectory = CreateTemporaryEmbeddedViewsFolder();
             factory.ConfigureDefaultViewService(viewOptions);
 
             var options = new IdentityServerOptions
             {
-                SiteName = "Näktergal Identity Provider",
+                SiteName = "Brocc Identity Provider",
                 SigningCertificate = NEnv.IdentityServerCertificate,
                 Factory = factory,
                 RequireSsl = NEnv.IsProduction,
@@ -234,10 +237,7 @@ namespace nUser.Code
                 };
             }
 
-            app.Map("/id", idsrvApp =>
-            {
-                idsrvApp.UseIdentityServer(options);
-            });
+            app.Map("/id", idsrvApp => { idsrvApp.UseIdentityServer(options); });
         }
 
         private static void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
@@ -276,6 +276,7 @@ namespace nUser.Code
                                 //Can't _really_ logout of windows auth, just set the notification to handled.
                                 notification.HandleResponse();
                             }
+
                             return Task.FromResult(0);
                         }
                     }
@@ -288,27 +289,31 @@ namespace nUser.Code
             {
                 //https://docs.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-asp-webapp
                 //Need to enable ID Tokens and tokens under Implicit grant and hybrid flows in the azure portal
-                app.UseOpenIdConnectAuthentication(new Microsoft.Owin.Security.OpenIdConnect.OpenIdConnectAuthenticationOptions
-                {
-                    // Sets the client ID, authority, and redirect URI as obtained from Web.config
-                    ClientId = azureAdLogin.ApplicationClientId,
-                    Authority = azureAdLogin.Authority,
-                    RedirectUri = NEnv.ServiceRegistry.External.ServiceUrl("nUser", "id/azure-ad").ToString(),
-                    // PostLogoutRedirectUri is the page that users will be redirected to after sign-out. In this case, it's using the home page
-                    PostLogoutRedirectUri = NEnv.ServiceRegistry.External.ServiceUrl("nBackOffice", "Secure/LoggedOut").ToString(),
-                    Scope = "openid profile email",
-                    ResponseType = "id_token token",
-                    // ValidateIssuer set to false to allow personal and work accounts from any organization to sign in to your application
-                    // To only allow users from a single organization, set ValidateIssuer to true and the 'tenant' setting in Web.config to the tenant name
-                    // To allow users from only a list of specific organizations, set ValidateIssuer to true and use the ValidIssuers parameter
-                    TokenValidationParameters = new TokenValidationParameters()
+                app.UseOpenIdConnectAuthentication(
+                    new OpenIdConnectAuthenticationOptions
                     {
-                        ValidateIssuer = true
-                    },
-                    //NOTE: These are read by the token validator callback in the constructor so the order of these matter. Pure insanity: https://github.com/IdentityServer/IdentityServer3/issues/1176#issuecomment-94942148
-                    AuthenticationType = "AzureAd",
-                    SignInAsAuthenticationType = signInAsType,
-                });
+                        // Sets the client ID, authority, and redirect URI as obtained from Web.config
+                        ClientId = azureAdLogin.ApplicationClientId,
+                        Caption = "Sign-in with Microsoft",
+                        Authority = azureAdLogin.Authority,
+                        RedirectUri = NEnv.ServiceRegistry.External.ServiceUrl("nUser", "id/azure-ad").ToString(),
+                        // PostLogoutRedirectUri is the page that users will be redirected to after sign-out. In this case, it's using the home page
+                        PostLogoutRedirectUri = NEnv.ServiceRegistry.External
+                            .ServiceUrl("nBackOffice", "Secure/LoggedOut").ToString(),
+                        Scope = "openid profile email", //"  https://graph.microsoft.com/.default",
+                        ResponseType = "id_token", //" token",
+                        // ValidateIssuer set to false to allow personal and work accounts from any organization to sign in to your application
+                        // To only allow users from a single organization, set ValidateIssuer to true and the 'tenant' setting in Web.config to the tenant name
+                        // To allow users from only a list of specific organizations, set ValidateIssuer to true and use the ValidIssuers parameter
+                        TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true
+                        },
+
+                        //NOTE: These are read by the token validator callback in the constructor so the order of these matter. Pure insanity: https://github.com/IdentityServer/IdentityServer3/issues/1176#issuecomment-94942148
+                        AuthenticationType = "AzureAd",
+                        SignInAsAuthenticationType = signInAsType,
+                    });
             }
         }
     }

@@ -1,12 +1,12 @@
-﻿using NTech;
-using System;
+﻿using System;
+using NTech;
 
 namespace nSavings.DbModel.BusinessEvents
 {
     public class InMemoryInterestChangeManager
     {
-        private object lockObject = new object();
-        private ChangeState currentChange = null;
+        private readonly object lockObject = new object();
+        private ChangeState currentChange;
 
         public class ChangeState
         {
@@ -32,7 +32,9 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        public bool TryInitiateChange(IClock clock, string savingsAccountTypeCode, decimal? oldInterestRatePercent, decimal newInterestRatePercent, DateTime allAccountsValidFromDate, DateTime? newAccountsValidFromDate, int currentUserId, out string failedMessage, out ChangeState state)
+        public bool TryInitiateChange(IClock clock, string savingsAccountTypeCode, decimal? oldInterestRatePercent,
+            decimal newInterestRatePercent, DateTime allAccountsValidFromDate, DateTime? newAccountsValidFromDate,
+            int currentUserId, out string failedMessage, out ChangeState state)
         {
             lock (lockObject)
             {
@@ -67,20 +69,24 @@ namespace nSavings.DbModel.BusinessEvents
             return this.currentChange;
         }
 
-        public bool TryVerifyCurrentChange(IClock clock, int currentUserId, string changeToken, out string failedMessage, bool dontEnforceDuality = false)
+        public bool TryVerifyCurrentChange(IClock clock, int currentUserId, string changeToken,
+            out string failedMessage, bool dontEnforceDuality = false)
         {
-            return TryVerifyOrRejectCurrentChange(clock, currentUserId, changeToken, true, out failedMessage, dontEnforceDuality: dontEnforceDuality);
+            return TryVerifyOrRejectCurrentChange(clock, currentUserId, changeToken, true, out failedMessage,
+                dontEnforceDuality: dontEnforceDuality);
         }
 
-        public bool TryRejectCurrentChange(IClock clock, int currentUserId, string changeToken, out string failedMessage, bool dontEnforceDuality = false)
+        public bool TryRejectCurrentChange(IClock clock, int currentUserId, string changeToken,
+            out string failedMessage, bool dontEnforceDuality = false)
         {
-            return TryVerifyOrRejectCurrentChange(clock, currentUserId, changeToken, false, out failedMessage, dontEnforceDuality: dontEnforceDuality);
+            return TryVerifyOrRejectCurrentChange(clock, currentUserId, changeToken, false, out failedMessage,
+                dontEnforceDuality: dontEnforceDuality);
         }
 
-        private bool TryCancelOrCarryOutCancelCurrentChange(IClock clock, int currentUserId, string changeToken, bool isCarriedOut, Func<ChangeState, Tuple<bool, string>> tryDoChange, out string failedMessage, bool dontEnforceDuality = false)
+        private bool TryCancelOrCarryOutCancelCurrentChange(IClock clock, int currentUserId, string changeToken,
+            bool isCarriedOut, Func<ChangeState, Tuple<bool, string>> tryDoChange, out string failedMessage,
+            bool dontEnforceDuality = false)
         {
-            ChangeState finalState = null;
-
             lock (lockObject)
             {
                 WipeCurrentIfOld(clock);
@@ -89,22 +95,27 @@ namespace nSavings.DbModel.BusinessEvents
                     failedMessage = "There is no active change.";
                     return false;
                 }
+
                 if (currentChange.InitiatedByUserId != currentUserId && isCarriedOut)
                 {
                     failedMessage = "You can only approve your own changes.";
                     return false;
                 }
+
                 if (currentChange.ChangeToken != changeToken)
                 {
-                    failedMessage = "The currently active change has been altered. Please refresh the page and make sure the new change is still ok.";
+                    failedMessage =
+                        "The currently active change has been altered. Please refresh the page and make sure the new change is still ok.";
                     return false;
                 }
+
                 if (isCarriedOut && !currentChange.VerifiedByUserId.HasValue)
                 {
                     failedMessage = "You cannot approve a change that has not been verified.";
                     return false;
                 }
-                finalState = currentChange;
+
+                var finalState = currentChange;
 
                 if (tryDoChange != null)
                 {
@@ -124,17 +135,23 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        public bool TryCarryOutCurrentChange(IClock clock, int currentUserId, string changeToken, Func<ChangeState, Tuple<bool, string>> tryDoChange, out string failedMessage, bool dontEnforceDuality = false)
+        public bool TryCarryOutCurrentChange(IClock clock, int currentUserId, string changeToken,
+            Func<ChangeState, Tuple<bool, string>> tryDoChange, out string failedMessage,
+            bool dontEnforceDuality = false)
         {
-            return TryCancelOrCarryOutCancelCurrentChange(clock, currentUserId, changeToken, true, tryDoChange, out failedMessage, dontEnforceDuality: dontEnforceDuality);
+            return TryCancelOrCarryOutCancelCurrentChange(clock, currentUserId, changeToken, true, tryDoChange,
+                out failedMessage, dontEnforceDuality: dontEnforceDuality);
         }
 
-        public bool TryCancelCurrentChange(IClock clock, int currentUserId, string changeToken, out string failedMessage, bool dontEnforceDuality = false)
+        public bool TryCancelCurrentChange(IClock clock, int currentUserId, string changeToken,
+            out string failedMessage, bool dontEnforceDuality = false)
         {
-            return TryCancelOrCarryOutCancelCurrentChange(clock, currentUserId, changeToken, false, null, out failedMessage, dontEnforceDuality: dontEnforceDuality);
+            return TryCancelOrCarryOutCancelCurrentChange(clock, currentUserId, changeToken, false, null,
+                out failedMessage, dontEnforceDuality: dontEnforceDuality);
         }
 
-        private bool TryVerifyOrRejectCurrentChange(IClock clock, int currentUserId, string changeToken, bool isVerified, out string failedMessage, bool dontEnforceDuality = false)
+        private bool TryVerifyOrRejectCurrentChange(IClock clock, int currentUserId, string changeToken,
+            bool isVerified, out string failedMessage, bool dontEnforceDuality = false)
         {
             lock (lockObject)
             {
@@ -144,21 +161,26 @@ namespace nSavings.DbModel.BusinessEvents
                     failedMessage = "There is no active change.";
                     return false;
                 }
+
                 if (currentChange.InitiatedByUserId == currentUserId && !dontEnforceDuality)
                 {
                     failedMessage = "You cannot verify/reject your own change.";
                     return false;
                 }
+
                 if (currentChange.ChangeToken != changeToken)
                 {
-                    failedMessage = "The currently active change has been altered. Please refresh the page and make sure the new change is still ok.";
+                    failedMessage =
+                        "The currently active change has been altered. Please refresh the page and make sure the new change is still ok.";
                     return false;
                 }
+
                 if (currentChange.VerifiedOrRejectedDate.HasValue)
                 {
                     failedMessage = "The change has already been verified or rejected.";
                     return false;
                 }
+
                 currentChange.VerifiedOrRejectedDate = clock.Now;
                 if (isVerified)
                     currentChange.VerifiedByUserId = currentUserId;

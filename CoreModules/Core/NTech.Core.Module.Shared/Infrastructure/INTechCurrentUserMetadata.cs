@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
+using Newtonsoft.Json;
 
 namespace NTech.Core.Module.Shared.Infrastructure
 {
@@ -21,31 +23,20 @@ namespace NTech.Core.Module.Shared.Infrastructure
     {
         private readonly Lazy<List<Claim>> claims;
 
-        public NTechCurrentUserMetadataImpl(System.Security.Principal.IIdentity identity)
-            : this((identity as System.Security.Claims.ClaimsIdentity)?.Claims)
+        public NTechCurrentUserMetadataImpl(IIdentity identity)
+            : this((identity as ClaimsIdentity)?.Claims)
 
         {
-
         }
 
         public NTechCurrentUserMetadataImpl(IEnumerable<Claim> claims)
         {
-            this.claims = new Lazy<List<Claim>>(() =>
-            {
-                if (claims == null)
-                {
-                    return null;
-                }
-                return claims.ToList();
-            });
+            this.claims = new Lazy<List<Claim>>(() => claims?.ToList());
         }
 
         private T WithClaims<T>(Func<List<Claim>, T> f)
         {
-            if (claims.Value == null)
-                return default(T);
-            else
-                return f(claims.Value);
+            return claims.Value == null ? default : f(claims.Value);
         }
 
         private string GetClaim(string claimName, bool isRequired)
@@ -58,10 +49,7 @@ namespace NTech.Core.Module.Shared.Infrastructure
 
         public bool ContextHasUser
         {
-            get
-            {
-                return WithClaims(x => new object()) == null;
-            }
+            get { return WithClaims(x => new object()) == null; }
         }
 
         public int UserId
@@ -82,27 +70,15 @@ namespace NTech.Core.Module.Shared.Infrastructure
             }
         }
 
-        public string InformationMetadata
-        {
-            get
+        public string InformationMetadata =>
+            JsonConvert.SerializeObject(new
             {
-                return Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    providerUserId = UserId,
-                    providerAuthenticationLevel = AuthenticationLevel,
-                    isSigned = false
-                });
-            }
-        }
+                providerUserId = UserId,
+                providerAuthenticationLevel = AuthenticationLevel,
+                isSigned = false
+            });
 
-        public bool IsSystemUser
-        {
-            get
-            {
-
-                return (GetClaim("ntech.issystemuser", false) ?? "false").ToLowerInvariant() == "true";
-            }
-        }
+        public bool IsSystemUser => (GetClaim("ntech.issystemuser", false) ?? "false").ToLowerInvariant() == "true";
 
         public string AuthenticationLevel => GetClaim("ntech.authenticationlevel", true);
 

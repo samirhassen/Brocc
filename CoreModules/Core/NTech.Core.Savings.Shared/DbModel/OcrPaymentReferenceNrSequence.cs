@@ -1,4 +1,4 @@
-﻿namespace nSavings
+﻿namespace NTech.Core.Savings.Shared.DbModel
 {
     public class OcrPaymentReferenceNrSequence
     {

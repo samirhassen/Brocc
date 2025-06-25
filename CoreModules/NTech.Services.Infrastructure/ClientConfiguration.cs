@@ -3,36 +3,33 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Configuration;
 using System.Xml.Linq;
 
 namespace NTech.Services.Infrastructure
 {
     public class ClientConfiguration : IClientConfiguration
     {
-        private string clientName;
-        private IDictionary<string, string> settings;
-        private HashSet<string> activeFeatures;
-        private CountrySetup countrySetup;
-        private XElement root;
-        
+        private readonly string clientName;
+        private readonly IDictionary<string, string> settings;
+        private readonly HashSet<string> activeFeatures;
+        private readonly XElement root;
+
         private ClientConfiguration(XDocument cfg)
         {
             root = cfg.Root;
 
-            this.clientName = root.Attribute("clientName").Value;
-            this.settings = root
+            clientName = root.Attribute("clientName").Value;
+            settings = root
                 .Elements()
                 .Where(x => x.Name.LocalName == "Settings")
                 .SelectMany(x => x.Elements().Where(y => y.Name.LocalName == "Setting"))
-                .ToDictionary(x => x.Attribute("key").Value, x => x.Attribute("value").Value, StringComparer.InvariantCultureIgnoreCase);
+                .ToDictionary(x => x.Attribute("key").Value, x => x.Attribute("value").Value,
+                    StringComparer.InvariantCultureIgnoreCase);
 
             var countrySetupElement = root.Elements().SingleOrDefault(x => x.Name.LocalName == "CountrySetup");
-            if(countrySetupElement == null)
+            if (countrySetupElement == null)
             {
-                this.countrySetup = new CountrySetup
+                Country = new CountrySetup
                 {
                     BaseCountry = "FI",
                     BaseCurrency = "EUR",
@@ -41,18 +38,22 @@ namespace NTech.Services.Infrastructure
             }
             else
             {
-                this.countrySetup = new CountrySetup
+                Country = new CountrySetup
                 {
-                    BaseCurrency = countrySetupElement.Elements().Single(x => x.Name.LocalName == "BaseCurrency").Value.Trim().ToUpper(),
-                    BaseCountry = countrySetupElement.Elements().Single(x => x.Name.LocalName == "BaseCountry").Value.Trim().ToUpper(),
-                    BaseFormattingCulture = countrySetupElement.Elements().Single(x => x.Name.LocalName == "BaseFormattingCulture").Value.Trim(),
+                    BaseCurrency = countrySetupElement.Elements().Single(x => x.Name.LocalName == "BaseCurrency").Value
+                        .Trim().ToUpper(),
+                    BaseCountry = countrySetupElement.Elements().Single(x => x.Name.LocalName == "BaseCountry").Value
+                        .Trim().ToUpper(),
+                    BaseFormattingCulture = countrySetupElement.Elements()
+                        .Single(x => x.Name.LocalName == "BaseFormattingCulture").Value.Trim(),
                 };
             }
 
-            this.activeFeatures = new HashSet<string>(root
+            activeFeatures = new HashSet<string>(root
                 .Elements()
                 .Where(x => x.Name.LocalName == "ActiveFeatures")
-                .SelectMany(x => x.Elements().Where(y => y.Name.LocalName == "Feature").Select(y => y.Attribute("name")?.Value))
+                .SelectMany(x =>
+                    x.Elements().Where(y => y.Name.LocalName == "Feature").Select(y => y.Attribute("name")?.Value))
                 .Where(x => !string.IsNullOrWhiteSpace(x)), StringComparer.InvariantCultureIgnoreCase);
         }
 
@@ -60,8 +61,7 @@ namespace NTech.Services.Infrastructure
         {
             return root
                 .Descendants()
-                .Where(x => x.Name.LocalName == name)
-                .SingleOrDefault();
+                .SingleOrDefault(x => x.Name.LocalName == name);
         }
 
         /*
@@ -76,15 +76,18 @@ namespace NTech.Services.Infrastructure
         yields
         { "single", "Single"}, { "live_together", "Living together"}
          */
+
         public Dictionary<string, string> GetCustomCodeDisplayNameDictionary(params string[] elementPath)
         {
             var containerElement = root;
-            foreach(var elementName in elementPath.Take(elementPath.Length - 1))
+            foreach (var elementName in elementPath.Take(elementPath.Length - 1))
             {
-                containerElement = containerElement.Descendants().Where(x => x.Name.LocalName == elementName).SingleOrDefault();
-                if(containerElement == null)
+                containerElement = containerElement.Descendants()
+                    .SingleOrDefault(x => x.Name.LocalName == elementName);
+                if (containerElement == null)
                     throw new Exception($"Missing in ClientConfiguration: {string.Join(".", elementPath)}");
             }
+
             return containerElement
                 .Descendants()
                 .Where(x => x.Name == elementPath.Last())
@@ -94,44 +97,43 @@ namespace NTech.Services.Infrastructure
         public string GetSingleCustomValue(bool mustExist, params string[] elementPath)
         {
             var containerElement = root;
-            foreach(var elementName in elementPath)
+            foreach (var elementName in elementPath)
             {
-                containerElement = containerElement.Descendants().Where(x => x.Name.LocalName == elementName).SingleOrDefault();
-                if(containerElement == null)
-                {
-                    if(mustExist)
-                        throw new Exception($"Missing in ClientConfiguration: {string.Join(".", elementPath)}");
-                    else
-                        return null;
-                }                    
+                containerElement = containerElement.Descendants()
+                    .SingleOrDefault(x => x.Name.LocalName == elementName);
+                if (containerElement != null) continue;
+
+                if (mustExist)
+                    throw new Exception($"Missing in ClientConfiguration: {string.Join(".", elementPath)}");
+
+                return null;
             }
-            if(string.IsNullOrWhiteSpace(containerElement.Value))
+
+            if (string.IsNullOrWhiteSpace(containerElement.Value))
             {
-                    if(mustExist)
-                        throw new Exception($"Missing in ClientConfiguration: {string.Join(".", elementPath)}");
-                    else
-                        return null;
+                if (mustExist)
+                    throw new Exception($"Missing in ClientConfiguration: {string.Join(".", elementPath)}");
+
+                return null;
             }
-            else
-                return containerElement.Value.Trim();
+
+            return containerElement.Value.Trim();
         }
 
         public int? GetSingleCustomInt(bool mustExist, params string[] elementPath)
         {
             var value = GetSingleCustomValue(mustExist, elementPath);
-            if(value == null)
+            if (value == null)
                 return null;
-            else
-                return int.Parse(value);
+            return int.Parse(value);
         }
 
         public bool? GetSingleCustomBoolean(bool mustExist, params string[] elementPath)
         {
             var value = GetSingleCustomValue(mustExist, elementPath);
-            if(value == null)
+            if (value == null)
                 return null;
-            else
-                return value.ToLowerInvariant() == "true";
+            return value.ToLowerInvariant() == "true";
         }
 
         public decimal? GetSingleCustomDecimal(bool mustExist, params string[] elementPath)
@@ -139,61 +141,45 @@ namespace NTech.Services.Infrastructure
             var value = GetSingleCustomValue(mustExist, elementPath);
             if (value == null)
                 return null;
-            else
-                return decimal.Parse(value, CultureInfo.InvariantCulture);
+            return decimal.Parse(value, CultureInfo.InvariantCulture);
         }
 
         public static ClientConfiguration CreateUsingNTechEnvironment(NTechEnvironment env = null)
         {
             env = env ?? NTechEnvironment.Instance;
             var fn = env.Setting("ntech.clientcfgfile", false);
-            if (fn == null)
-            {
-                var f = env.Setting("ntech.clientresourcefolder", false);
-                if (f == null)
-                    throw new Exception("Missing appsetting 'ntech.clientcfgfile'");
-                else
-                    fn = Path.Combine(f, "ClientConfiguration.xml");
-            }
-                
+            if (fn != null) return new ClientConfiguration(XDocument.Load(fn));
+
+            var f = env.Setting("ntech.clientresourcefolder", false);
+            if (f == null)
+                throw new Exception("Missing appsetting 'ntech.clientcfgfile'");
+
+            fn = Path.Combine(f, "ClientConfiguration.xml");
+
             return new ClientConfiguration(XDocument.Load(fn));
         }
-        
+
         public static ClientConfiguration CreateUsingXDocument(XDocument cfg)
         {
             return new ClientConfiguration(cfg);
         }
 
-        public CountrySetup Country
-        {
-            get
-            {
-                return this.countrySetup;
-            }
-        }
-        
+        public CountrySetup Country { get; }
+
         public string ClientName
         {
             get
             {
-                if (this.clientName == null)
+                if (clientName == null)
                     throw new Exception("Invalid client configuration. Missing clientName");
-                return this.clientName;
+                return clientName;
             }
         }
 
         public string OptionalSetting(string name)
         {
-            if (settings.ContainsKey(name))
-            {
-                var v = settings[name];
-                if (string.IsNullOrWhiteSpace(v))
-                    return null;
-                else
-                    return v.Trim();
-            }
-            else
-                return null;
+            if (!settings.TryGetValue(name, out var v)) return null;
+            return string.IsNullOrWhiteSpace(v) ? null : v.Trim();
         }
 
         public bool OptionalBool(string name)
@@ -225,12 +211,15 @@ namespace NTech.Services.Infrastructure
 
             public string GetBaseLanguage()
             {
-                if (BaseCountry == "FI")
-                    return "fi";
-                else if (BaseCountry == "SE")
-                    return "sv";
-                else
-                    throw new NotImplementedException();
+                switch (BaseCountry)
+                {
+                    case "FI":
+                        return "fi";
+                    case "SE":
+                        return "sv";
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
     }
@@ -239,5 +228,8 @@ namespace NTech.Services.Infrastructure
     {
         ClientConfiguration.CountrySetup Country { get; }
         string ClientName { get; }
+        string OptionalSetting(string name);
+        XElement GetCustomSection(string name);
+        bool IsFeatureEnabled(string name);
     }
 }

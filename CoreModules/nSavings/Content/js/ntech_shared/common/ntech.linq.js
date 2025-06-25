@@ -11,11 +11,11 @@ var NTechLinq;
         if (!i) {
             return null;
         }
-        return i.filter(function (item, i, ar) { return ar.indexOf(item) === i; });
+        return i.filter((item, i, ar) => ar.indexOf(item) === i);
     }
     NTechLinq.distinct = distinct;
     function first(i, f) {
-        var j = this.firstIndexOf(i, f);
+        let j = this.firstIndexOf(i, f);
         if (j < 0) {
             return null;
         }
@@ -26,8 +26,8 @@ var NTechLinq;
         if (!i) {
             return -1;
         }
-        for (var j = 0; j < i.length; j++) {
-            var v = i[j];
+        for (let j = 0; j < i.length; j++) {
+            let v = i[j];
             if (f(i[j])) {
                 return j;
             }
@@ -39,8 +39,7 @@ var NTechLinq;
         if (!i) {
             return false;
         }
-        for (var _i = 0, i_1 = i; _i < i_1.length; _i++) {
-            var x = i_1[_i];
+        for (let x of i) {
             if (f(x)) {
                 return true;
             }
@@ -49,13 +48,12 @@ var NTechLinq;
     }
     NTechLinq.any = any;
     function all(i, f) {
-        return !any(i, function (x) { return !f(x); });
+        return !any(i, x => !f(x));
     }
     NTechLinq.all = all;
     function where(i, f) {
-        var r = [];
-        for (var _i = 0, i_2 = i; _i < i_2.length; _i++) {
-            var x = i_2[_i];
+        let r = [];
+        for (let x of i) {
             if (f(x)) {
                 r.push(x);
             }
@@ -64,7 +62,7 @@ var NTechLinq;
     }
     NTechLinq.where = where;
     function single(i, f) {
-        var v = where(i, f);
+        let v = where(i, f);
         if (v.length !== 1) {
             throw new Error("Expected exactly one item but got: " + v.length);
         }

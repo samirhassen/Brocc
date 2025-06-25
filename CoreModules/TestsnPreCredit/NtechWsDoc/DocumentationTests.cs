@@ -11,7 +11,8 @@ namespace TestsnPreCredit.NtechWsDoc
         public void Minimal()
         {
             var g = new ServiceMethodDocumentationGenerator();
-            var d = g.Generate("a/b/c", "POST", typeof(SetMortgageLoanWorkflowStatusMethod.Request), typeof(SetMortgageLoanWorkflowStatusMethod.Response));
+            var d = g.Generate("a/b/c", "POST", typeof(SetMortgageLoanWorkflowStatusMethod.Request),
+                typeof(SetMortgageLoanWorkflowStatusMethod.Response));
 
             Assert.IsNotNull(d);
         }

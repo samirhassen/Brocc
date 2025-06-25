@@ -6,6 +6,7 @@ using nPreCredit;
 using nPreCredit.Code;
 using nPreCredit.Code.Services;
 using NTech.Banking.BankAccounts.Fi;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Credit.Database;
 using NTech.Core.Credit.Shared.Database;
 using NTech.Core.Credit.Shared.DomainModel;

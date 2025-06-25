@@ -1,14 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
-using nSavings.Code.Services;
-using NTech.Banking.BankAccounts.Fi;
-using NTech.Banking.CivicRegNumbers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using NTech.Banking.CivicRegNumbers;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
-namespace nSavings.Code
+namespace NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts
 {
     public class FinnishCustomsFileFormat
     {

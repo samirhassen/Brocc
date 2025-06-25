@@ -7,13 +7,14 @@
 
 @section Scripts {
     <script @Html.CspScriptNonce()>
-        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+        const initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'));
     </script>
     @Scripts.Render("~/Content/js/bundle-credithandlerlimitsettings-index")
 }
 
 <div class="pt-1 pb-2">
-    <div class="pull-left"><a class="n-back" ng-click="onBack($event)" href="#"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <div class="pull-left"><a class="n-back" ng-click="onBack($event)" href="#"><span
+                class="glyphicon glyphicon-arrow-left"></span></a></div>
     <h1 class="adjusted">Credit handler limit settings</h1>
 </div>
 
@@ -22,24 +23,24 @@
         <div class="frame">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Level</th>
-                        <th>Limit</th>
-                    </tr>
+                <tr>
+                    <th>Level</th>
+                    <th>Limit</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>0</td>
-                        <td>-</td>
-                    </tr>
-                    <tr ng-repeat="level in levels">
-                        <td>{{level.LimitLevel}}</td>
-                        <td>max {{level.MaxAmount | currency}} per credit</td>
-                    </tr>
-                    <tr ng-if="levels.length > 0">
-                        <td>{{levels[levels.length-1].LimitLevel+1}}</td>
-                        <td>no limit</td>
-                    </tr>
+                <tr>
+                    <td>0</td>
+                    <td>-</td>
+                </tr>
+                <tr ng-repeat="level in levels">
+                    <td>{{level.LimitLevel}}</td>
+                    <td>max {{level.MaxAmount | currency}} per credit</td>
+                </tr>
+                <tr ng-if="levels.length > 0">
+                    <td>{{levels[levels.length-1].LimitLevel+1}}</td>
+                    <td>no limit</td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -48,56 +49,60 @@
 
 <div>
     <h2 class="custom-header">Users</h2>
-    <hr class="hr-section" />
+    <hr class="hr-section"/>
 </div>
 
 <div class="row pb-2">
     <div class="col-md-4">
         <div class="relative">
             <span class="glyphicon glyphicon-search"></span>
-            <input type="text" class="form-control search" placeholder="Name" ng-model="nameFilter" ng-disabled="isEditingAny()">
+            <input type="text" class="form-control search" placeholder="Name" ng-model="nameFilter"
+                   ng-disabled="isEditingAny()">
         </div>
     </div>
 </div>
 
 <table class="table">
     <thead>
-        <tr>
-            <th class="col-md-3">User</th>
-            <th class="col-md-3">Level</th>
-            <th class="col-md-3 text-right">Exception possible</th>
-            <th class="col-md-3 text-right"></th>
-        </tr>
+    <tr>
+        <th class="col-md-3">User</th>
+        <th class="col-md-3">Level</th>
+        <th class="col-md-3 text-right">Exception possible</th>
+        <th class="col-md-3 text-right"></th>
+    </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="user in users | filter: filterUsers">
-            <td class="col-md-3 style="vertical-align:middle">
-                <span>{{user.DisplayName}}</span>
-            </td>
-            <td class="col-md-3" style="vertical-align:middle">
-                <span ng-hide="user.edit">{{user.LimitLevel}}</span>
-                <select class="form-control" ng-if="user.edit" ng-model="user.edit.LimitLevel">
-                    <option value="0">0</option>
-                    <option ng-repeat="level in levels" value="{{level.LimitLevel}}">
-                        {{level.LimitLevel}}
-                    </option>
-                    <option ng-if="levels.length > 0" value="{{levels[levels.length-1].LimitLevel+1}}">
-                        {{levels[levels.length-1].LimitLevel+1}}
-                    </option>
-                </select>
-            </td>
-            <td class="col-md-3 text-right" style="vertical-align:middle">
-                <span ng-hide="user.edit">{{user.IsOverrideAllowed ? 'Yes' : 'No'}}</span>
-                <label class="n-toggle" ng-if="user.edit">
-                    <input type="checkbox" ng-model="user.edit.IsOverrideAllowed" />
-                    <span class="n-slider"></span>
-                </label>
-            </td>
-            <td class="col-md-3 text-right" style="vertical-align:middle">
-                <button ng-hide="user.edit" class="n-icon-btn n-blue-btn" ng-click="beginEdit(user, $event)"><span class="glyphicon glyphicon-pencil"></span></button>
-                <button ng-show="user.edit" class="n-icon-btn n-white-btn" ng-click="cancelEdit(user, $event)"><span class="glyphicon glyphicon-remove"></span></button>
-                <button ng-show="user.edit" class="n-icon-btn n-green-btn" ng-click="saveEdit(user, $event)"><span class="glyphicon glyphicon-ok"></span></button>
-            </td>
-        </tr>
+    <tr ng-repeat="user in users | filter: filterUsers">
+        <td class="col-md-3" style="vertical-align:middle">
+            <span>{{user.DisplayName}}</span>
+        </td>
+        <td class="col-md-3" style="vertical-align:middle">
+            <span ng-hide="user.edit">{{user.LimitLevel}}</span>
+            <select class="form-control" ng-if="user.edit" ng-model="user.edit.LimitLevel">
+                <option value="0">0</option>
+                <option ng-repeat="level in levels" value="{{level.LimitLevel}}">
+                    {{level.LimitLevel}}
+                </option>
+                <option ng-if="levels.length > 0" value="{{levels[levels.length-1].LimitLevel+1}}">
+                    {{levels[levels.length-1].LimitLevel+1}}
+                </option>
+            </select>
+        </td>
+        <td class="col-md-3 text-right" style="vertical-align:middle">
+            <span ng-hide="user.edit">{{user.IsOverrideAllowed ? 'Yes' : 'No'}}</span>
+            <label class="n-toggle" ng-if="user.edit">
+                <input type="checkbox" ng-model="user.edit.IsOverrideAllowed"/>
+                <span class="n-slider"></span>
+            </label>
+        </td>
+        <td class="col-md-3 text-right" style="vertical-align:middle">
+            <button ng-hide="user.edit" class="n-icon-btn n-blue-btn" ng-click="beginEdit(user, $event)"><span
+                    class="glyphicon glyphicon-pencil"></span></button>
+            <button ng-show="user.edit" class="n-icon-btn n-white-btn" ng-click="cancelEdit(user, $event)"><span
+                    class="glyphicon glyphicon-remove"></span></button>
+            <button ng-show="user.edit" class="n-icon-btn n-green-btn" ng-click="saveEdit(user, $event)"><span
+                    class="glyphicon glyphicon-ok"></span></button>
+        </td>
+    </tr>
     </tbody>
 </table>

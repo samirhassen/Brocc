@@ -1,14 +1,17 @@
-﻿using nCreditReport.Models;
-using NTech.Banking.CivicRegNumbers;
-using Polly;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.Text;
+using System.Xml;
+using nCreditReport.Models;
+using nCreditReport.SoliditetFiWs;
+using NTech.Banking.CivicRegNumbers;
+using Polly;
+using Serilog;
 
 namespace nCreditReport.Code.BisnodeFi
 {
@@ -16,7 +19,6 @@ namespace nCreditReport.Code.BisnodeFi
     {
         public BisnodeService(string providerName) : base(providerName)
         {
-
         }
 
         protected override Result DoTryBuyCreditReport(
@@ -34,61 +36,79 @@ namespace nCreditReport.Code.BisnodeFi
         {
             var settings = NEnv.BisnodeFi;
             HttpBindingBase binding;
-            EndpointAddress address;
 
-            Action<HttpBindingBase> removeStupidSizeLimitDefaults = b =>
+            void RemoveStupidSizeLimitDefaults(HttpBindingBase b)
             {
                 b.MaxReceivedMessageSize = 20000000L;
                 b.MaxBufferSize = 20000000;
                 if (b.ReaderQuotas == null)
                 {
-                    b.ReaderQuotas = new System.Xml.XmlDictionaryReaderQuotas();
+                    b.ReaderQuotas = new XmlDictionaryReaderQuotas();
                 }
+
                 b.ReaderQuotas.MaxDepth = 32;
                 b.ReaderQuotas.MaxArrayLength = 200000000;
                 b.ReaderQuotas.MaxStringContentLength = 200000000;
-            };
+            }
 
             if (settings.EndpointUrl.StartsWith("https"))
             {
-                var b = new BasicHttpsBinding();
-                b.Security.Mode = BasicHttpsSecurityMode.Transport;
-                removeStupidSizeLimitDefaults(b);
+                var b = new BasicHttpsBinding
+                {
+                    Security =
+                    {
+                        Mode = BasicHttpsSecurityMode.Transport
+                    }
+                };
+                RemoveStupidSizeLimitDefaults(b);
                 binding = b;
-                address = new EndpointAddress(settings.EndpointUrl);
             }
             else
             {
-                var b = new BasicHttpBinding();
-                b.Security.Mode = BasicHttpSecurityMode.None;
-                removeStupidSizeLimitDefaults(b);
+                var b = new BasicHttpBinding
+                {
+                    Security =
+                    {
+                        Mode = BasicHttpSecurityMode.None
+                    }
+                };
+                RemoveStupidSizeLimitDefaults(b);
                 binding = b;
-                address = new EndpointAddress(settings.EndpointUrl);
             }
 
-            var c = new SoliditetFiWs.SoliditetHenkiloLuottoTiedotPortTypeClient(binding, address);
-            var request = new SoliditetFiWs.SoliditetHenkiloLuottoTiedotRequest
+            var address = new EndpointAddress(settings.EndpointUrl);
+
+            var c = new SoliditetHenkiloLuottoTiedotPortTypeClient(binding, address);
+            var request = new SoliditetHenkiloLuottoTiedotRequest
             {
-                KayttajaTiedot = new SoliditetFiWs.KayttajaTiedot
+                KayttajaTiedot = new KayttajaTiedot
                 {
                     KayttajaTunnus = settings.UserId,
                     AsiakasTunnus = settings.CustomerId,
                     LoppuAsiakas_Nimi = settings.CustomerCode,
                     LoppuAsiakas_HenkiloNimi = username
                 },
-                KohdeTiedot = new SoliditetFiWs.KohdeTiedot
+                KohdeTiedot = new KohdeTiedot
                 {
                     HenkiloTunnus = civicRegNr.NormalizedValue,
-                    SyyKoodi = SoliditetFiWs.KohdeTiedotSyyKoodi.Item1,
+                    SyyKoodi = KohdeTiedotSyyKoodi.Item1,
                     HenkiloTiedot = isAddressOnlyRequest
-                    ? SoliditetFiWs.HenkiloTietoType.K
-                    : (settings.RequestBricVariables ? SoliditetFiWs.HenkiloTietoType.X : SoliditetFiWs.HenkiloTietoType.K),
+                        ? HenkiloTietoType.K
+                        : settings.RequestBricVariables
+                            ? HenkiloTietoType.X
+                            : HenkiloTietoType.K,
                     HenkiloTiedotSpecified = true,
-                    LuottoTietoMerkinnat = isAddressOnlyRequest ? SoliditetFiWs.KohdeTiedotLuottoTietoMerkinnat.E : SoliditetFiWs.KohdeTiedotLuottoTietoMerkinnat.S,
+                    LuottoTietoMerkinnat = isAddressOnlyRequest
+                        ? KohdeTiedotLuottoTietoMerkinnat.E
+                        : KohdeTiedotLuottoTietoMerkinnat.S,
                     LuottoTietoMerkinnatSpecified = true,
-                    YritysYhteydet = isAddressOnlyRequest ? SoliditetFiWs.KyllaEiType.E : SoliditetFiWs.KyllaEiType.K,
+                    YritysYhteydet = isAddressOnlyRequest ? KyllaEiType.E : KyllaEiType.K,
                     YritysYhteydetSpecified = true,
-                    ScoreJaLuottoSuositus = isAddressOnlyRequest ? SoliditetFiWs.KyllaEiType.E : SoliditetFiWs.KyllaEiType.E, //! current E in both cases. Just to remember the adr only case if we start requesting it for scoring
+                    ScoreJaLuottoSuositus =
+                        isAddressOnlyRequest
+                            ? KyllaEiType.E
+                            : KyllaEiType
+                                .E, //! current E in both cases. Just to remember the adr only case if we start requesting it for scoring
                     ScoreJaLuottoSuositusSpecified = true
                 }
             };
@@ -96,8 +116,10 @@ namespace nCreditReport.Code.BisnodeFi
             NLog.Debug("Calling SoliditetHenkiloLuottoTiedotAsync");
             if (settings.DisableSslCheck)
             {
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+                ServicePointManager.ServerCertificateValidationCallback =
+                    (sender, certificate, chain, errors) => true;
             }
+
             var response = c.SoliditetHenkiloLuottoTiedotAsync(request).Result;
             NLog.Debug("SoliditetHenkiloLuottoTiedotAsync done");
 
@@ -106,7 +128,8 @@ namespace nCreditReport.Code.BisnodeFi
             if (logFolder != null)
             {
                 Directory.CreateDirectory(logFolder);
-                XmlSerializationUtil.Serialize(response.Response).Save(Path.Combine(logFolder, "bisnodefi-" + Guid.NewGuid() + ".xml"));
+                XmlSerializationUtil.Serialize(response.Response)
+                    .Save(Path.Combine(logFolder, "bisnodefi-" + Guid.NewGuid() + ".xml"));
             }
 
             var p = new BisnodeFiResponseParser();
@@ -144,13 +167,7 @@ namespace nCreditReport.Code.BisnodeFi
             });
         }
 
-        public override string ForCountry
-        {
-            get
-            {
-                return "FI";
-            }
-        }
+        public override string ForCountry => "FI";
 
         private static string FormatException(Exception ex)
         {
@@ -163,6 +180,7 @@ namespace nCreditReport.Code.BisnodeFi
                 b.AppendLine(ex.StackTrace);
                 ex = ex.InnerException;
             }
+
             return b.ToString();
         }
 
@@ -173,17 +191,18 @@ namespace nCreditReport.Code.BisnodeFi
             var m = FormatException(ex);
             if (m == null)
                 return false;
-            return m.Contains("Could not establish secure channel for SSL/TLS with authority") || m.Contains("The remote server returned an unexpected response: (502) Proxy Error");
+            return m.Contains("Could not establish secure channel for SSL/TLS with authority") ||
+                   m.Contains("The remote server returned an unexpected response: (502) Proxy Error");
         }
 
         //Retry once on the wierd intermittent ssl error
         private static Policy buyCreditReportRetryPolicy = Policy
-                .Handle<Exception>(IsRetryableBisnodeError)
-                .WaitAndRetry(new[] { TimeSpan.FromSeconds(1) }, (ex, ts, context) =>
-                    {
-                        //On Retry
-                        NLog.Information("BisnodeFi buyCreditReport retried on {exceptionMessage}", ex?.ToString());
-                    });
+            .Handle<Exception>(IsRetryableBisnodeError)
+            .WaitAndRetry(new[] { TimeSpan.FromSeconds(1) }, (ex, ts, context) =>
+            {
+                //On Retry
+                NLog.Information("BisnodeFi buyCreditReport retried on {exceptionMessage}", ex?.ToString());
+            });
 
         public override List<DictionaryEntry> FetchTabledValues(CreditReportRepository.FetchResult creditReport)
         {
@@ -208,6 +227,5 @@ namespace nCreditReport.Code.BisnodeFi
         }
 
         public override bool CanFetchTabledValues() => true;
-
     }
 }

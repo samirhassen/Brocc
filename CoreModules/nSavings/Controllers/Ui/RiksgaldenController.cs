@@ -1,11 +1,12 @@
-﻿using ICSharpCode.SharpZipLib.Zip;
-using nSavings.Code.Riksgalden;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.IO;
 using System.Web.Mvc;
+using ICSharpCode.SharpZipLib.Zip;
+using nSavings.Code;
+using nSavings.Code.Riksgalden;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [NTechAuthorizeSavingsHigh]
     public class RiksgaldenController : NController
@@ -14,10 +15,11 @@ namespace nSavings.Controllers
         [Route("Ui/Riksgalden")]
         public ActionResult Index()
         {
-            ViewBag.JsonInitialData = this.EncodeInitialData(new
+            ViewBag.JsonInitialData = EncodeInitialData(new
             {
                 firstFileUrlPattern = Url.Action("FirstFile", new { alsoEncryptAndSign = "BBBBB" }),
-                secondFileUrlPattern = Url.Action("SecondFile", new { alsoEncryptAndSign = "BBBBB", firstFileMaxBusinessEventId = "NNNNN" })
+                secondFileUrlPattern = Url.Action("SecondFile",
+                    new { alsoEncryptAndSign = "BBBBB", firstFileMaxBusinessEventId = "NNNNN" })
             });
             return View();
         }
@@ -30,40 +32,52 @@ namespace nSavings.Controllers
                 throw new NotImplementedException();
 
             //Fetch data
-            var repo = new RiksgaldenDataRepository(NEnv.ClientCfg.Country.BaseCurrency, NEnv.BaseCivicRegNumberParser, NEnv.ClientCfg.Country.BaseCountry, Clock);
+            var repo = new RiksgaldenDataRepository(NEnv.ClientCfg.Country.BaseCurrency, NEnv.BaseCivicRegNumberParser,
+                NEnv.ClientCfg.Country.BaseCountry, Clock);
             var riksgaldenConfig = NEnv.RiksgaldenConfig;
             var data = repo.GetFirstFileDataSet();
 
             //Export
-            var exporter = new RiksgaldenFileExporter(Clock.Now.Date, riksgaldenConfig.DepositorGuaranteeInstituteName, riksgaldenConfig.DepositorGuaranteeOrgnr);
+            var exporter = new RiksgaldenFileExporter(Clock.Now.Date, riksgaldenConfig.DepositorGuaranteeInstituteName,
+                riksgaldenConfig.DepositorGuaranteeOrgnr);
             var now = Clock.Now.Date;
             var ms = new MemoryStream();
 
             using (var zip = new ZipOutputStream(ms))
             {
-                Action<string, Action> addFile = (filename, write) =>
+                AddFile("kund.txt", () => exporter.WriteCustomerFileToStream(data.Customers, zip));
+                AddFile("konto.txt", () => exporter.WriteAccountsFileToStream(data.Accounts, zip));
+                AddFile("kontofordelning.txt",
+                    () => exporter.WriteAccountDistributionsFileToStream(data.AccountDistributions, zip));
+                AddFile("transaktion.txt", () => exporter.WriteTransactionsFileToStream(data.Transactions, true, zip));
+                if (NEnv.ClientCfg.Country.BaseCountry == "FI")
                 {
-                    var newEntry = new ZipEntry(filename);
-                    newEntry.DateTime = now;
+                    AddFile("filial.txt",
+                        () => exporter.WriteFinnishFilialFileToStream(data.FiFilialCustomers, data.FiFilialAccounts,
+                            zip));
+                }
+
+                zip.IsStreamOwner = false;
+
+                void AddFile(string filename, Action write)
+                {
+                    var newEntry = new ZipEntry(filename)
+                    {
+                        DateTime = now
+                    };
                     zip.PutNextEntry(newEntry);
                     write();
                     zip.CloseEntry();
-                };
-
-                addFile("kund.txt", () => exporter.WriteCustomerFileToStream(data.Customers, zip));
-                addFile("konto.txt", () => exporter.WriteAccountsFileToStream(data.Accounts, zip));
-                addFile("kontofordelning.txt", () => exporter.WriteAccountDistributionsFileToStream(data.AccountDistributions, zip));
-                addFile("transaktion.txt", () => exporter.WriteTransactionsFileToStream(data.Transactions, true, zip));
-                if (NEnv.ClientCfg.Country.BaseCountry == "FI")
-                {
-                    addFile("filial.txt", () => exporter.WriteFinnishFilialFileToStream(data.FiFilialCustomers, data.FiFilialAccounts, zip));
                 }
-                zip.IsStreamOwner = false;
             }
 
             ms.Position = 0;
 
-            return new FileStreamResult(ms, "application/zip") { FileDownloadName = $"Riksgalden_FirstFile_{now.ToString("yyyyMMddHHmmss")}_LastEventId_{data.MaxBusinessEventId}.zip" };
+            return new FileStreamResult(ms, "application/zip")
+            {
+                FileDownloadName =
+                    $"Riksgalden_FirstFile_{now:yyyyMMddHHmmss}_LastEventId_{data.MaxBusinessEventId}.zip"
+            };
         }
 
         [HttpGet]
@@ -74,34 +88,42 @@ namespace nSavings.Controllers
                 throw new NotImplementedException();
 
             //Fetch data
-            var repo = new RiksgaldenDataRepository(NEnv.ClientCfg.Country.BaseCurrency, NEnv.BaseCivicRegNumberParser, NEnv.ClientCfg.Country.BaseCountry, Clock);
+            var repo = new RiksgaldenDataRepository(NEnv.ClientCfg.Country.BaseCurrency, NEnv.BaseCivicRegNumberParser,
+                NEnv.ClientCfg.Country.BaseCountry, Clock);
             var riksgaldenConfig = NEnv.RiksgaldenConfig;
             var data = repo.GetSecondFileDataSet(firstFileMaxBusinessEventId);
 
             //Export
-            var exporter = new RiksgaldenFileExporter(Clock.Now.Date, riksgaldenConfig.DepositorGuaranteeInstituteName, riksgaldenConfig.DepositorGuaranteeOrgnr);
+            var exporter = new RiksgaldenFileExporter(Clock.Now.Date, riksgaldenConfig.DepositorGuaranteeInstituteName,
+                riksgaldenConfig.DepositorGuaranteeOrgnr);
             var now = Clock.Now.Date;
             var ms = new MemoryStream();
 
             using (var zip = new ZipOutputStream(ms))
             {
-                Action<string, Action> addFile = (filename, write) =>
+                AddFile("transaktion.txt", () => exporter.WriteTransactionsFileToStream(data.Transactions, false, zip));
+
+                zip.IsStreamOwner = false;
+
+                void AddFile(string filename, Action write)
                 {
-                    var newEntry = new ZipEntry(filename);
-                    newEntry.DateTime = now;
+                    var newEntry = new ZipEntry(filename)
+                    {
+                        DateTime = now
+                    };
                     zip.PutNextEntry(newEntry);
                     write();
                     zip.CloseEntry();
-                };
-
-                addFile("transaktion.txt", () => exporter.WriteTransactionsFileToStream(data.Transactions, false, zip));
-
-                zip.IsStreamOwner = false;
+                }
             }
 
             ms.Position = 0;
 
-            return new FileStreamResult(ms, "application/zip") { FileDownloadName = $"Riksgalden_SecondFile_{now.ToString("yyyyMMddHHmmss")}_Events_{data.StartAfterBusinessEventId}_{data.MaxBusinessEventId}.zip" };
+            return new FileStreamResult(ms, "application/zip")
+            {
+                FileDownloadName =
+                    $"Riksgalden_SecondFile_{now:yyyyMMddHHmmss}_Events_{data.StartAfterBusinessEventId}_{data.MaxBusinessEventId}.zip"
+            };
         }
     }
 }

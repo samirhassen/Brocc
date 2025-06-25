@@ -42,6 +42,8 @@ namespace nTest.App_Start
                 new System.Collections.Generic.List<string>());
 
             TimeMachine.SharedInstance.Init();
+            
+            Global.Application_Start(null, null);
         }
     }
 }

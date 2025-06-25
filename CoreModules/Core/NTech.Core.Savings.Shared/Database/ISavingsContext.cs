@@ -1,6 +1,10 @@
-﻿using nSavings;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NTech.Core.Module.Shared.Database;
-using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFixed;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace NTech.Core.Savings.Shared.Database
 {
@@ -11,6 +15,9 @@ namespace NTech.Core.Savings.Shared.Database
         IQueryable<IncomingPaymentHeader> IncomingPaymentHeadersQueryable { get; }
         IQueryable<KeyValueItem> KeyValueItemsQueryable { get; }
         IQueryable<OutgoingExportFileHeader> OutgoingExportFileHeadersQueryable { get; }
+        IQueryable<FixedAccountProduct> FixedAccountProductQueryable { get; }
+        IQueryable<SavingsAccountInterestCapitalization> SavingsAccountInterestCapitalizationsQueryable { get; }
+        IQueryable<SharedSavingsInterestRate> SharedSavingsInterestRatesQueryable { get; }
 
         void AddBusinessEvents(params BusinessEvent[] events);
         void AddSavingsAccountHeaders(params SavingsAccountHeader[] accounts);
@@ -30,8 +37,10 @@ namespace NTech.Core.Savings.Shared.Database
         void AddKeyValueItems(params KeyValueItem[] items);
         void RemoveKeyValueItems(params KeyValueItem[] items);
         void AddOutgoingExportFileHeaders(params OutgoingExportFileHeader[] items);
+        void AddSavingsAccountInterestCapitalizations(params SavingsAccountInterestCapitalization[] capitalization);
 
         int SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken ct = default);
     }
 
 

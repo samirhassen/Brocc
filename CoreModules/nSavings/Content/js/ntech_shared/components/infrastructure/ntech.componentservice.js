@@ -1,61 +1,60 @@
 var NTechComponents;
 (function (NTechComponents) {
-    var NTechComponentService = /** @class */ (function () {
-        function NTechComponentService(trafficCop, ntechLog) {
+    class NTechComponentService {
+        constructor(trafficCop, ntechLog) {
             this.trafficCop = trafficCop;
             this.ntechLog = ntechLog;
             this.reloadEventHost = new NTechComponents.NTechEventHost();
             this.ntechEventHost = new NTechComponents.NTechEventHost();
         }
-        NTechComponentService.prototype.isLoading = function () {
+        isLoading() {
             return this.trafficCop.pending.all > 0;
-        };
-        NTechComponentService.prototype.signalReloadRequired = function (context) {
+        }
+        signalReloadRequired(context) {
             this.reloadEventHost.signalEvent(context);
-        };
-        NTechComponentService.prototype.subscribeToReloadRequired = function (onReloadRequired) {
+        }
+        subscribeToReloadRequired(onReloadRequired) {
             return this.reloadEventHost.subscribeToEvent(onReloadRequired);
-        };
-        NTechComponentService.prototype.unSubscribeFromReloadRequired = function (removalId) {
+        }
+        unSubscribeFromReloadRequired(removalId) {
             this.reloadEventHost.unSubscribeFromEvent(removalId);
-        };
-        NTechComponentService.prototype.subscribeToNTechEvents = function (onEvent) {
+        }
+        subscribeToNTechEvents(onEvent) {
             return this.ntechEventHost.subscribeToEvent(onEvent);
-        };
-        NTechComponentService.prototype.emitNTechEvent = function (eventName, eventData) {
+        }
+        emitNTechEvent(eventName, eventData) {
             this.ntechEventHost.signalEvent({ eventName: eventName, eventData: eventData });
-        };
-        NTechComponentService.prototype.emitNTechCustomDataEvent = function (eventName, customData) {
+        }
+        emitNTechCustomDataEvent(eventName, customData) {
             this.ntechEventHost.signalEvent({ eventName: eventName, eventData: 'customData', customData: customData });
-        };
-        NTechComponentService.prototype.unSubscribeFromNTechEvents = function (removalId) {
+        }
+        unSubscribeFromNTechEvents(removalId) {
             this.ntechEventHost.unSubscribeFromEvent(removalId);
-        };
-        NTechComponentService.prototype.setFocus = function (controlAlias) {
+        }
+        setFocus(controlAlias) {
             this.emitNTechEvent('FocusControlByAlias', controlAlias);
-        };
-        NTechComponentService.prototype.createGuid = function () {
-            var s4 = function () { return Math.floor((1 + Math.random()) * 0x10000)
+        }
+        createGuid() {
+            let s4 = () => Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)
-                .substring(1); };
+                .substring(1);
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-        };
+        }
         //Based on https://github.com/neosmart/UrlBase64/blob/master/UrlBase64/UrlBase64.cs
-        NTechComponentService.prototype.toUrlSafeBase64String = function (data) {
-            var encoded = btoa(JSON.stringify(data)).replace('+', '-').replace('/', '_');
+        toUrlSafeBase64String(data) {
+            let encoded = btoa(JSON.stringify(data)).replace('+', '-').replace('/', '_');
             while (encoded[encoded.length - 1] === '=') {
                 encoded = encoded.substr(0, encoded.length - 1);
             }
             return encoded;
-        };
-        NTechComponentService.prototype.fromUrlSafeBase64String = function (data) {
+        }
+        fromUrlSafeBase64String(data) {
             if (!data) {
                 return null;
             }
-            var decodeFirstPass = function () {
-                var decoded = '';
-                for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
-                    var c = data_1[_i];
+            let decodeFirstPass = () => {
+                let decoded = '';
+                for (let c of data) {
                     if (c === '_') {
                         decoded += '/';
                     }
@@ -72,94 +71,81 @@ var NTechComponents;
                     default: return decoded;
                 }
             };
-            var d = decodeFirstPass();
+            let d = decodeFirstPass();
             return JSON.parse(atob(d));
-        };
-        NTechComponentService.prototype.createCrossModuleNavigationTargetCode = function (targetName, targetContext) {
+        }
+        createCrossModuleNavigationTargetCode(targetName, targetContext) {
             if (targetName == null)
                 return null;
-            return "t-" + this.toUrlSafeBase64String({ targetName: targetName, targetContext: targetContext });
-        };
-        NTechComponentService.prototype.getQueryStringParameterByName = function (name) {
+            return "t-" + this.toUrlSafeBase64String({ targetName, targetContext });
+        }
+        getQueryStringParameterByName(name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
             var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-        };
-        NTechComponentService.$inject = ['trafficCop', 'ntechLog'];
-        return NTechComponentService;
-    }());
+        }
+    }
+    NTechComponentService.$inject = ['trafficCop', 'ntechLog'];
     NTechComponents.NTechComponentService = NTechComponentService;
-    var NTechEvent = /** @class */ (function () {
-        function NTechEvent() {
-        }
-        return NTechEvent;
-    }());
+    class NTechEvent {
+    }
     NTechComponents.NTechEvent = NTechEvent;
-    var ReloadRequiredContext = /** @class */ (function () {
-        function ReloadRequiredContext() {
-        }
-        return ReloadRequiredContext;
-    }());
+    class ReloadRequiredContext {
+    }
     NTechComponents.ReloadRequiredContext = ReloadRequiredContext;
-    var TestFunctionSet = /** @class */ (function () {
-        function TestFunctionSet() {
+    class TestFunctionSet {
+        constructor() {
             this.functions = [];
         }
-        TestFunctionSet.prototype.add = function (title, execute) {
+        add(title, execute) {
             if (!this.functions) {
                 this.functions = [];
             }
             this.functions.push({ title: title, execute: execute });
-        };
-        TestFunctionSet.prototype.clear = function () {
-            this.functions = [];
-        };
-        return TestFunctionSet;
-    }());
-    NTechComponents.TestFunctionSet = TestFunctionSet;
-    var TestFunction = /** @class */ (function () {
-        function TestFunction() {
         }
-        return TestFunction;
-    }());
+        clear() {
+            this.functions = [];
+        }
+    }
+    NTechComponents.TestFunctionSet = TestFunctionSet;
+    class TestFunction {
+    }
     NTechComponents.TestFunction = TestFunction;
-    var NTechApiClientBase = /** @class */ (function () {
-        function NTechApiClientBase(onError, $http, $q) {
+    class NTechApiClientBase {
+        constructor(onError, $http, $q) {
             this.onError = onError;
             this.$http = $http;
             this.$q = $q;
             this.activePostCount = 0;
             this.loggingContext = 'unknown';
         }
-        NTechApiClientBase.prototype.post = function (url, data) {
-            var _this = this;
+        post(url, data) {
             this.activePostCount++;
-            var d = this.$q.defer();
-            this.$http.post(url, data).then(function (result) {
+            let d = this.$q.defer();
+            this.$http.post(url, data).then((result) => {
                 d.resolve(result.data);
-            }, function (err) {
-                if (_this.onError) {
-                    _this.onError(err.statusText);
+            }, err => {
+                if (this.onError) {
+                    this.onError(err.statusText);
                 }
                 d.reject(err.statusText);
-            }).finally(function () {
-                _this.activePostCount--;
+            }).finally(() => {
+                this.activePostCount--;
             });
             return d.promise;
-        };
-        NTechApiClientBase.prototype.isLoading = function () {
+        }
+        isLoading() {
             return this.activePostCount > 0;
-        };
-        NTechApiClientBase.prototype.map = function (p, f) {
-            var deferred = this.$q.defer();
-            p.then(function (s) {
+        }
+        map(p, f) {
+            let deferred = this.$q.defer();
+            p.then(s => {
                 deferred.resolve(f(s));
-            }, function (e) {
+            }, e => {
                 deferred.reject(e);
             });
             return deferred.promise;
-        };
-        return NTechApiClientBase;
-    }());
+        }
+    }
     NTechComponents.NTechApiClientBase = NTechApiClientBase;
 })(NTechComponents || (NTechComponents = {}));

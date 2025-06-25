@@ -1,10 +1,10 @@
-﻿using NTech.Core.Module.Shared.Infrastructure;
-using NTech.Services.Infrastructure;
-using nUser.DbModel;
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Web.Mvc;
+using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Services.Infrastructure;
+using nUser.DbModel;
 
 namespace nUser
 {
@@ -12,8 +12,7 @@ namespace nUser
     {
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var wsException = filterContext.Exception as NTechCoreWebserviceException;
-            if (wsException != null && wsException.IsUserFacing)
+            if (filterContext.Exception is NTechCoreWebserviceException wsException && wsException.IsUserFacing)
             {
                 var result = new JsonNetActionResult
                 {
@@ -21,9 +20,9 @@ namespace nUser
                     {
                         errorMessage = wsException?.Message ?? "generic",
                         errorCode = wsException?.ErrorCode ?? "generic"
-                    }
+                    },
+                    CustomHttpStatusCode = wsException?.ErrorHttpStatusCode ?? 500
                 };
-                result.CustomHttpStatusCode = wsException?.ErrorHttpStatusCode ?? 500;
 
                 filterContext.Result = result;
                 filterContext.ExceptionHandled = true;
@@ -44,12 +43,13 @@ namespace nUser
         {
             get
             {
-                var u = this.User.Identity as System.Security.Claims.ClaimsIdentity;
+                var u = User.Identity as ClaimsIdentity;
                 return int.Parse(u.FindFirst("ntech.userid").Value);
             }
         }
 
-        public INTechCurrentUserMetadata GetCurrentUserMetadataCore() => new NTechCurrentUserMetadataImpl(this.User.Identity as ClaimsIdentity);
+        public INTechCurrentUserMetadata GetCurrentUserMetadataCore() =>
+            new NTechCurrentUserMetadataImpl(User.Identity as ClaimsIdentity);
 
         protected IQueryable<GroupMembership> UncancelledGroupsOnly(IQueryable<GroupMembership> g)
         {
@@ -59,10 +59,10 @@ namespace nUser
         protected IQueryable<GroupMembership> ActiveGroupsOnly(IQueryable<GroupMembership> g)
         {
             return g.Where(x =>
-                  !x.GroupMembershipCancellation.Any(y => y.CommittedById.HasValue)
-                  && x.ApprovedDate.HasValue
-                  && x.StartDate < DateTime.Now
-                  && x.EndDate > DateTime.Now
+                !x.GroupMembershipCancellation.Any(y => y.CommittedById.HasValue)
+                && x.ApprovedDate.HasValue
+                && x.StartDate < DateTime.Now
+                && x.EndDate > DateTime.Now
             );
         }
 

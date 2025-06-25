@@ -1,42 +1,50 @@
-﻿using IdentityModel.Client;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
+using System.Security.Claims;
+using System.Text;
 using System.Web;
+using IdentityModel.Client;
+using Newtonsoft.Json;
 
 namespace NTech.Services.Infrastructure
 {
     public static class NHttp
     {
-        private static Dictionary<int, HttpClient> clientByTimeout = new Dictionary<int, HttpClient>(); //That you cant just set the timeout on each request is beyond insane
-        private static object clientPoolLock = new object();
+        private static readonly Dictionary<int, HttpClient>
+            ClientByTimeout =
+                new Dictionary<int, HttpClient>(); //That you cant just set the timeout on each request is beyond insane
+
+        private static readonly object ClientPoolLock = new object();
 
         private static HttpClient GetClient(TimeSpan? timeout)
         {
             var ts = timeout.HasValue ? (int)timeout.Value.TotalMilliseconds : -1;
-            if (clientByTimeout.ContainsKey(ts))
-                return clientByTimeout[ts];
+            if (ClientByTimeout.TryGetValue(ts, out var client))
+                return client;
 
-            lock (clientPoolLock)
+            lock (ClientPoolLock)
             {
-                if (clientByTimeout.ContainsKey(ts))
-                    return clientByTimeout[ts];
+                if (ClientByTimeout.TryGetValue(ts, out var client1))
+                    return client1;
 
                 var c = new HttpClient();
                 c.DefaultRequestHeaders.Clear();
                 if (timeout.HasValue)
                     c.Timeout = timeout.Value;
-                clientByTimeout.Add(ts, c);
+                ClientByTimeout.Add(ts, c);
 
-                return clientByTimeout[ts];
+                return ClientByTimeout[ts];
             }
         }
 
-        public static string AquireSystemUserAccessTokenWithUsernamePassword(string username, string password, Uri userServiceUrl)
+        public static string AquireSystemUserAccessTokenWithUsernamePassword(string username, string password,
+            Uri userServiceUrl)
         {
             var tokenClient = new TokenClient(
                 NTechServiceRegistry.CreateUrl(userServiceUrl, "id/connect/token").ToString(),
@@ -55,15 +63,16 @@ namespace NTech.Services.Infrastructure
             }
         }
 
-        public static string GetCurrentAccessToken(System.Security.Claims.ClaimsIdentity overrideUser = null)
+        public static string GetCurrentAccessToken(ClaimsIdentity overrideUser = null)
         {
             string accessToken = null;
-            var user = (overrideUser ?? (HttpContext.Current?.User?.Identity)) as System.Security.Claims.ClaimsIdentity;
+            var user = (overrideUser ?? (HttpContext.Current?.User?.Identity)) as ClaimsIdentity;
 
             if (user != null)
             {
                 accessToken = user?.FindFirst("access_token")?.Value;
             }
+
             if (accessToken == null)
             {
                 var h = HttpContext.Current?.Request?.Headers["Authorization"];
@@ -81,7 +90,8 @@ namespace NTech.Services.Infrastructure
 
         public static Tuple<Uri, string> SplitUriIntoBaseAndRelative(Uri uri)
         {
-            return Tuple.Create(new Uri(uri.GetLeftPart(UriPartial.Scheme | UriPartial.Authority)), uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped));
+            return Tuple.Create(new Uri(uri.GetLeftPart(UriPartial.Scheme | UriPartial.Authority)),
+                uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped));
         }
 
         public class NHttpCall
@@ -97,41 +107,49 @@ namespace NTech.Services.Infrastructure
                 {
                     request.Headers.Add("Authorization", $"Bearer {BearerToken}");
                 }
+
                 if (method != HttpMethod.Get)
                 {
                     request.Headers.Add("X-Ntech-Api-Call", "1");
                 }
+
                 prepare(request);
                 var response = GetClient(Timeout).SendAsync(request);
 
                 return new NHttpCallResult(() => response.Result);
             }
 
-            private static Lazy<JsonSerializerSettings> NullIgnoringJsonSerializerSettings = new Lazy<JsonSerializerSettings>(() =>
-            {
-                var s = new JsonSerializerSettings();
-                s.NullValueHandling = NullValueHandling.Ignore;
-                return s;
-            });
+            private static Lazy<JsonSerializerSettings> NullIgnoringJsonSerializerSettings =
+                new Lazy<JsonSerializerSettings>(() =>
+                {
+                    return new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    };
+                });
 
             private static string SerializeObject<T>(T value, bool allowSkipNulls)
             {
-                return allowSkipNulls ? JsonConvert.SerializeObject(value, NullIgnoringJsonSerializerSettings.Value) : JsonConvert.SerializeObject(value);
+                return allowSkipNulls
+                    ? JsonConvert.SerializeObject(value, NullIgnoringJsonSerializerSettings.Value)
+                    : JsonConvert.SerializeObject(value);
             }
 
-            public NHttpCallResult PostJson<T>(string relativeUrl, T value, bool allowSkipNulls = false, Dictionary<string, string> headers = null)
+            public NHttpCallResult PostJson<T>(string relativeUrl, T value, bool allowSkipNulls = false,
+                Dictionary<string, string> headers = null)
             {
                 return PostJsonRaw(relativeUrl, SerializeObject(value, allowSkipNulls), headers: headers);
             }
 
-            public NHttpCallResult PostJsonRaw(string relativeUrl, string json, Dictionary<string, string> headers = null)
+            public NHttpCallResult PostJsonRaw(string relativeUrl, string json,
+                Dictionary<string, string> headers = null)
             {
                 return Call(relativeUrl, HttpMethod.Post, request =>
                 {
-                    request.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    if (headers != null)
-                        foreach (var h in headers)
-                            request.Headers.Add(h.Key, h.Value);
+                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                    if (headers == null) return;
+                    foreach (var h in headers)
+                        request.Headers.Add(h.Key, h.Value);
                 });
             }
 
@@ -175,15 +193,14 @@ namespace NTech.Services.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    var se = FindInnerExceptionOfType<System.Net.Sockets.SocketException>(ex);
+                    var se = FindInnerExceptionOfType<SocketException>(ex);
                     if (se != null)
                         throw new Exception($"The service seems to be down: {se.Message}", se);
-                    else
-                        throw ex;
+                    throw;
                 }
             }
 
-            private T FindInnerExceptionOfType<T>(Exception ex) where T : Exception
+            private static T FindInnerExceptionOfType<T>(Exception ex) where T : Exception
             {
                 var e = ex;
                 var i = 0;
@@ -194,62 +211,27 @@ namespace NTech.Services.Infrastructure
                         return se;
                     e = e.InnerException;
                 }
+
                 return null;
             }
 
-            public string ContentType
-            {
-                get
-                {
-                    return response.Content.Headers.ContentType.ToString();
-                }
-            }
+            public string ContentType => response.Content.Headers.ContentType.ToString();
 
-            public bool IsSuccessStatusCode
-            {
-                get
-                {
-                    return response.IsSuccessStatusCode;
-                }
-            }
+            public bool IsSuccessStatusCode => response.IsSuccessStatusCode;
 
-            public bool IsNotFoundStatusCode
-            {
-                get
-                {
-                    return response.StatusCode == System.Net.HttpStatusCode.NotFound;
-                }
-            }
+            public bool IsNotFoundStatusCode => response.StatusCode == HttpStatusCode.NotFound;
 
-            public int StatusCode
-            {
-                get
-                {
-                    return (int)response.StatusCode;
-                }
-            }
+            public int StatusCode => (int)response.StatusCode;
 
-            public string ReasonPhrase
-            {
-                get
-                {
-                    return response.ReasonPhrase;
-                }
-            }
+            public string ReasonPhrase => response.ReasonPhrase;
 
             public void EnsureSuccessStatusCode()
             {
                 response.EnsureSuccessStatusCode();
             }
 
-            public bool IsApiError
-            {
-                get
-                {
-                    IEnumerable<string> v;
-                    return response.Headers.TryGetValues("X-Ntech-Api-Error", out v) && v.FirstOrDefault() == "1";
-                }
-            }
+            public bool IsApiError => response.Headers.TryGetValues("X-Ntech-Api-Error", out var v) &&
+                                      v.FirstOrDefault() == "1";
 
             public ApiError ParseApiError()
             {
@@ -258,18 +240,13 @@ namespace NTech.Services.Infrastructure
 
             public T HandlingApiError<T>(Func<NHttpCallResult, T> success, Func<ApiError, T> error)
             {
-                if (IsApiError)
-                    return error(ParseApiError());
-                else
-                    return success(this);
+                return IsApiError ? error(ParseApiError()) : success(this);
             }
 
-            public T HandlingApiErrorWithHttpCode<T>(Func<NHttpCallResult, T> success, Func<ApiError, System.Net.HttpStatusCode, T> error)
+            public T HandlingApiErrorWithHttpCode<T>(Func<NHttpCallResult, T> success,
+                Func<ApiError, HttpStatusCode, T> error)
             {
-                if (IsApiError)
-                    return error(ParseApiError(), response.StatusCode);
-                else
-                    return success(this);
+                return IsApiError ? error(ParseApiError(), response.StatusCode) : success(this);
             }
 
             public class ApiError
@@ -283,7 +260,8 @@ namespace NTech.Services.Infrastructure
                 if (!allowNonSucessStatusCode)
                     EnsureSuccessStatusCode();
                 if (!response.Content.Headers.ContentType.MediaType.Contains("application/json"))
-                    throw new Exception($"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
+                    throw new Exception(
+                        $"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
                 return response.Content.ReadAsStringAsync().Result;
             }
 
@@ -292,7 +270,8 @@ namespace NTech.Services.Infrastructure
                 if (!allowNonSucessStatusCode)
                     EnsureSuccessStatusCode();
                 if (!response.Content.Headers.ContentType.MediaType.Contains("application/json"))
-                    throw new Exception($"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
+                    throw new Exception(
+                        $"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
                 return JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result);
             }
 
@@ -301,15 +280,18 @@ namespace NTech.Services.Infrastructure
                 if (!allowNonSucessStatusCode)
                     EnsureSuccessStatusCode();
                 if (!response.Content.Headers.ContentType.MediaType.Contains("application/json"))
-                    throw new Exception($"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
-                return JsonConvert.DeserializeAnonymousType<T>(response.Content.ReadAsStringAsync().Result, anonymousTypeObject);
+                    throw new Exception(
+                        $"Expected application/json but instead got: {response.Content.Headers.ContentType.ToString()}");
+                return JsonConvert.DeserializeAnonymousType<T>(response.Content.ReadAsStringAsync().Result,
+                    anonymousTypeObject);
             }
 
             public void CopyToStream(Stream target)
             {
                 EnsureSuccessStatusCode();
                 if (response.Content.Headers.ContentType.MediaType.Contains("html"))
-                    throw new Exception($"Expected a binary response but instead got: {response.Content.Headers.ContentType.ToString()}");
+                    throw new Exception(
+                        $"Expected a binary response but instead got: {response.Content.Headers.ContentType.ToString()}");
                 response.Content.CopyToAsync(target).Wait();
             }
 
@@ -317,7 +299,8 @@ namespace NTech.Services.Infrastructure
             {
                 EnsureSuccessStatusCode();
                 if (response.Content.Headers.ContentType.MediaType.Contains("html") && !allowHtml)
-                    throw new Exception($"Expected a binary response but instead got: {response.Content.Headers.ContentType.ToString()}");
+                    throw new Exception(
+                        $"Expected a binary response but instead got: {response.Content.Headers.ContentType.ToString()}");
 
                 contentType = response.Content.Headers.ContentType.MediaType;
                 filename = response.Content.Headers.ContentDisposition?.FileName;

@@ -1,16 +1,18 @@
-﻿using nSavings.Code;
-using nSavings.DbModel.BusinessEvents;
+﻿using System;
+using System.Linq;
+using System.Net;
+using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.Code.Services;
+using nSavings.DbModel;
 using NTech.Banking.IncomingPaymentFiles;
+using NTech.Core.Savings.Shared.BusinessEvents;
 using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
 using NTech.Services.Infrastructure;
 using Serilog;
-using System;
-using System.Linq;
-using System.Net;
-using System.Web.Mvc;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiIncomingPaymentsController : NController
@@ -20,19 +22,18 @@ namespace nSavings.Controllers
             public IncomingPaymentFileFormat_Camt_054_001_02.ExtendedData Data { get; set; }
         }
 
-        private bool TryParse(byte[] fileData, string fileName, bool skipOutgoingPayments, Action<Exception> logError, out IncomingPaymentFileWithOriginalExtended pf, out string errorMessage)
+        private static bool TryParse(byte[] fileData, string fileName, bool skipOutgoingPayments,
+            Action<Exception> logError,
+            out IncomingPaymentFileWithOriginalExtended pf, out string errorMessage)
         {
             var f = new IncomingPaymentFileFormat_Camt_054_001_02(logError, skipOutgoingPayments: skipOutgoingPayments);
 
-            IncomingPaymentFileFormat_Camt_054_001_02.ExtendedData extendedData;
-            if (f.TryParseExtended(fileData, out pf, out errorMessage, out extendedData))
-            {
-                pf.OriginalFileData = fileData;
-                pf.OriginalFileName = fileName;
-                pf.Data = extendedData;
-                return true;
-            }
-            return false;
+            if (!f.TryParseExtended(fileData, out pf, out errorMessage, out var extendedData)) return false;
+
+            pf.OriginalFileData = fileData;
+            pf.OriginalFileName = fileName;
+            pf.Data = extendedData;
+            return true;
         }
 
         [HttpPost]
@@ -40,7 +41,8 @@ namespace nSavings.Controllers
         public ActionResult GetFileData(string fileFormatName, string fileName, string fileAsDataUrl)
         {
             if (fileFormatName != new IncomingPaymentFileFormat_Camt_054_001_02(null).FileFormatName)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Fileformat '{fileFormatName}' not supported");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    $"Fileformat '{fileFormatName}' not supported");
 
             if (fileName == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Missing fileName");
@@ -48,10 +50,7 @@ namespace nSavings.Controllers
             if (fileAsDataUrl == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Missing fileAsDataUrl");
 
-            string mimetype;
-            byte[] binaryData;
-
-            if (!TryParseDataUrl(fileAsDataUrl, out mimetype, out binaryData))
+            if (!TryParseDataUrl(fileAsDataUrl, out _, out var binaryData))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Invalid file");
             }
@@ -61,27 +60,31 @@ namespace nSavings.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Invalid '{fileFormatName}'-file");
             }
 
-            IncomingPaymentFileWithOriginalExtended file;
-            string errorMessage;
-            if (!TryParse(binaryData, fileName, true, null, out file, out errorMessage))
+            if (!TryParse(binaryData, fileName, true, null, out var file, out _))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Invalid '{fileFormatName}'-file");
             }
+
             file.OriginalFileName = fileName;
             file.OriginalFileData = binaryData;
 
-            var currencies = file.Accounts.Select(x => x.Currency).Distinct();
-            if (currencies.Count() > 1)
+            var currencies = file.Accounts.Select(x => x.Currency).Distinct().ToList();
+            if (currencies.Count > 1)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"File contains payments in multiple currencies which is not supported");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "File contains payments in multiple currencies which is not supported");
             }
 
             if (currencies.Single() != "EUR")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"File contains non euro payments which is not supported");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "File contains non euro payments which is not supported");
             }
 
-            var allPayments = file.Accounts.SelectMany(x => x.DateBatches).SelectMany(x => x.Payments);
+            var allPayments = file.Accounts
+                .SelectMany(x => x.DateBatches)
+                .SelectMany(x => x.Payments)
+                .ToList();
 
             using (var context = new SavingsContext())
             {
@@ -95,12 +98,14 @@ namespace nSavings.Controllers
                     ibans = string.Join(", ", includedIbans),
                     expectedIban = expectedIban,
                     hasUnexpectedIbans = includedIbans.Any(x => x != expectedIban),
-                    outgoingPayments = file.Data.NrOfSkippedOutgoingPayments > 0 ? new
-                    {
-                        nrOfSkippedOutgoingPayments = file.Data.NrOfSkippedOutgoingPayments,
-                        amountOfSkippedOutgoingPayments = file.Data.AmountOfSkippedOutgoingPayments
-                    } : null,
-                    totalPaymentCount = allPayments.Count(),
+                    outgoingPayments = file.Data.NrOfSkippedOutgoingPayments > 0
+                        ? new
+                        {
+                            nrOfSkippedOutgoingPayments = file.Data.NrOfSkippedOutgoingPayments,
+                            amountOfSkippedOutgoingPayments = file.Data.AmountOfSkippedOutgoingPayments
+                        }
+                        : null,
+                    totalPaymentCount = allPayments.Count,
                     totalPaymentSum = allPayments.Sum(x => (decimal?)x.Amount) ?? 0m
                 });
             }
@@ -108,10 +113,12 @@ namespace nSavings.Controllers
 
         [HttpPost]
         [Route("Api/IncomingPayments/ImportFile")]
-        public ActionResult ImportFile(string fileFormatName, string fileName, string fileAsDataUrl, bool? autoPlace, bool? overrideDuplicateCheck, bool? overrideIbanCheck, bool? skipOutgoingPayments)
+        public ActionResult ImportFile(string fileFormatName, string fileName, string fileAsDataUrl, bool? autoPlace,
+            bool? overrideDuplicateCheck, bool? overrideIbanCheck, bool? skipOutgoingPayments)
         {
             if (fileFormatName != new IncomingPaymentFileFormat_Camt_054_001_02(null).FileFormatName)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Fileformat '{fileFormatName}' not supported");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    $"Fileformat '{fileFormatName}' not supported");
 
             if (fileName == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Missing fileName");
@@ -126,26 +133,26 @@ namespace nSavings.Controllers
                 {
                     try
                     {
-                        string mimetype;
-                        byte[] binaryData;
-
-                        if (!TryParseDataUrl(fileAsDataUrl, out mimetype, out binaryData))
+                        if (!TryParseDataUrl(fileAsDataUrl, out _, out var binaryData))
                         {
                             return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Invalid file");
                         }
 
-                        IncomingPaymentFileWithOriginalExtended file;
-                        string errorMessage;
-                        if (!TryParse(binaryData, fileName, (skipOutgoingPayments ?? false), ex => NLog.Error(ex, "Api/IncomingPayments/ImportFile: file could not be parsed. {fileName}, {fileFormatName}", fileName, fileFormatName), out file, out errorMessage))
+                        if (!TryParse(binaryData, fileName, (skipOutgoingPayments ?? false),
+                                ex => NLog.Error(ex,
+                                    "Api/IncomingPayments/ImportFile: file could not be parsed. {fileName}, {fileFormatName}",
+                                    fileName, fileFormatName), out var file, out _))
                         {
-                            return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Internal server error");
+                            return new HttpStatusCodeResult(HttpStatusCode.InternalServerError,
+                                "Internal server error");
                         }
 
                         if (!overrideDuplicateCheck.HasValue || !overrideDuplicateCheck.Value)
                         {
                             if (context.IncomingPaymentFileHeaders.Any(x => x.ExternalId == file.ExternalId))
                             {
-                                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "File has already been imported. Override with overrideDuplicateCheck.");
+                                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                                    "File has already been imported. Override with overrideDuplicateCheck.");
                             }
                         }
 
@@ -159,7 +166,8 @@ namespace nSavings.Controllers
                                 .ToList();
                             if (otherIbans.Any())
                             {
-                                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "File has payments to unexpected ibans. Override with overrideIbanCheck.");
+                                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                                    "File has payments to unexpected ibans. Override with overrideIbanCheck.");
                             }
                         }
 
@@ -171,17 +179,24 @@ namespace nSavings.Controllers
                             .ToList();
                         if (futureBookKeepingDateDates.Any())
                         {
-                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Invalid payment file. There are payments for future dates: {string.Join(", ", futureBookKeepingDateDates.Select(x => x.ToString("yyyy-MM-dd")))}");
+                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                                $"Invalid payment file. There are payments for future dates: {string.Join(", ", futureBookKeepingDateDates.Select(x => x.ToString("yyyy-MM-dd")))}");
                         }
 
                         var resolver = Service;
                         var currentUser = GetCurrentUserMetadata();
-                        var customerClient = LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceHttpContextUser.SharedInstance, NEnv.ServiceRegistry);
-                        var mgr = new NewIncomingPaymentFileBusinessEventManager(currentUser, CoreClock.SharedInstance, NEnv.ClientCfgCore, NEnv.EnvSettings,
-                            resolver.GetEncryptionService(currentUser),  resolver.ContextFactory, customerClient);
-                        var documentClient = LegacyServiceClientFactory.CreateDocumentClient(LegacyHttpServiceHttpContextUser.SharedInstance, NEnv.ServiceRegistry);
-                        string message;
-                        var createdFile = mgr.ImportIncomingPaymentFile(context, file, documentClient, out message, skipAutoPlace: !(autoPlace ?? true));
+                        var customerClient =
+                            LegacyServiceClientFactory.CreateCustomerClient(
+                                LegacyHttpServiceHttpContextUser.SharedInstance, NEnv.ServiceRegistry);
+                        var mgr = new NewIncomingPaymentFileBusinessEventManager(currentUser, CoreClock.SharedInstance,
+                            NEnv.ClientCfgCore, NEnv.EnvSettings,
+                            ControllerServiceFactory.GetEncryptionService(currentUser), resolver.ContextFactory,
+                            customerClient);
+                        var documentClient =
+                            LegacyServiceClientFactory.CreateDocumentClient(
+                                LegacyHttpServiceHttpContextUser.SharedInstance, NEnv.ServiceRegistry);
+                        var createdFile = mgr.ImportIncomingPaymentFile(context, file, documentClient, out var message,
+                            skipAutoPlace: !(autoPlace ?? true));
                         context.ChangeTracker.DetectChanges();
                         context.SaveChanges();
                         tx.Commit();

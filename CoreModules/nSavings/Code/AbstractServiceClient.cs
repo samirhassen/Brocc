@@ -1,15 +1,15 @@
-﻿using NTech.Services.Infrastructure;
-using System;
+﻿using System;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Code
+namespace nSavings.Code;
+
+public abstract class AbstractServiceClient
 {
-    public abstract class AbstractServiceClient
-    {
-        protected abstract string ServiceName { get; }
+    protected abstract string ServiceName { get; }
 
-        protected NHttp.NHttpCall Begin(string bearerToken = null, TimeSpan? timeout = null)
-        {
-            return NHttp.Begin(new Uri(NEnv.ServiceRegistry.Internal[ServiceName]), bearerToken ?? NHttp.GetCurrentAccessToken(), timeout: timeout);
-        }
+    protected NHttp.NHttpCall Begin(string bearerToken = null, TimeSpan? timeout = null)
+    {
+        return NHttp.Begin(new Uri(NEnv.ServiceRegistry.Internal[ServiceName]),
+            bearerToken ?? NHttp.GetCurrentAccessToken(), timeout: timeout);
     }
 }

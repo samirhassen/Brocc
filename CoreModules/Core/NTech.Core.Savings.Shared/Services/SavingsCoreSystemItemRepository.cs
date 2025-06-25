@@ -1,9 +1,10 @@
-﻿using NTech.Core.Module.Shared.Infrastructure;
-using NTech.Core.Savings.Shared.Database;
-using System;
+﻿using System;
 using System.Linq;
+using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
 
-namespace nSavings.DbModel.Repository
+namespace NTech.Core.Savings.Shared.Services
 {
     public class SavingsCoreSystemItemRepository
     {

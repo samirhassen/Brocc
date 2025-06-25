@@ -1,8 +1,10 @@
-﻿using NTech.Services.Infrastructure.NTechWs;
+﻿using nSavings.Controllers.Api;
+using NTech.Services.Infrastructure.NTechWs;
 
 namespace nSavings.WebserviceMethods
 {
-    public class KeyValueStoreSetMethod : TypedWebserviceMethod<KeyValueStoreSetMethod.Request, KeyValueStoreSetMethod.Response>
+    public class
+        KeyValueStoreSetMethod : TypedWebserviceMethod<KeyValueStoreSetMethod.Request, KeyValueStoreSetMethod.Response>
     {
         public override string Path => "KeyValueStore/Set";
 
@@ -19,7 +21,7 @@ namespace nSavings.WebserviceMethods
 
             s.SetValue(request.Key, request.KeySpace, request.Value);
 
-            return new Response { };
+            return new Response();
         }
 
         public class Request
@@ -31,7 +33,6 @@ namespace nSavings.WebserviceMethods
 
         public class Response
         {
-
         }
     }
 }

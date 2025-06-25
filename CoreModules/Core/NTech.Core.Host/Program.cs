@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.FileProviders;
 using NTech.Core;
 using NTech.Core.Credit.Services;
+using NTech.Core.Host.Email;
 using NTech.Core.Host.Infrastructure;
 using NTech.Core.Host.Services;
 using NTech.Core.Host.Startup;
@@ -11,19 +14,17 @@ using NTech.Core.Module.Infrastrucutre.HttpClient;
 using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Module.Shared.Services;
-using System.Text.Json.Serialization;
-using System.Xml.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigurationManager configuration = builder.Configuration;
+
+var configuration = builder.Configuration;
 var externalConfigFile = configuration.GetValue<string>("ntech.corehost.externalconfigfile");
 if (externalConfigFile != null)
 {
-    //Used mainly for locahost development
-    builder.Configuration.AddJsonFile(new PhysicalFileProvider(Path.GetDirectoryName(externalConfigFile)), Path.GetFileName(externalConfigFile), false, true);
+    //Used mainly for localhost development
+    builder.Configuration.AddJsonFile(new PhysicalFileProvider(Path.GetDirectoryName(externalConfigFile)),
+        Path.GetFileName(externalConfigFile), false, true);
 }
-
-IWebHostEnvironment environment = builder.Environment;
 
 var env = new NEnv(configuration);
 NEnv.SharedInstance = env;
@@ -38,7 +39,7 @@ services.AddSingleton<INTechServiceRegistry>(env.ServiceRegistry);
 services.AddHttpContextAccessor(); //Probably needed for INtechCurrentUserMetadata
 services.AddTransient<IClientConfigurationCore, ClientConfigurationCore>(x =>
 {
-    //TODO: Add caching + changetracking of the file on disk that breaks the cache
+    // TODO: Add caching + changetracking of the file on disk that breaks the cache
     var env = x.GetRequiredService<NEnv>();
     var clientConfigurationDocumentFile = env.ClientConfigurationDocumentFile;
     return ClientConfigurationCore.CreateUsingXDocument(XDocument.Load(clientConfigurationDocumentFile));
@@ -63,21 +64,21 @@ services.AddSingleton<ICoreClock>(x => x.GetRequiredService<CoreHostClock>());
 services.AddSingleton<IMustacheTemplateRenderingService, StubbleMustacheTemplateService>();
 services.AddSingleton<IMarkdownTemplateRenderingService, CommonMarkMarkdownTemplateRenderingService>();
 
-NTech.Core.Host.Email.EmailServices.AddServices(services);
+EmailServices.AddServices(services);
 
 LoggingSetup.AddApiRequestLogging(services, env);
 SwaggerSetup.AddServices(services, env);
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(x =>
+    options.AddDefaultPolicy(policyBuilder =>
     {
         var serviceRegistry = env.ServiceRegistry;
         var corsDomains = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
-        serviceRegistry.External.Values.ToList().ForEach(x =>
+        serviceRegistry.External.Values.ToList().ForEach(url =>
         {
-            corsDomains.Add(new Uri(x).GetLeftPart(UriPartial.Authority));
+            corsDomains.Add(new Uri(url).GetLeftPart(UriPartial.Authority));
         });
-        x.AllowAnyHeader()
+        policyBuilder.AllowAnyHeader()
             .AllowAnyMethod()
             .WithOrigins(corsDomains.ToArray())
             .AllowCredentials();
@@ -96,22 +97,16 @@ services
     })
     .ConfigureActiveModules(env)
     .AddNewtonsoftJson()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+    .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 
 services
     .AddBearerTokenAuthorizationPolicy();
 
 LoggingSetup.AddServices(services);
 
-foreach (var module in ModuleLoader.AllModules.Value)
+foreach (var module in ModuleLoader.AllModules.Value.Where(module => module.IsActive(env)))
 {
-    if (module.IsActive(env))
-    {
-        module.AddServices(services, env);
-    }
+    module.AddServices(services, env);
 }
 
 var app = builder.Build();
@@ -144,12 +139,9 @@ app.UseEndpoints(endpoints =>
 
 app.Lifetime.ApplicationStarted.Register(() =>
 {
-    foreach (var module in ModuleLoader.AllModules.Value)
+    foreach (var module in ModuleLoader.AllModules.Value.Where(module => module.IsActive(env)))
     {
-        if (module.IsActive(env))
-        {
-            module.OnApplicationStarted(app.Logger);
-        }
+        module.OnApplicationStarted(app.Logger);
     }
 });
 

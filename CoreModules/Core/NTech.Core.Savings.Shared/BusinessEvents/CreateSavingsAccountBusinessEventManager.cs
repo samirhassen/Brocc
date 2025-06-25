@@ -1,19 +1,20 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
-using nSavings.Code.Services;
-using NTech.Banking.BankAccounts.Fi;
-using NTech.Banking.CivicRegNumbers;
-using NTech.Banking.Conversion;
-using NTech.Core;
-using NTech.Core.Module.Shared.Clients;
-using NTech.Core.Module.Shared.Infrastructure;
-using NTech.Core.Savings.Shared;
-using NTech.Core.Savings.Shared.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using NTech.Banking.CivicRegNumbers;
+using NTech.Banking.Conversion;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Module.Shared.Clients;
+using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFixed;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Core.Savings.Shared.Services;
+using NTech.Core.Savings.Shared.Services.Utilities;
 
-namespace nSavings.DbModel.BusinessEvents
+namespace NTech.Core.Savings.Shared.BusinessEvents
 {
     public enum SavingsApplicationItemName
     {
@@ -34,7 +35,8 @@ namespace nSavings.DbModel.BusinessEvents
         signedAgreementDocumentArchiveKey,
         customerId,
         savingsAccountNr,
-        withdrawalIban
+        withdrawalIban,
+        fixedInterestProduct
     }
 
     public enum SavingsApplicationCustomerContactInfoSourceWarningCode
@@ -59,8 +61,12 @@ namespace nSavings.DbModel.BusinessEvents
         private readonly ICustomerClient customerClient;
         private readonly SavingsContextFactory contextFactory;
 
-        public CreateSavingsAccountBusinessEventManager(NTech.Core.Module.Shared.Infrastructure.INTechCurrentUserMetadata currentUser, ICoreClock clock, IKeyValueStoreService keyValueStoreService,
-            ISavingsEnvSettings envSettings, IClientConfigurationCore clientConfiguration, ICustomerClient customerClient, SavingsContextFactory contextFactory) : base(currentUser, clock, clientConfiguration)
+        public CreateSavingsAccountBusinessEventManager(
+            INTechCurrentUserMetadata currentUser, ICoreClock clock,
+            IKeyValueStoreService keyValueStoreService,
+            ISavingsEnvSettings envSettings, IClientConfigurationCore clientConfiguration,
+            ICustomerClient customerClient, SavingsContextFactory contextFactory) : base(currentUser, clock,
+            clientConfiguration)
         {
             this.keyValueStoreService = keyValueStoreService;
             this.envSettings = envSettings;
@@ -86,7 +92,8 @@ namespace nSavings.DbModel.BusinessEvents
         {
             creationOptions = creationOptions ?? new CreationOptions();
 
-            var civicRegNrItem = applicationItems.SingleOrDefault(x => x.Item1 == SavingsApplicationItemName.customerCivicRegNr.ToString());
+            var civicRegNrItem = applicationItems.SingleOrDefault(x =>
+                x.Item1 == nameof(SavingsApplicationItemName.customerCivicRegNr));
 
             if (civicRegNrItem == null)
             {
@@ -95,9 +102,9 @@ namespace nSavings.DbModel.BusinessEvents
                 ocrPaymentReference = null;
                 return false;
             }
-            ICivicRegNumber civicRegNr;
 
-            if (!new CivicRegNumberParser(clientConfiguration.Country.BaseCountry).TryParse(civicRegNrItem.Item2, out civicRegNr))
+            if (!new CivicRegNumberParser(clientConfiguration.Country.BaseCountry).TryParse(civicRegNrItem.Item2,
+                    out var civicRegNr))
             {
                 failedMessage = "customerCivicRegNr invalid";
                 savingsAccount = null;
@@ -105,7 +112,9 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            var savingsAccountTypeCodeRaw = applicationItems?.Where(x => x.Item1 == SavingsApplicationItemName.savingsAccountTypeCode.ToString()).FirstOrDefault()?.Item2;
+            var savingsAccountTypeCodeRaw = applicationItems.FirstOrDefault(x
+                    => x.Item1 == nameof(SavingsApplicationItemName.savingsAccountTypeCode))
+                ?.Item2;
             var savingsAccountTypeCode = Enums.Parse<SavingsAccountTypeCode>(savingsAccountTypeCodeRaw);
             if (!savingsAccountTypeCode.HasValue)
             {
@@ -115,7 +124,9 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            var withdrawalIbanRaw = applicationItems?.Where(x => x.Item1 == SavingsApplicationItemName.withdrawalIban.ToString()).FirstOrDefault()?.Item2;
+            var withdrawalIbanRaw = applicationItems
+                .FirstOrDefault(x => x.Item1 == nameof(SavingsApplicationItemName.withdrawalIban))
+                ?.Item2;
             IBANFi withdrawalIban;
             if (string.IsNullOrWhiteSpace(withdrawalIbanRaw))
             {
@@ -131,7 +142,9 @@ namespace nSavings.DbModel.BusinessEvents
 
             var customerId = customerClient.GetCustomerId(civicRegNr);
 
-            if (context.SavingsAccountHeadersQueryable.Any(x => x.MainCustomerId == customerId && x.Status != SavingsAccountStatusCode.Closed.ToString()))
+            if (savingsAccountTypeCode is SavingsAccountTypeCode.StandardAccount &&
+                context.SavingsAccountHeadersQueryable.Any(x =>
+                    x.MainCustomerId == customerId && x.Status != nameof(SavingsAccountStatusCode.Closed)))
             {
                 failedMessage = "Customer already has a standard account that is not closed";
                 savingsAccount = null;
@@ -139,7 +152,8 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            var savingsAccountNr = applicationItems.SingleOrDefault(x => x.Item1 == SavingsApplicationItemName.savingsAccountNr.ToString())?.Item2;
+            var savingsAccountNr = applicationItems
+                .SingleOrDefault(x => x.Item1 == nameof(SavingsApplicationItemName.savingsAccountNr))?.Item2;
             if (string.IsNullOrWhiteSpace(savingsAccountNr))
             {
                 if (creationOptions.AllowAccountNrGeneration)
@@ -164,13 +178,25 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            var signedAgreementDocumentArchiveKey = applicationItems.SingleOrDefault(x => x.Item1 == SavingsApplicationItemName.signedAgreementDocumentArchiveKey.ToString())?.Item2;
-            if (string.IsNullOrWhiteSpace(signedAgreementDocumentArchiveKey) && !creationOptions.AllowCreateWithoutSignedAgreement)
+            var signedAgreementDocumentArchiveKey = applicationItems.SingleOrDefault(x =>
+                x.Item1 == nameof(SavingsApplicationItemName.signedAgreementDocumentArchiveKey))?.Item2;
+            if (string.IsNullOrWhiteSpace(signedAgreementDocumentArchiveKey) &&
+                !creationOptions.AllowCreateWithoutSignedAgreement)
             {
                 failedMessage = "Missing signedAgreementDocumentArchiveKey";
                 savingsAccount = null;
                 ocrPaymentReference = null;
                 return false;
+            }
+
+            string productId = null;
+            FixedAccountProduct product = null;
+            if (savingsAccountTypeCode == SavingsAccountTypeCode.FixedInterestAccount)
+            {
+                productId =
+                    applicationItems.Single(s => s.Item1 == nameof(SavingsApplicationItemName.fixedInterestProduct))
+                        .Item2;
+                product = context.FixedAccountProductQueryable.Single(p => p.Id == productId);
             }
 
             var evt = AddBusinessEvent(BusinessEventType.AccountCreation, context);
@@ -180,28 +206,15 @@ namespace nSavings.DbModel.BusinessEvents
                 AccountTypeCode = savingsAccountTypeCode.Value.ToString(),
                 CreatedByEvent = evt,
                 MainCustomerId = customerId,
+                FixedInterestProduct = productId,
+                MaturesAt = savingsAccountTypeCode == SavingsAccountTypeCode.FixedInterestAccount
+                    ? GetMaturityDate(product)
+                    : null
             };
             FillInInfrastructureFields(h);
             context.AddSavingsAccountHeaders(h);
 
             var frozenRemarks = new List<SavingsAccountCreationRemark>();
-            Action<SavingsAccountCreationRemarkCode, string> addFrozenAttention = (code, data) =>
-            {
-                var f = new SavingsAccountCreationRemark
-                {
-                    SavingsAccount = h,
-                    CreatedByEvent = evt,
-                    RemarkCategoryCode = code.ToString(),
-                    RemarkData = data
-                };
-                FillInInfrastructureFields(f);
-                if (!frozenRemarks.Any(x => x.RemarkCategoryCode == code.ToString() && x.RemarkData == data))
-                {
-                    //Dont add dupes it just clutters up the ui for no reason
-                    context.AddSavingsAccountCreationRemarks(f);
-                    frozenRemarks.Add(f);
-                }
-            };
 
             //Validera kunduppgifter med om kunden inte har det sedan tidigare
             var createCustomerRequest = new CreateOrUpdatePersonRequest
@@ -211,19 +224,24 @@ namespace nSavings.DbModel.BusinessEvents
                 Properties = new List<CreateOrUpdatePersonRequest.Property>()
             };
 
-            var customerContactInfoSourceWarningCode = Enums.Parse<SavingsApplicationCustomerContactInfoSourceWarningCode>(
-                applicationItems?.SingleOrDefault(x => x.Item1 == SavingsApplicationItemName.customerContactInfoSourceWarningCode.ToString())?.Item2);
+            var customerContactInfoSourceWarningCode =
+                Enums.Parse<SavingsApplicationCustomerContactInfoSourceWarningCode>(
+                    applicationItems.SingleOrDefault(x =>
+                        x.Item1 == nameof(SavingsApplicationItemName.customerContactInfoSourceWarningCode))?.Item2);
 
             if (customerContactInfoSourceWarningCode.HasValue)
             {
-                var customerContactInfoSourceWarningMessage = applicationItems?.SingleOrDefault(x => x.Item1 == SavingsApplicationItemName.customerContactInfoSourceWarningMessage.ToString())?.Item2;
+                var customerContactInfoSourceWarningMessage = applicationItems.SingleOrDefault(x =>
+                    x.Item1 == nameof(SavingsApplicationItemName.customerContactInfoSourceWarningMessage))?.Item2;
 
-                addFrozenAttention(SavingsAccountCreationRemarkCode.ContactInfoLookupIssue, JsonConvert.SerializeObject(new
-                {
-                    customerId = customerId,
-                    customerContactInfoSourceWarningCode = customerContactInfoSourceWarningCode?.ToString(),
-                    customerContactInfoSourceWarningMessage = customerContactInfoSourceWarningMessage //TODO: Switch this to an id of an encrypted item if there is time
-                }));
+                AddFrozenAttention(SavingsAccountCreationRemarkCode.ContactInfoLookupIssue, JsonConvert.SerializeObject(
+                    new
+                    {
+                        customerId = customerId,
+                        customerContactInfoSourceWarningCode = customerContactInfoSourceWarningCode?.ToString(),
+                        customerContactInfoSourceWarningMessage =
+                            customerContactInfoSourceWarningMessage //TODO: Switch this to an id of an encrypted item if there is time
+                    }));
             }
 
             //Merge in any included customer info            
@@ -242,31 +260,14 @@ namespace nSavings.DbModel.BusinessEvents
 
             customerClient.CreateOrUpdatePerson(createCustomerRequest);
 
-            void CheckForOtherCustomersWithSameData(string searchTermCode, string customerPropertyName, SavingsAccountCreationRemarkCode freezeCode)
-            {
-                var propertyValue = createCustomerRequest.Properties.FirstOrDefault(x => x.Name == customerPropertyName)?.Value;
-                if (propertyValue != null)
-                {
-                    var customerIdsWithSameValue = customerClient.FindCustomerIdsMatchingAllSearchTerms(new List<CustomerSearchTermModel> { new CustomerSearchTermModel
-                    {
-                        TermCode = searchTermCode,
-                        TermValue = propertyValue
-                    }
-                });
-                    foreach (var customerIdWithSameEmail in (customerIdsWithSameValue ?? new List<int>()).Except(new[] { customerId }))
-                    {
-                        addFrozenAttention(freezeCode, JsonConvert.SerializeObject(new { customerId = customerIdWithSameEmail }));
-                    }
-                }
-            }
-
             CheckForOtherCustomersWithSameData("email", "email", SavingsAccountCreationRemarkCode.FraudCheckSameEmail);
             CheckForOtherCustomersWithSameData("phone", "phone", SavingsAccountCreationRemarkCode.FraudCheckSamePhone);
 
             var isKycScreenDone = TryKycScreen(customerId);
             if (!isKycScreenDone)
             {
-                addFrozenAttention(SavingsAccountCreationRemarkCode.KycScreenFailed, JsonConvert.SerializeObject(new { customerId = customerId }));
+                AddFrozenAttention(SavingsAccountCreationRemarkCode.KycScreenFailed,
+                    JsonConvert.SerializeObject(new { customerId = customerId }));
             }
             else
             {
@@ -289,16 +290,20 @@ namespace nSavings.DbModel.BusinessEvents
                 "taxcountries",
                 "citizencountries"
             };
-            var propertyStatus = customerClient.CheckPropertyStatus(customerId, kycScreenProperties.Concat(taxOrCitizenProperties).ToHashSetShared());
+            var propertyStatus = customerClient.CheckPropertyStatus(customerId,
+                kycScreenProperties.Concat(taxOrCitizenProperties).ToHashSetShared());
 
             if (isKycScreenDone && propertyStatus.MissingPropertyNames.Any(x => kycScreenProperties.Contains(x)))
             {
                 //No need to add both this and KycScreenFailed when isKycScreenDone = false but this could be changed with no issues. It's just duplicate info for the handler.
-                addFrozenAttention(SavingsAccountCreationRemarkCode.KycAttentionNeeded, JsonConvert.SerializeObject(new { customerId = customerId }));
+                AddFrozenAttention(SavingsAccountCreationRemarkCode.KycAttentionNeeded,
+                    JsonConvert.SerializeObject(new { customerId = customerId }));
             }
+
             if (propertyStatus.MissingPropertyNames.Any(x => taxOrCitizenProperties.Contains(x)))
             {
-                addFrozenAttention(SavingsAccountCreationRemarkCode.UnknownTaxOrCitizenCountry, JsonConvert.SerializeObject(new { customerId = customerId }));
+                AddFrozenAttention(SavingsAccountCreationRemarkCode.UnknownTaxOrCitizenCountry,
+                    JsonConvert.SerializeObject(new { customerId = customerId }));
             }
 
             if (withdrawalIban != null)
@@ -309,64 +314,117 @@ namespace nSavings.DbModel.BusinessEvents
                     .SavingsAccountHeadersQueryable
                     .Where(x =>
                         x.MainCustomerId != customerId &&
-                        x.DatedStrings.Any(y => y.Name == DatedSavingsAccountStringCode.WithdrawalIban.ToString() && y.Value == ibanLookupValue))
+                        x.DatedStrings.Any(y =>
+                            y.Name == nameof(DatedSavingsAccountStringCode.WithdrawalIban) &&
+                            y.Value == ibanLookupValue))
                     .Select(x => x.SavingsAccountNr)
                     .Distinct()
                     .ToList();
                 foreach (var otherSavingsAccountNr in otherSavingsAccountsWithSameWithdrawalIban)
                 {
-                    addFrozenAttention(SavingsAccountCreationRemarkCode.FraudCheckSameWithdrawalIban, JsonConvert.SerializeObject(new { savingsAccountNr = otherSavingsAccountNr }));
+                    AddFrozenAttention(SavingsAccountCreationRemarkCode.FraudCheckSameWithdrawalIban,
+                        JsonConvert.SerializeObject(new { savingsAccountNr = otherSavingsAccountNr }));
                 }
             }
 
             if (HasAccountFreezeCheckpoint(customerId))
             {
-                addFrozenAttention(SavingsAccountCreationRemarkCode.CustomerCheckpoint, JsonConvert.SerializeObject(new { customerId = customerId }));
+                AddFrozenAttention(SavingsAccountCreationRemarkCode.CustomerCheckpoint,
+                    JsonConvert.SerializeObject(new { customerId = customerId }));
             }
 
-            string externalVariablesComment = "";
+            var externalVariablesComment = "";
             if (externalVariables != null && externalVariables.Count > 0)
             {
                 var key = Guid.NewGuid().ToString();
-                this.keyValueStoreService.SetValue(key,
-                    KeyValueStoreKeySpaceCode.SavingsExternalVariablesV1.ToString(),
-                    JsonConvert.SerializeObject(externalVariables.Select(x => new { Name = x.Item1, Value = x.Item2 })));
-                AddDatedSavingsAccountString(DatedSavingsAccountStringCode.ExternalVariablesKey.ToString(), key, context, savingsAccount: h, businessEvent: evt);
-                externalVariablesComment = $". External variables: {string.Join(", ", externalVariables.Select(x => $"{x.Item1}={x.Item2}"))}";
+                keyValueStoreService.SetValue(key,
+                    nameof(KeyValueStoreKeySpaceCode.SavingsExternalVariablesV1),
+                    JsonConvert.SerializeObject(externalVariables.Select(x =>
+                        new { Name = x.Item1, Value = x.Item2 })));
+                AddDatedSavingsAccountString(nameof(DatedSavingsAccountStringCode.ExternalVariablesKey), key,
+                    context, savingsAccount: h, businessEvent: evt);
+                externalVariablesComment =
+                    $". External variables: {string.Join(", ", externalVariables.Select(x => $"{x.Item1}={x.Item2}"))}";
             }
 
-            SetStatus(h, frozenRemarks.Any() ? SavingsAccountStatusCode.FrozenBeforeActive : SavingsAccountStatusCode.Active, evt, context);
+            SetStatus(h,
+                frozenRemarks.Any() ? SavingsAccountStatusCode.FrozenBeforeActive : SavingsAccountStatusCode.Active,
+                evt, context);
 
-            var attachmentArchiveKeys = signedAgreementDocumentArchiveKey == null ? null : new List<string> { signedAgreementDocumentArchiveKey };
-            if (frozenRemarks.Any())
-            {
-                AddComment(
-                    $"Account created as frozen pending control due to remark: {string.Join(", ", frozenRemarks.Select(x => x.RemarkCategoryCode).Distinct().ToList())}{externalVariablesComment}", BusinessEventType.AccountCreation, context, savingsAccount: h, attachmentArchiveKeys: attachmentArchiveKeys);
-            }
-            else
-            {
-                AddComment(
-                    $"Account created as open{externalVariablesComment}", BusinessEventType.AccountCreation, context, savingsAccount: h, attachmentArchiveKeys: attachmentArchiveKeys);
-            }
+            var attachmentArchiveKeys = signedAgreementDocumentArchiveKey == null
+                ? null
+                : new List<string> { signedAgreementDocumentArchiveKey };
+            AddComment(
+                frozenRemarks.Any()
+                    ? $"Account created as frozen pending control due to remark: {string.Join(", ", frozenRemarks.Select(x => x.RemarkCategoryCode).Distinct().ToList())}{externalVariablesComment}"
+                    : $"Account created as open{externalVariablesComment}",
+                BusinessEventType.AccountCreation, context, savingsAccount: h,
+                attachmentArchiveKeys: attachmentArchiveKeys);
 
             //Deposit ocr
-            var g = new SavingsOcrPaymentReferenceGenerator(contextFactory, clientConfiguration.Country.BaseCountry, sequenceNrShift: OcrSequenceNrShift);
+            var g = new SavingsOcrPaymentReferenceGenerator(contextFactory, clientConfiguration.Country.BaseCountry,
+                sequenceNrShift: OcrSequenceNrShift);
             var ocrNr = g.GenerateNew();
-            AddDatedSavingsAccountString(DatedSavingsAccountStringCode.OcrDepositReference.ToString(), ocrNr.NormalForm, context, businessEvent: evt, savingsAccount: h);
+            AddDatedSavingsAccountString(nameof(DatedSavingsAccountStringCode.OcrDepositReference), ocrNr.NormalForm,
+                context, businessEvent: evt, savingsAccount: h);
 
             if (!string.IsNullOrWhiteSpace(signedAgreementDocumentArchiveKey))
             {
-                AddDatedSavingsAccountString(DatedSavingsAccountStringCode.SignedInitialAgreementArchiveKey.ToString(), signedAgreementDocumentArchiveKey, context, savingsAccount: h, businessEvent: evt);
-                AddSavingsAccountDocument(SavingsAccountDocumentTypeCode.InitialAgreement, signedAgreementDocumentArchiveKey, context, savingsAccount: h, businessEvent: evt);
+                AddDatedSavingsAccountString(nameof(DatedSavingsAccountStringCode.SignedInitialAgreementArchiveKey),
+                    signedAgreementDocumentArchiveKey, context, savingsAccount: h, businessEvent: evt);
+                AddSavingsAccountDocument(SavingsAccountDocumentTypeCode.InitialAgreement,
+                    signedAgreementDocumentArchiveKey, context, savingsAccount: h, businessEvent: evt);
             }
 
             if (withdrawalIban != null)
-                AddDatedSavingsAccountString(DatedSavingsAccountStringCode.WithdrawalIban.ToString(), withdrawalIban.NormalizedValue, context, savingsAccount: h, businessEvent: evt);
+                AddDatedSavingsAccountString(nameof(DatedSavingsAccountStringCode.WithdrawalIban),
+                    withdrawalIban.NormalizedValue, context, savingsAccount: h, businessEvent: evt);
 
             failedMessage = null;
             savingsAccount = h;
             ocrPaymentReference = ocrNr;
             return true;
+
+            void CheckForOtherCustomersWithSameData(string searchTermCode, string customerPropertyName,
+                SavingsAccountCreationRemarkCode freezeCode)
+            {
+                var propertyValue = createCustomerRequest.Properties.FirstOrDefault(x => x.Name == customerPropertyName)
+                    ?.Value;
+                if (propertyValue == null) return;
+                var customerIdsWithSameValue = customerClient.FindCustomerIdsMatchingAllSearchTerms(
+                    new List<CustomerSearchTermModel>
+                    {
+                        new CustomerSearchTermModel
+                        {
+                            TermCode = searchTermCode,
+                            TermValue = propertyValue
+                        }
+                    });
+                foreach (var customerIdWithSameEmail in (customerIdsWithSameValue ?? new List<int>()).Except(new[]
+                             { customerId }))
+                {
+                    AddFrozenAttention(freezeCode,
+                        JsonConvert.SerializeObject(new { customerId = customerIdWithSameEmail }));
+                }
+            }
+
+            void AddFrozenAttention(SavingsAccountCreationRemarkCode code, string data)
+            {
+                var f = new SavingsAccountCreationRemark
+                {
+                    SavingsAccount = h, CreatedByEvent = evt, RemarkCategoryCode = code.ToString(), RemarkData = data
+                };
+                FillInInfrastructureFields(f);
+                if (frozenRemarks.Any(x => x.RemarkCategoryCode == code.ToString() && x.RemarkData == data)) return;
+                //Dont add dupes it just clutters up the ui for no reason
+                context.AddSavingsAccountCreationRemarks(f);
+                frozenRemarks.Add(f);
+            }
+        }
+
+        private DateTime? GetMaturityDate(FixedAccountProduct product)
+        {
+            return Clock.Today.AddMonths(product.TermInMonths);
         }
 
         private bool TryKycScreen(int customerId)
@@ -382,9 +440,6 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        private Dictionary<string, string> GetCustomerCardItems(int customerId, params string[] propertyNames) =>
-            customerClient.BulkFetchPropertiesByCustomerIdsD(new HashSet<int> { customerId }, propertyNames).Opt(customerId);
-
         private bool HasAccountFreezeCheckpoint(int customerId)
         {
             return customerClient.GetActiveCheckpointIdsOnCustomerIds(
@@ -395,40 +450,33 @@ namespace nSavings.DbModel.BusinessEvents
         //To ensure that ocr nrs from test dont overlap with production and that the left most nr is higher so its easy to see its from test
         //This is to make sure that accidenatal deposits made if someone thinks they are using production when in fact they are on test end up unplaced instead of one some elses account
         private long OcrSequenceNrShift =>
-            (!envSettings.IsProduction && clientConfiguration.Country.BaseCountry == "FI") ? 11111111L : 0L;
+            !envSettings.IsProduction && clientConfiguration.Country.BaseCountry == "FI" ? 11111111L : 0L;
 
         private static string GetCustomerPropertyFromApplicationItem(string i)
         {
-            if (i == SavingsApplicationItemName.customerFirstName.ToString())
+            if (!Enum.TryParse(i, out SavingsApplicationItemName itemName)) return null;
+
+            switch (itemName)
             {
-                return "firstName";
+                case SavingsApplicationItemName.customerFirstName:
+                    return "firstName";
+                case SavingsApplicationItemName.customerLastName:
+                    return "lastName";
+                case SavingsApplicationItemName.customerEmail:
+                    return "email";
+                case SavingsApplicationItemName.customerPhone:
+                    return "phone";
+                case SavingsApplicationItemName.customerAddressZipcode:
+                    return "addressZipcode";
+                case SavingsApplicationItemName.customerAddressStreet:
+                    return "addressStreet";
+                case SavingsApplicationItemName.customerAddressCity:
+                    return "addressCity";
+                case SavingsApplicationItemName.customerAddressCountry:
+                    return "addressCountry";
+                default:
+                    return null;
             }
-            else if (i == SavingsApplicationItemName.customerLastName.ToString())
-            {
-                return "lastName";
-            }
-            else if (i == SavingsApplicationItemName.customerEmail.ToString())
-                return "email";
-            else if (i == SavingsApplicationItemName.customerPhone.ToString())
-                return "phone";
-            else if (i == SavingsApplicationItemName.customerAddressZipcode.ToString())
-            {
-                return "addressZipcode";
-            }
-            else if (i == SavingsApplicationItemName.customerAddressStreet.ToString())
-            {
-                return "addressStreet";
-            }
-            else if (i == SavingsApplicationItemName.customerAddressCity.ToString())
-            {
-                return "addressCity";
-            }
-            else if (i == SavingsApplicationItemName.customerAddressCountry.ToString())
-            {
-                return "addressCountry";
-            }
-            else
-                return null;
         }
 
         public static string GenerateNewSavingsAccountNumber(SavingsContextFactory contextFactory)

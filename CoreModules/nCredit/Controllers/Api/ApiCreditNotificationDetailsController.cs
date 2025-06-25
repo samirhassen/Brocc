@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Web.Mvc;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace nCredit.Controllers
 {

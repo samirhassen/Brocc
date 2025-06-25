@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace nSavings.Code.Services
+namespace NTech.Core.Savings.Shared.Services
 {
     public interface IKeyValueStoreService
     {

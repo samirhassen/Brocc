@@ -1,26 +1,27 @@
-﻿using nSavings.Code;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.DbModel;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [NTechAuthorize(ValidateAccessToken = true)]
     [RoutePrefix("Api/EncryptedTemporaryStorage")]
     public class ApiEncryptedTemporaryStorageController : NController
     {
-        const string CurrentProtocolVersionName = "v1";
-        const string ProtocolVersionNameV1 = "v1";
+        private const string CurrentProtocolVersionName = "v1";
+        private const string ProtocolVersionNameV1 = "v1";
 
         public static string StoreStringI(string plaintextMessage, int? expireAfterHours)
         {
-            var p = new RijndaelCryptoProvider();
-            var iv = p.GenerateIv();
-            var key = p.GenerateKey();
+            var iv = RijndaelCryptoProvider.GenerateIv();
+            var key = RijndaelCryptoProvider.GenerateKey();
             var id = OneTimeTokenGenerator.SharedInstance.GenerateUniqueToken();
-            var cipherText = p.Encrypt(iv, key, plaintextMessage);
+            var cipherText = RijndaelCryptoProvider.Encrypt(iv, key, plaintextMessage);
 
             using (var context = new SavingsContext())
             {
@@ -47,6 +48,7 @@ namespace nSavings.Controllers
                 plainTextMessage = null;
                 return false;
             }
+
             var id = parts[3];
 
             using (var context = new SavingsContext())
@@ -61,10 +63,11 @@ namespace nSavings.Controllers
                     plainTextMessage = null;
                     return false;
                 }
+
                 var iv = parts[1];
                 var key = parts[2];
                 var p = new RijndaelCryptoProvider();
-                plainTextMessage = p.Decrypt(iv, key, cipherText);
+                plainTextMessage = RijndaelCryptoProvider.Decrypt(iv, key, cipherText);
                 return true;
             }
         }
@@ -78,11 +81,9 @@ namespace nSavings.Controllers
             {
                 return TryGetStringI_V1(compoundKey, out plainTextMessage);
             }
-            else
-            {
-                plainTextMessage = null;
-                return false;
-            }
+
+            plainTextMessage = null;
+            return false;
         }
 
         [HttpPost]
@@ -99,18 +100,17 @@ namespace nSavings.Controllers
         [Route("GetString")]
         public ActionResult GetString(string compoundKey)
         {
-            string m;
-            if (TryGetStringI(compoundKey, out m))
+            if (TryGetStringI(compoundKey, out var m))
                 return Json2(new
                 {
                     exists = true,
                     plaintextMessage = m
                 });
-            else
-                return Json2(new
-                {
-                    exists = false
-                });
+            
+            return Json2(new
+            {
+                exists = false
+            });
         }
 
         public static void DeleteExpiredItems()
@@ -119,7 +119,8 @@ namespace nSavings.Controllers
             {
                 var now = DateTime.Now;
 
-                var expiredItems = savingsContext.TemporaryExternallyEncryptedItems.Where(x => x.DeleteAfterDate < now).ToList();
+                var expiredItems = savingsContext.TemporaryExternallyEncryptedItems.Where(x => x.DeleteAfterDate < now)
+                    .ToList();
                 savingsContext.TemporaryExternallyEncryptedItems.RemoveRange(expiredItems);
 
                 savingsContext.SaveChanges();

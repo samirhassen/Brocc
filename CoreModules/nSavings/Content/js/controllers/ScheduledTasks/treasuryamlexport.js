@@ -1,6 +1,6 @@
 var app = angular.module('app', ['ntech.forms', 'ntech.components']);
-var TreasuryAMLCtr = /** @class */ (function () {
-    function TreasuryAMLCtr($scope, //ng.IScope
+class TreasuryAMLCtr {
+    constructor($scope, //ng.IScope
     $http, $q, $timeout) {
         this.$http = $http;
         this.$q = $q;
@@ -26,17 +26,17 @@ var TreasuryAMLCtr = /** @class */ (function () {
                 toastr.error(response.statusText, 'Error');
             });
         };
-        var tableHelper = new NTechTables.PagingHelper($q, $http);
+        let tableHelper = new NTechTables.PagingHelper($q, $http);
         $scope.gotoPage = function (pageNr, filter, evt) {
             if (evt) {
                 evt.preventDefault();
             }
             $scope.isLoading = true;
-            tableHelper.gotoPage(pageNr, 50, initialData.getFilesPageUrl, filter, null).then(function (response) {
+            tableHelper.gotoPage(pageNr, 50, initialData.getFilesPageUrl, filter, null).then(response => {
                 $scope.isLoading = false;
                 $scope.files = response.pagesData;
                 $scope.filesPaging = response.pagingObject;
-            }, function (err) {
+            }, err => {
                 $scope.isLoading = false;
                 toastr.error(err, 'Error');
             });
@@ -91,7 +91,6 @@ var TreasuryAMLCtr = /** @class */ (function () {
         $scope.dateSearch.search();
         window.scope = $scope;
     }
-    TreasuryAMLCtr.$inject = ['$scope', '$http', '$q', '$timeout'];
-    return TreasuryAMLCtr;
-}());
+}
+TreasuryAMLCtr.$inject = ['$scope', '$http', '$q', '$timeout'];
 app.controller('ctr', TreasuryAMLCtr);

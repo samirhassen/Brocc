@@ -1,11 +1,11 @@
-﻿using nSavings.Code;
+﻿using System;
+using System.Web.Mvc;
+using nSavings.Code;
 using nSavings.Code.Services;
 using NTech;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Services.Infrastructure;
 using NTech.Services.Infrastructure.NTechWs;
-using System;
-using System.Web.Mvc;
 
 namespace nSavings.Controllers.Api
 {
@@ -16,7 +16,8 @@ namespace nSavings.Controllers.Api
     {
         public static Lazy<ApiHostControllerHelper> ApiHost { get; private set; } =
             new Lazy<ApiHostControllerHelper>(() => new ApiHostControllerHelper(
-                NEnv.CurrentServiceName, NEnv.LogFolder?.FullName, typeof(ApiHostController), RoutePrefix, NEnv.IsProduction, NEnv.IsVerboseLoggingEnabled));
+                NEnv.CurrentServiceName, NEnv.LogFolder?.FullName, typeof(ApiHostController), RoutePrefix,
+                NEnv.IsProduction, NEnv.IsVerboseLoggingEnabled));
 
         private const string RoutePrefix = "api";
 
@@ -32,7 +33,8 @@ namespace nSavings.Controllers.Api
             if (NEnv.IsProduction)
                 return null;
             var unp = NEnv.ApplicationAutomationUsernameAndPassword;
-            return NHttp.AquireSystemUserAccessTokenWithUsernamePassword(unp.Item1, unp.Item2, NEnv.ServiceRegistry.Internal.ServiceRootUri("nUser"));
+            return NHttp.AquireSystemUserAccessTokenWithUsernamePassword(unp.Item1, unp.Item2,
+                NEnv.ServiceRegistry.Internal.ServiceRootUri("nUser"));
         }
 
         //Routed after any attribute routes in routeconfig
@@ -46,10 +48,7 @@ namespace nSavings.Controllers.Api
                 () => this.InformationMetadata));
         }
     }
-}
 
-namespace nSavings
-{
     public static class NTechWebserviceMethodRequestExtensions
     {
         public static ControllerServiceFactory Service(this NTechWebserviceMethodRequestContext source)
@@ -80,7 +79,7 @@ namespace nSavings
         public static INTechCurrentUserMetadata CurrentUserMetadataCore(this NTechWebserviceMethodRequestContext source)
         {
             return new NTechCurrentUserMetadataImpl(source.CurrentUserIdentity);
-        }        
+        }
 
         public static void ExtendCustomData(
             INTechWebserviceCustomData d,

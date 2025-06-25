@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using NTech.Services.Infrastructure.Email;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using NTech.Services.Infrastructure.Email;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [RoutePrefix("Ui/TestLatestEmails")]
     public class TestLatestEmailsListController : NController
@@ -13,10 +13,12 @@ namespace nSavings.Controllers
         [Route("List")]
         public ActionResult List()
         {
-            ViewBag.JsonInitialData = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new
-            {
-                emails = InMemoryEmailTestService.GetStoredEmails().OrderByDescending(x => x.Date).ToList()
-            })));
+            ViewBag.JsonInitialData = Convert.ToBase64String(
+                Encoding.UTF8.GetBytes(
+                    JsonConvert.SerializeObject(new
+                    {
+                        emails = InMemoryEmailTestService.GetStoredEmails().OrderByDescending(x => x.Date).ToList()
+                    })));
             return View();
         }
     }

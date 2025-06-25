@@ -1,4 +1,8 @@
-﻿using nCustomer;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using nCustomer;
 using NTech.Banking.CivicRegNumbers;
 using NTech.Core.Customer.Shared.Database;
 using NTech.Core.Customer.Shared.Models;
@@ -6,30 +10,29 @@ using NTech.Core.Customer.Shared.Services.Utilities;
 using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Module.Shared.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace NTech.Core.Customer.Shared.Services
 {
     public class KycQuestionsSessionService : KycQuestionsSessionArchiveOnlyService
     {
-        private readonly INTechCurrentUserMetadata user;
-        private readonly KycAnswersUpdateService kycAnswersUpdate;
-        private readonly EncryptionService encryptionService;
-        private readonly CrossModuleClientFactory crossModuleClientFactory;
-        private readonly Lazy<CivicRegNumberParser> civicRegNumberParser;
+        private readonly INTechCurrentUserMetadata _user;
+        private readonly KycAnswersUpdateService _kycAnswersUpdate;
+        private readonly EncryptionService _encryptionService;
+        private readonly CrossModuleClientFactory _crossModuleClientFactory;
+        private readonly Lazy<CivicRegNumberParser> _civicRegNumberParser;
 
-        public KycQuestionsSessionService(CustomerContextFactory customerContextFactory, ICoreClock clock, INTechCurrentUserMetadata user,
-            KycAnswersUpdateService kycAnswersUpdate, IClientConfigurationCore clientConfiguration, EncryptionService encryptionService, 
+        public KycQuestionsSessionService(CustomerContextFactory customerContextFactory, ICoreClock clock,
+            INTechCurrentUserMetadata user,
+            KycAnswersUpdateService kycAnswersUpdate, IClientConfigurationCore clientConfiguration,
+            EncryptionService encryptionService,
             CrossModuleClientFactory crossModuleClientFactory) : base(customerContextFactory, clock)
         {
-            this.user = user;
-            this.kycAnswersUpdate = kycAnswersUpdate;
-            this.encryptionService = encryptionService;
-            this.crossModuleClientFactory = crossModuleClientFactory;
-            civicRegNumberParser = new Lazy<CivicRegNumberParser>(() => new CivicRegNumberParser(clientConfiguration.Country.BaseCountry));
+            _user = user;
+            _kycAnswersUpdate = kycAnswersUpdate;
+            _encryptionService = encryptionService;
+            _crossModuleClientFactory = crossModuleClientFactory;
+            _civicRegNumberParser =
+                new Lazy<CivicRegNumberParser>(() => new CivicRegNumberParser(clientConfiguration.Country.BaseCountry));
         }
 
         public KycQuestionsSession CreateSession(CreateKycQuestionSessionRequest request)
@@ -46,13 +49,15 @@ namespace NTech.Core.Customer.Shared.Services
                 SourceDescription = request.SourceDescription,
                 Language = request.Language,
                 SlidingExpirationHours = request.SlidingExpirationHours,
-                CustomerIdByCustomerKey = request.CustomerIds.ToDictionary(x => OneTimeTokenGenerator.SharedInstance.GenerateUniqueToken(), x => x),
+                CustomerIdByCustomerKey =
+                    request.CustomerIds.ToDictionary(x => OneTimeTokenGenerator.SharedInstance.GenerateUniqueToken(),
+                        x => x),
                 CompletionCallbackModuleName = request.CompletionCallbackModuleName,
                 CustomData = request.CustomData,
                 AllowBackToRedirectUrl = request.AllowBackToRedirectUrl
             };
 
-            using (var context = customerContextFactory.CreateContext())
+            using (var context = CustomerContextFactory.CreateContext())
             {
                 StoreSession(context, session);
                 context.SaveChanges();
@@ -61,15 +66,17 @@ namespace NTech.Core.Customer.Shared.Services
             return session;
         }
 
-        public void AddAlternateKey(string sessionId, string alternateKey) => sessionStore.SetAlternateSessionKey(sessionId, alternateKey, user);
+        public void AddAlternateKey(string sessionId, string alternateKey) =>
+            SessionStore.SetAlternateSessionKey(sessionId, alternateKey, _user);
 
-        public CustomerPagesHandleKycQuestionAnswersResponse HandleSessionAnswers(CustomerPagesHandleKycQuestionAnswersRequest request)
+        public CustomerPagesHandleKycQuestionAnswersResponse HandleSessionAnswers(
+            CustomerPagesHandleKycQuestionAnswersRequest request)
         {
             try
             {
-                using (var context = customerContextFactory.CreateContext())
+                using (var context = CustomerContextFactory.CreateContext())
                 {
-                    var session = sessionStore.GetSessionComposable(context, request.SessionId);
+                    var session = SessionStore.GetSessionComposable(context, request.SessionId);
 
                     if (session?.IsActive != true)
                     {
@@ -92,7 +99,8 @@ namespace NTech.Core.Customer.Shared.Services
                             Source = session.SourceDescription,
                             Items = answerByCustomerKey[customerKey]
                         };
-                        kycAnswersUpdate.AddCustomerQuestionsSetComposable(context, questionSet, session.SourceType, session.SourceId);
+                        _kycAnswersUpdate.AddCustomerQuestionsSetComposable(context, questionSet, session.SourceType,
+                            session.SourceId);
                     }
 
                     session.IsCompleted = true;
@@ -104,7 +112,7 @@ namespace NTech.Core.Customer.Shared.Services
 
                     if (session.CompletionCallbackModuleName?.ToLowerInvariant() == "nprecredit")
                     {
-                        crossModuleClientFactory.PreCreditClient.ReportKycQuestionSessionCompleted(session.SessionId);
+                        _crossModuleClientFactory.PreCreditClient.ReportKycQuestionSessionCompleted(session.SessionId);
                     }
 
                     return new CustomerPagesHandleKycQuestionAnswersResponse
@@ -112,19 +120,20 @@ namespace NTech.Core.Customer.Shared.Services
                         WasCompleted = true
                     };
                 }
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception($"HandleSessionAnswers({request?.SessionId}) failed", ex);
             }
         }
 
-        public KycQuestionsSession GetSession(string sessionId) =>        
-            sessionStore.GetSession(sessionId);
+        public KycQuestionsSession GetSession(string sessionId) =>
+            SessionStore.GetSession(sessionId);
 
-        public CustomerPagesKycQuestionSessionResponse LoadCustomerPagesSession(string sessionId, KycQuestionsTemplateService templateService)
+        public CustomerPagesKycQuestionSessionResponse LoadCustomerPagesSession(string sessionId,
+            KycQuestionsTemplateService templateService)
         {
-            var session = sessionStore.GetSession(sessionId);
+            var session = SessionStore.GetSession(sessionId);
             if (session == null)
             {
                 return new CustomerPagesKycQuestionSessionResponse
@@ -151,23 +160,25 @@ namespace NTech.Core.Customer.Shared.Services
             var customerIds = session.CustomerIdByCustomerKey.Values.ToHashSetShared();
             Dictionary<int, Dictionary<string, string>> customerData;
 
-            using (var context = customerContextFactory.CreateContext())
+            using (var context = CustomerContextFactory.CreateContext())
             {
-                var customerRepository = new CustomerRepositorySimple(context, encryptionService);
+                var customerRepository = new CustomerRepositorySimple(context, _encryptionService);
                 customerData = customerRepository.BulkFetchD(customerIds,
-                    propertyNames: new HashSet<string> { "isCompany", "companyName", "firstName", "lastName", "birthDate", "civicRegNr" });
+                    propertyNames: new HashSet<string>
+                        { "isCompany", "companyName", "firstName", "lastName", "birthDate", "civicRegNr" });
             }
 
             string GetBirthDateFromCivicRegNr(string civicRegNr)
             {
                 if (string.IsNullOrWhiteSpace(civicRegNr))
                     return null;
-                return civicRegNumberParser.Value.TryParse(civicRegNr, out var parsedNr)
+                return _civicRegNumberParser.Value.TryParse(civicRegNr, out var parsedNr)
                     ? parsedNr?.BirthDate?.ToString("yyyy-MM-dd")
                     : null;
             }
 
-            var questionsTemplate = templateService.GetInitialData().ActiveProducts.FirstOrDefault(x => x.RelationType == session.QuestionsRelationType)?.CurrentQuestionsTemplate;
+            var questionsTemplate = templateService.GetInitialData().ActiveProducts
+                .FirstOrDefault(x => x.RelationType == session.QuestionsRelationType)?.CurrentQuestionsTemplate;
 
             return new CustomerPagesKycQuestionSessionResponse
             {
@@ -187,7 +198,9 @@ namespace NTech.Core.Customer.Shared.Services
                     var isCompany = d?.Opt("isCompany") == "true";
                     return new CustomerPagesKycQuestionSessionResponseCustomer
                     {
-                        FullName = isCompany ? d?.Opt("companyName") : $"{d?.Opt("firstName")} {d?.Opt("lastName")}".Trim(),
+                        FullName = isCompany
+                            ? d.Opt("companyName")
+                            : $"{d?.Opt("firstName")} {d?.Opt("lastName")}".Trim(),
                         BirthDate = d?.Opt("birthDate") ?? GetBirthDateFromCivicRegNr(d?.Opt("civicRegNr")),
                         CustomerKey = customerKey
                     };
@@ -197,28 +210,30 @@ namespace NTech.Core.Customer.Shared.Services
 
         private void StoreSession(ICustomerContextExtended context, KycQuestionsSession session)
         {
-            sessionStore.StoreSessionComposable(context, session, TimeSpan.FromHours(session.SlidingExpirationHours), user);
+            SessionStore.StoreSessionComposable(context, session, TimeSpan.FromHours(session.SlidingExpirationHours),
+                _user);
         }
     }
 
     public class KycQuestionsSessionArchiveOnlyService
     {
-        protected readonly SessionStore<KycQuestionsSession> sessionStore;
-        protected readonly CustomerContextFactory customerContextFactory;
+        protected readonly SessionStore<KycQuestionsSession> SessionStore;
+        protected readonly CustomerContextFactory CustomerContextFactory;
 
         public KycQuestionsSessionArchiveOnlyService(CustomerContextFactory customerContextFactory, ICoreClock clock)
         {
-            sessionStore = new SessionStore<KycQuestionsSession>(
-                "KycQuestionsSessionServiceV1", "KycQuestionsSessionServiceArchiveDateV1", "KycQuestionsSessionServiceAlternateKeyV1",
+            SessionStore = new SessionStore<KycQuestionsSession>(
+                "KycQuestionsSessionServiceV1", "KycQuestionsSessionServiceArchiveDateV1",
+                "KycQuestionsSessionServiceAlternateKeyV1",
                 clock,
                 x => x.SessionId,
-                () => customerContextFactory.CreateContext());
-            this.customerContextFactory = customerContextFactory;
+                customerContextFactory.CreateContext);
+            CustomerContextFactory = customerContextFactory;
         }
 
         public void ArchiveOldSessions()
         {
-            sessionStore.ArchiveOldSessions();
+            SessionStore.ArchiveOldSessions();
         }
     }
 
@@ -244,19 +259,16 @@ namespace NTech.Core.Customer.Shared.Services
 
     public class CustomerPagesHandleKycQuestionAnswersRequest
     {
-        [Required]
-        public string SessionId { get; set; }
+        [Required] public string SessionId { get; set; }
 
         public List<CustomerPagesHandleKycQuestionAnswersCustomer> CustomerAnswers { get; set; }
     }
 
     public class CustomerPagesHandleKycQuestionAnswersCustomer
     {
-        [Required]
-        public string CustomerKey { get; set; }
+        [Required] public string CustomerKey { get; set; }
 
-        [Required]
-        public List<CustomerQuestionsSetItem> Answers { get; set; }
+        [Required] public List<CustomerQuestionsSetItem> Answers { get; set; }
     }
 
     public class CustomerPagesHandleKycQuestionAnswersResponse

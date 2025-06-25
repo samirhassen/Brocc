@@ -1,6 +1,4 @@
-﻿using NTech.Core.Module.Shared.Database;
-using NTech.Legacy.Module.Shared;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Entity;
@@ -10,6 +8,9 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NTech.Core.Module.Shared.Database;
+using NTech.Legacy.Module.Shared;
+using nUser.Migrations;
 
 namespace nUser.DbModel
 {
@@ -28,16 +29,11 @@ namespace nUser.DbModel
         public void RollbackTransaction() => Database.CurrentTransaction.Rollback();
         public bool HasCurrentTransaction => Database.CurrentTransaction != null;
         public IDbTransaction CurrentTransaction => Database?.CurrentTransaction?.UnderlyingTransaction;
+
         public bool IsChangeTrackingEnabled
         {
-            get
-            {
-                return Configuration.AutoDetectChangesEnabled;
-            }
-            set
-            {
-                Configuration.AutoDetectChangesEnabled = value;
-            }
+            get => Configuration.AutoDetectChangesEnabled;
+            set => Configuration.AutoDetectChangesEnabled = value;
         }
 
         public void DetectChanges() => ChangeTracker.DetectChanges();
@@ -63,7 +59,8 @@ namespace nUser.DbModel
             modelBuilder.Entity<User>().Property(x => x.ConsentText);
             modelBuilder.Entity<User>().Property(x => x.ProviderName).HasMaxLength(100);
             modelBuilder.Entity<User>().Property(x => x.IsSystemUser).IsRequired();
-            modelBuilder.Entity<User>().HasMany(x => x.UserSettings).WithRequired(x => x.User).HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<User>().HasMany(x => x.UserSettings).WithRequired(x => x.User)
+                .HasForeignKey(x => x.UserId);
 
             modelBuilder.Entity<GroupMembership>().HasKey(x => x.Id);
             modelBuilder.Entity<GroupMembership>().Property(x => x.CreationDate).IsRequired();
@@ -101,7 +98,8 @@ namespace nUser.DbModel
                 .Property(x => x.AuthenticationType)
                 .HasMaxLength(128)
                 .IsRequired()
-                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute() { IsUnique = false }));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(new IndexAttribute() { IsUnique = false }));
 
             modelBuilder.Entity<AuthenticationMechanism>()
                 .Property(x => x.AuthenticationProvider)
@@ -134,7 +132,8 @@ namespace nUser.DbModel
                 e.Property(x => x.Timestamp).IsRequired().IsRowVersion();
                 e.Property(x => x.CreationDate).IsRequired();
                 e.Property(x => x.CreatedById).IsRequired();
-                e.Property(x => x.Name).IsRequired().HasMaxLength(128).HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute() { IsUnique = false }));
+                e.Property(x => x.Name).IsRequired().HasMaxLength(128).HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute() { IsUnique = false }));
                 e.Property(x => x.Value);
             });
 
@@ -153,7 +152,8 @@ namespace nUser.DbModel
             a(mb.Entity<T>());
         }
 
-        private static EntityTypeConfiguration<T> ConfigureInfrastructureFields<T>(EntityTypeConfiguration<T> t) where T : InfrastructureBaseItem
+        private static EntityTypeConfiguration<T> ConfigureInfrastructureFields<T>(EntityTypeConfiguration<T> t)
+            where T : InfrastructureBaseItem
         {
             t.Property(e => e.Timestamp).IsRequired().IsRowVersion();
             t.Property(e => e.ChangedById).IsRequired();
@@ -183,7 +183,8 @@ namespace nUser.DbModel
 
         public static void InitDatabase()
         {
-            System.Data.Entity.Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<UsersContext, Migrations.Configuration>());
+            Database.SetInitializer(
+                new MigrateDatabaseToLatestVersion<UsersContext, Configuration>());
             using (var context = new UsersContext())
             {
                 context.Database.Initialize(false);

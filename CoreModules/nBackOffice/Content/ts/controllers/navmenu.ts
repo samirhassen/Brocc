@@ -50,7 +50,7 @@ class NavMenuCtr {
             let productItems = _.filter<NavMenuNs.INavMenuItem>(allItems, x => x.subGroupName === productName)
             let productGroups : NavMenuNs.INavMenuGroupModel[] = []
             let tmp = _.groupBy(productItems, x => x.groupName)            
-            for (var groupName in tmp) {
+            for (const groupName in tmp) {
                 let items = tmp[groupName]
                 productGroups.push({ groupName: groupName, items: items, hasAnyPermittedItem: _.any(items, x => x.isPermitted) })
             }

@@ -1,8 +1,8 @@
 module NTechSavingsApi {
     export class ApiClient {
         constructor(private onError: ((errorMessage: string) => void),
-            private $http: ng.IHttpService,
-            private $q: ng.IQService) {
+                    private $http: ng.IHttpService,
+                    private $q: ng.IQService) {
         }
 
         private activePostCount: number = 0;
@@ -59,7 +59,7 @@ module NTechSavingsApi {
         }
 
         fetchUserNameByUserId(userId: number): ng.IPromise<FetchUserNameByUserIdResult> {
-            return this.post('/api/UserName/ByUserId', { UserId: userId })
+            return this.post('/api/UserName/ByUserId', {UserId: userId})
         }
 
         fetchFatcaExportFiles(pageSize?: number, pageNr?: number): ng.IPromise<FetchFatcaExportFilesResult> {
@@ -76,14 +76,19 @@ module NTechSavingsApi {
             })
         }
 
-        getCustomerMessagesTexts(messageIds: number[]): ng.IPromise<{ MessageTextByMessageId: INumberDictionary<string>, MessageTextFormat: INumberDictionary<string>, IsFromCustomerByMessageId: INumberDictionary<boolean>, AttachedDocumentsByMessageId: INumberDictionary<string> }> {
+        getCustomerMessagesTexts(messageIds: number[]): ng.IPromise<{
+            MessageTextByMessageId: INumberDictionary<string>,
+            MessageTextFormat: INumberDictionary<string>,
+            IsFromCustomerByMessageId: INumberDictionary<boolean>,
+            AttachedDocumentsByMessageId: INumberDictionary<string>
+        }> {
             return this.postUsingApiGateway('nCustomer', 'api/CustomerMessage/GetMessageTexts', {
                 MessageIds: messageIds
             })
         }
 
         createAndDeliverFinnishCustomsAccountsExportFile(skipDeliver: boolean): ng.IPromise<{}> {
-            return this.post('/api/FinnishCustomsAccounts/CreateExportFile', { skipDeliver: skipDeliver })
+            return this.post('/api/FinnishCustomsAccounts/CreateExportFile', {skipDeliver: skipDeliver})
         }
 
         fetchFinnishCustomsAccountsExportFiles(pageSize: number, pageNr: number): ng.IPromise<{
@@ -98,7 +103,7 @@ module NTechSavingsApi {
                 ExportResultStatus: string
             }[]
         }> {
-            return this.post('/api/FinnishCustomsAccounts/FetchExportFiles', { pageSize, pageNr })
+            return this.post('/api/FinnishCustomsAccounts/FetchExportFiles', {pageSize, pageNr})
         }
     }
 

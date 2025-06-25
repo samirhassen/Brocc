@@ -1,5 +1,5 @@
-import { ConfigService } from 'src/app/common-services/config.service';
-import { Dictionary } from 'src/app/common.types';
+import {ConfigService} from 'src/app/common-services/config.service';
+import {Dictionary} from 'src/app/common.types';
 
 export interface SettingsModel {
     Settings: SettingModel[];
@@ -39,7 +39,8 @@ export interface SettingFormDataFieldModel {
 }
 
 export class SettingsHelper {
-    constructor(public model: SettingsModel) {}
+    constructor(public model: SettingsModel) {
+    }
 
     public isSettingEnabled(s: SettingModel, config: ConfigService) {
         if (

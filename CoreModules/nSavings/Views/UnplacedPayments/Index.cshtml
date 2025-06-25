@@ -1,4 +1,5 @@
-﻿@using NWebsec.Mvc.HttpHeaders.Csp
+﻿@using nSavings.Code
+@using NWebsec.Mvc.HttpHeaders.Csp
 @{
     ViewBag.Title = "Savings - Unplaced Payments";
     ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak";
@@ -21,29 +22,35 @@
 }
 
 <div class="pt-1 pb-2">
-    <div class="pull-left"><a href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())" class="n-back"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+    <div class="pull-left">
+        <a href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())" class="n-back">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+        </a>
+    </div>
     <h1 class="adjusted">Savings: Unplaced deposits</h1>
 </div>
 <div class="row">
     <div class="col-sm-10 col-sm-offset-1">
         <table class="table">
             <thead>
-                <tr>
-                    <th class="col-sm-4">Date</th>
-                    <th class="col-sm-4">Note/Ocr</th>
-                    <th class="col-sm-4">Amount</th>
-                </tr>
+            <tr>
+                <th class="col-sm-4">Date</th>
+                <th class="col-sm-4">Note/Ocr</th>
+                <th class="col-sm-4">Amount</th>
+            </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="p in payments">
-                    <td class="col-sm-4"><a class="n-anchor" ng-href="{{p.NavigationLink}}">{{p.PaymentDate|date:'shortDate'}}</a></td>
-                    <td class="col-sm-4" ng-hide="p.OcrReference && p.NoteText">{{p.NoteText}}{{p.OcrReference}}</td>
-                    <td class="col-sm-4" ng-show="p.OcrReference && p.NoteText">{{p.OcrReference}} (Note: {{p.NoteText}})</td>
-                    <td class="col-sm-4">{{p.UnplacedAmount|currency}}</td>
-                </tr>
-                <tr ng-show="payments.length == 0">
-                    <td class="col-sm-12" colspan="3">-</td>
-                </tr>
+            <tr ng-repeat="p in payments">
+                <td class="col-sm-4"><a class="n-anchor" ng-href="{{p.NavigationLink}}">{{p.PaymentDate|date:'shortDate'}}</a>
+                </td>
+                <td class="col-sm-4" ng-hide="p.OcrReference && p.NoteText">{{p.NoteText}}{{p.OcrReference}}</td>
+                <td class="col-sm-4" ng-show="p.OcrReference && p.NoteText">{{p.OcrReference}} (Note: {{p.NoteText}})
+                </td>
+                <td class="col-sm-4">{{p.UnplacedAmount|currency}}</td>
+            </tr>
+            <tr ng-show="payments.length == 0">
+                <td class="col-sm-12" colspan="3">-</td>
+            </tr>
             </tbody>
         </table>
     </div>

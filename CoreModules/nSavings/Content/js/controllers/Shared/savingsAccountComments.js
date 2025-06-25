@@ -1,10 +1,10 @@
-var SavingsAccountCommentsCtr = /** @class */ (function () {
-    function SavingsAccountCommentsCtr($scope, $sce, $http, $q, savingsAccountCommentsService) {
-        var apiClient = new NTechSavingsApi.ApiClient(function (errorMessage) {
+class SavingsAccountCommentsCtr {
+    constructor($scope, $sce, $http, $q, savingsAccountCommentsService) {
+        let apiClient = new NTechSavingsApi.ApiClient(errorMessage => {
             toastr.error(errorMessage);
         }, $http, $q);
         apiClient.loggingContext = 'savingsAccountCommentsService';
-        $scope.addComment = function (evt) {
+        $scope.addComment = (evt) => {
             if (evt) {
                 evt.preventDefault();
             }
@@ -13,7 +13,7 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
                 return;
             }
             $scope.filterMode = null;
-            var saveComment = function (attachedFileAsDataUrl, attachedFileName) {
+            let saveComment = (attachedFileAsDataUrl, attachedFileName) => {
                 $http({
                     method: 'POST',
                     url: '/Api/SavingsAccountComment/Create',
@@ -23,35 +23,35 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
                         attachedFileAsDataUrl: attachedFileAsDataUrl,
                         attachedFileName: attachedFileName
                     }
-                }).then(function (response) {
+                }).then((response) => {
                     $scope.comments.unshift(response.data.comment);
                     $scope.commentText = null;
                     $scope.attachedFileName = null;
                     savingsAccountCommentsService.isLoading = false;
-                }, function (response) {
+                }, (response) => {
                     savingsAccountCommentsService.isLoading = false;
                     toastr.error('Failed!');
                 });
             };
             savingsAccountCommentsService.isLoading = true;
-            var attachedFiles = document.getElementById('commentAttachedFile').files;
+            let attachedFiles = document.getElementById('commentAttachedFile').files;
             if (attachedFiles.length == 1) {
-                var r = new FileReader();
-                var f_1 = attachedFiles[0];
-                if (f_1.size > (10 * 1024 * 1024)) {
+                let r = new FileReader();
+                let f = attachedFiles[0];
+                if (f.size > (10 * 1024 * 1024)) {
                     toastr.warning('Attached file is too big!');
                     savingsAccountCommentsService.isLoading = false;
                     return;
                 }
-                r.onloadend = function (e) {
-                    var dataUrl = e.target.result;
-                    var filename = f_1.name;
+                r.onloadend = (e) => {
+                    let dataUrl = e.target.result;
+                    let filename = f.name;
                     //Reset the file input
                     document.getElementById('commentform').reset();
                     //Save the document
                     saveComment(dataUrl, filename);
                 };
-                r.readAsDataURL(f_1);
+                r.readAsDataURL(f);
             }
             else if (attachedFiles.length == 0) {
                 saveComment(null, null);
@@ -60,15 +60,15 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
                 toastr.warning('Multiple files have been attached. Please reload the page and only attach a single file.');
             }
         };
-        var reload = function (savingsAccountNr) {
+        let reload = (savingsAccountNr) => {
             $scope.comments = null;
             $scope.savingsAccountNr = null;
             $scope.commentText = null;
             $scope.attachedFileName = null;
             document.getElementById('commentform').reset();
             savingsAccountCommentsService.isLoading = true;
-            var excludeTheseEventTypes = null;
-            var onlyTheseEventTypes = null;
+            let excludeTheseEventTypes = null;
+            let onlyTheseEventTypes = null;
             if ($scope.filterMode === 'user') {
                 onlyTheseEventTypes = ['UserComment'];
             }
@@ -79,27 +79,27 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
                 method: 'POST',
                 url: '/Api/SavingsAccountComment/LoadForSavingsAccount',
                 data: { savingsAccountNr: savingsAccountNr, excludeTheseEventTypes: excludeTheseEventTypes, onlyTheseEventTypes: onlyTheseEventTypes }
-            }).then(function (response) {
+            }).then((response) => {
                 $scope.savingsAccountNr = savingsAccountNr;
                 $scope.comments = response.data;
                 savingsAccountCommentsService.isLoading = false;
-            }, function (response) {
+            }, (response) => {
                 savingsAccountCommentsService.isLoading = false;
                 toastr.error('Failed!');
             });
         };
-        $scope.$watch(function () { return savingsAccountCommentsService.forceReload; }, function () {
+        $scope.$watch(() => savingsAccountCommentsService.forceReload, () => {
             if (savingsAccountCommentsService.forceReload === true) {
                 savingsAccountCommentsService.forceReload = false;
                 if (savingsAccountCommentsService.savingsAccountNr) {
-                    var savingsAccountNr = savingsAccountCommentsService.savingsAccountNr;
+                    let savingsAccountNr = savingsAccountCommentsService.savingsAccountNr;
                     reload(savingsAccountNr);
                 }
             }
         });
-        $scope.$watch(function () { return savingsAccountCommentsService.savingsAccountNr; }, function () {
+        $scope.$watch(() => savingsAccountCommentsService.savingsAccountNr, () => {
             if (savingsAccountCommentsService.savingsAccountNr) {
-                var savingsAccountNr = savingsAccountCommentsService.savingsAccountNr;
+                let savingsAccountNr = savingsAccountCommentsService.savingsAccountNr;
                 if ($scope.savingsAccountNr != savingsAccountNr) {
                     if (savingsAccountCommentsService.forceReload == true) {
                         savingsAccountCommentsService.forceReload = false;
@@ -115,24 +115,24 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
                 document.getElementById('commentform').reset();
             }
         });
-        $scope.selectCommentFileToAttach = function (evt) {
+        $scope.selectCommentFileToAttach = (evt) => {
             if (evt) {
                 evt.preventDefault();
             }
             $('#commentAttachedFile').click();
         };
-        $scope.refreshAttachedCommentFile = function () {
+        $scope.refreshAttachedCommentFile = () => {
             if (!document) {
                 $scope.attachedFileName = null;
                 return;
             }
             ;
-            var f = document.getElementById('commentAttachedFile');
+            let f = document.getElementById('commentAttachedFile');
             if (!f) {
                 $scope.attachedFileName = null;
                 return;
             }
-            var attachedFiles = f.files;
+            let attachedFiles = f.files;
             if (!attachedFiles) {
                 $scope.attachedFileName = null;
                 return;
@@ -147,13 +147,13 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
                 $scope.attachedFileName = 'Error - multiple files selected!';
             }
         };
-        $scope.onFilterModeChanged = function () {
+        $scope.onFilterModeChanged = () => {
             if (!$scope.savingsAccountNr) {
                 return;
             }
             reload($scope.savingsAccountNr);
         };
-        $scope.toggleCommentDetails = function (c, evt) {
+        $scope.toggleCommentDetails = (c, evt) => {
             if (evt) {
                 evt.preventDefault();
             }
@@ -166,7 +166,7 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
             }
             if (c.CustomerSecureMessageId) {
                 savingsAccountCommentsService.isLoading = true;
-                apiClient.getCustomerMessagesTexts([c.CustomerSecureMessageId]).then(function (x) {
+                apiClient.getCustomerMessagesTexts([c.CustomerSecureMessageId]).then(x => {
                     savingsAccountCommentsService.isLoading = false;
                     c.commentDetails = {
                         ArchiveLinks: null,
@@ -193,26 +193,19 @@ var SavingsAccountCommentsCtr = /** @class */ (function () {
         };
         window.commentsScope = $scope;
     }
-    SavingsAccountCommentsCtr.$inject = ['$scope', '$sce', '$http', '$q', 'savingsAccountCommentsService'];
-    return SavingsAccountCommentsCtr;
-}());
+}
+SavingsAccountCommentsCtr.$inject = ['$scope', '$sce', '$http', '$q', 'savingsAccountCommentsService'];
 app.controller('savingsAccountComments', SavingsAccountCommentsCtr);
 var SavingsAccountCommentsNs;
 (function (SavingsAccountCommentsNs) {
-    var CommentDetails = /** @class */ (function () {
-        function CommentDetails() {
-        }
-        return CommentDetails;
-    }());
+    class CommentDetails {
+    }
     SavingsAccountCommentsNs.CommentDetails = CommentDetails;
-    var SavingsAccountCommentsService = /** @class */ (function () {
-        function SavingsAccountCommentsService() {
-        }
-        return SavingsAccountCommentsService;
-    }());
+    class SavingsAccountCommentsService {
+    }
     SavingsAccountCommentsNs.SavingsAccountCommentsService = SavingsAccountCommentsService;
     function initSavingsAccountCommentsService($http) {
-        var d = { savingsAccountNr: null, isLoading: false, forceReload: false };
+        let d = { savingsAccountNr: null, isLoading: false, forceReload: false };
         return d;
     }
     SavingsAccountCommentsNs.initSavingsAccountCommentsService = initSavingsAccountCommentsService;
@@ -222,8 +215,8 @@ $('textarea.expand').focus(function () {
     $(this).animate({ height: "6em" }, 500);
 });
 $('#commentsContainer').on('change', '#commentAttachedFile', function () {
-    var scope = angular.element($("#commentsContainer")).scope();
-    scope.$apply(function () {
+    let scope = angular.element($("#commentsContainer")).scope();
+    scope.$apply(() => {
         scope.refreshAttachedCommentFile();
     });
 });

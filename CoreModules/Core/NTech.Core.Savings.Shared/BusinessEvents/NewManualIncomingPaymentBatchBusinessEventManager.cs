@@ -1,9 +1,9 @@
-﻿using NTech.Core;
+﻿using System;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Savings.Shared.Database;
-using System;
+using NTech.Core.Savings.Shared.DbModel;
 
-namespace nSavings.DbModel.BusinessEvents
+namespace NTech.Core.Savings.Shared.BusinessEvents
 {
     public class NewManualIncomingPaymentBatchBusinessEventManager : BusinessEventManagerBaseCore
     {

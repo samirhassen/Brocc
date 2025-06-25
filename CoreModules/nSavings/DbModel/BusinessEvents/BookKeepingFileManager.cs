@@ -1,12 +1,12 @@
-﻿using nSavings.Code;
-using nSavings.Excel;
-using NTech.Banking.BookKeeping;
-using NTech.Banking.SieFiles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using nSavings.Code;
+using NTech.Banking.BookKeeping;
+using NTech.Banking.SieFiles;
+using NTech.Core.Savings.Shared.DbModel;
 
 namespace nSavings.DbModel.BusinessEvents
 {
@@ -18,12 +18,14 @@ namespace nSavings.DbModel.BusinessEvents
 
         //Temporary solution until we have implemented support for account plans
         public static string EnsureAccountNr(NtechBookKeepingRuleFile.BookKeepingAccount nr) =>
-            nr.GetLedgerAccountNr(_ => { throw new NotImplementedException(); });
-        public static Tuple<string, string> EnsureAccountNrs(Tuple<NtechBookKeepingRuleFile.BookKeepingAccount, NtechBookKeepingRuleFile.BookKeepingAccount> accounts) =>
+            nr.GetLedgerAccountNr(_ => throw new NotImplementedException());
+
+        public static Tuple<string, string> EnsureAccountNrs(
+            Tuple<NtechBookKeepingRuleFile.BookKeepingAccount, NtechBookKeepingRuleFile.BookKeepingAccount> accounts) =>
             Tuple.Create(EnsureAccountNr(accounts.Item1), EnsureAccountNr(accounts.Item2));
 
-
-        public bool TryCreateBookKeepingFile(SavingsContext context, List<DateTime> transactionDates, DocumentClient documentClient, out OutgoingBookkeepingFileHeader h, out List<string> warnings)
+        public bool TryCreateBookKeepingFile(SavingsContext context, List<DateTime> transactionDates,
+            DocumentClient documentClient, out OutgoingBookkeepingFileHeader h, out List<string> warnings)
         {
             warnings = new List<string>();
 
@@ -67,10 +69,12 @@ namespace nSavings.DbModel.BusinessEvents
                     var trs = context
                         .LedgerAccountTransactions
                         .Include("BusinessEvent")
-                        .Where(x => x.BusinessEvent.EventType == eventRule.BusinessEventName && x.TransactionDate == forTransactionDate)
+                        .Where(x => x.BusinessEvent.EventType == eventRule.BusinessEventName &&
+                                    x.TransactionDate == forTransactionDate)
                         .ToList();
 
-                    foreach (var evt in trs.GroupBy(x => new { x.BusinessEventId, x.BookKeepingDate, x.SavingsAccountNr }))
+                    foreach (var evt in trs.GroupBy(x => new
+                                 { x.BusinessEventId, x.BookKeepingDate, x.SavingsAccountNr }))
                     {
                         var bi = evt.First().BusinessEvent;
                         var bookKeepingDate = evt.Key.BookKeepingDate;
@@ -81,7 +85,8 @@ namespace nSavings.DbModel.BusinessEvents
                             text += $" S:[{savingsAccountNr}]";
                         }
 
-                        var verification = sie.CreateVerification(bookKeepingDate, text, registrationDate: bi.TransactionDate);
+                        var verification =
+                            sie.CreateVerification(bookKeepingDate, text, registrationDate: bi.TransactionDate);
                         foreach (var tr in evt)
                         {
                             var trConnections = new HashSet<string>();
@@ -91,23 +96,28 @@ namespace nSavings.DbModel.BusinessEvents
 
                             foreach (var bookingRule in eventRule.Bookings)
                             {
-                                if (bookingRule.LedgerAccount == tr.AccountCode && bookingRule.Connections.SetEquals(trConnections))
+                                if (bookingRule.LedgerAccount != tr.AccountCode ||
+                                    !bookingRule.Connections.SetEquals(trConnections)) continue;
+                                var tp = sie.WithTransactionPair(tr.Amount,
+                                    EnsureAccountNrs(bookingRule.BookKeepingAccounts));
+                                if (ruleSet.CommonCostPlace != null)
+                                    tp.HavingCostPlaceDimension(ruleSet.CommonCostPlace.Item1,
+                                        ruleSet.CommonCostPlace.Item2);
+                                else if (ruleSet.CustomDimensions != null)
                                 {
-                                    var tp = sie.WithTransactionPair(tr.Amount, EnsureAccountNrs(bookingRule.BookKeepingAccounts));
-                                    if (ruleSet.CommonCostPlace != null)
-                                        tp.HavingCostPlaceDimension(ruleSet.CommonCostPlace.Item1, ruleSet.CommonCostPlace.Item2);
-                                    else if (ruleSet.CustomDimensions != null)
-                                    {
-                                        string dimensionCase = "fallback";
-                                        if (!ruleSet.CustomDimensions.CustomDimensionTextByCaseName.ContainsKey(dimensionCase))
-                                            throw new Exception($"Missing custom dimension {dimensionCase}");
-                                        tp.HavingDimensionRaw(ruleSet.CustomDimensions.CustomDimensionTextByCaseName[dimensionCase]);
-                                    }
-                                    tp.MergeIntoVerification(verification);
-                                    bookedTransactions.Add(tr);
+                                    const string dimensionCase = "fallback";
+                                    if (!ruleSet.CustomDimensions.CustomDimensionTextByCaseName.TryGetValue(
+                                            dimensionCase, out var value))
+                                        throw new Exception($"Missing custom dimension {dimensionCase}");
+                                    tp.HavingDimensionRaw(
+                                        value);
                                 }
+
+                                tp.MergeIntoVerification(verification);
+                                bookedTransactions.Add(tr);
                             }
                         }
+
                         if (verification.Transactions != null && verification.Transactions.Count > 0)
                             sie.AddVerification(verification);
                     }
@@ -128,22 +138,21 @@ namespace nSavings.DbModel.BusinessEvents
             h.FromTransactionDate = transactionDates.Min();
             h.ToTransactionDate = transactionDates.Max();
 
-            var dateTag = $"{h.FromTransactionDate.ToString("yyyy-MM-dd")}-{h.ToTransactionDate.ToString("yyyy-MM-dd")}";
+            var dateTag =
+                $"{h.FromTransactionDate:yyyy-MM-dd}-{h.ToTransactionDate:yyyy-MM-dd}";
             using (var ms = new MemoryStream())
             {
                 sie.Save(ms);
 
-                string customerBookkeepingFileEnding = NEnv.SieFileEnding;
+                var customerBookkeepingFileEnding = NEnv.SieFileEnding;
                 var filename = $"Savings-BookKeeping-{dateTag}." + customerBookkeepingFileEnding;
                 h.FileArchiveKey = documentClient.ArchiveStore(ms.ToArray(), "text/plain", filename);
 
-                string exportProfileName = NEnv.BookkeepingFileExportProfileName;
+                var exportProfileName = NEnv.BookkeepingFileExportProfileName;
                 if (exportProfileName != null)
                 {
-                    int timeInMs;
-                    List<string> successProfileNames;
-                    List<string> failedProfileNames;
-                    if (!documentClient.TryExportArchiveFile(h.FileArchiveKey, exportProfileName, out successProfileNames, out failedProfileNames, out timeInMs))
+                    if (!documentClient.TryExportArchiveFile(h.FileArchiveKey, exportProfileName,
+                            out _, out _, out _))
                     {
                         warnings.Add($"Export with profile '{exportProfileName}' failed for '{filename}'");
                     }
@@ -155,26 +164,30 @@ namespace nSavings.DbModel.BusinessEvents
             return true;
         }
 
-        public string[] GetBookKeepingWarnings(List<DateTime> transactionDates)
+        public static string[] GetBookKeepingWarnings(List<DateTime> transactionDates)
         {
             var warnDays = new List<string>();
             foreach (var forTransactionDate in transactionDates)
             {
                 using (var context = new SavingsContext())
                 {
-                    var baseQuery = context.LedgerAccountTransactions.Where(x => x.TransactionDate == forTransactionDate);
-                    var isOk = baseQuery.Any(x => x.OutgoingBookkeepingFileHeaderId.HasValue) || (baseQuery.Count() == 0);
+                    var baseQuery =
+                        context.LedgerAccountTransactions.Where(x => x.TransactionDate == forTransactionDate);
+                    var isOk = baseQuery.Any(x => x.OutgoingBookkeepingFileHeaderId.HasValue) ||
+                               !baseQuery.Any();
                     if (!isOk)
                         warnDays.Add(forTransactionDate.ToString("yyyy-MM-dd"));
                 }
             }
+
             if (warnDays.Any())
-                return new[] { $"There are whole days with transactions but no bookkeeping: {string.Join(", ", warnDays)}" };
-            else
-                return null;
+                return new[]
+                    { $"There are whole days with transactions but no bookkeeping: {string.Join(", ", warnDays)}" };
+
+            return null;
         }
 
-        private string CreateExcelFromSie(SieBookKeepingFile sie, string dateTag, DocumentClient documentClient)
+        private static string CreateExcelFromSie(SieBookKeepingFile sie, string dateTag, DocumentClient documentClient)
         {
             //Create excel version
             var sheets = new List<DocumentClientExcelRequest.Sheet>();
@@ -192,7 +205,9 @@ namespace nSavings.DbModel.BusinessEvents
                 });
                 foreach (var tr in ver.Transactions)
                 {
-                    var firstOd = tr.ObjectNrsByDimensionNr.Take(1).Select(x => new KeyValuePair<int, string>?(x)).FirstOrDefault();
+                    var firstOd = tr.ObjectNrsByDimensionNr.Take(1).Select(x => new KeyValuePair<int, string>?(x))
+                        .FirstOrDefault();
+
                     trRows.Add(new ExcelRowModel
                     {
                         RowType = "Transaction",
@@ -200,23 +215,24 @@ namespace nSavings.DbModel.BusinessEvents
                         TransactionDebetAmount = tr.Amount >= 0m ? new decimal?(tr.Amount) : null,
                         TransactionCreditAmount = tr.Amount < 0m ? new decimal?(-tr.Amount) : null,
                         DimensionNr = firstOd.HasValue ? new int?(firstOd.Value.Key) : null,
-                        ObjectNr = firstOd.HasValue ? firstOd.Value.Value : null,
+                        ObjectNr = firstOd?.Value,
                     });
-                    foreach (var od in tr.ObjectNrsByDimensionNr.Skip(1))
-                    {
-                        trRows.Add(new ExcelRowModel
+
+                    trRows.AddRange(tr.ObjectNrsByDimensionNr
+                        .Skip(1)
+                        .Select(od => new ExcelRowModel
                         {
                             RowType = "TransactionDimension",
                             DimensionNr = od.Key,
                             ObjectNr = od.Value
-                        });
-                    }
+                        }));
                 }
             }
+
             var trSheet = new DocumentClientExcelRequest.Sheet
             {
                 AutoSizeColumns = true,
-                Title = $"Verifications"
+                Title = "Verifications"
             };
 
             trSheet.SetColumnsAndData(trRows,
@@ -226,7 +242,8 @@ namespace nSavings.DbModel.BusinessEvents
                 trRows.Col(x => x.TransactionAccount, ExcelType.Text, "Account"),
                 trRows.Col(x => x.TransactionDebetAmount, ExcelType.Number, "DebetAmount"),
                 trRows.Col(x => x.TransactionCreditAmount, ExcelType.Number, "CreditAmount"),
-                trRows.Col(x => x.DimensionNr.HasValue ? x.DimensionNr.Value.ToString() : null, ExcelType.Text, "DimensionNr"),
+                trRows.Col(x => x.DimensionNr?.ToString(), ExcelType.Text,
+                    "DimensionNr"),
                 trRows.Col(x => x.ObjectNr, ExcelType.Text, "ObjectNr"),
                 trRows.Col(x => x.RowType, ExcelType.Text, "RowType"));
             sheets.Add(trSheet);
@@ -235,7 +252,7 @@ namespace nSavings.DbModel.BusinessEvents
             var dimSheet = new DocumentClientExcelRequest.Sheet
             {
                 AutoSizeColumns = true,
-                Title = $"Dimensions"
+                Title = "Dimensions"
             };
             var dims = sie.Dimensions.ToList();
             dimSheet.SetColumnsAndData(dims,

@@ -1,15 +1,21 @@
-﻿using NTech.Banking.BankAccounts.Fi;
-using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
+using nSavings.Code;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Savings.Shared.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
 
 namespace nSavings.DbModel.BusinessEvents
 {
     public class WithdrawalBusinessEventManager : BusinessEventManagerBase
     {
-        public WithdrawalBusinessEventManager(int userId, string informationMetadata) : base(userId, informationMetadata)
+        public WithdrawalBusinessEventManager(int userId, string informationMetadata) : base(userId,
+            informationMetadata)
         {
         }
 
@@ -30,15 +36,15 @@ namespace nSavings.DbModel.BusinessEvents
             public int? RequestedByHandlerUserId { get; set; }
         }
 
-        public bool TryCreateNew(WithdrawalRequest request, bool allowSkipUniqueOperationToken, bool allowCheckpoint, out string failedMessage, out BusinessEvent evt)
+        public bool TryCreateNew(WithdrawalRequest request, bool allowSkipUniqueOperationToken, bool allowCheckpoint,
+            out string failedMessage, out BusinessEvent evt)
         {
             try
             {
                 var r = EncryptionContext.WithEncryption(ec =>
                 {
-                    string fm;
-                    BusinessEvent e;
-                    var result = TryCreateNewI(ec, request, allowSkipUniqueOperationToken, allowCheckpoint, out fm, out e);
+                    var result = TryCreateNewI(ec, request, allowSkipUniqueOperationToken, allowCheckpoint, out var fm,
+                        out var e);
                     ec.Context.SaveChanges();
                     return Tuple.Create(result, fm, e);
                 });
@@ -46,20 +52,19 @@ namespace nSavings.DbModel.BusinessEvents
                 evt = r.Item3;
                 return r.Item1;
             }
-            catch (System.Data.Entity.Infrastructure.DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
-                if (ex?.FormatException()?.Contains("OutgoingPaymentHeader_UniqueToken_UIdx") ?? false)
-                {
-                    failedMessage = "Operation token has already been used. Generate a new one and try again if this call is not a duplicate.";
-                    evt = null;
-                    return false;
-                }
-                else
-                    throw;
+                if (!(ex.FormatException()?.Contains("OutgoingPaymentHeader_UniqueToken_UIdx") ?? false)) throw;
+
+                failedMessage =
+                    "Operation token has already been used. Generate a new one and try again if this call is not a duplicate.";
+                evt = null;
+                return false;
             }
         }
 
-        private bool TryCreateNewI(EncryptionContext encryptionContext, WithdrawalRequest request, bool allowSkipUniqueOperationToken, bool allowCheckpoint, out string failedMessage, out BusinessEvent evt)
+        private bool TryCreateNewI(EncryptionContext encryptionContext, WithdrawalRequest request,
+            bool allowSkipUniqueOperationToken, bool allowCheckpoint, out string failedMessage, out BusinessEvent evt)
         {
             var context = encryptionContext.Context;
 
@@ -73,7 +78,8 @@ namespace nSavings.DbModel.BusinessEvents
 
             if (request.RequestedByCustomerId.HasValue && request.RequestedByHandlerUserId.HasValue)
             {
-                failedMessage = "RequestedByCustomerId and RequestedByHandlerUserId cannot both be set. Either a customer initiated the withdrawal or a handler did. It cant be both.";
+                failedMessage =
+                    "RequestedByCustomerId and RequestedByHandlerUserId cannot both be set. Either a customer initiated the withdrawal or a handler did. It cant be both.";
                 return false;
             }
 
@@ -82,23 +88,26 @@ namespace nSavings.DbModel.BusinessEvents
                 failedMessage = "Missing toIban";
                 return false;
             }
+
             if (string.IsNullOrWhiteSpace(request.SavingsAccountNr))
             {
                 failedMessage = "Missing savings account nr";
                 return false;
             }
+
             if (string.IsNullOrWhiteSpace(request.UniqueOperationToken) && !allowSkipUniqueOperationToken)
             {
                 failedMessage = "Missing uniqueOperationToken";
                 return false;
             }
+
             if (!request.WithdrawalAmount.HasValue || request.WithdrawalAmount <= 0m)
             {
                 failedMessage = "Missing or invalid WithdrawalAmount";
                 return false;
             }
-            IBANFi parsedIban;
-            if (!IBANFi.TryParse(request.ToIban, out parsedIban))
+
+            if (!IBANFi.TryParse(request.ToIban, out var parsedIban))
             {
                 failedMessage = "Invalid iban";
                 return false;
@@ -113,7 +122,9 @@ namespace nSavings.DbModel.BusinessEvents
                 {
                     x.MainCustomerId,
                     x.Status,
-                    CapitalBalance = x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString()).Sum(y => (decimal?)y.Amount) ?? 0m
+                    CapitalBalance =
+                        x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
+                            .Sum(y => (decimal?)y.Amount) ?? 0m
                 })
                 .SingleOrDefault();
 
@@ -136,8 +147,7 @@ namespace nSavings.DbModel.BusinessEvents
                 return false;
             }
 
-            string mainCustomerName;
-            if (!TryGetCustomerNameFromCustomerCard(h.MainCustomerId, out mainCustomerName, out failedMessage))
+            if (!TryGetCustomerNameFromCustomerCard(h.MainCustomerId, out var mainCustomerName, out failedMessage))
             {
                 return false;
             }
@@ -169,43 +179,36 @@ namespace nSavings.DbModel.BusinessEvents
                 savingsAccountNr: request.SavingsAccountNr,
                 outgoingPayment: w);
 
-            //Items
-            Action<OutgoingPaymentHeaderItemCode, string, bool> addItem = (name, value, isEncrypted) =>
-            {
-                var item = new OutgoingPaymentHeaderItem
-                {
-                    IsEncrypted = isEncrypted,
-                    OutgoingPayment = w,
-                    Name = name.ToString(),
-                    Value = value
-                };
-                FillInInfrastructureFields(item);
-                w.Items.Add(item);
-                context.OutgoingPaymentHeaderItems.Add(item);
-            };
-            addItem(OutgoingPaymentHeaderItemCode.CustomerMessage, string.IsNullOrWhiteSpace(request.CustomCustomerMessageText)
-                ? NewIncomingPaymentFileBusinessEventManager.GetOutgoingPaymentFileCustomerMessage(NEnv.EnvSettings, 
-                    eventName: "Withdrawal", contextNumber: request.SavingsAccountNr)
-                : request.CustomCustomerMessageText, false);
+            AddItem(OutgoingPaymentHeaderItemCode.CustomerMessage,
+                string.IsNullOrWhiteSpace(request.CustomCustomerMessageText)
+                    ? NewIncomingPaymentFileBusinessEventManager.GetOutgoingPaymentFileCustomerMessage(NEnv.EnvSettings,
+                        eventName: "Withdrawal", contextNumber: request.SavingsAccountNr)
+                    : request.CustomCustomerMessageText, false);
             if (!string.IsNullOrWhiteSpace(request.CustomTransactionText))
-                addItem(OutgoingPaymentHeaderItemCode.CustomTransactionMessage, request.CustomTransactionText, false);
-            addItem(OutgoingPaymentHeaderItemCode.CustomerName, mainCustomerName, true);
-            addItem(OutgoingPaymentHeaderItemCode.FromIban, NEnv.OutgoingPaymentIban.NormalizedValue, false);
-            addItem(OutgoingPaymentHeaderItemCode.ToIban, parsedIban.NormalizedValue, false);
-            addItem(OutgoingPaymentHeaderItemCode.SavingsAccountNr, request.SavingsAccountNr, false);
+                AddItem(OutgoingPaymentHeaderItemCode.CustomTransactionMessage, request.CustomTransactionText, false);
+            AddItem(OutgoingPaymentHeaderItemCode.CustomerName, mainCustomerName, true);
+            AddItem(OutgoingPaymentHeaderItemCode.FromIban, NEnv.OutgoingPaymentIban.NormalizedValue, false);
+            AddItem(OutgoingPaymentHeaderItemCode.ToIban, parsedIban.NormalizedValue, false);
+            AddItem(OutgoingPaymentHeaderItemCode.SavingsAccountNr, request.SavingsAccountNr, false);
             if (request.RequestIpAddress != null)
-                addItem(OutgoingPaymentHeaderItemCode.RequestIpAddress, request.RequestIpAddress, true);
+                AddItem(OutgoingPaymentHeaderItemCode.RequestIpAddress, request.RequestIpAddress, true);
             if (request.RequestAuthenticationMethod != null)
-                addItem(OutgoingPaymentHeaderItemCode.RequestAuthenticationMethod, request.RequestAuthenticationMethod, false);
+                AddItem(OutgoingPaymentHeaderItemCode.RequestAuthenticationMethod, request.RequestAuthenticationMethod,
+                    false);
             if (request.RequestDate.HasValue)
-                addItem(OutgoingPaymentHeaderItemCode.RequestDate, request.RequestDate.Value.ToString("o", CultureInfo.InvariantCulture), false);
+                AddItem(OutgoingPaymentHeaderItemCode.RequestDate,
+                    request.RequestDate.Value.ToString("o", CultureInfo.InvariantCulture), false);
             if (request.RequestedByCustomerId.HasValue)
-                addItem(OutgoingPaymentHeaderItemCode.RequestedByCustomerId, request.RequestedByCustomerId.Value.ToString(), false);
+                AddItem(OutgoingPaymentHeaderItemCode.RequestedByCustomerId,
+                    request.RequestedByCustomerId.Value.ToString(), false);
             if (request.RequestedByHandlerUserId.HasValue)
-                addItem(OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId, request.RequestedByHandlerUserId.Value.ToString(), false);
+                AddItem(OutgoingPaymentHeaderItemCode.RequestedByHandlerUserId,
+                    request.RequestedByHandlerUserId.Value.ToString(), false);
 
             //Comment
-            AddComment($"Withdrawal of {request.WithdrawalAmount.GetValueOrDefault().ToString("C", CommentFormattingCulture)}", BusinessEventType.Withdrawal, context, savingsAccountNr: request.SavingsAccountNr);
+            AddComment(
+                $"Withdrawal of {request.WithdrawalAmount.GetValueOrDefault().ToString("C", CommentFormattingCulture)}",
+                BusinessEventType.Withdrawal, context, savingsAccountNr: request.SavingsAccountNr);
 
             ////////////////////////////////////////////////
             //////////////// Handle encryption /////////////
@@ -228,6 +231,15 @@ namespace nSavings.DbModel.BusinessEvents
 
             failedMessage = null;
             return true;
+
+            //Items
+            void AddItem(OutgoingPaymentHeaderItemCode name, string value, bool isEncrypted)
+            {
+                var item = new OutgoingPaymentHeaderItem { IsEncrypted = isEncrypted, OutgoingPayment = w, Name = name.ToString(), Value = value };
+                FillInInfrastructureFields(item);
+                w.Items.Add(item);
+                context.OutgoingPaymentHeaderItems.Add(item);
+            }
         }
 
         public static bool HasTransactionBlockCheckpoint(int customerId)
@@ -237,8 +249,11 @@ namespace nSavings.DbModel.BusinessEvents
 
         public static Dictionary<int, bool> HasTransactionBlockCheckpoint(HashSet<int> customerIds)
         {
-            var customerClient = LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceHttpContextUser.SharedInstance, NEnv.ServiceRegistry);
-            return NewIncomingPaymentFileBusinessEventManager.HasTransactionBlockCheckpoint(customerIds, customerClient);
+            var customerClient =
+                LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceHttpContextUser.SharedInstance,
+                    NEnv.ServiceRegistry);
+            return NewIncomingPaymentFileBusinessEventManager.HasTransactionBlockCheckpoint(customerIds,
+                customerClient);
         }
     }
 }

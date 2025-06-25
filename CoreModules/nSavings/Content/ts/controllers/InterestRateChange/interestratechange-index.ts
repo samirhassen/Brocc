@@ -1,5 +1,6 @@
 class InterestRateChangeCtrl {
     static $inject = ['$scope', '$http', '$q', '$interval']
+
     constructor(
         private $scope: ng.IScope,
         private $http: ng.IHttpService,
@@ -18,14 +19,14 @@ class InterestRateChangeCtrl {
         }
 
         this.upcomingChanges = initialData.upcomingChanges;
-        
+
         this.setUiStateFromChange(initialData.currentChangeState)
 
         this.$interval(() => {
             this.doBackgroundStateUpdate();
         }, 1000)
     }
-    
+
     currentNewAccountsInterestRate: InterestRateChangeNs.IInterestRate;
     isLoading: boolean;
     backUrl: string;
@@ -37,11 +38,11 @@ class InterestRateChangeCtrl {
     upcomingChanges: Array<InterestRateChangeNs.IUpcomingChange>;
     historicalChangeItems: Array<InterestRateChangeNs.IHistoricalChangeItem>;
 
-    isValidDecimal(value:string) : boolean {
+    isValidDecimal(value: string): boolean {
         return ntech.forms.isValidDecimal(value)
     }
 
-    asMoment(value: string) {        
+    asMoment(value: string) {
         var v = moment(value, 'YYYY-MM-DD', true)
         if (v.isValid()) {
             return v;
@@ -50,7 +51,7 @@ class InterestRateChangeCtrl {
         }
     }
 
-    isValidDate(value: string) : boolean {
+    isValidDate(value: string): boolean {
         if (ntech.forms.isNullOrWhitespace(value))
             return true
         return moment(value, 'YYYY-MM-DD', true).isValid()
@@ -58,7 +59,7 @@ class InterestRateChangeCtrl {
 
     isLowering(fromRate: number, toRate: number) {
         /*Floating point math is evil*/
-        return Math.round(toRate * 100) < Math.round(fromRate * 100) 
+        return Math.round(toRate * 100) < Math.round(fromRate * 100)
     }
 
     calculateRegular(event: Event) {
@@ -69,7 +70,7 @@ class InterestRateChangeCtrl {
         let today = this.asMoment(initialData.today);
         let earliestAllowedAllAccountsLoweredDate = this.asMoment(initialData.earliestAllowedAllAccountsLoweredDate);
         let earliestAllowedNewAccountsOrRaisedDate = this.asMoment(initialData.earliestAllowedNewAccountsOrRaisedDate);
-        
+
         let isLowering = false;
         let newValidFromDate = this.asMoment(this.regular.validFromDate);
 
@@ -80,7 +81,7 @@ class InterestRateChangeCtrl {
 
         let newInterestRate = parseFloat(parseFloat(this.regular.newInterestRate.replace(',', '.')).toFixed(2));
         if (this.currentNewAccountsInterestRate) {
-            let currentInterestRate = this.currentNewAccountsInterestRate.InterestRatePercent;            
+            let currentInterestRate = this.currentNewAccountsInterestRate.InterestRatePercent;
             isLowering = this.isLowering(currentInterestRate, newInterestRate)
         }
 
@@ -91,7 +92,7 @@ class InterestRateChangeCtrl {
         p.newAccountsDate = null;
         p.newInterestRate = newInterestRate;
         p.showRegularChangeLoweringTwoMonthWarning = isLowering && newValidFromDate < earliestAllowedAllAccountsLoweredDate;
-        
+
         this.preview = p;
     }
 
@@ -213,7 +214,7 @@ class InterestRateChangeCtrl {
         })
     }
 
-    cancelUpcomingChange(id: number, event : Event) {
+    cancelUpcomingChange(id: number, event: Event) {
         if (event) {
             event.preventDefault();
         }
@@ -255,9 +256,7 @@ class InterestRateChangeCtrl {
         this.$http({
             method: 'POST',
             url: initialData.urls.fetchHistoricalChangeItems,
-            data: {
-
-            }
+            data: {}
         }).then((response: ng.IHttpResponse<InterestRateChangeNs.IResponseWithHistoricalChangeItems>) => {
             this.isLoading = false
             this.historicalChangeItems = response.data.historicalChangeItems
@@ -276,7 +275,7 @@ class InterestRateChangeCtrl {
             this.regular = null;
             this.split = null;
             //We wipe upcoming changes and history here to make sure this wont be stale after the change is added.
-            this.upcomingChanges = null; 
+            this.upcomingChanges = null;
             this.historicalChangeItems = null;
         } else {
             this.pending = null;
@@ -308,18 +307,22 @@ class InterestRateChangeCtrl {
                 this.setUiStateFromChange(response.data.currentChangeState)
             } else {
                 //No state before or after. Dont update here or we will wipe out any attempt of a user to initiate change on each synch
-            }  
+            }
         }, (response) => {
-            toastr.error(response.statusText)
-        })        
+            if(response.statusText && response.statusText !== "") {
+                toastr.error(response.statusText)
+            } else {
+                toastr.error("Lost connection to server")
+            }
+        })
     }
-    
+
     convertResponseToPendingModel(s: InterestRateChangeNs.IResponseChangeState): InterestRateChangeNs.PendingChangeModel {
         //Is cancel ever not allowed?
         if (!s) {
             return null;
         }
-        var m = new InterestRateChangeNs.PendingChangeModel();
+        const m = new InterestRateChangeNs.PendingChangeModel();
         m.isInitiatedByCurrentUser = s.CurrentUserId == s.InitiatedByUserId;
         m.newInterestRatePercent = s.NewInterestRatePercent;
         m.isRegularChange = !s.NewAccountsValidFromDate;
@@ -341,6 +344,7 @@ class InterestRateChangeCtrl {
         return m;
     }
 }
+
 var app = angular.module('app', ['ntech.forms'])
 app.controller('interestRateChangeCtrl', InterestRateChangeCtrl)
 
@@ -361,20 +365,23 @@ module InterestRateChangeNs {
         RejectedByUserId: string,
         RejectedByUserDisplayName: string,
         VerifiedOrRejectedDate: string,
-        IsViolatingTwoMonthLoweringRule : boolean
+        IsViolatingTwoMonthLoweringRule: boolean
     }
+
     export interface IResponseWithChangeState {
         currentChangeState: IResponseChangeState
     }
+
     export interface IResponseWithChangeStateAndUpcoming extends IResponseWithChangeState {
         upcomingChanges: Array<IUpcomingChange>
     }
+
     export interface IInterestRate {
-        AccountTypeCode : string,
-        AppliesToAccountsSinceBusinessEventId : number,
-        InterestRatePercent : number,
-        TransactionDate : string,
-        ValidFromDate : string
+        AccountTypeCode: string,
+        AppliesToAccountsSinceBusinessEventId: number,
+        InterestRatePercent: number,
+        TransactionDate: string,
+        ValidFromDate: string
     }
 
     export class RegularChangeModel {
@@ -385,7 +392,7 @@ module InterestRateChangeNs {
     export class SplitChangeModel {
         newInterestRate: string;
         validFromDateNewAccounts: string;
-        validFromDateExistingAccounts: string; 
+        validFromDateExistingAccounts: string;
     }
 
     export class PreviewModel {
@@ -430,7 +437,7 @@ module InterestRateChangeNs {
         VerifiedByUserDisplayName: string,
         VerifiedDate: string
     }
-    
+
     export interface IHistoricalChangeItem {
         Id: number,
         AccountTypeCode: string,
@@ -448,6 +455,7 @@ module InterestRateChangeNs {
         RemovedByUserDisplayName: string,
         RemovedDate: string
     }
+
     export interface IResponseWithHistoricalChangeItems {
         historicalChangeItems: Array<IHistoricalChangeItem>
     }

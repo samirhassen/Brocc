@@ -1,22 +1,22 @@
-﻿using nSavings.DbModel.Repository;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NTech.Core.Module;
 using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Module.Shared.Services;
 using NTech.Core.Savings.Shared.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
 
-namespace nSavings.Code.Cm1
+namespace NTech.Core.Savings.Shared.Services.Cm1
 {
     public class SavingsCm1DomainModel
     {
         public List<PerProductCmlExportFileRequest.TransactionModel> Transactions { get; set; }
         private long? newTransactionId;
 
-        private int currentUserId;
-        private string informationMetadata;
-        private SavingsContextFactory contextFactory;
+        private readonly int currentUserId;
+        private readonly string informationMetadata;
+        private readonly SavingsContextFactory contextFactory;
         private Lazy<NTechSimpleSettingsCore> cm1Settings;
         private readonly ICustomerClient customerClient;
         private readonly EncryptionService encryptionService;

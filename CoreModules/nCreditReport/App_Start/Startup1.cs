@@ -1,17 +1,23 @@
-﻿using Microsoft.Owin;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Microsoft.Owin;
+using nCreditReport.App_Start;
+using NTech;
 using NTech.Services.Infrastructure;
 using NTech.Services.Infrastructure.Eventing;
 using NWebsec.Csp;
 using Owin;
 using Serilog;
 using Serilog.Core.Enrichers;
-using System;
-using System.Collections.Generic;
-using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Serilog.Events;
+using AuthorizeAttribute = System.Web.Mvc.AuthorizeAttribute;
 
-[assembly: OwinStartup(typeof(nCreditReport.App_Start.Startup1))]
+[assembly: OwinStartup(typeof(Startup1))]
 
 namespace nCreditReport.App_Start
 {
@@ -19,50 +25,59 @@ namespace nCreditReport.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() => NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry, NEnv.AutomationUsernameAndPassword));
+            var automationUser = new Lazy<NTechSelfRefreshingBearerToken>(() =>
+                NTechSelfRefreshingBearerToken.CreateSystemUserBearerTokenWithUsernameAndPassword(NEnv.ServiceRegistry,
+                    NEnv.AutomationUsernameAndPassword));
             var cfg = new LoggerConfiguration();
             if (NEnv.IsVerboseLoggingEnabled)
             {
                 cfg.MinimumLevel.Debug();
             }
+
             Log.Logger = cfg
                 .Enrich.WithMachineName()
                 .Enrich.FromLogContext()
                 .Enrich.With(
                     new PropertyEnricher("ServiceName", "nCreditReport"),
-                    new PropertyEnricher("ServiceVersion", System.Reflection.Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString())
+                    new PropertyEnricher("ServiceVersion",
+                        Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString())
                 )
-                .WriteTo.Sink(new NTechSerilogSink(n => NEnv.ServiceRegistry.Internal[n], bearerToken: automationUser), NEnv.IsVerboseLoggingEnabled
-                    ? Serilog.Events.LogEventLevel.Debug
-                    : Serilog.Events.LogEventLevel.Information)
+                .WriteTo.Sink(new NTechSerilogSink(n => NEnv.ServiceRegistry.Internal[n], bearerToken: automationUser),
+                    NEnv.IsVerboseLoggingEnabled
+                        ? LogEventLevel.Debug
+                        : LogEventLevel.Information)
                 .CreateLogger();
 
-            NLog.Information("{EventType}: in {environment} mode", "ServiceStarting", NEnv.IsProduction ? "prod" : "dev");
+            NLog.Information("{EventType}: in {environment} mode", "ServiceStarting",
+                NEnv.IsProduction ? "prod" : "dev");
 
             if (NEnv.IsVerboseLoggingEnabled)
             {
                 var logFolder = NEnv.LogFolder;
                 if (logFolder != null)
-                    app.Use<NTechVerboseRequestLogMiddleware>(new System.IO.DirectoryInfo(System.IO.Path.Combine(logFolder.FullName, "RawRequests")), "nCreditReport");
+                    app.Use<NTechVerboseRequestLogMiddleware>(
+                        new DirectoryInfo(Path.Combine(logFolder.FullName, "RawRequests")),
+                        "nCreditReport");
             }
 
             app.Use<NTechLoggingMiddleware>("nCreditReport");
 
-            LoginSetupSupport.SetupLogin(app, "nCreditReport", LoginSetupSupport.LoginMode.OnlyApi, NEnv.IsProduction, NEnv.ServiceRegistry, NEnv.ClientCfg);
+            LoginSetupSupport.SetupLogin(app, "nCreditReport", LoginSetupSupport.LoginMode.OnlyApi, NEnv.IsProduction,
+                NEnv.ServiceRegistry, NEnv.ClientCfg);
 
             //Start the background worker
             NTechEventHandler.CreateAndLoadSubscribers(
-                typeof(nCreditReport.Global).Assembly,
+                typeof(Global).Assembly,
                 new List<string>());
 
-            NTech.ClockFactory.Init();
+            ClockFactory.Init();
 
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             NTechHardenedMvcModelBinder.Register(NEnv.CurrentServiceName);
-            GlobalFilters.Filters.Add(new System.Web.Mvc.AuthorizeAttribute());
+            GlobalFilters.Filters.Add(new AuthorizeAttribute());
             GlobalFilters.Filters.Add(new NTechHandleErrorAttribute());
 
             GlobalContentSecurityPolicyFilters.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -76,7 +91,8 @@ namespace nCreditReport.App_Start
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void NWebsecHttpHeaderSecurityModule_CspViolationReported(object sender, CspViolationReportEventArgs e)
+        protected void NWebsecHttpHeaderSecurityModule_CspViolationReported(object sender,
+            CspViolationReportEventArgs e)
         {
             var violationReport = e.ViolationReport;
             var logFolder = NEnv.LogFolder;

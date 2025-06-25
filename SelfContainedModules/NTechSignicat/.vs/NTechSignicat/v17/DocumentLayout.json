@@ -3,8 +3,60 @@
   "WorkspaceRootPath": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\controllers\\signicatsignaturecallbackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\controllers\\signicatsignaturecallbackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\controllers\\mocksignaturecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\controllers\\mocksignaturecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\controllers\\signicatauthenticationcallbackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\controllers\\signicatauthenticationcallbackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\services\\signicatsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\services\\signicatsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\controllers\\signatureapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\controllers\\signatureapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\services\\signature\\signicatsignatureservicebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\services\\signature\\signicatsignatureservicebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\services\\signature\\mocksignatureservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\services\\signature\\mocksignatureservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\services\\sqlitedocumentdatabaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\services\\sqlitedocumentdatabaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\controllers\\mockauthenticationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\controllers\\mockauthenticationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\connected services\\signicatdocumentservicev3\\connectedservice.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\connected services\\signicatdocumentservicev3\\connectedservice.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|c:\\repository\\bacs\\selfcontainedmodules\\ntechsignicat\\ntechsignicat\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1A24AEAA-0011-4E8E-A2C4-0E990FCB0654}|NTechSignicat\\NTechSignicat.csproj|solutionrelative:ntechsignicat\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,20 +66,422 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 64,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:157:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:164:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:168:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:163:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:158:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:159:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:160:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:161:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:162:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:142:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:143:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:144:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:146:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:147:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:148:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:149:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:150:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:151:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:152:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:153:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:154:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:155:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:156:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:145:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:165:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:166:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:167:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:170:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:169:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:174:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:176:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:175:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SignicatAuthenticationCallbackController.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\SignicatAuthenticationCallbackController.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Controllers\\SignicatAuthenticationCallbackController.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\SignicatAuthenticationCallbackController.cs",
+              "RelativeToolTip": "NTechSignicat\\Controllers\\SignicatAuthenticationCallbackController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwBkAAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T13:51:56.032Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SignicatSettings.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\SignicatSettings.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Services\\SignicatSettings.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\SignicatSettings.cs",
+              "RelativeToolTip": "NTechSignicat\\Services\\SignicatSettings.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAuwBQAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T11:03:21.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SignatureApiController.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\SignatureApiController.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Controllers\\SignatureApiController.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\SignatureApiController.cs",
+              "RelativeToolTip": "NTechSignicat\\Controllers\\SignatureApiController.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAAAEsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T10:56:26.774Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MockSignatureService.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\Signature\\MockSignatureService.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Services\\Signature\\MockSignatureService.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\Signature\\MockSignatureService.cs",
+              "RelativeToolTip": "NTechSignicat\\Services\\Signature\\MockSignatureService.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAuwCwAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T10:53:49.624Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SqliteDocumentDatabaseService.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\SqliteDocumentDatabaseService.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Services\\SqliteDocumentDatabaseService.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\SqliteDocumentDatabaseService.cs",
+              "RelativeToolTip": "NTechSignicat\\Services\\SqliteDocumentDatabaseService.cs",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAcwIkAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T10:53:01.484Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Startup.cs",
-              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Startup.cs",
-              "RelativeDocumentMoniker": "NTechSignicat\\Startup.cs",
-              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Startup.cs",
-              "RelativeToolTip": "NTechSignicat\\Startup.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "SignicatSignatureCallbackController.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\SignicatSignatureCallbackController.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Controllers\\SignicatSignatureCallbackController.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\SignicatSignatureCallbackController.cs",
+              "RelativeToolTip": "NTechSignicat\\Controllers\\SignicatSignatureCallbackController.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAqwCMAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T21:35:20.537Z",
+              "WhenOpened": "2025-06-11T10:39:25.374Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "MockAuthenticationController.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\MockAuthenticationController.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Controllers\\MockAuthenticationController.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\MockAuthenticationController.cs",
+              "RelativeToolTip": "NTechSignicat\\Controllers\\MockAuthenticationController.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAYwA0AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T10:39:09.806Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MockSignatureController.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\MockSignatureController.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Controllers\\MockSignatureController.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Controllers\\MockSignatureController.cs",
+              "RelativeToolTip": "NTechSignicat\\Controllers\\MockSignatureController.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAuwCgAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T10:34:25.357Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Program.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Program.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Program.cs",
+              "RelativeToolTip": "NTechSignicat\\Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAASwBIAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T08:28:31.827Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\appsettings.json",
+              "RelativeDocumentMoniker": "NTechSignicat\\appsettings.json",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\appsettings.json",
+              "RelativeToolTip": "NTechSignicat\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-11T08:27:51.748Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ConnectedService.json",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Connected Services\\SignicatDocumentServiceV3\\ConnectedService.json",
+              "RelativeDocumentMoniker": "NTechSignicat\\Connected Services\\SignicatDocumentServiceV3\\ConnectedService.json",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Connected Services\\SignicatDocumentServiceV3\\ConnectedService.json",
+              "RelativeToolTip": "NTechSignicat\\Connected Services\\SignicatDocumentServiceV3\\ConnectedService.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-11T08:27:33.607Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SignicatSignatureServiceBase.cs",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\Signature\\SignicatSignatureServiceBase.cs",
+              "RelativeDocumentMoniker": "NTechSignicat\\Services\\Signature\\SignicatSignatureServiceBase.cs",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Services\\Signature\\SignicatSignatureServiceBase.cs",
+              "RelativeToolTip": "NTechSignicat\\Services\\Signature\\SignicatSignatureServiceBase.cs",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAuwG8AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T08:09:11.754Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "NTechSignicat\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\Properties\\launchSettings.json",
+              "RelativeToolTip": "NTechSignicat\\Properties\\launchSettings.json",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAACIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-11T07:55:40.999Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "NTechSignicat\\appsettings.Development.json",
+              "ToolTip": "C:\\Repository\\BaCS\\SelfContainedModules\\NTechSignicat\\NTechSignicat\\appsettings.Development.json",
+              "RelativeToolTip": "NTechSignicat\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-10T10:04:00.907Z"
             }
           ]
         }

@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
-using nSavings.Code.Trapets;
-using NTech.Services.Infrastructure;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.Code;
+using nSavings.Code.Trapets;
+using nSavings.DbModel;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Services.Infrastructure;
+using Serilog;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiTrapetsAmlExportController : NController
@@ -20,8 +22,8 @@ namespace nSavings.Controllers
         public ActionResult CreateExport(IDictionary<string, string> schedulerData)
         {
             return SavingsContext.RunWithExclusiveLock("ntech.scheduledjobs.createsavingstrapetsamlexport",
-                    () => CreateExportI(schedulerData),
-                    () => Json2(new { errors = new[] { "Job is already running" } })
+                () => CreateExportI(schedulerData),
+                () => Json2(new { errors = new[] { "Job is already running" } })
             );
         }
 
@@ -54,7 +56,10 @@ namespace nSavings.Controllers
                         x.TransactionDate,
                         ExportResultStatus = JsonConvert.DeserializeObject(x.ExportResultStatus),
                         x.FileArchiveKey,
-                        ArchiveDocumentUrl = x.FileArchiveKey == null ? null : Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = x.FileArchiveKey, setFileDownloadName = true }),
+                        ArchiveDocumentUrl = x.FileArchiveKey == null
+                            ? null
+                            : Url.Action("ArchiveDocument", "ApiArchiveDocument",
+                                new { key = x.FileArchiveKey, setFileDownloadName = true }),
                         x.UserId,
                         UserDisplayName = GetUserDisplayNameByUserId(x.UserId.ToString())
                     })
@@ -77,33 +82,29 @@ namespace nSavings.Controllers
             public int? TimeInMs { get; set; }
         }
 
-        private static DeliveryResult DeliverExportFile(string archiveKey, List<string> errors, DocumentClient dc, string exportFilename)
+        private static DeliveryResult DeliverExportFile(string archiveKey, List<string> errors, DocumentClient dc,
+            string exportFilename)
         {
             var exportProfileName = NEnv.TrapetsAmlExportProfileName;
             if (exportProfileName == null)
             {
                 return new DeliveryResult { DeliveredToProfileName = null, TimeInMs = null };
             }
-            else
-            {
-                int timeInMs;
-                List<string> successProfileNames;
-                List<string> failedProfileNames;
-                var isSuccess = dc.TryExportArchiveFile(archiveKey, exportProfileName, out successProfileNames, out failedProfileNames, out timeInMs, filename: exportFilename);
 
-                if (!isSuccess)
-                    errors.Add($"Export with profile '{exportProfileName}' failed");
+            var isSuccess = dc.TryExportArchiveFile(archiveKey, exportProfileName, out _,
+                out _, out var timeInMs, filename: exportFilename);
 
-                return new DeliveryResult { TimeInMs = timeInMs, DeliveredToProfileName = isSuccess ? exportProfileName : null };
-            }
+            if (!isSuccess)
+                errors.Add($"Export with profile '{exportProfileName}' failed");
+
+            return new DeliveryResult
+                { TimeInMs = timeInMs, DeliveredToProfileName = isSuccess ? exportProfileName : null };
         }
 
         private ActionResult CreateExportI(IDictionary<string, string> schedulerData)
         {
-            Func<string, string> getSchedulerData = s => (schedulerData != null && schedulerData.ContainsKey(s)) ? schedulerData[s] : null;
-
-            List<string> errors = new List<string>();
-            List<string> warnings = new List<string>();
+            var errors = new List<string>();
+            var warnings = new List<string>();
             var w = Stopwatch.StartNew();
             string deliveryArchiveKey = null;
             DeliveryResult deliveryResult = null;
@@ -113,16 +114,18 @@ namespace nSavings.Controllers
                 {
                     var trapetsConfig = NEnv.TrapetsAmlConfig;
                     var deliveryDate = DateTimeOffset.Now;
-                    var skipDeliveryExport = getSchedulerData("skipDeliveryExport") == "true";
+                    var skipDeliveryExport = GetSchedulerData("skipDeliveryExport") == "true";
 
-                    var model = TrapetsDomainModel.GetChangesSinceLastExport(CurrentUserId, InformationMetadata, trapetsConfig);
+                    var model = TrapetsDomainModel.GetChangesSinceLastExport(CurrentUserId, InformationMetadata,
+                        trapetsConfig);
 
                     var fileFormat = new TrapetsFileFormat();
                     fileFormat.WithTemporaryExportFile(model, deliveryDate.Date, tempFileName =>
                     {
                         var dc = new DocumentClient();
                         var filename = string.Format(trapetsConfig.ExportFileNamePattern, deliveryDate);
-                        deliveryArchiveKey = dc.ArchiveStoreFile(new FileInfo(tempFileName), "application/xml", filename);
+                        deliveryArchiveKey =
+                            dc.ArchiveStoreFile(new FileInfo(tempFileName), "application/xml", filename);
 
                         //Update timestamps as soon as the file is commited locally
                         model.UpdateChangeTrackingSystemItems();
@@ -162,7 +165,7 @@ namespace nSavings.Controllers
                     FileArchiveKey = deliveryArchiveKey,
                     ExportResultStatus = JsonConvert.SerializeObject(new
                     {
-                        status = errors?.Count > 0 ? "Error" : (warnings?.Count > 0 ? "Warning" : "Success"),
+                        status = errors.Count > 0 ? "Error" : (warnings?.Count > 0 ? "Warning" : "Success"),
                         errors = errors,
                         warnings = warnings,
                         deliveryTimeInMs = deliveryResult?.TimeInMs,
@@ -176,6 +179,9 @@ namespace nSavings.Controllers
             }
 
             return Json2(new { errors, totalMilliseconds = w.ElapsedMilliseconds, warnings });
+
+            string GetSchedulerData(string s) =>
+                schedulerData != null && schedulerData.TryGetValue(s, out var value) ? value : null;
         }
     }
 }

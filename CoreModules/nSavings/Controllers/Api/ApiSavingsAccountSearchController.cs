@@ -1,10 +1,11 @@
-﻿using nSavings.Code.Services;
+﻿using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.Code.Services;
 using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
 using NTech.Services.Infrastructure;
 using NTech.Services.Infrastructure.NTechWs;
-using System.Web.Mvc;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiSavingsAccountSearchController : NController
@@ -13,7 +14,9 @@ namespace nSavings.Controllers
         [Route("Api/SavingsAccount/Search")]
         public ActionResult Search(SavingsAccountSearchRequest request)
         {
-            var customerClient = LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceHttpContextUser.SharedInstance, NEnv.ServiceRegistry);
+            var customerClient =
+                LegacyServiceClientFactory.CreateCustomerClient(LegacyHttpServiceHttpContextUser.SharedInstance,
+                    NEnv.ServiceRegistry);
             var service = new SavingsAccountSearchService(customerClient);
             try
             {
@@ -26,8 +29,8 @@ namespace nSavings.Controllers
                 {
                     return new HttpStatusCodeResult(ex.ErrorHttpStatusCode ?? 400, ex.Message);
                 }
-                else
-                    throw;
+
+                throw;
             }
         }
     }

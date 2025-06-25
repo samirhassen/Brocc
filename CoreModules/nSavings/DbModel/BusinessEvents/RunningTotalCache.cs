@@ -14,16 +14,17 @@ namespace nSavings.DbModel.BusinessEvents
         private readonly Func<T, DateTime> getDate;
         private readonly Func<T, decimal> getAmount;
 
-        private int nextIndex = 0;
+        private int nextIndex;
         private DateTime currentDate;
-        private decimal currentSum = 0m;
+        private decimal currentSum;
 
-        public RunningTotalCache(IEnumerable<T> items, Func<T, DateTime> getDate, Func<T, decimal> getAmount, bool itemsIsOrderedAscAlready)
+        public RunningTotalCache(IEnumerable<T> items, Func<T, DateTime> getDate, Func<T, decimal> getAmount,
+            bool itemsIsOrderedAscAlready)
         {
-            this.orderedItems = itemsIsOrderedAscAlready ? items.ToList() : items.OrderBy(getDate).ToList();
+            orderedItems = itemsIsOrderedAscAlready ? items.ToList() : items.OrderBy(getDate).ToList();
             this.getAmount = getAmount;
             this.getDate = getDate;
-            this.currentDate = DateTime.MinValue;
+            currentDate = DateTime.MinValue;
         }
 
         public decimal GetRunningTotal(DateTime d)
@@ -44,12 +45,15 @@ namespace nSavings.DbModel.BusinessEvents
                 currentSum += getAmount(item);
                 nextIndex++;
             }
+
             return currentSum;
         }
     }
+
     public static class RunningTotalCache
     {
-        public static RunningTotalCache<T> Create<T>(IEnumerable<T> items, Func<T, DateTime> getDate, Func<T, decimal> getAmount, bool itemsIsOrderedAscAlready)
+        public static RunningTotalCache<T> Create<T>(IEnumerable<T> items, Func<T, DateTime> getDate,
+            Func<T, decimal> getAmount, bool itemsIsOrderedAscAlready)
         {
             return new RunningTotalCache<T>(items, getDate, getAmount, itemsIsOrderedAscAlready);
         }

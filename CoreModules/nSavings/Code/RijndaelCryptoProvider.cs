@@ -7,16 +7,16 @@ namespace nSavings.Code
 {
     public class RijndaelCryptoProvider
     {
-        private static Encoding encoding = Encoding.UTF8;
+        private static readonly Encoding Encoding = Encoding.UTF8;
 
-        private void InitCrypto(Rijndael rj)
+        private static void InitCrypto(Rijndael rj)
         {
             rj.Padding = PaddingMode.Zeros;
             rj.BlockSize = 256;
             rj.Mode = CipherMode.CBC;
         }
 
-        public string GenerateIv()
+        public static string GenerateIv()
         {
             using (var rj = RijndaelManaged.Create())
             {
@@ -26,7 +26,7 @@ namespace nSavings.Code
             }
         }
 
-        public string GenerateKey()
+        public static string GenerateKey()
         {
             using (var rj = RijndaelManaged.Create())
             {
@@ -36,9 +36,9 @@ namespace nSavings.Code
             }
         }
 
-        public string Encrypt(string iv, string key, string plaintextMessage)
+        public static string Encrypt(string iv, string key, string plaintextMessage)
         {
-            var messageBytes = encoding.GetBytes(plaintextMessage);
+            var messageBytes = Encoding.GetBytes(plaintextMessage);
             using (var rj = RijndaelManaged.Create())
             {
                 InitCrypto(rj);
@@ -54,12 +54,13 @@ namespace nSavings.Code
                     {
                         w.Write(messageBytes, 0, messageBytes.Length);
                     }
+
                     return Convert.ToBase64String(rs.ToArray());
                 }
             }
         }
 
-        public string Decrypt(string iv, string key, string encryptedMessage)
+        public static string Decrypt(string iv, string key, string encryptedMessage)
         {
             var messageBytes = Convert.FromBase64String(encryptedMessage);
             using (var rj = RijndaelManaged.Create())
@@ -77,10 +78,10 @@ namespace nSavings.Code
                     {
                         w.Write(messageBytes, 0, messageBytes.Length);
                     }
-                    if (rj.Padding == PaddingMode.Zeros)
-                        return Encoding.UTF8.GetString(rs.ToArray()).TrimEnd('\0');
-                    else
-                        return Encoding.UTF8.GetString(rs.ToArray());
+
+                    return rj.Padding == PaddingMode.Zeros
+                        ? Encoding.UTF8.GetString(rs.ToArray()).TrimEnd('\0')
+                        : Encoding.UTF8.GetString(rs.ToArray());
                 }
             }
         }

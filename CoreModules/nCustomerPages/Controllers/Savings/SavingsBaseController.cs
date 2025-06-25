@@ -1,36 +1,35 @@
-﻿using nCustomerPages.Code;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using nCustomerPages.Code;
 
-namespace nCustomerPages.Controllers.Savings
+namespace nCustomerPages.Controllers.Savings;
+
+[RoutePrefix("savings")]
+[CustomerPagesAuthorize(Roles = "SavingsCustomer")]
+public abstract class SavingsBaseController : BaseController
 {
-    [RoutePrefix("savings")]
-    [CustomerPagesAuthorize(Roles = "SavingsCustomer")]
-    public abstract class SavingsBaseController : BaseController
+    public enum MessageTypeCode
     {
-        public enum MessageTypeCode
-        {
-            alreadyhaveaccount,
-            newaccountgreeting,
-            accountbeingprocessed
-        }
+        alreadyhaveaccount,
+        newaccountgreeting,
+        accountbeingprocessed
+    }
 
-        protected string MakeSavingsOverviewMessageUrl(MessageTypeCode code, string newAccountNr = null)
+    protected string MakeSavingsOverviewMessageUrl(MessageTypeCode code, string newAccountNr = null)
+    {
+        return Url.Action("Index", "ProductOverview", new
         {
-            return Url.Action("Index", "ProductOverview", new
-            {
-                MessageTypeCode = code.ToString()
-            });
-        }
+            MessageTypeCode = code.ToString()
+        });
+    }
 
-        protected CustomerLockedSavingsClient CreateCustomerLockedSavingsClient()
-        {
-            return new CustomerLockedSavingsClient(CustomerId);
-        }
+    protected CustomerLockedSavingsClient CreateCustomerLockedSavingsClient()
+    {
+        return new CustomerLockedSavingsClient(CustomerId);
+    }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            ViewBag.CurrentPageProductGroup = "Savings";
-            base.OnActionExecuting(filterContext);
-        }
+    protected override void OnActionExecuting(ActionExecutingContext filterContext)
+    {
+        ViewBag.CurrentPageProductGroup = "Savings";
+        base.OnActionExecuting(filterContext);
     }
 }

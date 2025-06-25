@@ -1,16 +1,16 @@
-﻿using nSavings.Code;
-using nSavings.DbModel.BusinessEvents;
-using nSavings.Excel;
-using NTech;
-using NTech.Banking.BookKeeping;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using nSavings.Code;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using NTech;
+using NTech.Banking.BookKeeping;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiBookkeepingFilesController : NController
@@ -21,8 +21,7 @@ namespace nSavings.Controllers
             public DateTime? ToDate { get; set; }
         }
 
-        [HttpPost]
-        [Route("Api/BookkeepingFiles/GetFilesPage")]
+        [HttpPost, Route("Api/BookkeepingFiles/GetFilesPage")]
         public ActionResult GetFilesPage(int pageSize, Filter filter = null, int pageNr = 0)
         {
             using (var context = new SavingsContext())
@@ -31,13 +30,13 @@ namespace nSavings.Controllers
                     .OutgoingBookkeepingFileHeaders
                     .AsQueryable();
 
-                if (filter != null && filter.FromDate.HasValue)
+                if (filter?.FromDate != null)
                 {
                     var fd = filter.FromDate.Value.Date;
                     baseResult = baseResult.Where(x => x.TransactionDate >= fd);
                 }
 
-                if (filter != null && filter.ToDate.HasValue)
+                if (filter?.ToDate != null)
                 {
                     var td = filter.ToDate.Value.Date;
                     baseResult = baseResult.Where(x => x.TransactionDate <= td);
@@ -68,12 +67,16 @@ namespace nSavings.Controllers
                         UserDisplayName = GetUserDisplayNameByUserId(x.UserId.ToString()),
                         x.FileArchiveKey,
                         x.XlsFileArchiveKey,
-                        ArchiveDocumentUrl = Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = x.FileArchiveKey, setFileDownloadName = true }),
-                        ExcelDocumentUrl = x.XlsFileArchiveKey == null ? null : Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = x.XlsFileArchiveKey, setFileDownloadName = true })
+                        ArchiveDocumentUrl = Url.Action("ArchiveDocument", "ApiArchiveDocument",
+                            new { key = x.FileArchiveKey, setFileDownloadName = true }),
+                        ExcelDocumentUrl = x.XlsFileArchiveKey == null
+                            ? null
+                            : Url.Action("ArchiveDocument", "ApiArchiveDocument",
+                                new { key = x.XlsFileArchiveKey, setFileDownloadName = true })
                     })
                     .ToList();
 
-                var nrOfPages = (totalCount / pageSize) + (totalCount % pageSize == 0 ? 0 : 1);
+                var nrOfPages = totalCount / pageSize + (totalCount % pageSize == 0 ? 0 : 1);
 
                 return Json2(new
                 {
@@ -102,20 +105,20 @@ namespace nSavings.Controllers
                 var minTrDate = context.LedgerAccountTransactions.Min(x => (DateTime?)x.TransactionDate);
                 if (!minTrDate.HasValue)
                     return new List<DateTime>();
-                else
-                    fromDate = minTrDate.Value;
+                fromDate = minTrDate.Value;
             }
 
-            DateTime toDate = clock.Today.AddDays(-1);
+            var toDate = clock.Today.AddDays(-1);
             var dates = new List<DateTime>();
             var d = fromDate;
-            int guard = 0;
+            var guard = 0;
 
             while (d <= toDate && guard++ < 10000)
             {
                 dates.Add(d);
                 d = d.AddDays(1);
             }
+
             if (guard > 9000)
                 throw new Exception("Hit guard code in GetDates");
 
@@ -128,7 +131,7 @@ namespace nSavings.Controllers
         {
             using (var context = new SavingsContext())
             {
-                var documentClient = new Code.DocumentClient();
+                var documentClient = new DocumentClient();
                 var mgr = new BookKeepingFileManager(CurrentUserId, InformationMetadata);
                 using (var tr = context.Database.BeginTransaction())
                 {
@@ -137,9 +140,8 @@ namespace nSavings.Controllers
                     if (dates.Count == 0)
                         return Json2(new { noNewTransactions = true });
 
-                    OutgoingBookkeepingFileHeader h;
-                    List<string> warnings;
-                    var wasFileCreated = mgr.TryCreateBookKeepingFile(context, dates, documentClient, out h, out warnings);
+                    var wasFileCreated =
+                        mgr.TryCreateBookKeepingFile(context, dates, documentClient, out var h, out var warnings);
 
                     if (wasFileCreated)
                     {
@@ -148,16 +150,18 @@ namespace nSavings.Controllers
                     }
 
                     warnings = warnings ?? new List<string>();
-                    warnings.AddRange(mgr.GetBookKeepingWarnings(dates) ?? new string[] { });
+                    warnings.AddRange(BookKeepingFileManager.GetBookKeepingWarnings(dates) ?? new string[] { });
 
                     if (wasFileCreated)
                     {
-                        return Json2(new { noNewTransactions = false, bookkeepingFileHeaderId = h.Id, warnings = warnings.Count > 0 ? warnings : null });
+                        return Json2(new
+                        {
+                            noNewTransactions = false, bookkeepingFileHeaderId = h.Id,
+                            warnings = warnings.Count > 0 ? warnings : null
+                        });
                     }
-                    else
-                    {
-                        return Json2(new { noNewTransactions = true, warnings = warnings.Count > 0 ? warnings : null });
-                    }
+
+                    return Json2(new { noNewTransactions = true, warnings = warnings.Count > 0 ? warnings : null });
                 }
             }
         }
@@ -168,27 +172,28 @@ namespace nSavings.Controllers
         {
             var request = new DocumentClientExcelRequest
             {
-                Sheets = new DocumentClientExcelRequest.Sheet[]
+                Sheets = new[]
                 {
-                            new DocumentClientExcelRequest.Sheet
-                            {
-                                AutoSizeColumns = true,
-                                Title = $"Savings bookkeeping rules"
-                            }
+                    new DocumentClientExcelRequest.Sheet
+                    {
+                        AutoSizeColumns = true,
+                        Title = "Savings bookkeeping rules"
+                    }
                 }
             };
 
             var ruleSet = NtechBookKeepingRuleFile.Parse(XDocuments.Load(NEnv.BookKeepingRuleFileName));
 
-            var allConnections = new HashSet<string>(ruleSet.BusinessEventRules.SelectMany(x => x.Bookings.SelectMany(y => y.Connections)).ToList());
+            var allConnections = new HashSet<string>(ruleSet.BusinessEventRules
+                .SelectMany(x => x.Bookings.SelectMany(y => y.Connections)).ToList());
 
             var rows = ruleSet.BusinessEventRules.SelectMany(evt => evt.Bookings.Select((b, i) => new
             {
                 EventName = i == 0 ? evt.BusinessEventName : null,
-                LedgerAccount = b.LedgerAccount,
+                b.LedgerAccount,
                 DebetAccount = BookKeepingFileManager.EnsureAccountNr(b.BookKeepingAccounts.Item1),
                 CreditAccount = BookKeepingFileManager.EnsureAccountNr(b.BookKeepingAccounts.Item2),
-                Connections = b.Connections
+                b.Connections
             })).ToList();
 
             var s = request.Sheets[0];
@@ -199,6 +204,7 @@ namespace nSavings.Controllers
             {
                 cols.Add(rows.Col(x => x.Connections.Contains(c) ? "X" : "", ExcelType.Text, c));
             }
+
             cols.Add(rows.Col(x => x.DebetAccount, ExcelType.Text, "Debet account"));
             cols.Add(rows.Col(x => x.CreditAccount, ExcelType.Text, "Credit account"));
 
@@ -207,7 +213,8 @@ namespace nSavings.Controllers
             var client = new DocumentClient();
             var report = client.CreateXlsx(request);
 
-            return new FileStreamResult(report, XlsxContentType) { FileDownloadName = $"SavingsBookkeepingRules-{DateTime.Today.ToString("yyyy-MM-dd")}.xlsx" };
+            return new FileStreamResult(report, XlsxContentType)
+                { FileDownloadName = $"SavingsBookkeepingRules-{DateTime.Today:yyyy-MM-dd}.xlsx" };
         }
     }
 }

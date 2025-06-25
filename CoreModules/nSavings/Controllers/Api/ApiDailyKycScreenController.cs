@@ -1,14 +1,16 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
-using nSavings.Code.Email;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.Code;
+using nSavings.Code.Email;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiDailyKycScreenController : NController
@@ -23,7 +25,7 @@ namespace nSavings.Controllers
             if (!screenDate.HasValue)
                 screenDate = Clock.Today;
 
-            using (var context = new SavingsContext())
+            using (var context = new DbModel.SavingsContext())
             {
                 var activeCustomerIds = FetchAllActiveCustomerIds(context);
 
@@ -32,7 +34,7 @@ namespace nSavings.Controllers
                 var customerIdsToScreen = activeResult.ActiveCustomerIds;
 
                 //Make sure those customers have been screened
-                var customerClient = new Code.CustomerClient();
+                var customerClient = new CustomerClient();
                 var screenResult = customerClient.ListScreenBatch(customerIdsToScreen, screenDate.Value);
 
                 //Figure out which of these have conflicts and log it
@@ -72,7 +74,7 @@ namespace nSavings.Controllers
             }
         }
 
-        private static void SendSummaryEmail(DateTime? screenDate, SavingsContext context, CustomerClient.FetchCustomerKycStatusChangesResult result)
+        private static void SendSummaryEmail(DateTime? screenDate, DbModel.SavingsContext context, CustomerClient.FetchCustomerKycStatusChangesResult result)
         {
             var reportEmails = NEnv.KycScreenReportEmails;
             if (reportEmails == null)
@@ -111,7 +113,7 @@ namespace nSavings.Controllers
                 "dailyKycScreenSavings");
         }
 
-        private static ISet<int> FetchAllActiveCustomerIds(SavingsContext context)
+        private static ISet<int> FetchAllActiveCustomerIds(DbModel.SavingsContext context)
         {
             return new HashSet<int>(context
                 .SavingsAccountHeaders
@@ -120,7 +122,7 @@ namespace nSavings.Controllers
                 .ToList());
         }
 
-        public static (ISet<int> ActiveCustomerIds, int ScreenedTodayCount) GetActiveCustomerIdsAndAlreadyScreenedCount(SavingsContext context, DateTime screenDate, ISet<int> activeCustomerIds = null)
+        public static (ISet<int> ActiveCustomerIds, int ScreenedTodayCount) GetActiveCustomerIdsAndAlreadyScreenedCount(DbModel.SavingsContext context, DateTime screenDate, ISet<int> activeCustomerIds = null)
         {
             var customerIds = activeCustomerIds ?? FetchAllActiveCustomerIds(context);
 
@@ -140,19 +142,19 @@ namespace nSavings.Controllers
         [Route("Api/Kyc/GetFilesPage")]
         public ActionResult GetFilesPage(int pageSize, Filter filter = null, int pageNr = 0)
         {
-            using (var context = new SavingsContext())
+            using (var context = new DbModel.SavingsContext())
             {
                 var baseResult = context
                     .DailyKycScreenHeaders
                     .AsQueryable();
 
-                if (filter != null && filter.FromDate.HasValue)
+                if (filter?.FromDate != null)
                 {
                     var fd = filter.FromDate.Value.Date;
                     baseResult = baseResult.Where(x => x.TransactionDate >= fd);
                 }
 
-                if (filter != null && filter.ToDate.HasValue)
+                if (filter?.ToDate != null)
                 {
                     var td = filter.ToDate.Value.Date;
                     baseResult = baseResult.Where(x => x.TransactionDate <= td);

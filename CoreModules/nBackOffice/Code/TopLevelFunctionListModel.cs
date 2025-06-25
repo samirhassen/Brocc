@@ -74,22 +74,23 @@ namespace nBackOffice.Code
 
             foreach (var wrapper in document.Root.Descendants().Where(x => x.Name.LocalName == "Functions"))
             {
-                foreach (var f in wrapper.Descendants().Where(x => x.Name.LocalName == "Function" && IsFunctionShown(x, activeModuleNames)))
-                {
-                    functions.Add(new Function
+                functions.AddRange(wrapper.Descendants()
+                    .Where(x => x.Name.LocalName == "Function" && IsFunctionShown(x, activeModuleNames))
+                    .Select(f => new Function
                     {
                         SystemName = wrapper.Attribute("systemName")?.Value,
                         GroupName = wrapper.Attribute("groupName").Value,
                         MenuGroup = f.Descendants().Single(x => x.Name.LocalName == "MenuGroup").Value,
-                        MenuSubGroup = f.Descendants().SingleOrDefault(x => x.Name.LocalName == "MenuSubGroup")?.Value ?? "Core",
+                        MenuSubGroup =
+                            f.Descendants().SingleOrDefault(x => x.Name.LocalName == "MenuSubGroup")?.Value ?? "Core",
                         MenuName = f.Descendants().Single(x => x.Name.LocalName == "MenuName").Value,
                         Module = f.Descendants().Single(x => x.Name.LocalName == "Module").Value,
                         Url = f.Descendants().Single(x => x.Name.LocalName == "Url").Value
-                    });
-                }
+                    }));
             }
 
-            var subGroupOrder = document.Root.Descendants().Where(x => x.Name.LocalName == "SgOrderItem").Select(x => x.Value).ToList();
+            var subGroupOrder = document.Root.Descendants().Where(x => x.Name.LocalName == "SgOrderItem")
+                .Select(x => x.Value).ToList();
 
             return new TopLevelFunctionListModel
             {
@@ -102,9 +103,9 @@ namespace nBackOffice.Code
         {
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = $"nBackOffice.Resources.TopLevelFunctionList.xml";
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
-                XDocument doc = XDocuments.Load(stream);
+                var doc = XDocuments.Load(stream);
                 return FromXDocument(doc, GetActiveModuleNames());
             }
         }
@@ -167,13 +168,11 @@ namespace nBackOffice.Code
         /// </summary>
         private string GetRequiredRoleName(Function f)
         {
-            if (f.SystemName?.ToLowerInvariant() == "all" || f.GroupName?.ToLowerInvariant() == "all")
-            {
-                if (f.SystemName?.ToLowerInvariant() != f.GroupName?.ToLowerInvariant())
-                    throw new Exception("If either SystemName or GroupName is All then both must be");
-                return null;
-            }
-            return f.SystemName == null ? f.GroupName : $"{f.SystemName}.{f.GroupName}";
+            if (f.SystemName?.ToLowerInvariant() != "all" && f.GroupName?.ToLowerInvariant() != "all")
+                return f.SystemName == null ? f.GroupName : $"{f.SystemName}.{f.GroupName}";
+            if (f.SystemName?.ToLowerInvariant() != f.GroupName?.ToLowerInvariant())
+                throw new Exception("If either SystemName or GroupName is All then both must be");
+            return null;
         }
 
         public class MenuGroup

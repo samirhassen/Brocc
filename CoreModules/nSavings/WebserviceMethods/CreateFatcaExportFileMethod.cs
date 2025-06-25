@@ -1,24 +1,25 @@
-﻿using NTech.Services.Infrastructure.NTechWs;
-using System;
+﻿using System;
+using nSavings.Controllers.Api;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Services.Infrastructure.NTechWs;
 
 namespace nSavings.WebserviceMethods
 {
-    public class CreateFatcaExportFileMethod : TypedWebserviceMethod<CreateFatcaExportFileMethod.Request, CreateFatcaExportFileMethod.Response>
+    public class CreateFatcaExportFileMethod : TypedWebserviceMethod<CreateFatcaExportFileMethod.Request,
+        CreateFatcaExportFileMethod.Response>
     {
         public override string Path => "Fatca/CreateExportFile";
 
         protected override Response DoExecuteTyped(NTechWebserviceMethodRequestContext requestContext, Request request)
         {
-            Validate(request, r =>
-            {
-                r.Require(x => x.Year);
-            });
+            Validate(request, r => { r.Require(x => x.Year); });
 
             var date = new DateTime(request.Year.Value, 12, 31);
 
             OutgoingExportFileHeader.StandardExportResultStatusModel exportResult = null;
             var result = requestContext.Service().FatcaExport.CreateAndStoreAndExportFatcaExportFile(date,
-                request.ExportProfile, requestContext.CurrentUserId(), requestContext.InformationMetadata(), observeExportResult: x => exportResult = x);
+                request.ExportProfile, requestContext.CurrentUserId(), requestContext.InformationMetadata(),
+                observeExportResult: x => exportResult = x);
 
             return new Response
             {

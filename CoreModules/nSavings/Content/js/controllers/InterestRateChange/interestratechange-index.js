@@ -1,6 +1,5 @@
-var InterestRateChangeCtrl = /** @class */ (function () {
-    function InterestRateChangeCtrl($scope, $http, $q, $interval) {
-        var _this = this;
+class InterestRateChangeCtrl {
+    constructor($scope, $http, $q, $interval) {
         this.$scope = $scope;
         this.$http = $http;
         this.$q = $q;
@@ -16,14 +15,14 @@ var InterestRateChangeCtrl = /** @class */ (function () {
         }
         this.upcomingChanges = initialData.upcomingChanges;
         this.setUiStateFromChange(initialData.currentChangeState);
-        this.$interval(function () {
-            _this.doBackgroundStateUpdate();
+        this.$interval(() => {
+            this.doBackgroundStateUpdate();
         }, 1000);
     }
-    InterestRateChangeCtrl.prototype.isValidDecimal = function (value) {
+    isValidDecimal(value) {
         return ntech.forms.isValidDecimal(value);
-    };
-    InterestRateChangeCtrl.prototype.asMoment = function (value) {
+    }
+    asMoment(value) {
         var v = moment(value, 'YYYY-MM-DD', true);
         if (v.isValid()) {
             return v;
@@ -31,35 +30,35 @@ var InterestRateChangeCtrl = /** @class */ (function () {
         else {
             return null;
         }
-    };
-    InterestRateChangeCtrl.prototype.isValidDate = function (value) {
+    }
+    isValidDate(value) {
         if (ntech.forms.isNullOrWhitespace(value))
             return true;
         return moment(value, 'YYYY-MM-DD', true).isValid();
-    };
-    InterestRateChangeCtrl.prototype.isLowering = function (fromRate, toRate) {
+    }
+    isLowering(fromRate, toRate) {
         /*Floating point math is evil*/
         return Math.round(toRate * 100) < Math.round(fromRate * 100);
-    };
-    InterestRateChangeCtrl.prototype.calculateRegular = function (event) {
+    }
+    calculateRegular(event) {
         if (event) {
             event.preventDefault();
         }
-        var today = this.asMoment(initialData.today);
-        var earliestAllowedAllAccountsLoweredDate = this.asMoment(initialData.earliestAllowedAllAccountsLoweredDate);
-        var earliestAllowedNewAccountsOrRaisedDate = this.asMoment(initialData.earliestAllowedNewAccountsOrRaisedDate);
-        var isLowering = false;
-        var newValidFromDate = this.asMoment(this.regular.validFromDate);
+        let today = this.asMoment(initialData.today);
+        let earliestAllowedAllAccountsLoweredDate = this.asMoment(initialData.earliestAllowedAllAccountsLoweredDate);
+        let earliestAllowedNewAccountsOrRaisedDate = this.asMoment(initialData.earliestAllowedNewAccountsOrRaisedDate);
+        let isLowering = false;
+        let newValidFromDate = this.asMoment(this.regular.validFromDate);
         if (newValidFromDate <= today) {
             toastr.warning('From date must be after today');
             return;
         }
-        var newInterestRate = parseFloat(parseFloat(this.regular.newInterestRate.replace(',', '.')).toFixed(2));
+        let newInterestRate = parseFloat(parseFloat(this.regular.newInterestRate.replace(',', '.')).toFixed(2));
         if (this.currentNewAccountsInterestRate) {
-            var currentInterestRate = this.currentNewAccountsInterestRate.InterestRatePercent;
+            let currentInterestRate = this.currentNewAccountsInterestRate.InterestRatePercent;
             isLowering = this.isLowering(currentInterestRate, newInterestRate);
         }
-        var p = new InterestRateChangeNs.PreviewModel();
+        let p = new InterestRateChangeNs.PreviewModel();
         p.isRegularChange = true;
         p.initiatedDate = today;
         p.allAccountsDate = newValidFromDate;
@@ -67,27 +66,27 @@ var InterestRateChangeCtrl = /** @class */ (function () {
         p.newInterestRate = newInterestRate;
         p.showRegularChangeLoweringTwoMonthWarning = isLowering && newValidFromDate < earliestAllowedAllAccountsLoweredDate;
         this.preview = p;
-    };
-    InterestRateChangeCtrl.prototype.calculateSplit = function (event) {
+    }
+    calculateSplit(event) {
         if (event) {
             event.preventDefault();
         }
-        var today = this.asMoment(initialData.today);
-        var earliestAllowedAllAccountsLoweredDate = this.asMoment(initialData.earliestAllowedAllAccountsLoweredDate);
-        var earliestAllowedNewAccountsOrRaisedDate = this.asMoment(initialData.earliestAllowedNewAccountsOrRaisedDate);
-        var isLowering = false;
-        var newAllAccountsValidFromDate = this.asMoment(this.split.validFromDateExistingAccounts);
-        var newNewAccountsValidFromDate = this.asMoment(this.split.validFromDateNewAccounts);
+        let today = this.asMoment(initialData.today);
+        let earliestAllowedAllAccountsLoweredDate = this.asMoment(initialData.earliestAllowedAllAccountsLoweredDate);
+        let earliestAllowedNewAccountsOrRaisedDate = this.asMoment(initialData.earliestAllowedNewAccountsOrRaisedDate);
+        let isLowering = false;
+        let newAllAccountsValidFromDate = this.asMoment(this.split.validFromDateExistingAccounts);
+        let newNewAccountsValidFromDate = this.asMoment(this.split.validFromDateNewAccounts);
         if (newAllAccountsValidFromDate <= today || newNewAccountsValidFromDate <= today) {
             toastr.warning('From date must be after today');
             return;
         }
-        var newInterestRate = parseFloat(parseFloat(this.split.newInterestRate.replace(',', '.')).toFixed(2));
+        let newInterestRate = parseFloat(parseFloat(this.split.newInterestRate.replace(',', '.')).toFixed(2));
         if (this.currentNewAccountsInterestRate) {
-            var currentInterestRate = this.currentNewAccountsInterestRate.InterestRatePercent;
+            let currentInterestRate = this.currentNewAccountsInterestRate.InterestRatePercent;
             isLowering = this.isLowering(currentInterestRate, newInterestRate);
         }
-        var p = new InterestRateChangeNs.PreviewModel();
+        let p = new InterestRateChangeNs.PreviewModel();
         p.isRegularChange = false;
         p.initiatedDate = today;
         p.allAccountsDate = newAllAccountsValidFromDate;
@@ -96,9 +95,8 @@ var InterestRateChangeCtrl = /** @class */ (function () {
         p.showSplitChangeLoweringTwoMonthWarning = isLowering && newAllAccountsValidFromDate < earliestAllowedAllAccountsLoweredDate;
         p.showSplitChangeSameDateWarning = newAllAccountsValidFromDate.isSame(newNewAccountsValidFromDate);
         this.preview = p;
-    };
-    InterestRateChangeCtrl.prototype.initiateChange = function (event) {
-        var _this = this;
+    }
+    initiateChange(event) {
         if (event) {
             event.preventDefault();
         }
@@ -112,17 +110,16 @@ var InterestRateChangeCtrl = /** @class */ (function () {
                 allAccountsValidFromDate: this.preview.allAccountsDate.format('YYYY-MM-DD'),
                 newAccountsValidFromDate: this.preview.newAccountsDate ? this.preview.newAccountsDate.format('YYYY-MM-DD') : null
             }
-        }).then(function (response) {
-            _this.isLoading = false;
-            _this.historicalChangeItems = null;
-            _this.setUiStateFromChange(response.data.currentChangeState);
-        }, function (response) {
-            _this.isLoading = false;
+        }).then((response) => {
+            this.isLoading = false;
+            this.historicalChangeItems = null;
+            this.setUiStateFromChange(response.data.currentChangeState);
+        }, (response) => {
+            this.isLoading = false;
             toastr.error(response.statusText);
         });
-    };
-    InterestRateChangeCtrl.prototype.cancelVerifyOrChange = function (url, event) {
-        var _this = this;
+    }
+    cancelVerifyOrChange(url, event) {
         if (event) {
             event.preventDefault();
         }
@@ -134,26 +131,25 @@ var InterestRateChangeCtrl = /** @class */ (function () {
                 testUserId: initialData.testUserId,
                 changeToken: this.pending.changeToken
             }
-        }).then(function (response) {
-            _this.isLoading = false;
-            _this.historicalChangeItems = null;
-            _this.setUiStateFromChange(response.data.currentChangeState);
-        }, function (response) {
-            _this.isLoading = false;
+        }).then((response) => {
+            this.isLoading = false;
+            this.historicalChangeItems = null;
+            this.setUiStateFromChange(response.data.currentChangeState);
+        }, (response) => {
+            this.isLoading = false;
             toastr.error(response.statusText);
         });
-    };
-    InterestRateChangeCtrl.prototype.cancelChange = function (event) {
+    }
+    cancelChange(event) {
         this.cancelVerifyOrChange(initialData.urls.cancelChange, event);
-    };
-    InterestRateChangeCtrl.prototype.verifyChange = function (event) {
+    }
+    verifyChange(event) {
         this.cancelVerifyOrChange(initialData.urls.verifyChange, event);
-    };
-    InterestRateChangeCtrl.prototype.rejectChange = function (event) {
+    }
+    rejectChange(event) {
         this.cancelVerifyOrChange(initialData.urls.rejectChange, event);
-    };
-    InterestRateChangeCtrl.prototype.carryOutChange = function (event) {
-        var _this = this;
+    }
+    carryOutChange(event) {
         if (event) {
             event.preventDefault();
         }
@@ -166,18 +162,17 @@ var InterestRateChangeCtrl = /** @class */ (function () {
                 changeToken: this.pending.changeToken,
                 returnUpcomingChanges: true
             }
-        }).then(function (response) {
-            _this.isLoading = false;
-            _this.historicalChangeItems = null;
-            _this.upcomingChanges = response.data.upcomingChanges;
-            _this.setUiStateFromChange(response.data.currentChangeState);
-        }, function (response) {
-            _this.isLoading = false;
+        }).then((response) => {
+            this.isLoading = false;
+            this.historicalChangeItems = null;
+            this.upcomingChanges = response.data.upcomingChanges;
+            this.setUiStateFromChange(response.data.currentChangeState);
+        }, (response) => {
+            this.isLoading = false;
             toastr.error(response.statusText);
         });
-    };
-    InterestRateChangeCtrl.prototype.cancelUpcomingChange = function (id, event) {
-        var _this = this;
+    }
+    cancelUpcomingChange(id, event) {
         if (event) {
             event.preventDefault();
         }
@@ -189,17 +184,17 @@ var InterestRateChangeCtrl = /** @class */ (function () {
                 testUserId: initialData.testUserId,
                 rateChangeHeaderId: id
             }
-        }).then(function (response) {
-            _this.isLoading = false;
-            _this.upcomingChanges = response.data.upcomingChanges;
-            _this.historicalChangeItems = null;
-            _this.setUiStateFromChange(response.data.currentChangeState);
-        }, function (response) {
-            _this.isLoading = false;
+        }).then((response) => {
+            this.isLoading = false;
+            this.upcomingChanges = response.data.upcomingChanges;
+            this.historicalChangeItems = null;
+            this.setUiStateFromChange(response.data.currentChangeState);
+        }, (response) => {
+            this.isLoading = false;
             toastr.error(response.statusText);
         });
-    };
-    InterestRateChangeCtrl.prototype.toggleHistoricalChangeItems = function (event) {
+    }
+    toggleHistoricalChangeItems(event) {
         if (event) {
             event.preventDefault();
         }
@@ -209,9 +204,8 @@ var InterestRateChangeCtrl = /** @class */ (function () {
         else {
             this.fetchHistoricalChangeItems(event);
         }
-    };
-    InterestRateChangeCtrl.prototype.fetchHistoricalChangeItems = function (event) {
-        var _this = this;
+    }
+    fetchHistoricalChangeItems(event) {
         if (event) {
             event.preventDefault();
         }
@@ -220,16 +214,16 @@ var InterestRateChangeCtrl = /** @class */ (function () {
             method: 'POST',
             url: initialData.urls.fetchHistoricalChangeItems,
             data: {}
-        }).then(function (response) {
-            _this.isLoading = false;
-            _this.historicalChangeItems = response.data.historicalChangeItems;
-        }, function (response) {
-            _this.isLoading = false;
+        }).then((response) => {
+            this.isLoading = false;
+            this.historicalChangeItems = response.data.historicalChangeItems;
+        }, (response) => {
+            this.isLoading = false;
             toastr.error(response.statusText);
         });
-    };
-    InterestRateChangeCtrl.prototype.setUiStateFromChange = function (s) {
-        var m = this.convertResponseToPendingModel(s);
+    }
+    setUiStateFromChange(s) {
+        let m = this.convertResponseToPendingModel(s);
         if (m) {
             this.pending = m;
             this.preview = null;
@@ -245,9 +239,8 @@ var InterestRateChangeCtrl = /** @class */ (function () {
             this.regular = new InterestRateChangeNs.RegularChangeModel();
             this.split = new InterestRateChangeNs.SplitChangeModel();
         }
-    };
-    InterestRateChangeCtrl.prototype.doBackgroundStateUpdate = function () {
-        var _this = this;
+    }
+    doBackgroundStateUpdate() {
         this.$http({
             method: 'POST',
             url: initialData.urls.getCurrentChangeState,
@@ -255,34 +248,39 @@ var InterestRateChangeCtrl = /** @class */ (function () {
                 testUserId: initialData.testUserId,
                 changeToken: this.pending ? this.pending.changeToken : null
             }
-        }).then(function (response) {
-            var stateBefore = _this.pending;
-            var stateAfter = response.data.currentChangeState;
+        }).then((response) => {
+            let stateBefore = this.pending;
+            let stateAfter = response.data.currentChangeState;
             if (stateBefore && !stateAfter) {
                 //Canceled, we need to actually update here
-                _this.setUiStateFromChange(response.data.currentChangeState);
+                this.setUiStateFromChange(response.data.currentChangeState);
             }
             else if (!stateBefore && stateAfter) {
                 //Most likely someelse initiated something. We should update here, even if the current user is doing something
-                _this.setUiStateFromChange(response.data.currentChangeState);
+                this.setUiStateFromChange(response.data.currentChangeState);
             }
             else if (stateBefore && stateAfter) {
                 //Synch
-                _this.setUiStateFromChange(response.data.currentChangeState);
+                this.setUiStateFromChange(response.data.currentChangeState);
             }
             else {
                 //No state before or after. Dont update here or we will wipe out any attempt of a user to initiate change on each synch
             }
-        }, function (response) {
-            toastr.error(response.statusText);
+        }, (response) => {
+            if (response.statusText && response.statusText !== "") {
+                toastr.error(response.statusText);
+            }
+            else {
+                toastr.error("Lost connection to server");
+            }
         });
-    };
-    InterestRateChangeCtrl.prototype.convertResponseToPendingModel = function (s) {
+    }
+    convertResponseToPendingModel(s) {
         //Is cancel ever not allowed?
         if (!s) {
             return null;
         }
-        var m = new InterestRateChangeNs.PendingChangeModel();
+        const m = new InterestRateChangeNs.PendingChangeModel();
         m.isInitiatedByCurrentUser = s.CurrentUserId == s.InitiatedByUserId;
         m.newInterestRatePercent = s.NewInterestRatePercent;
         m.isRegularChange = !s.NewAccountsValidFromDate;
@@ -300,36 +298,23 @@ var InterestRateChangeCtrl = /** @class */ (function () {
         m.showSplitChangeLoweringTwoMonthWarning = !m.isRegularChange && s.IsViolatingTwoMonthLoweringRule;
         m.showRegularChangeLoweringTwoMonthWarning = m.isRegularChange && s.IsViolatingTwoMonthLoweringRule;
         return m;
-    };
-    InterestRateChangeCtrl.$inject = ['$scope', '$http', '$q', '$interval'];
-    return InterestRateChangeCtrl;
-}());
+    }
+}
+InterestRateChangeCtrl.$inject = ['$scope', '$http', '$q', '$interval'];
 var app = angular.module('app', ['ntech.forms']);
 app.controller('interestRateChangeCtrl', InterestRateChangeCtrl);
 var InterestRateChangeNs;
 (function (InterestRateChangeNs) {
-    var RegularChangeModel = /** @class */ (function () {
-        function RegularChangeModel() {
-        }
-        return RegularChangeModel;
-    }());
+    class RegularChangeModel {
+    }
     InterestRateChangeNs.RegularChangeModel = RegularChangeModel;
-    var SplitChangeModel = /** @class */ (function () {
-        function SplitChangeModel() {
-        }
-        return SplitChangeModel;
-    }());
+    class SplitChangeModel {
+    }
     InterestRateChangeNs.SplitChangeModel = SplitChangeModel;
-    var PreviewModel = /** @class */ (function () {
-        function PreviewModel() {
-        }
-        return PreviewModel;
-    }());
+    class PreviewModel {
+    }
     InterestRateChangeNs.PreviewModel = PreviewModel;
-    var PendingChangeModel = /** @class */ (function () {
-        function PendingChangeModel() {
-        }
-        return PendingChangeModel;
-    }());
+    class PendingChangeModel {
+    }
     InterestRateChangeNs.PendingChangeModel = PendingChangeModel;
 })(InterestRateChangeNs || (InterestRateChangeNs = {}));

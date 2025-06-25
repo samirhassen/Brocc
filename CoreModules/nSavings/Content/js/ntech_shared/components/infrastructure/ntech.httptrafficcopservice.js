@@ -1,13 +1,10 @@
 var NTechComponents;
 (function (NTechComponents) {
-    var CountsModel = /** @class */ (function () {
-        function CountsModel() {
-        }
-        return CountsModel;
-    }());
+    class CountsModel {
+    }
     NTechComponents.CountsModel = CountsModel;
-    var NTechHttpTrafficCopService = /** @class */ (function () {
-        function NTechHttpTrafficCopService() {
+    class NTechHttpTrafficCopService {
+        constructor() {
             //Using solution from: https://www.bennadel.com/blog/2777-monitoring-http-activity-with-http-interceptors-in-angularjs.htm
             this.total = {
                 all: 0,
@@ -27,11 +24,11 @@ var NTechComponents;
             };
             this.listeners = [];
         }
-        NTechHttpTrafficCopService.prototype.addStateChangeListener = function (onStateChange) {
+        addStateChangeListener(onStateChange) {
             this.listeners.push(onStateChange);
-        };
-        NTechHttpTrafficCopService.prototype.endRequest = function (httpMethod) {
-            var httpMethodN = this.normalizedHttpMethod(httpMethod);
+        }
+        endRequest(httpMethod) {
+            let httpMethodN = this.normalizedHttpMethod(httpMethod);
             this.pending.all--;
             this.pending[httpMethodN]--;
             // EDGE CASE: In the unlikely event that the interceptors were not
@@ -42,24 +39,22 @@ var NTechComponents;
             if (this.pending[httpMethodN] < 0) {
                 this.redistributePendingCounts(httpMethodN);
             }
-            for (var _i = 0, _a = this.listeners; _i < _a.length; _i++) {
-                var a = _a[_i];
+            for (let a of this.listeners) {
                 a();
             }
-        };
-        NTechHttpTrafficCopService.prototype.startRequest = function (httpMethod) {
-            var httpMethodN = this.normalizedHttpMethod(httpMethod);
+        }
+        startRequest(httpMethod) {
+            let httpMethodN = this.normalizedHttpMethod(httpMethod);
             this.total.all++;
             this.total[httpMethod]++;
             this.pending.all++;
             this.pending[httpMethod]++;
-            for (var _i = 0, _a = this.listeners; _i < _a.length; _i++) {
-                var a = _a[_i];
+            for (let a of this.listeners) {
                 a();
             }
-        };
-        NTechHttpTrafficCopService.prototype.normalizedHttpMethod = function (httpMethod) {
-            var n = (httpMethod || "").toLowerCase();
+        }
+        normalizedHttpMethod(httpMethod) {
+            let n = (httpMethod || "").toLowerCase();
             switch (n) {
                 case "get":
                 case "post":
@@ -69,12 +64,12 @@ var NTechComponents;
                     return (n);
             }
             return ("get");
-        };
+        }
         // I attempt to redistribute an [unexpected] negative count to other
         // non-negative counts. The HTTP methods are iterated in likelihood of
         // execution. And, while this isn't an exact science, it will normalize
         // after all HTTP requests have finished processing.
-        NTechHttpTrafficCopService.prototype.redistributePendingCounts = function (negativeMethod) {
+        redistributePendingCounts(negativeMethod) {
             var overflow = Math.abs(this.pending[negativeMethod]);
             this.pending[negativeMethod] = 0;
             // List in likely order of precedence in the application.
@@ -93,8 +88,7 @@ var NTechComponents;
                     }
                 }
             }
-        };
-        return NTechHttpTrafficCopService;
-    }());
+        }
+    }
     NTechComponents.NTechHttpTrafficCopService = NTechHttpTrafficCopService;
 })(NTechComponents || (NTechComponents = {}));

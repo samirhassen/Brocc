@@ -1,0 +1,33 @@
+﻿@using nSavings.ViewModel.FixedRateProduct
+@model nSavings.ViewModel.FixedRateProduct.FixedRateProductManagementViewModel
+
+@section Styles {}
+
+<table class="product-table w-full mt-1" x-data="{ showHistory: false }">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Interest rate</th>
+        <th>Term</th>
+        <th>Start date</th>
+        <th>End date</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="item-list">
+    @Html.Partial("_ProductItems", new ProductItemsViewModel(Model.FutureProducts))
+    @Html.Partial("_ProductItems", new ProductItemsViewModel(Model.ActiveProducts))
+    <tr class="bg-gray-100 cursor-pointer" @@click="showHistory = !showHistory">
+        <td colspan="7" class="font-semibold text-gray-500 text-center">
+            <div class="items-center">
+                Historical
+                <span x-text="showHistory ? '▼' : '▶'" class="ml-2"></span>
+            </div>
+        </td>
+    </tr>
+    <template x-if="showHistory">
+        @Html.Partial("_ProductItems", new ProductItemsViewModel(Model.HistoricalProducts, true, false))
+    </template>
+    </tbody>
+</table>

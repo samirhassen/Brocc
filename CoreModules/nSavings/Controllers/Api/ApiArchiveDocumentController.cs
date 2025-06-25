@@ -1,30 +1,28 @@
-﻿using NTech.Services.Infrastructure;
-using System.IO;
+﻿using System.IO;
 using System.Web.Mvc;
+using nSavings.Code;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiArchiveDocumentController : NController
     {
-        [Route("Api/ArchiveDocument")]
-        [HttpGet()]
+        [HttpGet, Route("Api/ArchiveDocument")]
         public ActionResult ArchiveDocument(string key, bool setFileDownloadName = false)
         {
-            var c = new Code.DocumentClient();
-            string contentType;
-            string fileName;
-            byte[] b;
-            if (!c.TryFetchRaw(key, out contentType, out fileName, out b))
+            var c = new DocumentClient();
+            if (!c.TryFetchRaw(key, out var contentType, out var fileName, out var b))
             {
                 return HttpNotFound();
             }
 
-            var result = new FileStreamResult(new MemoryStream(b), contentType.ToString());
+            var result = new FileStreamResult(new MemoryStream(b), contentType);
             if (setFileDownloadName && !string.IsNullOrWhiteSpace(fileName))
             {
                 result.FileDownloadName = fileName;
             }
+
             return result;
         }
     }

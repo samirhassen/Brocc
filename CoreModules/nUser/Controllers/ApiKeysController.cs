@@ -1,9 +1,8 @@
-﻿
+﻿using System.Web.Mvc;
 using NTech.Core.User.Shared;
 using NTech.Core.User.Shared.Services;
 using NTech.Services.Infrastructure;
 using nUser.DbModel;
-using System.Web.Mvc;
 
 namespace nUser.Controllers
 {

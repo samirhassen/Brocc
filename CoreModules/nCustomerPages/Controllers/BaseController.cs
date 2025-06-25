@@ -1,45 +1,28 @@
-﻿using Newtonsoft.Json;
-using NTech;
-using NTech.Banking.BankAccounts.Fi;
-using NTech.Banking.CivicRegNumbers;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using NTech;
+using NTech.Banking.CivicRegNumbers;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Services.Infrastructure;
 
 namespace nCustomerPages.Controllers
 {
     public abstract class BaseController : AnonymousBaseController
     {
-        protected ClaimsIdentity CustomerUser
-        {
-            get
-            {
-                return User?.Identity as ClaimsIdentity;
-            }
-        }
+        protected ClaimsIdentity CustomerUser => User?.Identity as ClaimsIdentity;
 
-        protected int CustomerId
-        {
-            get
-            {
-                return LoginProvider.GetCustomerId(CustomerUser).Value;
-            }
-        }
+        protected int CustomerId => LoginProvider.GetCustomerId(CustomerUser).Value;
 
-        protected bool IsStrongIdentity
-        {
-            get
-            {
-                return CustomerUser?.FindFirst("ntech.claims.isstrongidentity")?.Value == "true";
-            }
-        }
+        protected bool IsStrongIdentity => CustomerUser?.FindFirst("ntech.claims.isstrongidentity")?.Value == "true";
 
-        protected string InferBankNameFromIbanFi(IBANFi iban)
+        protected static string InferBankNameFromIbanFi(IBANFi iban)
         {
             try
             {
@@ -57,35 +40,39 @@ namespace nCustomerPages.Controllers
             get
             {
                 var v = CustomerUser?.FindFirst("ntech.claims.civicregnr")?.Value;
-                if (string.IsNullOrWhiteSpace(v))
-                    return null;
-                else
-                    return NEnv.BaseCivicRegNumberParser.Parse(v);
+                return string.IsNullOrWhiteSpace(v) ? null : NEnv.BaseCivicRegNumberParser.Parse(v);
             }
         }
 
-        public static Dictionary<string, string> GetTranslationsSharedDict(UrlHelper h, HttpRequestBase request, Action<string> observeUserLanguage = null)
+        public static Dictionary<string, string> GetTranslationsSharedDict(UrlHelper h, HttpRequestBase request,
+            Action<string> observeUserLanguage = null)
         {
-            return GetTranslationsSharedI(h, request, "ntech.ncustomerpages.GetTranslationsSharedDict", x => Translations.GetTranslationTable(x), observeUserLanguage: observeUserLanguage);
+            return GetTranslationsSharedI(h, request, "ntech.ncustomerpages.GetTranslationsSharedDict",
+                Translations.GetTranslationTable, observeUserLanguage: observeUserLanguage);
         }
 
-        public static dynamic GetTranslationsShared(UrlHelper h, HttpRequestBase request, Action<string> observeUserLanguage = null)
+        public static dynamic GetTranslationsShared(UrlHelper h, HttpRequestBase request,
+            Action<string> observeUserLanguage = null)
         {
-            return GetTranslationsSharedI(h, request, "ntech.ncustomerpages.GetTranslations", x => GetTranslationsI(x, h), observeUserLanguage: observeUserLanguage);
+            return GetTranslationsSharedI(h, request, "ntech.ncustomerpages.GetTranslations",
+                x => GetTranslationsI(x, h), observeUserLanguage: observeUserLanguage);
         }
 
         public static string GetUserLanguage(HttpRequestBase request)
         {
             var defaultLanguage = GetDefaultLanguage();
 
-            var userLang = request?.Cookies[LanguageOverrideCookieName]?.Value ?? System.Threading.Thread.CurrentThread?.CurrentUICulture?.TwoLetterISOLanguageName ?? defaultLanguage;
+            var userLang = request?.Cookies[LanguageOverrideCookieName]?.Value ??
+                           Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName ??
+                           defaultLanguage;
             if (!IsSupportedLanguage(userLang))
                 userLang = defaultLanguage;
 
             return userLang;
         }
 
-        private static T GetTranslationsSharedI<T>(UrlHelper h, HttpRequestBase request, string context, Func<string, T> fromUserLanguage, Action<string> observeUserLanguage = null) where T : class
+        private static T GetTranslationsSharedI<T>(UrlHelper h, HttpRequestBase request, string context,
+            Func<string, T> fromUserLanguage, Action<string> observeUserLanguage = null) where T : class
         {
             var userLang = GetUserLanguage(request);
 
@@ -93,29 +80,30 @@ namespace nCustomerPages.Controllers
 
             if (NEnv.IsTranslationCacheDisabled)
                 return fromUserLanguage(userLang);
-            else
-                return NTechCache.WithCache($"{context}.{userLang}", TimeSpan.FromHours(1), () => fromUserLanguage(userLang));
+            return NTechCache.WithCache($"{context}.{userLang}", TimeSpan.FromHours(1),
+                () => fromUserLanguage(userLang));
         }
 
         private static bool IsSupportedLanguage(string language)
         {
             var country = NEnv.ClientCfg.Country.BaseCountry;
-            if (country == "FI")
-                return language.IsOneOf("sv", "fi");
-            else if (country == "SE")
-                return language.IsOneOf("sv");
-            else
-                return false; //Always use default
+            return country switch
+            {
+                "FI" => language.IsOneOf("sv", "fi"),
+                "SE" => language.IsOneOf("sv"),
+                _ => false
+            };
         }
+
         private static string GetDefaultLanguage()
         {
             var country = NEnv.ClientCfg.Country.BaseCountry;
-            if (country == "SE")
-                return "sv";
-            else if (country == "FI")
-                return "fi";
-            else
-                return "fi";
+            return country switch
+            {
+                "SE" => "sv",
+                "FI" => "fi",
+                _ => "fi"
+            };
         }
 
         private const string LanguageOverrideCookieName = "ntechcustomerpageslangv1";
@@ -131,11 +119,11 @@ namespace nCustomerPages.Controllers
 
             var uiLanguage = "fi";
 
-            (p as IDictionary<string, object>)[uiLanguage] = Translations.FetchTranslation(uiLanguage);
+            ((IDictionary<string, object>)p)[uiLanguage] = Translations.FetchTranslation(uiLanguage);
             if (userLang == "sv")
             {
                 uiLanguage = userLang;
-                (p as IDictionary<string, object>)[uiLanguage] = Translations.FetchTranslation(uiLanguage);
+                ((IDictionary<string, object>)p)[uiLanguage] = Translations.FetchTranslation(uiLanguage);
             }
 
             return new
@@ -156,22 +144,15 @@ namespace nCustomerPages.Controllers
 
         protected void LogUserAction(string actionName)
         {
-            LoginProvider.LogUserAction(actionName, this.User?.Identity as ClaimsIdentity);
+            LoginProvider.LogUserAction(actionName, User?.Identity as ClaimsIdentity);
         }
-
     }
 
     public abstract class AnonymousBaseController : Controller
     {
-        protected IClock Clock
-        {
-            get
-            {
-                return ClockFactory.SharedInstance;
-            }
-        }
+        protected static IClock Clock => ClockFactory.SharedInstance;
 
-        protected ActionResult Json2(object data)
+        protected static ActionResult Json2(object data)
         {
             return new JsonNetResult
             {
@@ -185,37 +166,30 @@ namespace nCustomerPages.Controllers
             public string ContentType { get; set; }
             public object Data { get; set; }
 
-            public JsonSerializerSettings SerializerSettings { get; set; }
+            public JsonSerializerSettings SerializerSettings { get; set; } = new();
             public Formatting Formatting { get; set; }
-
-            public JsonNetResult()
-            {
-                SerializerSettings = new JsonSerializerSettings();
-            }
 
             public override void ExecuteResult(ControllerContext context)
             {
                 if (context == null)
-                    throw new ArgumentNullException("context");
+                    throw new ArgumentNullException(nameof(context));
 
-                HttpResponseBase response = context.HttpContext.Response;
+                var response = context.HttpContext.Response;
 
                 response.ContentType = !string.IsNullOrEmpty(ContentType)
-                  ? ContentType
-                  : "application/json";
+                    ? ContentType
+                    : "application/json";
 
                 if (ContentEncoding != null)
                     response.ContentEncoding = ContentEncoding;
 
-                if (Data != null)
-                {
-                    JsonTextWriter writer = new JsonTextWriter(response.Output) { Formatting = Formatting };
+                if (Data == null) return;
+                var writer = new JsonTextWriter(response.Output) { Formatting = Formatting };
 
-                    JsonSerializer serializer = JsonSerializer.Create(SerializerSettings);
-                    serializer.Serialize(writer, Data);
+                var serializer = JsonSerializer.Create(SerializerSettings);
+                serializer.Serialize(writer, Data);
 
-                    writer.Flush();
-                }
+                writer.Flush();
             }
         }
     }

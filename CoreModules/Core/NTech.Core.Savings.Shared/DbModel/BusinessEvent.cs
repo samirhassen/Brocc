@@ -1,8 +1,9 @@
-﻿using NTech.Core.Module.Shared.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NTech.Core.Module.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings
+namespace NTech.Core.Savings.Shared.DbModel
 {
     public enum BusinessEventType
     {
@@ -11,6 +12,7 @@ namespace nSavings
         AccountCreationRemarkResolution,
         IncomingPaymentFileImport,
         YearlyInterestCapitalization,
+        MonthlyInterestCapitalization,
         Withdrawal,
         AccountClosure,
         PlacementOfUnplacedPayment,
@@ -21,7 +23,13 @@ namespace nSavings
         CancelWithdrawalAccountChange,
         InterestRateChangeRemoval,
         NewManualIncomingPaymentBatch,
-        WelcomeEmailSent
+        WelcomeEmailSent,
+        FixedRateProductAdded,
+        FixedRateProductRemoved,
+        FixedRateProductChanged,
+        FixedRateProductResponse,
+        FixedInterestAccountMaturity,
+        ManualAccountCapitalization
         //YearlyInterestCapitalization,
         //Withdrawal,
         //OutgoingPaymentFile,
@@ -50,15 +58,34 @@ namespace nSavings
         public virtual List<SavingsAccountCreationRemark> CreatedSavingsAccountCreationRemarks { get; set; }
         public virtual List<SharedSavingsInterestRate> CreatedSharedSavingsInterestRates { get; set; }
         public virtual List<IncomingPaymentFileHeader> CreatedIncomingPaymentFiles { get; set; }
-        public virtual List<SavingsAccountInterestCapitalization> CreatedSavingsAccountInterestCapitalizations { get; set; }
+
+        public virtual List<SavingsAccountInterestCapitalization> CreatedSavingsAccountInterestCapitalizations
+        {
+            get;
+            set;
+        }
+
         public virtual List<OutgoingPaymentHeader> CreatedOutgoingPayments { get; set; }
         public virtual List<OutgoingPaymentFileHeader> CreatedOutgoingPaymentFiles { get; set; }
-        public virtual List<SavingsAccountWithdrawalAccountChange> InitiatedSavingsAccountWithdrawalAccountChanges { get; set; }
-        public virtual List<SavingsAccountWithdrawalAccountChange> CommittedOrCancelledSavingsAccountWithdrawalAccountChanges { get; set; }
+
+        public virtual List<SavingsAccountWithdrawalAccountChange> InitiatedSavingsAccountWithdrawalAccountChanges
+        {
+            get;
+            set;
+        }
+
+        public virtual List<SavingsAccountWithdrawalAccountChange>
+            CommittedOrCancelledSavingsAccountWithdrawalAccountChanges { get; set; }
+
         public virtual List<SavingsAccountKycQuestion> CreatedSavingsAccountKycQuestions { get; set; }
         public virtual List<SavingsAccountDocument> CreatedSavingsAccountDocuments { get; set; }
         public virtual List<SharedSavingsInterestRate> SharedSavingsInterestRateChangeRemovals { get; set; }
         public virtual List<SharedSavingsInterestRate> SharedSavingsInterestRateAppliesToAccountsSinces { get; set; }
-        public virtual List<SharedSavingsInterestRateChangeHeader> CreatedSharedSavingsInterestRateChangeHeaders { get; set; }
+
+        public virtual List<SharedSavingsInterestRateChangeHeader> CreatedSharedSavingsInterestRateChangeHeaders
+        {
+            get;
+            set;
+        }
     }
 }

@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using NTech.Core;
-using NTech.Core.Module.Shared.Infrastructure;
-using NTech.Core.Savings.Shared.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Core.Savings.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel;
 
-namespace nSavings.Code.Services
+namespace NTech.Core.Savings.Shared.Services
 {
     public class KeyValueStoreService : IKeyValueStoreService
     {

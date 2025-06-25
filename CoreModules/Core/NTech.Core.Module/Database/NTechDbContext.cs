@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage;
 using NTech.Core.Module.Shared.Database;
-using System.Data;
 
 namespace NTech.Core.Module.Database
 {
@@ -19,21 +20,20 @@ namespace NTech.Core.Module.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(NEnv.SharedInstance.GetConnectionString(ConnectionStringName));
-            }
+            if (optionsBuilder.IsConfigured) return;
+            optionsBuilder.UseSqlServer(NEnv.SharedInstance.GetConnectionString(ConnectionStringName));
         }
 
         public abstract string ConnectionStringName { get; }
         protected abstract void HandleCreate(ModelBuilder modelBuilder, LegacyEntityFrameworkHelper legacyHelper);
 
-        protected void Cfg<T>(ModelBuilder mb, Action<Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<T>> a) where T : class
+        protected static void Cfg<T>(ModelBuilder mb, Action<EntityTypeBuilder<T>> a) where T : class
         {
             a(mb.Entity<T>());
         }
 
-        protected Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<T> ConfigureInfrastructureFields<T>(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<T> t) where T : InfrastructureBaseItem
+        protected static EntityTypeBuilder<T> ConfigureInfrastructureFields<T>(
+            EntityTypeBuilder<T> t) where T : InfrastructureBaseItem
         {
             t.Property(e => e.Timestamp).IsRequired().IsRowVersion();
             t.Property(e => e.ChangedById).IsRequired();
@@ -51,14 +51,8 @@ namespace NTech.Core.Module.Database
 
         public bool IsChangeTrackingEnabled
         {
-            get
-            {
-                return ChangeTracker.AutoDetectChangesEnabled;
-            }
-            set
-            {
-                ChangeTracker.AutoDetectChangesEnabled = value;
-            }
+            get => ChangeTracker.AutoDetectChangesEnabled;
+            set => ChangeTracker.AutoDetectChangesEnabled = value;
         }
 
         public void DetectChanges() => ChangeTracker.DetectChanges();

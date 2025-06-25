@@ -1,13 +1,12 @@
 ﻿using Moq;
 using Newtonsoft.Json.Linq;
-using nSavings.Code;
-using nSavings.Code.Services;
-using nSavings.Code.Services.FinnishCustomsAccounts;
 using NTech.Core.Module;
 using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Savings.Database;
 using NTech.Core.Savings.Shared.Database;
 using System.Text;
+using NTech.Core.Savings.Shared.Services;
+using NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts;
 
 namespace NTech.Core.Host.IntegrationTests.UlLegacy.Savings
 {

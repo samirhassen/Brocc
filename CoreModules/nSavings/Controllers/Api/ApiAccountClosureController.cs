@@ -1,13 +1,12 @@
-﻿using nSavings.Code.Services;
-using nSavings.DbModel.BusinessEvents;
-using NTech.Banking.BankAccounts.Fi;
-using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
-using NTech.Services.Infrastructure;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nSavings.Code.Services;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     [NTechAuthorizeSavingsMiddle]
@@ -37,12 +36,15 @@ namespace nSavings.Controllers
                     Status = h.Status,
                     SavingsAccountNr = h.SavingsAccountNr,
                     Today = Clock.Today,
-                    AreWithdrawalsSuspended = WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(h.MainCustomerId)
+                    AreWithdrawalsSuspended =
+                        WithdrawalBusinessEventManager.HasTransactionBlockCheckpoint(h.MainCustomerId)
                 });
             }
         }
+
         private AccountClosureBusinessEventManager CreateAccountClosureBusinessEventManager() =>
-             new AccountClosureBusinessEventManager(this.CurrentUserId, this.InformationMetadata, Service.CustomerRelationsMerge);
+            new AccountClosureBusinessEventManager(this.CurrentUserId, this.InformationMetadata,
+                ControllerServiceFactory.CustomerRelationsMerge);
 
         [HttpPost]
         [Route("Api/SavingsAccount/PreviewCloseAccount")]
@@ -50,24 +52,22 @@ namespace nSavings.Controllers
         {
             var mgr = CreateAccountClosureBusinessEventManager();
 
-            IBANFi withdrawalIban;
-            string failedMessage;
-            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out withdrawalIban, out failedMessage))
+            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out var withdrawalIban, out var failedMessage))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
             }
 
-            AccountClosureBusinessEventManager.AccountClosurePreviewResult pr;
-            if (mgr.TryPreviewCloseAccount(savingsAccountNr, allowCheckpoint: true, failedMessage: out failedMessage, result: out pr))
+            if (mgr.TryPreviewCloseAccount(savingsAccountNr, allowCheckpoint: true, failedMessage: out failedMessage,
+                    result: out var previewResult))
             {
                 return Json2(new
                 {
                     UniqueOperationToken = BusinessEventManagerBase.GenerateUniqueOperationKey(),
                     SavingsAccountNr = savingsAccountNr,
                     CloseDate = Clock.Today,
-                    pr.CapitalizedInterest,
-                    pr.CapitalBalanceBefore,
-                    pr.WithdrawalAmount,
+                    previewResult.CapitalizedInterest,
+                    previewResult.CapitalBalanceBefore,
+                    previewResult.WithdrawalAmount,
                     WithdrawalIban = new
                     {
                         Raw = withdrawalIban.NormalizedValue,
@@ -82,25 +82,23 @@ namespace nSavings.Controllers
 
         [HttpPost]
         [Route("Api/SavingsAccount/CloseAccount")]
-        public ActionResult CloseAccount(string savingsAccountNr, string uniqueOperationToken, bool? skipCalculationDetails)
+        public ActionResult CloseAccount(string savingsAccountNr, string uniqueOperationToken,
+            bool? skipCalculationDetails)
         {
             var mgr = CreateAccountClosureBusinessEventManager();
 
-            IBANFi withdrawalIban;
-            string failedMessage;
-            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out withdrawalIban, out failedMessage))
+            if (!mgr.TryGetWithdrawalIban(savingsAccountNr, out var withdrawalIban, out var failedMessage))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
             }
 
-            BusinessEvent evt;
             if (mgr.TryCloseAccount(new AccountClosureBusinessEventManager.AccountClosureRequest
-            {
-                ToIban = withdrawalIban.NormalizedValue,
-                SavingsAccountNr = savingsAccountNr,
-                UniqueOperationToken = uniqueOperationToken,
-                IncludeCalculationDetails = !(skipCalculationDetails ?? false)
-            }, false, true, out failedMessage, out evt))
+                {
+                    ToIban = withdrawalIban.NormalizedValue,
+                    SavingsAccountNr = savingsAccountNr,
+                    UniqueOperationToken = uniqueOperationToken,
+                    IncludeCalculationDetails = !(skipCalculationDetails ?? false)
+                }, false, true, out failedMessage, out var evt))
             {
                 return Json2(new
                 {
@@ -108,8 +106,8 @@ namespace nSavings.Controllers
                     newUniqueOperationToken = BusinessEventManagerBase.GenerateUniqueOperationKey()
                 });
             }
-            else
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
         }
     }
 }

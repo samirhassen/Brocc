@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using NTech.Banking.Shared.BankAccounts;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Banking.OutgoingPaymentFiles
 {

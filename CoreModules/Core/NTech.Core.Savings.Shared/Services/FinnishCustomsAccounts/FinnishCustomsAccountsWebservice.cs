@@ -1,18 +1,17 @@
-﻿using Jose;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using nSavings.Code.Services.FinnishCustomsAccounts;
-using NTech.Core.Module;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using static nSavings.Code.Services.FinnishCustomsAccountsWebservice;
+using Jose;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NTech.Core.Module;
+using static NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts.FinnishCustomsAccountsWebservice;
 
-namespace nSavings.Code.Services
+namespace NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts
 {
     public interface IFinnishCustomsAccountsWebservice
     {

@@ -13,6 +13,7 @@ using NTech.Core.Module.Shared.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace nCredit.DbModel.BusinessEvents
 {

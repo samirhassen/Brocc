@@ -1,4 +1,5 @@
-﻿using IdentityModel.Client;
+﻿
+using Duende.IdentityModel.Client;
 using NTech.Services.Infrastructure;
 using Serilog;
 using System;
@@ -45,18 +46,23 @@ namespace nGccCustomerApplication.Code
 
         private AuthResult AuthenticateWithBasicAuth(ActionExecutingContext filterContext, string authHeaderValue, string callerIdAddress)
         {
-            if(!TryParseBasicAuthHeader(authHeaderValue, out var parsedAuthHeader))
+            if (!TryParseBasicAuthHeader(authHeaderValue, out var parsedAuthHeader))
                 return null;
 
-            var tokenClient = new TokenClient(
-                new Uri(new Uri(NEnv.ServiceRegistry.Internal["nUser"]), "id/connect/token").ToString(),
-                "nTechSystemUser",
-                "nTechSystemUser");
-
-            var token = tokenClient.RequestResourceOwnerPasswordAsync(parsedAuthHeader.Value.UserName, parsedAuthHeader.Value.Password, scope: "nTech1").Result;
-            if (token.IsError)
+            var client = new HttpClient();
+            var token = client.RequestPasswordTokenAsync(new PasswordTokenRequest()
             {
-                NLog.Error("Failed call {errorMessage}", token.Error);
+                Address = NEnv.ServiceRegistry.Internal.ServiceUrl("nUser", "id/connect/token").ToString(),
+                ClientId = "nTechSystemUser",
+                ClientSecret = "nTechSystemUser",
+                UserName = parsedAuthHeader.Value.UserName,
+                Password = parsedAuthHeader.Value.Password,
+                Scope = "nTech1"
+            });
+
+            if (token.Result.IsError)
+            {
+                NLog.Error("Failed call {errorMessage}", token.Result.Error);
                 return null;
             }
             else
@@ -64,7 +70,7 @@ namespace nGccCustomerApplication.Code
                 if (string.IsNullOrWhiteSpace(parsedAuthHeader.Value.UserName))
                     return null;
 
-                var providerName = NTechCache.WithCache($"ntech.ngcccustomerapplication.providernameByUsername.{parsedAuthHeader.Value.UserName}", TimeSpan.FromMinutes(15), () => GetProviderName(token.AccessToken));
+                var providerName = NTechCache.WithCache($"ntech.ngcccustomerapplication.providernameByUsername.{parsedAuthHeader.Value.UserName}", TimeSpan.FromMinutes(15), () => GetProviderName(token.Result.AccessToken));
 
                 if (string.IsNullOrWhiteSpace(providerName))
                     return null;
@@ -75,7 +81,7 @@ namespace nGccCustomerApplication.Code
                     UserName = parsedAuthHeader.Value.UserName,
                     CallerIpAddress = callerIdAddress,
                     ProviderName = providerName,
-                    PreCreditBearerToken = token.AccessToken
+                    PreCreditBearerToken = token.Result.AccessToken
                 };
             }
         }
@@ -93,7 +99,7 @@ namespace nGccCustomerApplication.Code
             client.BaseAddress = new Uri(NEnv.ServiceRegistry.Internal["nUser"]);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.SetBearerToken(bearerToken);
+            AuthorizationHeaderExtensions.SetBearerToken(client, bearerToken);
             var response = client.PostAsJsonAsync("User/GetProviderNameForCurrentUser", new { }).Result;
             response.EnsureSuccessStatusCode();
             var rr = response.Content.ReadAsAsync<GetProviderNameResult>().Result;

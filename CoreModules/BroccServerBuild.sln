@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.Services.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTech.Banking.Shared", "NTech.Banking.Shared\NTech.Banking.Shared.csproj", "{CBDCFF22-E5DE-4E52-9E4B-5E79F781F962}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brocc.Savings.Tests", "Brocc.Savings.Tests\Brocc.Savings.Tests.csproj", "{33B4C58D-EE56-4D83-A4F7-C6EF7C2CAED6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +183,10 @@ Global
 		{CBDCFF22-E5DE-4E52-9E4B-5E79F781F962}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBDCFF22-E5DE-4E52-9E4B-5E79F781F962}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBDCFF22-E5DE-4E52-9E4B-5E79F781F962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33B4C58D-EE56-4D83-A4F7-C6EF7C2CAED6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33B4C58D-EE56-4D83-A4F7-C6EF7C2CAED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33B4C58D-EE56-4D83-A4F7-C6EF7C2CAED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33B4C58D-EE56-4D83-A4F7-C6EF7C2CAED6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -201,6 +207,7 @@ Global
 		{7E053319-5FF6-4887-A3E3-A55A71A64688} = {A1C5CE17-DEAD-4DF7-851C-50D48FEAA1E3}
 		{7D903EC9-5F21-49CD-B942-D2B19F6FC74D} = {A1C5CE17-DEAD-4DF7-851C-50D48FEAA1E3}
 		{9284E0EE-F77C-4687-B8BB-F0110CB667C6} = {A1C5CE17-DEAD-4DF7-851C-50D48FEAA1E3}
+		{33B4C58D-EE56-4D83-A4F7-C6EF7C2CAED6} = {8CCDA0CA-82E0-421B-8075-F125DEF95F30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E7D8DA69-B480-4BC0-81AA-0C859C81C6AE}

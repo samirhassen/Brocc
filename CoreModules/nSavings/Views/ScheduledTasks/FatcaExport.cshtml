@@ -1,4 +1,5 @@
-﻿@using NWebsec.Mvc.HttpHeaders.Csp
+﻿@using nSavings.Code
+@using NWebsec.Mvc.HttpHeaders.Csp
 @{
     Layout = "~/Views/ScheduledTasks/_ScheduledTaskLayout.cshtml";
     ViewBag.Title = "Credit - Fatca export";
@@ -8,14 +9,18 @@
 
 @section Scripts {
     <script @Html.CspScriptNonce()>
-        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+        const initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'));
     </script>
     @Scripts.Render("~/Content/js/bundle-fatcaexport-index")
 }
 
 @section PageHeader {
     <div class="pt-1 pb-2">
-        <div class="pull-left"><a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())"><span class="glyphicon glyphicon-arrow-left"></span></a></div>
+        <div class="pull-left">
+            <a class="n-back" href="@(new Uri(NEnv.ServiceRegistry.External["nBackoffice"]).ToString())">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </a>
+        </div>
         <h1 class="adjusted">Fatca export</h1>
     </div>
 }
@@ -42,41 +47,44 @@
         </div>
     </div>
 
-    <div class="pt-3 text-center no-hits" ng-show="main && (!main.rows || main.rows.length == 0)"><p>There are no FATCA files.</p></div>
+    <div class="pt-3 text-center no-hits" ng-show="main && (!main.rows || main.rows.length == 0)"><p>There are no FATCA
+            files.</p></div>
 
     <div class="pt-3" ng-show="main.rows && main.rows.length > 0">
         <table class="table">
             <thead>
-                <tr>
-                    <th class="col-xs-2">Created date</th>
-                    <th class="col-xs-1">For year</th>
-                    <th class="col-xs-1 text-right"># accounts</th>
-                    <th class="col-xs-2">Status</th>
-                    <th class="col-xs-2">Delivered to</th>
-                    <th class="col-xs-2">Download file</th>
-                    <th class="text-right col-xs-2">By</th>
-                </tr>
+            <tr>
+                <th class="col-xs-2">Created date</th>
+                <th class="col-xs-1">For year</th>
+                <th class="col-xs-1 text-right"># accounts</th>
+                <th class="col-xs-2">Status</th>
+                <th class="col-xs-2">Delivered to</th>
+                <th class="col-xs-2">Download file</th>
+                <th class="text-right col-xs-2">By</th>
+            </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="f in main.rows">
-                    <td class="">{{f.TransactionDate | date:'shortDate'}}</td>
-                    <td class="">{{f.ForYearDate | date:'yyyy'}}</td>
-                    <td class="text-right">{{f.NrOfAccounts}}</td>
-                    <td class="text-left" ng-if="f.ExportResult.Status !== 'NoExportProfile'">
-                        <span class="glyphicon" ng-class="{ 'glyphicon-exclamation-sign' : f.ExportResult.Status == 'Warning', 'glyphicon-ok' : f.ExportResult.Status == 'Ok',  'glyphicon-remove' : f.ExportResult.Status == 'Error' }"></span>
-                        <span ng-repeat="w in f.ExportResult.Warnings">({{w}})</span>
-                        <span ng-repeat="e in f.ExportResult.Errors">({{e}})</span>
-                    </td>
-                    <td ng-if="f.ExportResult.Status !== 'NoExportProfile'">
-                        <span ng-repeat="p in f.ExportResult.SuccessProfileNames">{{p}}</span>
-                        <span ng-show="f.ExportResult.SuccessProfileNames.length === 0">Not delivered</span>
-                    </td>
-                    <td colspan="2" ng-if="f.ExportResult.Status === 'NoExportProfile'">
-                        <span>No export profile</span>
-                    </td>
-                    <td><a class="n-direct-btn n-purple-btn" ng-show="f.ArchiveDocumentUrl" target="_blank" ng-href="{{f.ArchiveDocumentUrl}}">File <span class="glyphicon glyphicon-save"></span></a></td>
-                    <td class="text-right">{{f.UserDisplayName}}</td>
-                </tr>
+            <tr ng-repeat="f in main.rows">
+                <td class="">{{f.TransactionDate | date:'shortDate'}}</td>
+                <td class="">{{f.ForYearDate | date:'yyyy'}}</td>
+                <td class="text-right">{{f.NrOfAccounts}}</td>
+                <td class="text-left" ng-if="f.ExportResult.Status !== 'NoExportProfile'">
+                    <span class="glyphicon"
+                          ng-class="{ 'glyphicon-exclamation-sign' : f.ExportResult.Status == 'Warning', 'glyphicon-ok' : f.ExportResult.Status == 'Ok',  'glyphicon-remove' : f.ExportResult.Status == 'Error' }"></span>
+                    <span ng-repeat="w in f.ExportResult.Warnings">({{w}})</span>
+                    <span ng-repeat="e in f.ExportResult.Errors">({{e}})</span>
+                </td>
+                <td ng-if="f.ExportResult.Status !== 'NoExportProfile'">
+                    <span ng-repeat="p in f.ExportResult.SuccessProfileNames">{{p}}</span>
+                    <span ng-show="f.ExportResult.SuccessProfileNames.length === 0">Not delivered</span>
+                </td>
+                <td colspan="2" ng-if="f.ExportResult.Status === 'NoExportProfile'">
+                    <span>No export profile</span>
+                </td>
+                <td><a class="n-direct-btn n-purple-btn" ng-show="f.ArchiveDocumentUrl" target="_blank"
+                       ng-href="{{f.ArchiveDocumentUrl}}">File <span class="glyphicon glyphicon-save"></span></a></td>
+                <td class="text-right">{{f.UserDisplayName}}</td>
+            </tr>
             </tbody>
         </table>
     </div>

@@ -1,4 +1,5 @@
 ﻿using NTech.Banking.BankAccounts.Fi;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Module;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Savings.Shared;
@@ -52,6 +53,14 @@ namespace NTech.Core.Savings
             get
             {
                 return IBANFi.Parse(Req("ntech.savings.outgoingpaymentiban"));
+            }
+        }
+
+        public int IncomingPaymentDepositeGracePeriodInDays
+        {
+            get
+            {
+                return Convert.ToInt32(Req("ntech.savings.incomingpayments.depositsgraceperiodindays"));
             }
         }
     }

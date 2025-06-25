@@ -1,20 +1,25 @@
-﻿using nSavings.Code.Services;
+﻿using System.Collections.Generic;
+using nSavings.Code;
+using nSavings.Controllers.Api;
+using NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts;
 using NTech.Services.Infrastructure.NTechWs;
-using System.Collections.Generic;
 
 namespace nSavings.WebserviceMethods
 {
-    public class FetchFinnishCustomsExportFilesMethod : TypedWebserviceMethod<FetchFinnishCustomsExportFilesMethod.Request, FetchFinnishCustomsExportFilesMethod.Response>
+    public class FetchFinnishCustomsExportFilesMethod : TypedWebserviceMethod<
+        FetchFinnishCustomsExportFilesMethod.Request, FetchFinnishCustomsExportFilesMethod.Response>
     {
         public override string Path => "FinnishCustomsAccounts/FetchExportFiles";
 
-        public override bool IsEnabled => NEnv.ClientCfg.IsFeatureEnabled("ntech.feature.savingsCustomsAccountsExport.v1");
+        public override bool IsEnabled =>
+            NEnv.ClientCfg.IsFeatureEnabled("ntech.feature.savingsCustomsAccountsExport.v1");
 
         protected override Response DoExecuteTyped(NTechWebserviceMethodRequestContext requestContext, Request request)
         {
             ValidateUsingAnnotations(request);
 
-            var result = requestContext.Service().FinnishCustomsAccounts(requestContext.CurrentUserMetadataCore()).GetExportsPageAndNrOfPages(request.PageSize ?? 50, request.PageNr ?? 0);
+            var result = requestContext.Service().FinnishCustomsAccounts(requestContext.CurrentUserMetadataCore())
+                .GetExportsPageAndNrOfPages(request.PageSize ?? 50, request.PageNr ?? 0);
 
             return new Response
             {

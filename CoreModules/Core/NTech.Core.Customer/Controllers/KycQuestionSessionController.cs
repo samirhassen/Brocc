@@ -1,64 +1,62 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using NTech.Core.Customer.Shared.Services;
 using NTech.Core.Module.Shared.Clients;
-using System.ComponentModel.DataAnnotations;
 
-namespace NTech.Core.Customer.Controllers
+namespace NTech.Core.Customer.Controllers;
+
+[ApiController]
+[NTechRequireFeatures(RequireFeaturesAll = new[] { "feature.customerpages.kyc" })]
+[Route("Api/Customer/KycQuestionSession")]
+public class KycQuestionSessionController : Controller
 {
-    [ApiController]
-    [NTechRequireFeatures(RequireFeaturesAll = new[] { "feature.customerpages.kyc" })]
-    public class KycQuestionSessionController : Controller
+    private readonly KycQuestionsSessionService _kycQuestionsSessionService;
+    private readonly KycQuestionsTemplateService _templateService;
+
+    public KycQuestionSessionController(KycQuestionsSessionService kycQuestionsSessionService,
+        KycQuestionsTemplateService templateService)
     {
-        private readonly KycQuestionsSessionService kycQuestionsSessionService;
-        private readonly KycQuestionsTemplateService templateService;
-
-        public KycQuestionSessionController(KycQuestionsSessionService kycQuestionsSessionService,
-            KycQuestionsTemplateService templateService)
-        {
-            this.kycQuestionsSessionService = kycQuestionsSessionService;
-            this.templateService = templateService;
-        }
-
-        [HttpPost]
-        [Route("Api/Customer/KycQuestionSession/LoadCustomerPagesSession")]
-        public CustomerPagesKycQuestionSessionResponse LoadCustomerPagesSession(KycQuestionSessionRequest request) =>
-            kycQuestionsSessionService.LoadCustomerPagesSession(request?.SessionId, templateService);
-
-        [HttpPost]
-        [Route("Api/Customer/KycQuestionSession/Fetch")]
-        public KycQuestionsSession Load(KycQuestionSessionRequest request) =>
-            kycQuestionsSessionService.GetSession(request?.SessionId);
-
-        [HttpPost]
-        [Route("Api/Customer/KycQuestionSession/CreateSession")]
-        public KycQuestionsSession CreateSession(CreateKycQuestionSessionRequest request) =>
-            kycQuestionsSessionService.CreateSession(request);
-
-        [HttpPost]
-        [Route("Api/Customer/KycQuestionSession/AddAlternateKey")]
-        public ActionResult AddAlternateKey(CustomerPagesKycQuestionSessionAlternateKeyRequest request)
-        {
-            kycQuestionsSessionService.AddAlternateKey(request.SessionId, request.AlternateKey);
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("Api/Customer/KycQuestionSession/HandleAnswers")]
-        public CustomerPagesHandleKycQuestionAnswersResponse HandleAnswers(CustomerPagesHandleKycQuestionAnswersRequest request) =>
-            kycQuestionsSessionService.HandleSessionAnswers(request);
+        _kycQuestionsSessionService = kycQuestionsSessionService;
+        _templateService = templateService;
     }
 
-    public class CustomerPagesKycQuestionSessionAlternateKeyRequest
+    [HttpPost]
+    [Route("LoadCustomerPagesSession")]
+    public CustomerPagesKycQuestionSessionResponse LoadCustomerPagesSession(KycQuestionSessionRequest request) =>
+        _kycQuestionsSessionService.LoadCustomerPagesSession(request?.SessionId, _templateService);
+
+    [HttpPost]
+    [Route("Fetch")]
+    public KycQuestionsSession Load(KycQuestionSessionRequest request) =>
+        _kycQuestionsSessionService.GetSession(request?.SessionId);
+
+    [HttpPost]
+    [Route("CreateSession")]
+    public KycQuestionsSession CreateSession(CreateKycQuestionSessionRequest request) =>
+        _kycQuestionsSessionService.CreateSession(request);
+
+    [HttpPost]
+    [Route("AddAlternateKey")]
+    public ActionResult AddAlternateKey(CustomerPagesKycQuestionSessionAlternateKeyRequest request)
     {
-        [Required]
-        public string SessionId { get; set; }
-        [Required]
-        public string AlternateKey { get; set; }
+        _kycQuestionsSessionService.AddAlternateKey(request.SessionId, request.AlternateKey);
+        return Ok();
     }
 
-    public class KycQuestionSessionRequest
-    {
-        [Required]
-        public string SessionId { get; set; }
-    }
+    [HttpPost]
+    [Route("HandleAnswers")]
+    public CustomerPagesHandleKycQuestionAnswersResponse HandleAnswers(
+        CustomerPagesHandleKycQuestionAnswersRequest request) =>
+        _kycQuestionsSessionService.HandleSessionAnswers(request);
+}
+
+public class CustomerPagesKycQuestionSessionAlternateKeyRequest
+{
+    [Required] public string SessionId { get; set; }
+    [Required] public string AlternateKey { get; set; }
+}
+
+public class KycQuestionSessionRequest
+{
+    [Required] public string SessionId { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace nSavings.Code
+﻿namespace nSavings.Code.nUser;
+
+public interface IUserClient
 {
-    public interface IUserClient
-    {
-        string GetUserDisplayNameByUserId(string userId);
-    }
+    string GetUserDisplayNameByUserId(string userId);
 }

@@ -14,6 +14,7 @@ using NTech.Core.Module;
 using NTech.Core.Module.Shared.Infrastructure;
 using System.Globalization;
 using System.Xml.Linq;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Core.Credit
 {

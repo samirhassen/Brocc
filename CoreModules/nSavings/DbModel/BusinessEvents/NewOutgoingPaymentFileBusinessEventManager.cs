@@ -1,14 +1,17 @@
-﻿using nSavings.Code;
-using NTech.Banking.BankAccounts.Fi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using nSavings.Code;
+using nSavings.Code.Fileformats;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Savings.Shared.DbModel;
 
 namespace nSavings.DbModel.BusinessEvents
 {
     public class NewOutgoingPaymentFileBusinessEventManager : BusinessEventManagerBase
     {
-        public NewOutgoingPaymentFileBusinessEventManager(int userId, string informationMetadata) : base(userId, informationMetadata)
+        public NewOutgoingPaymentFileBusinessEventManager(int userId, string informationMetadata) : base(userId,
+            informationMetadata)
         {
         }
 
@@ -30,8 +33,12 @@ namespace nSavings.DbModel.BusinessEvents
                 .Select(x => new
                 {
                     Header = x,
-                    ShouldBePaidToCustomerBalance = x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString()).Sum(y => (decimal?)y.Amount) ?? 0m,
-                    SavingsAccountNr = x.Transactions.Where(y => y.SavingsAccountNr != null).Select(y => y.SavingsAccountNr).FirstOrDefault()
+                    ShouldBePaidToCustomerBalance =
+                        x.Transactions
+                            .Where(y => y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString())
+                            .Sum(y => (decimal?)y.Amount) ?? 0m,
+                    SavingsAccountNr = x.Transactions.Where(y => y.SavingsAccountNr != null)
+                        .Select(y => y.SavingsAccountNr).FirstOrDefault()
                 })
                 .Where(x => x.ShouldBePaidToCustomerBalance > 0m && !x.Header.OutgoingPaymentFileHeaderId.HasValue)
                 .ToList();
@@ -40,26 +47,20 @@ namespace nSavings.DbModel.BusinessEvents
             IDictionary<long, string> decryptedValues;
             if (encryptedItems.Any())
             {
-                decryptedValues = EncryptionContext.Load(context, encryptedItems.Select(x => long.Parse(x.Value)).ToArray(), NEnv.EncryptionKeys.AsDictionary());
+                decryptedValues = EncryptionContext.Load(context,
+                    encryptedItems.Select(x => long.Parse(x.Value)).ToArray(), NEnv.EncryptionKeys.AsDictionary());
             }
             else
             {
                 decryptedValues = new Dictionary<long, string>();
             }
-            Func<OutgoingPaymentHeader, OutgoingPaymentHeaderItemCode, string> getItemValue = (h, code) =>
-                {
-                    var i = h.Items.Single(x => x.Name == code.ToString());
-                    if (i.IsEncrypted)
-                        return decryptedValues[long.Parse(i.Value)];
-                    else
-                        return i.Value;
-                };
 
             foreach (var p in pending)
             {
                 var payment = p.Header;
                 payment.OutgoingPaymentFile = outgoingFile;
-                AddTransaction(context, LedgerAccountTypeCode.ShouldBePaidToCustomer, -p.ShouldBePaidToCustomerBalance, evt, outgoingFile.TransactionDate,
+                AddTransaction(context, LedgerAccountTypeCode.ShouldBePaidToCustomer, -p.ShouldBePaidToCustomerBalance,
+                    evt, outgoingFile.TransactionDate,
                     outgoingPaymentId: payment.Id,
                     savingsAccountNr: p.SavingsAccountNr);
             }
@@ -78,16 +79,16 @@ namespace nSavings.DbModel.BusinessEvents
                 //Create the file
                 var groups =
                     pending
-                        .GroupBy(x => getItemValue(x.Header, OutgoingPaymentHeaderItemCode.FromIban))
+                        .GroupBy(x => GetItemValue(x.Header, OutgoingPaymentHeaderItemCode.FromIban))
                         .Select((x, i) => new OutgoingPaymentFileFormat_Pain_001_001_3.PaymentFile.PaymentGroup
                         {
                             FromIban = IBANFi.Parse(x.Key),
                             Payments = x.Select((y, j) => new OutgoingPaymentFileFormat_Pain_001_001_3.Payment
                             {
                                 Amount = y.ShouldBePaidToCustomerBalance,
-                                CustomerName = getItemValue(y.Header, OutgoingPaymentHeaderItemCode.CustomerName),
-                                Message = getItemValue(y.Header, OutgoingPaymentHeaderItemCode.CustomerMessage),
-                                ToIban = IBANFi.Parse(getItemValue(y.Header, OutgoingPaymentHeaderItemCode.ToIban)),
+                                CustomerName = GetItemValue(y.Header, OutgoingPaymentHeaderItemCode.CustomerName),
+                                Message = GetItemValue(y.Header, OutgoingPaymentHeaderItemCode.CustomerMessage),
+                                ToIban = IBANFi.Parse(GetItemValue(y.Header, OutgoingPaymentHeaderItemCode.ToIban)),
                             }).ToList()
                         })
                         .ToList();
@@ -106,12 +107,12 @@ namespace nSavings.DbModel.BusinessEvents
                 };
 
                 var creator = new OutgoingPaymentFileFormat_Pain_001_001_3();
-                creator.PopulateIds(f);
+                OutgoingPaymentFileFormat_Pain_001_001_3.PopulateIds(f);
 
                 outgoingFile.ExternalId = f.PaymentFileId;
 
                 var fileBytes = creator.CreateFileAsBytes(f, Clock.Now);
-                var fileName = $"Savings-OutPmts-{Clock.Now.ToString("yyyy-MM-dd")}-{outgoingFile.ExternalId}.xml";
+                var fileName = $"Savings-OutPmts-{Clock.Now:yyyy-MM-dd}-{outgoingFile.ExternalId}.xml";
                 archiveKey = documentClient.ArchiveStore(fileBytes, "application/xml", fileName);
             }
             else
@@ -122,6 +123,12 @@ namespace nSavings.DbModel.BusinessEvents
             outgoingFile.FileArchiveKey = archiveKey;
 
             return outgoingFile;
+
+            string GetItemValue(OutgoingPaymentHeader h, OutgoingPaymentHeaderItemCode code)
+            {
+                var i = h.Items.Single(x => x.Name == code.ToString());
+                return i.IsEncrypted ? decryptedValues[long.Parse(i.Value)] : i.Value;
+            }
         }
     }
 }

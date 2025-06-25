@@ -4,6 +4,7 @@ using NTech.Banking.BankAccounts.Se;
 using NTech.Banking.CivicRegNumbers;
 using System;
 using System.Linq;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace nTest.RandomDataSource
 {
