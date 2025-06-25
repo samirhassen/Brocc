@@ -1,18 +1,16 @@
-﻿using nSavings.Code;
+﻿using nSavings.Code.nUser;
 using NTech.Services.Infrastructure.NTechWs;
 
 namespace nSavings.WebserviceMethods
 {
-    public class UsernameByUserIdMethod : TypedWebserviceMethod<UsernameByUserIdMethod.Request, UsernameByUserIdMethod.Response>
+    public class
+        UsernameByUserIdMethod : TypedWebserviceMethod<UsernameByUserIdMethod.Request, UsernameByUserIdMethod.Response>
     {
         public override string Path => "UserName/ByUserId";
 
         protected override Response DoExecuteTyped(NTechWebserviceMethodRequestContext requestContext, Request request)
         {
-            Validate(request, x =>
-            {
-                x.Require(y => y.UserId);
-            });
+            Validate(request, x => { x.Require(y => y.UserId); });
 
             var client = new UserClient();
 

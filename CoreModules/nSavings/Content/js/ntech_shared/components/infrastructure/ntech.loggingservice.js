@@ -1,14 +1,13 @@
 var NTechComponents;
 (function (NTechComponents) {
-    var NTechLoggingService = /** @class */ (function () {
-        function NTechLoggingService() {
+    class NTechLoggingService {
+        constructor() {
             this.isDebugMode = location && location.hostname === 'localhost';
         }
-        NTechLoggingService.prototype.logDebug = function (message) {
+        logDebug(message) {
             console.log(message);
-        };
-        NTechLoggingService.$inject = [];
-        return NTechLoggingService;
-    }());
+        }
+    }
+    NTechLoggingService.$inject = [];
     NTechComponents.NTechLoggingService = NTechLoggingService;
 })(NTechComponents || (NTechComponents = {}));

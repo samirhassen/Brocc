@@ -1,17 +1,17 @@
-﻿using nSavings.Code;
-using NTech.Banking.BankAccounts.Fi;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using NTech.Banking.IncomingPaymentFiles;
-using NTech.Core;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Module.Shared.Services;
-using NTech.Core.Savings.Shared;
 using NTech.Core.Savings.Shared.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings.DbModel.BusinessEvents
+namespace NTech.Core.Savings.Shared.BusinessEvents
 {
     public class NewIncomingPaymentFileBusinessEventManager : BusinessEventManagerBaseCore
     {
@@ -33,7 +33,7 @@ namespace nSavings.DbModel.BusinessEvents
 
         public IncomingPaymentFileHeader ImportIncomingPaymentFile(ISavingsContext context, IncomingPaymentFileWithOriginal paymentfile, IDocumentClient documentClient, out string placementMessage, bool skipAutoPlace = false)
         {
-            if(!context.HasCurrentTransaction)
+            if (!context.HasCurrentTransaction)
                 throw new Exception("Needs an ambient transaction");
 
             var futureBookKeepingDateDates = paymentfile
@@ -66,6 +66,8 @@ namespace nSavings.DbModel.BusinessEvents
                 {
                     x.SavingsAccountNr,
                     x.MainCustomerId,
+                    x.CreatedByEvent,
+                    x.AccountTypeCode,
                     x.Status,
                     OcrNr = x
                             .DatedStrings
@@ -76,7 +78,7 @@ namespace nSavings.DbModel.BusinessEvents
                 })
                 .Where(x => allOcrsInPaymentFile.Contains(x.OcrNr))
                 .ToList()
-                .ToDictionary(x => x.OcrNr, x => new { x.SavingsAccountNr, x.MainCustomerId, x.Status });
+                .ToDictionary(x => x.OcrNr, x => new { x.SavingsAccountNr, x.MainCustomerId, x.Status, x.CreatedByEvent.EventDate, x.AccountTypeCode });
 
             var customerIds = savingsAccountNrByOcr.Values.Select(x => x.MainCustomerId).Distinct().ToList();
             var accountBalanceByCustomerId = GetCurrentBalanceByCustomerId(context, customerIds);
@@ -108,6 +110,8 @@ namespace nSavings.DbModel.BusinessEvents
             int placedCount = 0;
             int unplacedCount = 0;
             var maxAllowedSavingsCustomerBalance = envSettings.MaxAllowedSavingsCustomerBalance;
+            var incomingPaymentDepositeGracePeriodInDays = envSettings.IncomingPaymentDepositeGracePeriodInDays;
+
             foreach (var externalPayment in pms)
             {
                 var pmt = new IncomingPaymentHeader
@@ -144,7 +148,12 @@ namespace nSavings.DbModel.BusinessEvents
                 {
                     var currentCustomerBalance = accountBalanceByCustomerId[externalPayment.Match.MainCustomerId];
 
-                    if (externalPayment.Match.Status != SavingsAccountStatusCode.Active.ToString())
+                    int gracePeriodDaysDiff = (Clock.Now.Date - externalPayment.Match.EventDate.Date).Days;
+                    if (gracePeriodDaysDiff > incomingPaymentDepositeGracePeriodInDays && externalPayment.Match.AccountTypeCode == nameof(SavingsAccountTypeCode.FixedInterestAccount))
+                    {
+                        notPlacedReasonsMessage = "Customer fixed rate account has passed grace period";
+                    }
+                    else if (externalPayment.Match.Status != SavingsAccountStatusCode.Active.ToString())
                     {
                         notPlacedReasonsMessage = "Savings account is not active";
                     }
@@ -328,7 +337,7 @@ namespace nSavings.DbModel.BusinessEvents
             repaymentAmount = Math.Round(repaymentAmount, 2);
             leaveUnplacedAmount = Math.Round(leaveUnplacedAmount, 2);
 
-            using(var context = contextFactory.CreateContext())
+            using (var context = contextFactory.CreateContext())
             {
                 context.BeginTransaction();
                 try
@@ -458,7 +467,7 @@ namespace nSavings.DbModel.BusinessEvents
                     context.RollbackTransaction();
                     throw;
                 }
-            }            
+            }
         }
 
         public static bool HasTransactionBlockCheckpoint(int customerId, ICustomerClient customerClient)

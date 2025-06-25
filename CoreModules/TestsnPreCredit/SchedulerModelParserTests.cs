@@ -15,31 +15,45 @@ namespace TestsnPreCredit
         [TestMethod]
         public void ScheduleFileMorning_WithWhitespaceEverywhere_IsStillParsedCorrectly()
         {
-            var model = CreateTestModel();
+            SchedulerModel model = CreateTestModel();
 
-            var slot = model.Timeslots.SingleOrDefault(x => x.Name == "Morning");
+            SchedulerModel.TimeSlot slot = model.Timeslots.SingleOrDefault(x => x.Name == "Morning");
             Assert.IsNotNull(slot);
 
-            var call = slot.Items.SingleOrDefault(x => x.ServiceCall.ServiceUrl == new Uri("https://credit.example.org/Api/Credit/CreateTerminationLetters"));
+            SchedulerModel.TimeSlotItem call = slot.Items.SingleOrDefault(x =>
+                x.ServiceCall.Name == "CreateCreditTerminationLetters");
             Assert.IsNotNull(call);
+            Assert.AreEqual(new Uri("https://credit.example.org/Api/Credit/CreateTerminationLetters"),
+                call.ServiceCall.ServiceUrl);
 
-            var description = call.TriggerLimitation.GetDescription();
+            SchedulerModel.TimeSlot evening = model.Timeslots.SingleOrDefault(x => x.Name == "Evening");
+            Assert.IsNotNull(evening);
+
+            SchedulerModel.TimeSlotItem callWithParm =
+                evening.Items.SingleOrDefault(x => x.ServiceCall.Name == "CustomerPeriodicMaintenance");
+            Assert.IsNotNull(callWithParm);
+            
+            Assert.AreEqual(new Uri("https://customer.example.org/Customer/RunPeriodicMaintenance?test=SomeVal"),
+                callWithParm.ServiceCall.ServiceUrl);
+
+            string description = call.TriggerLimitation.GetDescription();
             Assert.IsTrue(description.Contains("Success")
-                && description.Contains("Warning")
-                && description.Contains("CreateCreditNotifications")
-                && description.Contains("CreateCreditReminders")
-                && description.Contains("14"));
+                          && description.Contains("Warning")
+                          && description.Contains("CreateCreditNotifications")
+                          && description.Contains("CreateCreditReminders")
+                          && description.Contains("14"));
         }
 
         [TestMethod]
         public void ScheduleFileEvening_WithWhitespaceEverywhere_IsStillParsedCorrectly()
         {
-            var model = CreateTestModel();
+            SchedulerModel model = CreateTestModel();
 
-            var slot = model.Timeslots.SingleOrDefault(x => x.Name == "Evening");
+            SchedulerModel.TimeSlot slot = model.Timeslots.SingleOrDefault(x => x.Name == "Evening");
             Assert.IsNotNull(slot);
 
-            var call = slot.Items.SingleOrDefault(x => x.ServiceCall.ServiceUrl == new Uri("https://customer.example.org/Customer/RunPeriodicMaintenance"));
+            SchedulerModel.TimeSlotItem call = slot.Items.SingleOrDefault(x =>
+                x.ServiceCall.ServiceUrl == new Uri("https://customer.example.org/Customer/RunPeriodicMaintenance?test=SomeVal"));
             Assert.IsNotNull(call);
 
             Assert.IsTrue(call.ServiceCall.IsManualTriggerAllowed);
@@ -48,10 +62,10 @@ namespace TestsnPreCredit
         [TestMethod]
         public void Merge_EmptyClient_ResultsInSharedOnly()
         {
-            var clientJobs = new SchedulerModel();
-            var sharedJobs = CreateTestModel();
+            SchedulerModel clientJobs = new SchedulerModel();
+            SchedulerModel sharedJobs = CreateTestModel();
 
-            new SchedulerModelCombinator().MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
+            SchedulerModelCombinator.MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
 
             Assert.AreEqual(JsonConvert.SerializeObject(clientJobs), JsonConvert.SerializeObject(CreateTestModel()));
         }
@@ -59,10 +73,9 @@ namespace TestsnPreCredit
         [TestMethod]
         public void Merge_MissingShared_ResultsInClientOnly()
         {
-            var clientJobs = CreateTestModel();
-            SchedulerModel sharedJobs = null;
+            SchedulerModel clientJobs = CreateTestModel();
 
-            new SchedulerModelCombinator().MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
+            SchedulerModelCombinator.MergeSharedJobsIntoClientJobs(null, clientJobs);
 
             Assert.AreEqual(JsonConvert.SerializeObject(clientJobs), JsonConvert.SerializeObject(CreateTestModel()));
         }
@@ -70,11 +83,11 @@ namespace TestsnPreCredit
         [TestMethod]
         public void Merge_ServiceCalls_Are_Merged()
         {
-            var clientJobs = CreateTestModel();
-            var sharedJobs = CreateTestModel();
+            SchedulerModel clientJobs = CreateTestModel();
+            SchedulerModel sharedJobs = CreateTestModel();
             clientJobs.ServiceCalls.Remove(clientJobs.ServiceCalls.Keys.First());
 
-            new SchedulerModelCombinator().MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
+            SchedulerModelCombinator.MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
 
             Assert.AreEqual(JsonConvert.SerializeObject(clientJobs), JsonConvert.SerializeObject(CreateTestModel()));
         }
@@ -82,26 +95,29 @@ namespace TestsnPreCredit
         [TestMethod]
         public void Merge_Timeslots_Are_Merged()
         {
-            var clientJobs = CreateTestModel();
-            var sharedJobs = CreateTestModel();
-            var morningSlot = clientJobs.Timeslots.Single(x => x.Name == "Morning");
+            SchedulerModel clientJobs = CreateTestModel();
+            SchedulerModel sharedJobs = CreateTestModel();
+            SchedulerModel.TimeSlot morningSlot = clientJobs.Timeslots.Single(x => x.Name == "Morning");
             morningSlot.Items.Remove(morningSlot.Items.First());
 
-            new SchedulerModelCombinator().MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
+            SchedulerModelCombinator.MergeSharedJobsIntoClientJobs(sharedJobs, clientJobs);
 
             Assert.AreEqual(JsonConvert.SerializeObject(clientJobs), JsonConvert.SerializeObject(CreateTestModel()));
         }
 
-        private SchedulerModel CreateTestModel()
+        private static SchedulerModel CreateTestModel()
         {
-            Func<string, bool> isFeatureEnabled = _ => true;
-            var sr = ServiceRegistry.CreateFromDict(new Dictionary<string, string> { { "nCredit", "https://credit.example.org" }, { "ncustomer", "https://customer.example.org" } });
+            ServiceRegistry sr = ServiceRegistry.CreateFromDict(new Dictionary<string, string>
+            {
+                { "nCredit", "https://credit.example.org" }, { "ncustomer", "https://customer.example.org" }
+            });
 
-            return SchedulerModel.Parse(XDocument.Parse(ScheduleWithWhitespaceEverywhere), sr, isFeatureEnabled, "SE");
+            return SchedulerModel.Parse(XDocument.Parse(ScheduleWithWhitespaceEverywhere), sr, IsFeatureEnabled, "SE");
+            bool IsFeatureEnabled(string _) => true;
         }
 
-        private static string ScheduleWithWhitespaceEverywhere =
-@"<SchedulerSetup>
+        private static readonly string ScheduleWithWhitespaceEverywhere =
+            @"<SchedulerSetup>
 
   <ScheduleRunner> ModuleDbSqlAgent</ScheduleRunner>
   <ServiceCalls>
@@ -111,6 +127,8 @@ namespace TestsnPreCredit
 
     <ServiceCall name=' CustomerPeriodicMaintenance' allowManualTrigger='true  '>
       <ServiceUrl service=' nCustomer'>Customer/RunPeriodicMaintenance</ServiceUrl>
+
+      <ServiceParameter name='test   '>SomeVal</ServiceParameter>
 
     </ServiceCall> 
   </ServiceCalls>

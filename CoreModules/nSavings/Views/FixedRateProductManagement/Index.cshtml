@@ -1,0 +1,88 @@
+@using nSavings.ViewModel.FixedRateProduct.Common
+@using NWebsec.Mvc.HttpHeaders.Csp
+@model nSavings.ViewModel.FixedRateProduct.FixedRateProductManagementViewModel
+
+@section Styles {
+    <link @Html.CspStyleNonce() rel="stylesheet" href="@Url.Content("~/Content/dist/bundle.min.css")"/>
+    <style>
+        .button {
+            padding: 0.5rem 1rem;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .product-table th,
+        .product-table td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .border-unset {
+            border: unset;
+            border-bottom: unset;
+            border-top: unset;
+            border-left: unset;
+            border-right: unset;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script @Html.CspScriptNonce() defer src="@Url.Content("~/Content/dist/bundle.min.js")"></script>
+    @if (HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script @Html.CspScriptNonce() defer src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@4"></script>
+    }
+}
+
+<div id="content-root" x-data="{ showModal: false }">
+    <template x-if="showModal">
+        <div id="modal-overlay"
+             class="flex fixed top-0 left-0 w-full h-full justify-center items-center z-9999 bg-black/50">
+            <div id="modal-content" class="modal-content">
+                @Html.Partial("_CreateProduct", new ProductViewModel { ValidFrom = DateTime.Now })
+            </div>
+        </div>
+    </template>
+
+    <div class="w-full grid grid-cols-[1fr_auto] border-solid border-[#1a69c4] border-b-2">
+        <h1 class="content-center border-unset">Manage products</h1>
+
+        <div class="mt-1 mb-1">
+            <button class="button bg-[#007bff]" @@click="showModal = true">
+                Create new product
+            </button>
+        </div>
+    </div>
+
+    <div class="h-full grid grid-cols-3">
+        <div class="h-full col-span-2 p-3 mr-2 mt-2 border-2 border-solid border-gray-100 rounded-xl"
+             id="enabled-items">
+            @Html.Partial("_ProductList", Model)
+        </div>
+
+        <div class="h-full p-3 ml-2 mt-2 border-2 border-solid border-gray-100 rounded-xl">
+            <h2>Changelog</h2>
+            <div id="audit-log">
+                <table class="product-table w-full mt-1">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var auditLog in Model.AuditLog)
+                    {
+                        <tr>
+                            <td>@auditLog.Date.ToString("yyyy-MM-dd")</td>
+                            <td>@auditLog.Message</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

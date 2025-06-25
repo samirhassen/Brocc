@@ -119,22 +119,6 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NTech.Banking.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NTech.Banking.Shared\bin\Release\netstandard2.0\NTech.Banking.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="NTech.Core.Credit.Shared">
-      <HintPath>..\Core\NTech.Core.Credit.Shared\bin\Debug\netstandard2.0\NTech.Core.Credit.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="NTech.Core.Module.Shared">
-      <HintPath>..\Core\NTech.Core.Module.Shared\bin\Debug\netstandard2.0\NTech.Core.Module.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="NTech.Legacy.Module.Shared">
-      <HintPath>..\NTech.Legacy.Module.Shared\bin\Debug\net472\NTech.Legacy.Module.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="NTech.Services.Infrastructure">
-      <HintPath>..\NTech.Services.Infrastructure\bin\Debug\NTech.Services.Infrastructure.dll</HintPath>
-    </Reference>
     <Reference Include="Nustache.Core, Version=1.16.0.4, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
       <HintPath>..\packages\Nustache.1.16.0.4\lib\net20\Nustache.Core.dll</HintPath>
       <Private>True</Private>
@@ -930,11 +914,14 @@
     <Content Include="Content\xls\CompanyLoanFileImportExample_v_20210423.xlsx" />
     <Content Include="Views\Shared\Components\CompanyLoans\Component_CompanyLoanImport.cshtml" />
     <Content Include="ncredit.appsettings.debug.config" />
+    <Content Include="ncredit.connectionstrings.config" />
     <Content Include="ncredit.connectionstrings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\Shared\Components\Component_BookkeepingRulesEdit.cshtml" />
+    <Content Include="packages.lock.json" />
+    <None Include="Properties\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1180,6 +1167,28 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\NTech.Core.Credit.Shared\NTech.Core.Credit.Shared.csproj">
+      <Project>{30dd31c7-f0c7-4972-960e-d84298b07dc1}</Project>
+      <Name>NTech.Core.Credit.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
+      <Project>{bdf0291f-c4c0-43eb-a346-0160f22f0822}</Project>
+      <Name>NTech.Core.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
+      <Project>{8e8913c4-048d-4af1-9344-9494e917da35}</Project>
+      <Name>NTech.Banking.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Legacy.Module.Shared\NTech.Legacy.Module.Shared.csproj">
+      <Project>{a13c3d12-61ff-4b5f-b334-2897f3868479}</Project>
+      <Name>NTech.Legacy.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NTech.Services.Infrastructure\NTech.Services.Infrastructure.csproj">
+      <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
+      <Name>NTech.Services.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

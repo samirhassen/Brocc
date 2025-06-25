@@ -1,10 +1,15 @@
-﻿using NTech;
-using NTech.Legacy.Module.Shared;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Globalization;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using nSavings.Code;
+using nSavings.Code.Eventing;
+using nSavings.DbModel;
+using NTech;
+using NTech.Legacy.Module.Shared;
+using NTech.Services.Infrastructure;
+using NTech.Services.Infrastructure.Eventing;
 
 namespace nSavings.Controllers
 {
@@ -13,13 +18,14 @@ namespace nSavings.Controllers
         [AllowAnonymous]
         public ActionResult Hb()
         {
-            var a = System.Reflection.Assembly.GetExecutingAssembly();
+            var a = Assembly.GetExecutingAssembly();
             return Json(new
             {
                 status = "ok",
                 name = a.GetName().Name,
-                build = System.Reflection.AssemblyName.GetAssemblyName(a.Location).Version.ToString(),
-                release = NTechSimpleSettings.GetValueFromClientResourceFile("CurrentReleaseMetadata.txt", "releaseNumber", "No Current Release Info")
+                build = AssemblyName.GetAssemblyName(a.Location).Version.ToString(),
+                release = NTechSimpleSettings.GetValueFromClientResourceFile("CurrentReleaseMetadata.txt",
+                    "releaseNumber", "No Current Release Info")
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -35,11 +41,11 @@ namespace nSavings.Controllers
         [Route("Api/Common/ReceiveEvent")]
         public ActionResult ApiReceiveEvent(string eventSource, string eventName, string eventData)
         {
-            SavingsEventCode c;
-            if (Enum.TryParse(eventName, out c))
+            if (Enum.TryParse(eventName, out SavingsEventCode c))
             {
-                NTech.Services.Infrastructure.Eventing.NTechEventHandler.PublishEvent(c.ToString(), eventData);
+                NTechEventHandler.PublishEvent(c.ToString(), eventData);
             }
+
             return Json(new { });
         }
 
@@ -67,10 +73,11 @@ namespace nSavings.Controllers
         [Route("Logout")]
         public ActionResult Logout()
         {
-            if (this.User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
-                this.HttpContext.GetOwinContext().Authentication.SignOut();
+                HttpContext.GetOwinContext().Authentication.SignOut();
             }
+
             return RedirectToAction("Loggedout");
         }
 
@@ -82,6 +89,7 @@ namespace nSavings.Controllers
             {
                 return RedirectToAction("Logout");
             }
+
             return View();
         }
 
@@ -98,6 +106,7 @@ namespace nSavings.Controllers
                     {
                         c.Database.Initialize(true);
                     }
+
                     isDbValid = true;
                 }
                 catch
@@ -122,7 +131,7 @@ namespace nSavings.Controllers
                 return false;
 
             DateTimeOffset? changeTo = null;
-            bool wasChanged = false;
+            var wasChanged = false;
             var now = DateTimeOffset.Now;
             if (remove.HasValue && remove.Value)
             {
@@ -135,11 +144,13 @@ namespace nSavings.Controllers
 
                 if (!string.IsNullOrWhiteSpace(time))
                 {
-                    d = DateTime.ParseExact($"{date.Value.ToString("yyyy-MM-dd")} {time}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+                    d = DateTime.ParseExact($"{date.Value:yyyy-MM-dd} {time}", "yyyy-MM-dd HH:mm",
+                        CultureInfo.InvariantCulture);
                     var n = changeTo.Value;
                     changeTo = new DateTimeOffset(n.Year, n.Month, n.Day, d.Hour, d.Minute, 0, n.Offset);
                 }
             }
+
             if (changeTo.HasValue)
             {
                 wasChanged = ClockFactory.TrySetApplicationDateAndTime(changeTo.Value);
@@ -148,8 +159,7 @@ namespace nSavings.Controllers
             return wasChanged;
         }
 
-        [Route("Api/Common/TimeTravel")]
-        [HttpPost()]
+        [HttpPost, Route("Api/Common/TimeTravel")]
         public ActionResult ApiTimeTravel(DateTime? date, bool? remove, string time) //Time assumed to be HH:mm
         {
             if (NEnv.IsProduction)

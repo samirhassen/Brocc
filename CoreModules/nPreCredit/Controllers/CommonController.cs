@@ -20,7 +20,8 @@ namespace nPreCredit.Controllers
                 status = "ok",
                 name = a.GetName().Name,
                 build = System.Reflection.AssemblyName.GetAssemblyName(a.Location).Version.ToString(),
-                release = NTechSimpleSettings.GetValueFromClientResourceFile("CurrentReleaseMetadata.txt", "releaseNumber", "No Current Release Info")
+                release = NTechSimpleSettings.GetValueFromClientResourceFile("CurrentReleaseMetadata.txt",
+                    "releaseNumber", "No Current Release Info")
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -34,10 +35,11 @@ namespace nPreCredit.Controllers
         [Route("Logout")]
         public ActionResult Logout()
         {
-            if (this.User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
-                this.HttpContext.GetOwinContext().Authentication.SignOut();
+                HttpContext.GetOwinContext().Authentication.SignOut();
             }
+
             return RedirectToAction("Loggedout");
         }
 
@@ -49,17 +51,18 @@ namespace nPreCredit.Controllers
             {
                 return RedirectToAction("Logout");
             }
+
             return View();
         }
 
         [Route("Setup")]
         [HttpGet()]
-        public ActionResult Setup(bool? verifyDb = null, bool? clearCache = null)
+        public ActionResult Setup(bool verifyDb = true, bool clearCache = true)
         {
             ClockFactory.ResetTestClock();
 
             bool? isDbValid = null;
-            if (verifyDb ?? true)
+            if (verifyDb)
             {
                 try
                 {
@@ -67,6 +70,7 @@ namespace nPreCredit.Controllers
                     {
                         c.Database.Initialize(true);
                     }
+
                     isDbValid = true;
                 }
                 catch
@@ -76,13 +80,14 @@ namespace nPreCredit.Controllers
             }
 
             bool? isCacheCleared = null;
-            if (clearCache ?? true)
+            if (clearCache)
             {
                 CacheHandler.ClearAllCaches();
                 if (!NEnv.IsProduction)
                 {
                     InMemoryEmailTestService.ClearStoredEmails();
                 }
+
                 isCacheCleared = true;
             }
 
@@ -108,17 +113,10 @@ namespace nPreCredit.Controllers
         public ActionResult Translation(string lang)
         {
             var t = Translations.FetchTranslation(lang);
-            if (t != null)
-            {
-                return Content(JsonConvert.SerializeObject(t), "application/json", System.Text.Encoding.UTF8);
-            }
-            else
-            {
-                return HttpNotFound();
-            }
+            return t != null ? (ActionResult)Content(JsonConvert.SerializeObject(t), "application/json", System.Text.Encoding.UTF8) : HttpNotFound();
         }
 
-        [HttpPost()]
+        [HttpPost]
         [NTechApi]
         [Route("Api/Common/ReceiveEvent")]
         public ActionResult ApiReceiveEvent(string eventSource, string eventName, string eventData)
@@ -128,6 +126,7 @@ namespace nPreCredit.Controllers
             {
                 NTech.Services.Infrastructure.Eventing.NTechEventHandler.PublishEvent(c.ToString(), eventData);
             }
+
             return Json(new { });
         }
     }

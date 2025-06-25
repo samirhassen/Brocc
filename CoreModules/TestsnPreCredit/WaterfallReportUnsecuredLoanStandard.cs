@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace TestsnPreCredit
 {
-
     [TestClass]
     public class WaterfallReportUnsecuredLoanStandard
     {
@@ -16,7 +15,8 @@ namespace TestsnPreCredit
             var workflowService = new WorkflowServiceReadBase(UnsecuredLoanStandardWorkflowService.StandardWorkflow);
             var model = CreateApplication();
 
-            var state = model.GetWaterfallState(workflowService, UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
+            var state = model.GetWaterfallState(workflowService,
+                UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
 
             Assert.AreEqual(StepWaterfallStateCode.Current, state);
         }
@@ -29,10 +29,13 @@ namespace TestsnPreCredit
             {
                 x.IsActive = false;
                 x.IsRejected = true;
-                x.MemberOfListNames = Enumerables.Singleton($"{UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name}_{workflowService.RejectedStatusName}");
+                x.MemberOfListNames =
+                    Enumerables.Singleton(
+                        $"{UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name}_{workflowService.RejectedStatusName}");
             });
 
-            var state = model.GetWaterfallState(workflowService, UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
+            var state = model.GetWaterfallState(workflowService,
+                UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
 
             Assert.AreEqual(StepWaterfallStateCode.Rejected, state);
         }
@@ -47,7 +50,8 @@ namespace TestsnPreCredit
                 x.IsCancelled = true;
             });
 
-            var state = model.GetWaterfallState(workflowService, UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
+            var state = model.GetWaterfallState(workflowService,
+                UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
 
             Assert.AreEqual(StepWaterfallStateCode.Cancelled, state);
         }
@@ -66,8 +70,10 @@ namespace TestsnPreCredit
                 };
             });
 
-            var creditCheckState = model.GetWaterfallState(workflowService, UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
-            var customerOfferDecisionState = model.GetWaterfallState(workflowService, UnsecuredLoanStandardWorkflowService.CustomerOfferDecisionStep.Name);
+            var creditCheckState = model.GetWaterfallState(workflowService,
+                UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
+            var customerOfferDecisionState = model.GetWaterfallState(workflowService,
+                UnsecuredLoanStandardWorkflowService.CustomerOfferDecisionStep.Name);
 
             Assert.AreEqual(StepWaterfallStateCode.Accepted, creditCheckState);
             Assert.AreEqual(StepWaterfallStateCode.Current, customerOfferDecisionState);
@@ -88,8 +94,10 @@ namespace TestsnPreCredit
                 x.IsCancelled = true;
             });
 
-            var creditCheckState = model.GetWaterfallState(workflowService, UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
-            var customerOfferDecisionState = model.GetWaterfallState(workflowService, UnsecuredLoanStandardWorkflowService.CustomerOfferDecisionStep.Name);
+            var creditCheckState = model.GetWaterfallState(workflowService,
+                UnsecuredLoanStandardWorkflowService.CreditCheckStep.Name);
+            var customerOfferDecisionState = model.GetWaterfallState(workflowService,
+                UnsecuredLoanStandardWorkflowService.CustomerOfferDecisionStep.Name);
 
             Assert.AreEqual(StepWaterfallStateCode.Accepted, creditCheckState);
             Assert.AreEqual(StepWaterfallStateCode.Cancelled, customerOfferDecisionState);
@@ -101,13 +109,16 @@ namespace TestsnPreCredit
             var workflowService = new WorkflowServiceReadBase(UnsecuredLoanStandardWorkflowService.StandardWorkflow);
             var model = CreateApplication(x =>
             {
-                x.MemberOfListNames = workflowService.GetStepOrder().Select(y => $"{y}_{workflowService.AcceptedStatusName}");
+                x.MemberOfListNames = workflowService.GetStepOrder()
+                    .Select(y => $"{y}_{workflowService.AcceptedStatusName}");
                 x.IsActive = false;
                 x.IsFinalDecisionMade = true;
             });
 
             Assert.AreEqual(
-                true, workflowService.GetStepOrder().All(x => model.GetWaterfallState(workflowService, x) == StepWaterfallStateCode.Accepted));
+                true,
+                workflowService.GetStepOrder().All(x =>
+                    model.GetWaterfallState(workflowService, x) == StepWaterfallStateCode.Accepted));
         }
 
         private WaterfallApplicationModel CreateApplication(Action<WaterfallApplicationModel> modify = null)
@@ -121,10 +132,7 @@ namespace TestsnPreCredit
                 IsRejected = false,
                 IsFinalDecisionMade = false,
                 ProviderName = "self",
-                MemberOfListNames = new string[]
-                {
-                    "CreditCheck_Initial"
-                }
+                MemberOfListNames = new string[] { "CreditCheck_Initial" }
             };
             modify?.Invoke(model);
             return model;

@@ -14,7 +14,7 @@ namespace NTech.Legacy.Module.Shared.Infrastructure
         </script>
         @RenderSection("Scripts", true)
          */
-        public static string GenerateScriptBlock(NTechServiceRegistry serviceRegistry, ClientConfiguration clientConfiguration)
+        public static string GenerateScriptBlock(NTechServiceRegistry serviceRegistry, IClientConfiguration clientConfiguration)
         {
             if (!clientConfiguration.IsFeatureEnabled("ntech.feature.customeroverview"))
                 return "";

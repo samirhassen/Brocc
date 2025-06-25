@@ -1,10 +1,11 @@
-﻿using nSavings.DbModel.BusinessEvents;
-using NTech.Services.Infrastructure;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using nSavings.DbModel.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiSavingsAccountInterestHistoryController : NController
@@ -17,7 +18,7 @@ namespace nSavings.Controllers
             if (string.IsNullOrWhiteSpace(savingsAccountNr))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr");
 
-            using (var context = new SavingsContext())
+            using (var context = new DbModel.SavingsContext())
             {
                 var a = ApiSavingsAccountDetailsController
                      .GetSavingsAccountDetailsQueryable(context, Clock.Today)

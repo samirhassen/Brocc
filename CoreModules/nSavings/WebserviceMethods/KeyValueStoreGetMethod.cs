@@ -1,8 +1,10 @@
-﻿using NTech.Services.Infrastructure.NTechWs;
+﻿using nSavings.Controllers.Api;
+using NTech.Services.Infrastructure.NTechWs;
 
 namespace nSavings.WebserviceMethods
 {
-    public class KeyValueStoreGetMethod : TypedWebserviceMethod<KeyValueStoreGetMethod.Request, KeyValueStoreGetMethod.Response>
+    public class
+        KeyValueStoreGetMethod : TypedWebserviceMethod<KeyValueStoreGetMethod.Request, KeyValueStoreGetMethod.Response>
     {
         public override string Path => "KeyValueStore/Get";
 

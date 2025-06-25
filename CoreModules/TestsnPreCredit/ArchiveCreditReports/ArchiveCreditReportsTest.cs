@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using nPreCredit.WebserviceMethods;
 using System;
 using static nPreCredit.WebserviceMethods.FilterOutCustomersWithInactiveApplicationsMethod;
 
@@ -16,9 +15,7 @@ namespace TestsnPreCredit.ArchiveCreditReports
             activeApplication.IsActive = true;
 
             //True => application is not archived 
-            Assert.IsTrue(
-                FilterOutCustomersWithInactiveApplicationsMethod.DoesApplicationVetoArchiving(activeApplication, DateTime.Now, minNrOfDaysInactive)
-                );
+            Assert.IsTrue(DoesApplicationVetoArchiving(activeApplication, DateTime.Now, minNrOfDaysInactive));
         }
 
         [TestMethod]
@@ -30,8 +27,9 @@ namespace TestsnPreCredit.ArchiveCreditReports
 
             //True => application is not archived 
             Assert.IsTrue(
-                FilterOutCustomersWithInactiveApplicationsMethod.DoesApplicationVetoArchiving(activeApplicationWithFinalDecisionDate, DateTime.Now, minNrOfDaysInactive)
-                );
+                DoesApplicationVetoArchiving(
+                    activeApplicationWithFinalDecisionDate, DateTime.Now, minNrOfDaysInactive)
+            );
         }
 
         [TestMethod]
@@ -43,8 +41,9 @@ namespace TestsnPreCredit.ArchiveCreditReports
 
             //False => application is archived 
             Assert.IsFalse(
-                FilterOutCustomersWithInactiveApplicationsMethod.DoesApplicationVetoArchiving(inactiveCancelledDateApplication, DateTime.Now, minNrOfDaysInactive)
-                );
+                DoesApplicationVetoArchiving(
+                    inactiveCancelledDateApplication, DateTime.Now, minNrOfDaysInactive)
+            );
         }
 
         [TestMethod]
@@ -56,8 +55,9 @@ namespace TestsnPreCredit.ArchiveCreditReports
 
             //False => application is archived 
             Assert.IsFalse(
-                FilterOutCustomersWithInactiveApplicationsMethod.DoesApplicationVetoArchiving(inactiveRejectedDateApplication, DateTime.Now, minNrOfDaysInactive)
-                );
+                DoesApplicationVetoArchiving(
+                    inactiveRejectedDateApplication, DateTime.Now, minNrOfDaysInactive)
+            );
         }
 
         public DateTimeOffset? GetXDaysAgoDateTime(int nrOfDaysAgo)

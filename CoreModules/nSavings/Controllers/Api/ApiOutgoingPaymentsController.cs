@@ -1,9 +1,11 @@
-﻿using nSavings.DbModel.BusinessEvents;
-using NTech.Services.Infrastructure;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
+using nSavings.DbModel;
+using nSavings.DbModel.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Api
 {
     [NTechApi]
     public class ApiOutgoingPaymentsController : NController
@@ -32,7 +34,8 @@ namespace nSavings.Controllers
                         PaymentsAmount = -(x
                             .Payments
                             .SelectMany(y => y.Transactions)
-                            .Where(y => y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString() && y.BusinessEventId == x.CreatedByBusinessEventId)
+                            .Where(y => y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString() &&
+                                        y.BusinessEventId == x.CreatedByBusinessEventId)
                             .Sum(y => (decimal?)y.Amount) ?? 0m)
                     })
                     .ToList()
@@ -44,7 +47,8 @@ namespace nSavings.Controllers
                         x.UserId,
                         UserDisplayName = GetUserDisplayNameByUserId(x.UserId.ToString()),
                         x.FileArchiveKey,
-                        ArchiveDocumentUrl = Url.Action("ArchiveDocument", "ApiArchiveDocument", new { key = x.FileArchiveKey, setFileDownloadName = true }),
+                        ArchiveDocumentUrl = Url.Action("ArchiveDocument", "ApiArchiveDocument",
+                            new { key = x.FileArchiveKey, setFileDownloadName = true }),
                     })
                     .ToList();
 
@@ -65,7 +69,6 @@ namespace nSavings.Controllers
         {
             using (var context = new SavingsContext())
             {
-                var documentClient = new Code.DocumentClient();
                 var mgr = new NewOutgoingPaymentFileBusinessEventManager(CurrentUserId, InformationMetadata);
                 var file = mgr.Create(context);
 
@@ -92,7 +95,8 @@ namespace nSavings.Controllers
                         x.OutgoingPaymentFile.BookKeepingDate,
                         PaidToCustomerTransactions = x
                             .Transactions
-                            .Where(y => y.BusinessEventId == x.OutgoingPaymentFile.CreatedByBusinessEventId && y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString())
+                            .Where(y => y.BusinessEventId == x.OutgoingPaymentFile.CreatedByBusinessEventId &&
+                                        y.AccountCode == LedgerAccountTypeCode.ShouldBePaidToCustomer.ToString())
                     })
                     .Where(x => x.PaidToCustomerTransactions.Any())
                     .Select(x => new

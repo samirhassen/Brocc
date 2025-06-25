@@ -1,245 +1,266 @@
-﻿using Newtonsoft.Json.Serialization;
-using NTech;
-using NTech.Banking.CivicRegNumbers;
-using NTech.Core.Module.Shared;
-using NTech.Core.Module.Shared.Infrastructure;
-using NTech.Core.Module.Shared.Services;
-using NTech.Legacy.Module.Shared;
-using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
-using NTech.Services.Infrastructure;
-using NTech.Services.Infrastructure.NTechWs;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Newtonsoft.Json.Serialization;
+using NTech;
+using NTech.Banking.CivicRegNumbers;
+using NTech.Core.Module.Shared;
+using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Legacy.Module.Shared;
+using NTech.Legacy.Module.Shared.Infrastructure.HttpClient;
+using NTech.Services.Infrastructure;
+using NTech.Services.Infrastructure.NTechWs;
 
-namespace nCustomerPages.Controllers
+namespace nCustomerPages.Controllers;
+
+public class AnonymousEmbeddedCustomerPagesController : EmbeddedCustomerPagesControllerBase
 {
-    public class AnonymousEmbeddedCustomerPagesController : EmbeddedCustomerPagesControllerBase
+    private static bool IsApiWhiteListedForProxying(string moduleName, string localPath)
     {
-        private bool IsApiWhiteListedForProxying(string moduleName, string localPath)
+        /*
+         * When whitelisting things here think about the fact that the end user can manipulate everything except the customer id.
+         * Make sure the apis exposed here are safe to be called (in the sense of only affecting that user) under these premises.
+         */
+        if (moduleName.EqualsIgnoreCase("NTechHost"))
         {
-            /*
-             * When whiteliting things here think about the fact that the enduser can manipulate everything except the customer id.
-             * Make sure the apis exposed here are safe to be called (in the sense of only affecting that user) under these premises.
-             */
-            if (moduleName.EqualsIgnoreCase("NTechHost"))
-            {
-                return localPath.IsOneOfIgnoreCase(
-                    "Api/Customer/KycQuestionSession/LoadCustomerPagesSession",
-                    "Api/Customer/KycQuestionSession/HandleAnswers",
-                    "Api/PreCredit/PolicyFilters/PreScore-WebApplication");
-            }
-            else if (!NEnv.IsProduction && moduleName.EqualsIgnoreCase("nTest"))
-            {
-                return localPath.IsOneOfIgnoreCase(
-                    "Api/TestPerson/GetOrGenerate",
-                    "Api/Company/TestCompany/GetOrGenerateBulk");
-            }
-            else
-                return false;
+            return localPath.IsOneOfIgnoreCase(
+                "Api/Customer/KycQuestionSession/LoadCustomerPagesSession",
+                "Api/Customer/KycQuestionSession/HandleAnswers",
+                "Api/PreCredit/PolicyFilters/PreScore-WebApplication");
         }
 
-        [NTechApi]
-        [HttpPost]
-        [Route("api/embedded-customerpages/iso-countries")]
-        [AllowAnonymous]
-        public ActionResult IsoCountries()
+        if (!NEnv.IsProduction && moduleName.EqualsIgnoreCase("nTest"))
         {
-            var result = new JsonNetActionResult
-            {
-                Data = IsoCountry.LoadEmbedded()
-            };
-            result.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            return result;
+            return localPath.IsOneOfIgnoreCase(
+                "Api/TestPerson/GetOrGenerate",
+                "Api/Company/TestCompany/GetOrGenerateBulk");
         }
 
-        [NTechApi]
-        [HttpPost]
-        [Route("api/embedded-customerpages/ul-web-application-settings")]
-        [AllowAnonymous]
-        public ActionResult LoanObjectives()
+        return false;
+    }
+
+    [NTechApi]
+    [HttpPost]
+    [Route("api/embedded-customerpages/iso-countries")]
+    [AllowAnonymous]
+    public ActionResult IsoCountries()
+    {
+        var result = new JsonNetActionResult
         {
-            NTechCoreWebserviceException CreateDisabledException() => new NTechCoreWebserviceException("Disabled") { ErrorCode = "applicationDisabled" };
-
-            var clientCfg = NEnv.ClientCfgCore;
-            if(!NEnv.IsStandardUnsecuredLoansEnabled || !clientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans.webapplication"))
-                return HttpNotFound();
-
-            var applicationSettings = LegacyServiceClientFactory
-                .CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry).LoadSettings("unsecuredLoanExternalApplication");
-
-            (List<string> RepaymentTimes, List<int> LoanAmounts) GetExampleCalculatorValues()
+            Data = IsoCountry.LoadEmbedded(),
+            SerializerSettings =
             {
-                int GetInt(string name) => applicationSettings.ReqParse(name, int.Parse);
-                List<int> GetSteppedItems(int min, int max, int step, (int Min, int Max)? global = null)
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }
+        };
+        return result;
+    }
+
+    [NTechApi]
+    [HttpPost]
+    [Route("api/embedded-customerpages/ul-web-application-settings")]
+    [AllowAnonymous]
+    public ActionResult LoanObjectives()
+    {
+        var clientCfg = NEnv.ClientCfgCore;
+        if (!NEnv.IsStandardUnsecuredLoansEnabled ||
+            !clientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans.webapplication"))
+            return HttpNotFound();
+
+        var applicationSettings = LegacyServiceClientFactory
+            .CreateCustomerClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry)
+            .LoadSettings("unsecuredLoanExternalApplication");
+
+        object result;
+        try
+        {
+            var exampleCalculatorValues = GetExampleCalculatorValues();
+
+            result = new
+            {
+                IsEnabled = true,
+                Settings = new
                 {
-                    if (min > max)
-                        throw new Exception("Web application calculator min > max");
-
-                    if (min <= 0 || max <= 0 || step <= 0)
-                        throw CreateDisabledException();
-
-                    if (global.HasValue)
-                    {
-                        min = Math.Max(min, global.Value.Min);
-                        max = Math.Min(max, global.Value.Max);
-                    }
-
-                    var items = new List<int>();
-                    var value = min;
-                    do
-                    {
-                        items.Add(value);
-                        if (items.Count > 1000) throw new Exception("Calculator step too small. Caused > 1000 items");
-                        value += step;
-                    } while (value <= max);
-                    return items;
+                    LoanObjectives = clientCfg.GetRepeatedCustomValue("LoanObjectives", "LoanObjective"),
+                    RepaymentTimes = exampleCalculatorValues.RepaymentTimes,
+                    LoanAmounts = exampleCalculatorValues.LoanAmounts,
+                    ExampleMarginInterestRatePercent =
+                        Numbers.ParseDecimalOrNull(applicationSettings.Req("exampleInterestRatePercent")),
+                    ExampleInitialFeeWithheldAmount = clientCfg.GetSingleCustomInt(false,
+                        "UlStandardWebApplication", "ExampleInitialFeeWithheldAmount"),
+                    ExampleInitialFeeCapitalizedAmount = clientCfg.GetSingleCustomInt(false,
+                        "UlStandardWebApplication", "ExampleInitialFeeCapitalizedAmount"),
+                    ExampleInitialFeeOnFirstNotificationAmount =
+                        int.Parse(applicationSettings.Req("exampleInitialFeeOnFirstNotificationAmount")),
+                    ExampleNotificationFee = int.Parse(applicationSettings.Req("exampleNotificationFee")),
+                    PersonalDataPolicyUrl = new Uri(applicationSettings.Req("personalDataPolicyUrl")).ToString(),
+                    DataSharing = GetDataSharingSettings(clientCfg, NTechEnvironmentLegacy.SharedInstance)
                 }
-                var exampleLoanAmounts = GetSteppedItems(GetInt("exampleLoanAmountMin"), GetInt("exampleLoanAmountMax"), GetInt("exampleLoanAmountStep"));
-                var exampleRepaymentMonths = GetSteppedItems(GetInt("exampleRepaymentMonthsMin"), GetInt("exampleRepaymentMonthsMax"), 1);
-                var exampleRepaymentDays = applicationSettings.Req("exampleRepaymentDaysIsEnabled") == "true"
-                    ? GetSteppedItems(GetInt("exampleRepaymentDaysMin"), GetInt("exampleRepaymentDaysMax"), 1, global: (Min: 10, Max: 30))
-                    : new List<int>();
-                return (
-                    RepaymentTimes: exampleRepaymentDays.Select(x => $"{x}d").Concat(exampleRepaymentMonths.Select(y => $"{y}m")).ToList(), 
-                    LoanAmounts: exampleLoanAmounts);
-            }
-
-            object result;
-            try
+            };
+        }
+        catch (NTechCoreWebserviceException ex)
+        {
+            if (ex.ErrorCode == "applicationDisabled")
             {
-                var exampleCalculatorValues = GetExampleCalculatorValues();
-
                 result = new
                 {
-                    IsEnabled = true,
-                    Settings = new
-                    {
-                        LoanObjectives = clientCfg.GetRepeatedCustomValue("LoanObjectives", "LoanObjective"),
-                        RepaymentTimes = exampleCalculatorValues.RepaymentTimes,
-                        LoanAmounts = exampleCalculatorValues.LoanAmounts,
-                        ExampleMarginInterestRatePercent = Numbers.ParseDecimalOrNull(applicationSettings.Req("exampleInterestRatePercent")),
-                        ExampleInitialFeeWithheldAmount = clientCfg.GetSingleCustomInt(false, "UlStandardWebApplication", "ExampleInitialFeeWithheldAmount"),
-                        ExampleInitialFeeCapitalizedAmount = clientCfg.GetSingleCustomInt(false, "UlStandardWebApplication", "ExampleInitialFeeCapitalizedAmount"),
-                        ExampleInitialFeeOnFirstNotificationAmount = int.Parse(applicationSettings.Req("exampleInitialFeeOnFirstNotificationAmount")),
-                        ExampleNotificationFee = int.Parse(applicationSettings.Req("exampleNotificationFee")),
-                        PersonalDataPolicyUrl = new Uri(applicationSettings.Req("personalDataPolicyUrl")).ToString(),
-                        DataSharing = GetDataSharingSettings(clientCfg, NTechEnvironmentLegacy.SharedInstance)
-                    }
+                    IsEnabled = false
                 };
             }
-            catch(NTechCoreWebserviceException ex)
+            else
+                throw;
+        }
+
+        var actionResult = new JsonNetActionResult
+        {
+            Data = result,
+            SerializerSettings =
             {
-                if (ex.ErrorCode == "applicationDisabled")
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }
+        };
+        return actionResult;
+
+        (List<string> RepaymentTimes, List<int> LoanAmounts) GetExampleCalculatorValues()
+        {
+            var exampleLoanAmounts = GetSteppedItems(GetInt("exampleLoanAmountMin"), GetInt("exampleLoanAmountMax"),
+                GetInt("exampleLoanAmountStep"));
+            var exampleRepaymentMonths = GetSteppedItems(GetInt("exampleRepaymentMonthsMin"),
+                GetInt("exampleRepaymentMonthsMax"), 1);
+            var exampleRepaymentDays = applicationSettings.Req("exampleRepaymentDaysIsEnabled") == "true"
+                ? GetSteppedItems(GetInt("exampleRepaymentDaysMin"), GetInt("exampleRepaymentDaysMax"), 1,
+                    global: (Min: 10, Max: 30))
+                : [];
+            return (
+                RepaymentTimes: exampleRepaymentDays.Select(x => $"{x}d")
+                    .Concat(exampleRepaymentMonths.Select(y => $"{y}m")).ToList(),
+                LoanAmounts: exampleLoanAmounts);
+
+            List<int> GetSteppedItems(int min, int max, int step, (int Min, int Max)? global = null)
+            {
+                if (min > max)
+                    throw new Exception("Web application calculator min > max");
+
+                if (min <= 0 || max <= 0 || step <= 0)
+                    throw CreateDisabledException();
+
+                if (global.HasValue)
                 {
-                    result = new
-                    {
-                        IsEnabled = false
-                    };
+                    min = Math.Max(min, global.Value.Min);
+                    max = Math.Min(max, global.Value.Max);
                 }
-                else
-                    throw;
+
+                var items = new List<int>();
+                var value = min;
+                do
+                {
+                    items.Add(value);
+                    if (items.Count > 1000) throw new Exception("Calculator step too small. Caused > 1000 items");
+                    value += step;
+                } while (value <= max);
+
+                return items;
             }
 
-            var actionResult = new JsonNetActionResult
-            {
-                Data = result
-            };
-            actionResult.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            return actionResult;
-
+            int GetInt(string name) => applicationSettings.ReqParse(name, int.Parse);
         }
 
-        [NTechApi]
-        [HttpPost]
-        [Route("api/embedded-customerpages/custom-costs")]
-        [AllowAnonymous]
-        public async Task<ActionResult> CustomCosts()
-        {
-            var creditClient = LegacyServiceClientFactory.CreateCreditClient(LegacyHttpServiceSystemUser.SharedInstance, NEnv.ServiceRegistry);
-            var result = new JsonNetActionResult
-            {
-                Data = (await creditClient.GetCustomCostsAsync()).Select(x => new
-                {
-                    x.Text,
-                    x.Code
-                }).ToList()
-            };
-            result.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            return result;
-        }
+        NTechCoreWebserviceException CreateDisabledException() => new("Disabled")
+            { ErrorCode = "applicationDisabled" };
+    }
 
-        private static object GetDataSharingSettings(IClientConfigurationCore clientCfg, INTechEnvironment env)
+    [NTechApi]
+    [HttpPost]
+    [Route("api/embedded-customerpages/custom-costs")]
+    [AllowAnonymous]
+    public async Task<ActionResult> CustomCosts()
+    {
+        var creditClient = LegacyServiceClientFactory.CreateCreditClient(LegacyHttpServiceSystemUser.SharedInstance,
+            NEnv.ServiceRegistry);
+        var result = new JsonNetActionResult
         {
-            var isDataSharingEnabled = clientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans.datasharing");
-            if (!isDataSharingEnabled)
-                return null;
-            var kreditzSettings = KreditzApiClient.GetSettings(env);
-            return new
+            Data = (await creditClient.GetCustomCostsAsync()).Select(x => new
             {
-                ProviderName = KreditzApiClient.DataSharingProviderName,
-                kreditzSettings.UseMock,
-                kreditzSettings.IFrameClientId,
-                kreditzSettings.TestCivicRegNr,
-                kreditzSettings.FetchMonthCount
-            };
-        }
-
-        [NTechApi]
-        [HttpPost]
-        [Route("api/embedded-customerpages/parse-civicregnr")]
-        [AllowAnonymous]
-        public ActionResult ParseCivicRegNr(string civicRegNr, string countryCode)
-        {
-            if (!string.IsNullOrWhiteSpace(civicRegNr))
+                x.Text,
+                x.Code
+            }).ToList(),
+            SerializerSettings =
             {
-                if (string.IsNullOrWhiteSpace(countryCode))
-                    countryCode = NEnv.ClientCfg.Country.BaseCountry;
-                var parser = new CivicRegNumberParser(countryCode);
-                if(parser.TryParse(civicRegNr, out var validCivicRegNr))
-                {
-                    return Json2(new
-                    {
-                        isValid = true,
-                        normalizedValue = validCivicRegNr.NormalizedValue,
-                        ageInYears = validCivicRegNr.BirthDate.HasValue
-                            ? (int)Math.Floor((decimal)Dates.GetAbsoluteNrOfMonthsBetweenDates(Clock.Today, validCivicRegNr.BirthDate.Value) / 12m)
-                            : new int?(),
-                        isMale = validCivicRegNr.IsMale
-                    });
-                }
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
             }
-            return Json2(new { isValid = false });
-        }
+        };
+        return result;
+    }
 
-        [NTechApi]
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult ForwardedAnonymousApiCall()
+    private static object GetDataSharingSettings(IClientConfigurationCore clientCfg, INTechEnvironment env)
+    {
+        var isDataSharingEnabled = clientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans.datasharing");
+        if (!isDataSharingEnabled)
+            return null;
+        var kreditzSettings = KreditzApiClient.GetSettings(env);
+        return new
         {
-            var moduleName = NTechServiceRegistry.NormalizePath(RouteData.Values["module"] as string);
-            var localPath = NTechServiceRegistry.NormalizePath(RouteData.Values["path"] as string);
+            ProviderName = KreditzApiClient.DataSharingProviderName,
+            kreditzSettings.UseMock,
+            kreditzSettings.IFrameClientId,
+            kreditzSettings.TestCivicRegNr,
+            kreditzSettings.FetchMonthCount
+        };
+    }
 
-            if (!IsApiWhiteListedForProxying(moduleName, localPath))
-                return NTechWebserviceMethod.ToFrameworkErrorActionResult(NTechWebserviceMethod.CreateErrorResponse("That api either doesnt exist or is not whitelisted", errorCode: "notFoundOrNotWhitelisted", httpStatusCode: 400));
-
-            return SendForwardApiCall(request =>
+    [NTechApi]
+    [HttpPost]
+    [Route("api/embedded-customerpages/parse-civicregnr")]
+    [AllowAnonymous]
+    public ActionResult ParseCivicRegNr(string civicRegNr, string countryCode)
+    {
+        if (string.IsNullOrWhiteSpace(civicRegNr)) return Json2(new { isValid = false });
+        if (string.IsNullOrWhiteSpace(countryCode))
+            countryCode = NEnv.ClientCfg.Country.BaseCountry;
+        var parser = new CivicRegNumberParser(countryCode);
+        if (parser.TryParse(civicRegNr, out var validCivicRegNr))
+        {
+            return Json2(new
             {
-                return null;
-            }, moduleName, localPath);
+                isValid = true,
+                normalizedValue = validCivicRegNr.NormalizedValue,
+                ageInYears = validCivicRegNr.BirthDate.HasValue
+                    ? (int)Math.Floor(
+                        (decimal)Dates.GetAbsoluteNrOfMonthsBetweenDates(Clock.Today,
+                            validCivicRegNr.BirthDate.Value) / 12m)
+                    : new int?(),
+                isMale = validCivicRegNr.IsMale
+            });
         }
 
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            routes.MapRoute(
-                name: "AnonymousEmbeddedCustomerPagesControllerForwardedApiCalls",
-                url: "api/embedded-customerpages/anonymous-proxy/{module}/{*path}",
-                defaults: new { controller = "AnonymousEmbeddedCustomerPages", action = "ForwardedAnonymousApiCall" }
-            );
-        }
+        return Json2(new { isValid = false });
+    }
+
+    [NTechApi]
+    [AllowAnonymous]
+    [HttpPost]
+    public ActionResult ForwardedAnonymousApiCall()
+    {
+        var moduleName = NTechServiceRegistry.NormalizePath(RouteData.Values["module"] as string);
+        var localPath = NTechServiceRegistry.NormalizePath(RouteData.Values["path"] as string);
+
+        if (!IsApiWhiteListedForProxying(moduleName, localPath))
+            return NTechWebserviceMethod.ToFrameworkErrorActionResult(
+                NTechWebserviceMethod.CreateErrorResponse("That api either doesnt exist or is not whitelisted",
+                    errorCode: "notFoundOrNotWhitelisted", httpStatusCode: 400));
+
+        return SendForwardApiCall(request => null, moduleName, localPath);
+    }
+
+    public static void RegisterRoutes(RouteCollection routes)
+    {
+        routes.MapRoute(
+            name: "AnonymousEmbeddedCustomerPagesControllerForwardedApiCalls",
+            url: "api/embedded-customerpages/anonymous-proxy/{module}/{*path}",
+            defaults: new { controller = "AnonymousEmbeddedCustomerPages", action = "ForwardedAnonymousApiCall" }
+        );
     }
 }

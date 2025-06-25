@@ -1,15 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "outDir": "Content/js",
     "allowJs": true,
+    "checkJs": false,
+    // TODO: "strict": true,
     "noImplicitAny": false,
-    "module": "none",
-    "typeRoots": [ "../SharedTsTypings" ]
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["angular", "jquery", "moment", "toastr"]
   },
   "compileOnSave": true,
   "include": [
     "Content/ts"
-  ]
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   /* Add typings to [solution}\node_modules and make sure they are checked in to make the team build not take a million years */
 }

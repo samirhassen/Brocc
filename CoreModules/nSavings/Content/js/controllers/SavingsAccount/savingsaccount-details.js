@@ -1,12 +1,12 @@
-var SavingsAccountDetailsCtr = /** @class */ (function () {
-    function SavingsAccountDetailsCtr($scope, $http, $q, $timeout, $route, $routeParams, savingsAccountDetailsData, mainService) {
+class SavingsAccountDetailsCtr {
+    constructor($scope, $http, $q, $timeout, $route, $routeParams, savingsAccountDetailsData, mainService) {
         $scope.backUrl = initialData.backUrl;
         $scope.$routeParams = $routeParams;
         $scope.details = savingsAccountDetailsData.details;
         $scope.capitalTransactions = savingsAccountDetailsData.capitalTransactions;
         $scope.accumulatedInterest = savingsAccountDetailsData.accumulatedInterest;
         window.detailsScope = $scope;
-        $scope.toggleTransactionDetails = function (t, evt) {
+        $scope.toggleTransactionDetails = (t, evt) => {
             if (evt) {
                 evt.preventDefault();
             }
@@ -21,20 +21,20 @@ var SavingsAccountDetailsCtr = /** @class */ (function () {
                     data: {
                         transactionId: t.id
                     }
-                }).then(function (response) {
+                }).then((response) => {
                     $scope.isLoading = false;
                     t.transactionDetails = response.data;
-                }, function (response) {
+                }, (response) => {
                     $scope.isLoading = false;
                     toastr.error(response.statusText);
                 });
             }
         };
-        $scope.showInterestHistory = function (evt) {
+        $scope.showInterestHistory = (evt) => {
             if (evt) {
                 evt.preventDefault();
             }
-            mainService.loadBySavingsAccountNr($route.current.params.savingsAccountNr, initialData.interestHistoryUrl).then(function (d) {
+            mainService.loadBySavingsAccountNr($route.current.params.savingsAccountNr, initialData.interestHistoryUrl).then((d) => {
                 var dd = angular.copy(d.interestRates);
                 dd.reverse();
                 $scope.interestHistory = {
@@ -43,7 +43,7 @@ var SavingsAccountDetailsCtr = /** @class */ (function () {
                 $('#accountdetailsInterestHistoryModal').modal('show');
             });
         };
-        $scope.hideInterestHistory = function (evt) {
+        $scope.hideInterestHistory = (evt) => {
             if (evt) {
                 evt.preventDefault();
             }
@@ -53,7 +53,6 @@ var SavingsAccountDetailsCtr = /** @class */ (function () {
             $('.modal-backdrop').remove();
         };
     }
-    SavingsAccountDetailsCtr.$inject = ['$scope', '$http', '$q', '$timeout', '$route', '$routeParams', 'savingsAccountDetailsData', 'mainService'];
-    return SavingsAccountDetailsCtr;
-}());
+}
+SavingsAccountDetailsCtr.$inject = ['$scope', '$http', '$q', '$timeout', '$route', '$routeParams', 'savingsAccountDetailsData', 'mainService'];
 app.controller('detailsCtr', SavingsAccountDetailsCtr);

@@ -7,7 +7,8 @@ namespace nTest.RandomDataSource
 {
     public class TestSavingsAccountApplicationGenerator
     {
-        public string CreateApplicationJson(StoredPerson p, bool hasRemarks, IRandomnessSource random, List<Tuple<string, string>> additionalApplicationItems = null, bool generateIban = true)
+        public string CreateApplicationJson(StoredPerson p, bool hasRemarks, IRandomnessSource random,
+            List<Tuple<string, string>> additionalApplicationItems = null, bool generateIban = true)
         {
             var applicationItems = new List<Tuple<string, string>>();
             Action<string, string> a = (n, v) => applicationItems.Add(Tuple.Create(n, v));

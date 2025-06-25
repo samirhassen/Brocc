@@ -7,10 +7,33 @@
 
 @section Scripts {
     <script @Html.CspScriptNonce()>
-        var initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+        const initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'));
     </script>
     @Scripts.Render("~/Content/js/bundle-navmenu")    
 }
+
+<!--div class="pt-3{{p.className ? (' ' + p.className) : ''}}" ng-repeat="p in m.products" ng-show="p.hasAnyPermittedItem || showDetails">
+<div class="container">
+    <h1>{{p.productName}}</h1>
+    <div class="row pt-3" ng-repeat="gg in p.groupGroups" ng-show="gg.hasAnyPermittedItem || showDetails">
+        <div class="col-xs-4" ng-repeat="g in gg.groups" ng-show="g.hasAnyPermittedItem || showDetails">
+            <h2 class="text-center">{{g.groupName}}</h2>
+            <ul class="list-unstyled text-center">
+                <li ng-repeat="i in g.items" ng-show="i.isPermitted || showDetails">
+                    <a ng-show="i.isPermitted" ng-href="{{i.url}}" class="n-anchor">{{i.name}}</a>
+                    <span ng-hide="i.isPermitted" class="noaccess">{{i.name}}</span>
+                    <span ng-show="showDetails" class="reqrole">({{i.requiredRole}})</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="text-right container" style="padding-top:30px; color:#f9f9f9;" ng-show="m.allowShowDetails">
+    <label>Show details</label>
+    <input type="checkbox" style="margin-left: 10px;" ng-model="showDetails" ng-true-value="'true'" ng-false-value="''">
+</div-->
 
 <div class="pt-3{{p.className ? (' ' + p.className) : ''}}" ng-repeat="p in m.products" ng-show="p.hasAnyPermittedItem || showDetails">
     <div class="container">
@@ -29,7 +52,7 @@
         </div>
     </div>
 </div>
-        
+
 <div class="text-right container" style="padding-top:30px; color:#f9f9f9;" ng-show="m.allowShowDetails">
     <label>Show details</label>
     <input type="checkbox" style="margin-left: 10px;" ng-model="showDetails" ng-true-value="'true'" ng-false-value="''">

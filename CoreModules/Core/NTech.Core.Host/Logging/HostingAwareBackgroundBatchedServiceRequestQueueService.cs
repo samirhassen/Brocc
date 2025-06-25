@@ -1,13 +1,14 @@
-﻿using NTech.Services.Infrastructure;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
+using NTech.Services.Infrastructure;
 
 namespace NTech.Core.Host.Logging
 {
-    public abstract class HostingAwareBackgroundBatchedServiceRequestQueueService<TItem> : HostingAwareBackgroundTimerService
+    public abstract class
+        HostingAwareBackgroundBatchedServiceRequestQueueService<TItem> : HostingAwareBackgroundTimerService
     {
         protected override int TimeBetweenTicksInMilliseconds => 15000;
-        private readonly ConcurrentQueue<TItem> queue = new ConcurrentQueue<TItem>();
-        protected virtual int MaxBatchSize { get { return 500; } }
+        private readonly ConcurrentQueue<TItem> queue = new();
+        protected virtual int MaxBatchSize => 500;
 
         protected override async Task OnTick(CancellationToken cancellationToken)
         {
@@ -17,18 +18,16 @@ namespace NTech.Core.Host.Logging
                 if (cancellationToken.IsCancellationRequested)
                     return;
                 var batch = new List<TItem>(MaxBatchSize);
-                TItem i;
-                while (batch.Count < MaxBatchSize && queue.TryDequeue(out i))
+                while (batch.Count < MaxBatchSize && queue.TryDequeue(out var i))
                 {
                     batch.Add(i);
                 }
-                if (batch.Count > 0)
-                {
-                    countLeft -= batch.Count;
-                    if (cancellationToken.IsCancellationRequested)
-                        return;
-                    await HandleBatch(batch, cancellationToken);
-                }
+
+                if (batch.Count <= 0) continue;
+                countLeft -= batch.Count;
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+                await HandleBatch(batch, cancellationToken);
             }
         }
 

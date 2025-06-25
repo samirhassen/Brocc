@@ -890,7 +890,7 @@ namespace nCredit
 
         public static T RunWithExclusiveLock<T>(string lockName, Func<T> ifLockAquired, Func<T> ifAlreadyLocked, TimeSpan? waitForLock = null)
         {
-            return NTechPerServiceExclusiveLock.RunWithExclusiveLock(lockName, ifLockAquired, ifAlreadyLocked, waitForLock: waitForLock);
+            return NTechPerServiceExclusiveLock.RunWithExclusiveLock(lockName, ifLockAquired, ifAlreadyLocked, acquireTimeout: waitForLock);
         }
 
         public static void InitDatabase()

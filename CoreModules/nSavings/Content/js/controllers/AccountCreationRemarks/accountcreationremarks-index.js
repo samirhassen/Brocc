@@ -80,7 +80,7 @@ app.controller('ctr', ['$scope', '$http', '$q', '$timeout', 'savingsAccountComme
                 toastr.error(response.statusText);
             });
         };
-        $scope.getRemarkCodeDisplayText = function (code) {
+        $scope.getRemarkCodeDisplayText = (code) => {
             if (code === 'CustomerCheckpoint') {
                 return 'Customer checkpoint';
             }

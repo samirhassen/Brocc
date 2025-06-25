@@ -1,13 +1,14 @@
-﻿using nDocument.Code;
-using nDocument.Code.Archive;
-using NTech.Services.Infrastructure;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using nDocument.Code;
+using nDocument.Code.Archive;
+using NTech.Services.Infrastructure;
+using NTech.Services.Infrastructure.NTechWs;
+using Serilog;
 
 namespace nDocument.Controllers
 {
@@ -23,11 +24,12 @@ namespace nDocument.Controllers
             public string Base64EncodedFileData { get; set; }
         }
 
-        private ActionResult ServiceError(string errorMessage)
+        private static ActionResult ServiceError(string errorMessage)
         {
             var errorCode = errorMessage.IsOneOf(HardenedArchiveProvider.FileTypeNotAllowedCode) ? errorMessage : null;
-            return NTech.Services.Infrastructure.NTechWs.NTechWebserviceMethod.ToFrameworkErrorActionResult(
-                NTech.Services.Infrastructure.NTechWs.NTechWebserviceMethod.CreateErrorResponse(errorMessage, errorCode: errorCode));
+            return NTechWebserviceMethod.ToFrameworkErrorActionResult(
+                NTechWebserviceMethod.CreateErrorResponse(errorMessage,
+                    errorCode: errorCode));
         }
 
         [HttpPost]
@@ -49,14 +51,13 @@ namespace nDocument.Controllers
                     };
                 }
 
-                if (!p.TryStore(fileBytes, request.MimeType, request.FileName, out string key, out string errorMessage, optionalData: optionalData))
+                if (!p.TryStore(fileBytes, request.MimeType, request.FileName, out var key, out var errorMessage,
+                        optionalData: optionalData))
                 {
                     return ServiceError(errorMessage);
                 }
-                else
-                {
-                    return Json(new { key });
-                }
+
+                return Json(new { key });
             }
             catch (Exception ex)
             {
@@ -72,14 +73,13 @@ namespace nDocument.Controllers
             {
                 var p = ArchiveProviderFactory.Create();
 
-                if (!p.TryStore(file.InputStream, file.ContentType, file.FileName, out string key, out string errorMessage))
+                if (!p.TryStore(file.InputStream, file.ContentType, file.FileName, out var key,
+                        out var errorMessage))
                 {
                     return ServiceError(errorMessage);
                 }
-                else
-                {
-                    return Json(new { key });
-                }
+
+                return Json(new { key });
             }
             catch (Exception ex)
             {
@@ -94,7 +94,7 @@ namespace nDocument.Controllers
             if (string.IsNullOrWhiteSpace(key))
                 return HttpNotFound();
 
-            var p = Code.Archive.ArchiveProviderFactory.Create();
+            var p = ArchiveProviderFactory.Create();
             var result = p.FetchMetadata(key);
 
             if (result == null && ArchiveProviderFactory.IsBackupProviderSet)
@@ -117,7 +117,7 @@ namespace nDocument.Controllers
         [HttpPost]
         public ActionResult Delete(string key)
         {
-            bool wasDeleted = false;
+            var wasDeleted = false;
             if (!string.IsNullOrWhiteSpace(key))
             {
                 var p = ArchiveProviderFactory.Create();
@@ -143,7 +143,8 @@ namespace nDocument.Controllers
             if (keysToFetchFromBackup.Count > 0 && ArchiveProviderFactory.IsBackupProviderSet)
             {
                 var backupProvider = ArchiveProviderFactory.CreateBackup();
-                var backupResult = backupProvider.FetchMetadataBulk(keysToFetchFromBackup.ToHashSet()) ?? new Dictionary<string, ArchiveMetadataFetchResult>();
+                var backupResult = backupProvider.FetchMetadataBulk(keysToFetchFromBackup.ToHashSet()) ??
+                                   new Dictionary<string, ArchiveMetadataFetchResult>();
 
                 foreach (var kvp in backupResult)
                 {
@@ -151,13 +152,17 @@ namespace nDocument.Controllers
                 }
             }
 
-            return Json(keys.Select(x => new
+            return Json(keys.Select(x =>
             {
-                ArchiveKey = x,
-                Exists = result.ContainsKey(x),
-                ContentType = result.ContainsKey(x) ? result[x]?.ContentType : null,
-                FileName = result.ContainsKey(x) ? result[x]?.FileName : null,
-                OptionalData = result.ContainsKey(x) ? result[x]?.OptionalData : null
+                var resVal = result.TryGetValue(x, out var value) ? value : null;
+                return new
+                {
+                    ArchiveKey = x,
+                    Exists = result.ContainsKey(x),
+                    ContentType = resVal?.ContentType,
+                    FileName = resVal?.FileName,
+                    OptionalData = resVal?.OptionalData
+                };
             }).ToList());
         }
 
@@ -167,7 +172,7 @@ namespace nDocument.Controllers
             if (string.IsNullOrWhiteSpace(key))
                 return HttpNotFound();
 
-            var p = ArchiveProviderFactory.Create(); 
+            var p = ArchiveProviderFactory.Create();
             var result = p.Fetch(key);
 
             if (result == null && ArchiveProviderFactory.IsBackupProviderSet)

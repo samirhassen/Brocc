@@ -6,6 +6,7 @@ using nTest.Code;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace nTest
 {
@@ -15,7 +16,8 @@ namespace nTest
         {
         }
 
-        private readonly ConcurrentDictionary<string, ServiceClient> serviceClients = new ConcurrentDictionary<string, ServiceClient>();
+        private readonly ConcurrentDictionary<string, ServiceClient> serviceClients =
+            new ConcurrentDictionary<string, ServiceClient>();
 
         private readonly object timeLock = new object();
 
@@ -35,23 +37,21 @@ namespace nTest
                         {
                             PublishTimeChangeEvent(newT.CurrentTime);
                         }
+
                         return newT.CurrentTime;
                     }
-                    else if (t.CurrentTime != time)
+
+                    if (t.CurrentTime == time) return t.CurrentTime;
+
+                    t.CurrentTime = time;
+                    tr.AddOrUpdate("v1", "currentTime", t);
+                    tr.Commit();
+                    if (publishUpdateEvent)
                     {
-                        t.CurrentTime = time;
-                        tr.AddOrUpdate("v1", "currentTime", t);
-                        tr.Commit();
-                        if (publishUpdateEvent)
-                        {
-                            PublishTimeChangeEvent(t.CurrentTime);
-                        }
-                        return t.CurrentTime;
+                        PublishTimeChangeEvent(t.CurrentTime);
                     }
-                    else
-                    {
-                        return t.CurrentTime;
-                    }
+
+                    return t.CurrentTime;
                 }
             }
         }
@@ -73,29 +73,31 @@ namespace nTest
         {
             var s = NEnv.ServiceRegistry;
 
-            foreach (var serviceName in TimeMachineSupportingServiceNames)
+            foreach (var serviceName in TimeMachineSupportingServiceNames.Where(serviceName =>
+                         s.ContainsService(serviceName)))
             {
-                if (s.ContainsService(serviceName))
+                try
                 {
-                    try
-                    {
-                        var serviceClient = serviceClients.GetOrAdd(
-                            serviceName,
-                            _ => LegacyServiceClientFactory.CreateClientFactory(NEnv.ServiceRegistry).CreateClient(LegacyHttpServiceSystemUser.SharedInstance, serviceName));
-                        serviceClient.ToSync(() => serviceClient.CallVoid(
-                                x => x.PostJson(GetSetTimeUrl(serviceName), new { now = time }),
-                                x => x.EnsureSuccessStatusCode()));
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"Set-TimeMachine-Time failed for '{serviceName}'", ex);
-                    }
+                    var serviceClient = serviceClients.GetOrAdd(
+                        serviceName,
+                        _ => LegacyServiceClientFactory.CreateClientFactory(NEnv.ServiceRegistry)
+                            .CreateClient(LegacyHttpServiceSystemUser.SharedInstance, serviceName));
+                    serviceClient.ToSync(() => serviceClient.CallVoid(
+                        x => x.PostJson(GetSetTimeUrl(serviceName), new { now = time }),
+                        x => x.EnsureSuccessStatusCode()));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Set-TimeMachine-Time failed for '{serviceName}'", ex);
                 }
             }
-            NTech.Services.Infrastructure.Eventing.NTechEventHandler.PublishEvent("TimeMachineTimeChanged", JsonConvert.SerializeObject(new { currentTime = time }));
+
+            NTech.Services.Infrastructure.Eventing.NTechEventHandler.PublishEvent("TimeMachineTimeChanged",
+                JsonConvert.SerializeObject(new { currentTime = time }));
         }
 
-        private static string GetSetTimeUrl(string serviceName) => serviceName == "NTechHost" ? "Api/Set-TimeMachine-Time" : "Set-TimeMachine-Time";
+        private static string GetSetTimeUrl(string serviceName) =>
+            serviceName == "NTechHost" ? "Api/Set-TimeMachine-Time" : "Set-TimeMachine-Time";
 
         private class CurrentTimeItem
         {
@@ -150,6 +152,7 @@ namespace nTest
                         }
                     }
                 }
+
                 return sharedInstance;
             }
         }

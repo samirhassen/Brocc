@@ -24,10 +24,10 @@ ntech.se = (function () {
         input = input.replace('-', '');
         if (input.length != 10 && input.length != 12)
             return false;
-        var monthNr = input.length == 10 ? parseInt(input.slice(2, 4)) : parseInt(input.slice(4, 6));
+        let monthNr = input.length == 10 ? parseInt(input.slice(2, 4)) : parseInt(input.slice(4, 6));
         if (monthNr < 20)
             return (isValidCivicNr(input));
-        var parity, sum;
+        let parity, sum;
         sum = 0;
         parity = 0;
         // Check luhn algorithm
@@ -65,9 +65,9 @@ ntech.se = (function () {
             input = input.substring(2);
         }
         // Declare variables
-        var yearNr = parseInt((!!RegExp.$1) ? RegExp.$1 : RegExp.$5);
-        var monthNr = (parseInt((!!RegExp.$2) ? RegExp.$2 : RegExp.$6) - 1);
-        var dayNr = parseInt((!!RegExp.$3) ? RegExp.$3 : RegExp.$7);
+        let yearNr = parseInt((!!RegExp.$1) ? RegExp.$1 : RegExp.$5);
+        let monthNr = (parseInt((!!RegExp.$2) ? RegExp.$2 : RegExp.$6) - 1);
+        let dayNr = parseInt((!!RegExp.$3) ? RegExp.$3 : RegExp.$7);
         var d = new Date(yearNr, monthNr, dayNr), sum = 0, numdigits = input.length, parity = numdigits % 2, i, digit;
         // Check valid date
         if (Object.prototype.toString.call(d) !== "[object Date]" || isNaN(d.getTime()))
@@ -266,12 +266,12 @@ ntech.libphonenumber = (function () {
 })();
 var NTechTables;
 (function (NTechTables) {
-    var PagingHelper = /** @class */ (function () {
-        function PagingHelper($q, $http) {
+    class PagingHelper {
+        constructor($q, $http) {
             this.$q = $q;
             this.$http = $http;
         }
-        PagingHelper.prototype.createPagingObjectFromPageResult = function (h, onGotoPage) {
+        createPagingObjectFromPageResult(h, onGotoPage) {
             if (!h) {
                 return {
                     pages: [],
@@ -282,7 +282,7 @@ var NTechTables;
                     onGotoPage: onGotoPage ? onGotoPage : null
                 };
             }
-            var p = [];
+            let p = [];
             //9 items including separators are the most shown at one time
             //The two items before and after the current item are shown
             //The first and last item are always shown
@@ -304,149 +304,131 @@ var NTechTables;
                 isNextAllowed: h.CurrentPageNr < (h.TotalNrOfPages - 1),
                 nextPageNr: h.CurrentPageNr + 1
             };
-        };
-        PagingHelper.prototype.gotoPage = function (pageNr, pageSize, url, filter, evt) {
-            var _this = this;
+        }
+        gotoPage(pageNr, pageSize, url, filter, evt) {
             if (evt) {
                 evt.preventDefault();
             }
-            var deferred = this.$q.defer();
+            let deferred = this.$q.defer();
             this.$http({
                 method: 'POST',
                 url: url,
                 data: { pageSize: pageSize, filter: filter, pageNr: pageNr }
-            }).then(function (response) {
-                var data = response.data;
+            }).then((response) => {
+                let data = response.data;
                 deferred.resolve({
                     pagesData: data,
-                    pagingObject: _this.createPagingObjectFromPageResult(data)
+                    pagingObject: this.createPagingObjectFromPageResult(data)
                 });
-            }, function (response) {
+            }, (response) => {
                 deferred.reject(response.statusText);
             });
             return deferred.promise;
-        };
-        return PagingHelper;
-    }());
+        }
+    }
     NTechTables.PagingHelper = PagingHelper;
-    var GotoPageResult = /** @class */ (function () {
-        function GotoPageResult() {
-        }
-        return GotoPageResult;
-    }());
+    class GotoPageResult {
+    }
     NTechTables.GotoPageResult = GotoPageResult;
-    var PagingObject = /** @class */ (function () {
-        function PagingObject() {
-        }
-        return PagingObject;
-    }());
+    class PagingObject {
+    }
     NTechTables.PagingObject = PagingObject;
-    var Page = /** @class */ (function () {
-        function Page() {
-        }
-        return Page;
-    }());
+    class Page {
+    }
     NTechTables.Page = Page;
 })(NTechTables || (NTechTables = {}));
 var NTechComponents;
 (function (NTechComponents) {
-    var Dictionary = /** @class */ (function () {
-        function Dictionary() {
+    class Dictionary {
+        constructor() {
             this._keys = [];
             this._values = [];
             this.undefinedKeyErrorMessage = "Key is either undefined, null or an empty string.";
         }
-        Dictionary.prototype.isEitherUndefinedNullOrStringEmpty = function (object) {
+        isEitherUndefinedNullOrStringEmpty(object) {
             return (typeof object) === "undefined" || object === null || object.toString() === "";
-        };
-        Dictionary.prototype.checkKeyAndPerformAction = function (action, key, value) {
+        }
+        checkKeyAndPerformAction(action, key, value) {
             if (this.isEitherUndefinedNullOrStringEmpty(key)) {
                 throw new Error(this.undefinedKeyErrorMessage);
             }
             return action(key, value);
-        };
-        Dictionary.prototype.add = function (key, value) {
-            var _this = this;
-            var addAction = function (key, value) {
-                if (_this.containsKey(key)) {
+        }
+        add(key, value) {
+            var addAction = (key, value) => {
+                if (this.containsKey(key)) {
                     throw new Error("An element with the same key already exists in the dictionary.");
                 }
-                _this._keys.push(key);
-                _this._values.push(value);
+                this._keys.push(key);
+                this._values.push(value);
             };
             this.checkKeyAndPerformAction(addAction, key, value);
-        };
-        Dictionary.prototype.remove = function (key) {
-            var _this = this;
-            var removeAction = function (key) {
-                if (!_this.containsKey(key)) {
+        }
+        remove(key) {
+            var removeAction = (key) => {
+                if (!this.containsKey(key)) {
                     return false;
                 }
-                var index = _this._keys.indexOf(key);
-                _this._keys.splice(index, 1);
-                _this._values.splice(index, 1);
+                var index = this._keys.indexOf(key);
+                this._keys.splice(index, 1);
+                this._values.splice(index, 1);
                 return true;
             };
             return (this.checkKeyAndPerformAction(removeAction, key));
-        };
-        Dictionary.prototype.getValue = function (key) {
-            var _this = this;
-            var getValueAction = function (key) {
-                if (!_this.containsKey(key)) {
+        }
+        getValue(key) {
+            var getValueAction = (key) => {
+                if (!this.containsKey(key)) {
                     return null;
                 }
-                var index = _this._keys.indexOf(key);
-                return _this._values[index];
+                var index = this._keys.indexOf(key);
+                return this._values[index];
             };
             return this.checkKeyAndPerformAction(getValueAction, key);
-        };
-        Dictionary.prototype.containsKey = function (key) {
-            var _this = this;
-            var containsKeyAction = function (key) {
-                if (_this._keys.indexOf(key) === -1) {
+        }
+        containsKey(key) {
+            var containsKeyAction = (key) => {
+                if (this._keys.indexOf(key) === -1) {
                     return false;
                 }
                 return true;
             };
             return this.checkKeyAndPerformAction(containsKeyAction, key);
-        };
-        Dictionary.prototype.changeValueForKey = function (key, newValue) {
-            var _this = this;
-            var changeValueForKeyAction = function (key, newValue) {
-                if (!_this.containsKey(key)) {
+        }
+        changeValueForKey(key, newValue) {
+            var changeValueForKeyAction = (key, newValue) => {
+                if (!this.containsKey(key)) {
                     throw new Error("In the dictionary there is no element with the given key.");
                 }
-                var index = _this._keys.indexOf(key);
-                _this._values[index] = newValue;
+                var index = this._keys.indexOf(key);
+                this._values[index] = newValue;
             };
             this.checkKeyAndPerformAction(changeValueForKeyAction, key, newValue);
-        };
-        Dictionary.prototype.keys = function () {
+        }
+        keys() {
             return this._keys;
-        };
-        Dictionary.prototype.values = function () {
+        }
+        values() {
             return this._values;
-        };
-        Dictionary.prototype.count = function () {
+        }
+        count() {
             return this._values.length;
-        };
-        return Dictionary;
-    }());
+        }
+    }
     NTechComponents.Dictionary = Dictionary;
-    var UniqueIdGenerator = /** @class */ (function () {
-        function UniqueIdGenerator() {
+    class UniqueIdGenerator {
+        constructor() {
             this.alphabet = '23456789abdegjkmnpqrvwxyz';
         }
-        UniqueIdGenerator.prototype.generateUniqueId = function (length) {
+        generateUniqueId(length) {
             var rtn = '';
             for (var i = 0; i < length; i++) {
                 rtn += this.alphabet.charAt(Math.floor(Math.random() * this.alphabet.length));
             }
             return rtn;
-        };
-        return UniqueIdGenerator;
-    }());
-    var uGen = new UniqueIdGenerator();
+        }
+    }
+    let uGen = new UniqueIdGenerator();
     function generateUniqueId(length) {
         return uGen.generateUniqueId(length);
     }

@@ -2,7 +2,7 @@ var NTechNavigationTarget;
 (function (NTechNavigationTarget) {
     //Based on https://github.com/neosmart/UrlBase64/blob/master/UrlBase64/UrlBase64.cs
     function toUrlSafeBase64String(data) {
-        var encoded = btoa(JSON.stringify(data)).replace('+', '-').replace('/', '_');
+        let encoded = btoa(JSON.stringify(data)).replace('+', '-').replace('/', '_');
         while (encoded[encoded.length - 1] === '=') {
             encoded = encoded.substr(0, encoded.length - 1);
         }
@@ -13,10 +13,9 @@ var NTechNavigationTarget;
         if (!data) {
             return null;
         }
-        var decodeFirstPass = function () {
-            var decoded = '';
-            for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
-                var c = data_1[_i];
+        let decodeFirstPass = () => {
+            let decoded = '';
+            for (let c of data) {
                 if (c === '_') {
                     decoded += '/';
                 }
@@ -33,14 +32,14 @@ var NTechNavigationTarget;
                 default: return decoded;
             }
         };
-        var d = decodeFirstPass();
+        let d = decodeFirstPass();
         return JSON.parse(atob(d));
     }
     NTechNavigationTarget.fromUrlSafeBase64String = fromUrlSafeBase64String;
     function createCrossModuleNavigationTargetCode(targetName, targetContext) {
         if (targetName == null)
             return null;
-        return "t-" + toUrlSafeBase64String({ targetName: targetName, targetContext: targetContext });
+        return "t-" + toUrlSafeBase64String({ targetName, targetContext });
     }
     NTechNavigationTarget.createCrossModuleNavigationTargetCode = createCrossModuleNavigationTargetCode;
 })(NTechNavigationTarget || (NTechNavigationTarget = {}));

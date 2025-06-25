@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using nSavings;
 using NTech.Core.Module.Database;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFixed;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace NTech.Core.Savings.Database
 {
@@ -403,5 +405,7 @@ namespace NTech.Core.Savings.Database
                 ch.Property(x => x.TransactionDate).IsRequired().HasColumnType("date");
             });
         }
+
+        public IQueryable<FixedAccountProduct> FixedAccountProductQueryable => null;
     }
 }

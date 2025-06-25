@@ -28,7 +28,7 @@ namespace nPreCredit.Code.Services
 {
     public static class ServicesConfig
     {
-        private static void R<TConcrete, TInterface>(ContainerBuilder builder) where TConcrete : TInterface
+        private static void Reg<TConcrete, TInterface>(ContainerBuilder builder) where TConcrete : TInterface
         {
             builder
                 .RegisterType<TConcrete>()
@@ -52,56 +52,56 @@ namespace nPreCredit.Code.Services
 
         public static void RegisterServices(ContainerBuilder builder)
         {
-            R<PartialCreditApplicationModelService, IPartialCreditApplicationModelService>(builder);
+            Reg<PartialCreditApplicationModelService, IPartialCreditApplicationModelService>(builder);
             builder.RegisterType<ApplicationInfoService>().InstancePerRequest();
-            R<MortgageLoanApplicationCreditCheckService, IMortgageLoanApplicationCreditCheckService>(builder);
-            R<HttpContextUrlService, IHttpContextUrlService>(builder);
-            R<ApplicationCommentService, IApplicationCommentService>(builder);
-            R<ApplicationCommentService, IApplicationCommentServiceComposable>(builder);
-            R<KeyValueStoreService, IKeyValueStoreService>(builder);
-            R<MortgageLoanApplicationValuationService, IMortgageLoanApplicationValuationService>(builder);
-            R<MortgageLoanCurrentLoansService, IMortgageLoanCurrentLoansService>(builder);
-            R<MortgageLoanApplicationDirectDebitCheckService, IMortgageLoanApplicationDirectDebitCheckService>(builder);
-            R<MortgageLoanObjectService, IMortgageLoanObjectService>(builder);
-            R<PublishEventService, IPublishEventService>(builder);
-            R<CustomerInfoService, ICustomerInfoService>(builder);
-            R<MortgageLoanWorkListService, IMortgageLoanWorkListService>(builder);
-            R<MortgageLoanApplicationBasisService, IMortgageLoanApplicationBasisService>(builder);
-            R<CustomerOfficialDataService, ICustomerOfficialDataService>(builder);
+            Reg<MortgageLoanApplicationCreditCheckService, IMortgageLoanApplicationCreditCheckService>(builder);
+            Reg<HttpContextUrlService, IHttpContextUrlService>(builder);
+            Reg<ApplicationCommentService, IApplicationCommentService>(builder);
+            Reg<ApplicationCommentService, IApplicationCommentServiceComposable>(builder);
+            Reg<KeyValueStoreService, IKeyValueStoreService>(builder);
+            Reg<MortgageLoanApplicationValuationService, IMortgageLoanApplicationValuationService>(builder);
+            Reg<MortgageLoanCurrentLoansService, IMortgageLoanCurrentLoansService>(builder);
+            Reg<MortgageLoanApplicationDirectDebitCheckService, IMortgageLoanApplicationDirectDebitCheckService>(builder);
+            Reg<MortgageLoanObjectService, IMortgageLoanObjectService>(builder);
+            Reg<PublishEventService, IPublishEventService>(builder);
+            Reg<CustomerInfoService, ICustomerInfoService>(builder);
+            Reg<MortgageLoanWorkListService, IMortgageLoanWorkListService>(builder);
+            Reg<MortgageLoanApplicationBasisService, IMortgageLoanApplicationBasisService>(builder);
+            Reg<CustomerOfficialDataService, ICustomerOfficialDataService>(builder);
             builder.RegisterType<ApplicationCheckpointService>().InstancePerRequest();
-            R<FraudModelService, IFraudModelService>(builder);
-            R<ApplicationWaitingForAdditionalInformationService, IApplicationWaitingForAdditionalInformationService>(builder);
-            R<ApplicationCancellationService, IApplicationCancellationService>(builder);
-            R<ProviderInfoService, IProviderInfoService>(builder);
-            R<MortgageApplicationRejectionService, IMortgageApplicationRejectionService>(builder);
-            R<MortgageLoanApplicationInitialCreditCheckService, IMortgageLoanApplicationInitialCreditCheckService>(builder);
-            R<EncryptedTemporaryStorageService, IEncryptedTemporaryStorageService>(builder);
-            R<OtherApplicationsService, IOtherApplicationsService>(builder);
-            R<MortgageLoanApplicationCreationService, IMortgageLoanApplicationCreationService>(builder);
-            R<MortgageLoanApplicationAlterationService, IMortgageLoanApplicationAlterationService>(builder);
-            R<ShowInfoOnNextPageLoadService, IShowInfoOnNextPageLoadService>(builder);
-            R<ReferenceInterestRateService, IReferenceInterestRateService>(builder);
-            R<ApplicationArchiveService, IApplicationArchiveService>(builder);
-            R<CompanyLoanApplicationSearchService, ICompanyLoanApplicationSearchService>(builder);
+            Reg<FraudModelService, IFraudModelService>(builder);
+            Reg<ApplicationWaitingForAdditionalInformationService, IApplicationWaitingForAdditionalInformationService>(builder);
+            Reg<ApplicationCancellationService, IApplicationCancellationService>(builder);
+            Reg<ProviderInfoService, IProviderInfoService>(builder);
+            Reg<MortgageApplicationRejectionService, IMortgageApplicationRejectionService>(builder);
+            Reg<MortgageLoanApplicationInitialCreditCheckService, IMortgageLoanApplicationInitialCreditCheckService>(builder);
+            Reg<EncryptedTemporaryStorageService, IEncryptedTemporaryStorageService>(builder);
+            Reg<OtherApplicationsService, IOtherApplicationsService>(builder);
+            Reg<MortgageLoanApplicationCreationService, IMortgageLoanApplicationCreationService>(builder);
+            Reg<MortgageLoanApplicationAlterationService, IMortgageLoanApplicationAlterationService>(builder);
+            Reg<ShowInfoOnNextPageLoadService, IShowInfoOnNextPageLoadService>(builder);
+            Reg<ReferenceInterestRateService, IReferenceInterestRateService>(builder);
+            Reg<ApplicationArchiveService, IApplicationArchiveService>(builder);
+            Reg<CompanyLoanApplicationSearchService, ICompanyLoanApplicationSearchService>(builder);
             builder.RegisterType<SharedCreateApplicationService>().InstancePerRequest();
-            R<CompanyLoans.CompanyLoanCreditCheckService, CompanyLoans.ICompanyLoanCreditCheckService>(builder);
-            R<CompanyLoans.CompanyLoanCustomerCardUpdateService, CompanyLoans.ICompanyLoanCustomerCardUpdateService>(builder);
+            Reg<CompanyLoans.CompanyLoanCreditCheckService, CompanyLoans.ICompanyLoanCreditCheckService>(builder);
+            Reg<CompanyLoans.CompanyLoanCustomerCardUpdateService, CompanyLoans.ICompanyLoanCustomerCardUpdateService>(builder);
             builder.RegisterType<CreditApplicationListService>().InstancePerRequest();
             builder.RegisterType<CreditApplicationCustomerListService>().InstancePerRequest();
-            R<CreditApplicationCustomerListService, ICreditApplicationCustomerListService>(builder);
-            R<CompanyLoans.CompanyLoanApplicationApprovalService, CompanyLoans.ICompanyLoanApplicationApprovalService>(builder);
-            R<CompanyLoans.CompanyLoanAgreementService, CompanyLoans.ICompanyLoanAgreementService>(builder);
-            R<CompanyLoans.CompanyLoanAgreementSignatureService, CompanyLoans.ICompanyLoanAgreementSignatureService>(builder);
-            R<LockedAgreementService, ILockedAgreementService>(builder);
-            R<ComplexApplicationListService, IComplexApplicationListService>(builder);
-            R<ComplexApplicationListReadOnlyService, IComplexApplicationListReadOnlyService>(builder);
-            R<PreCreditContextFactoryService, IPreCreditContextFactoryService>(builder);
-            R<WorkListService, IWorkListService>(builder);
-            R<MortgageLoanLeadsWorkListService, IMortgageLoanLeadsWorkListService>(builder);
-            R<ApplicationAssignedHandlerService, IApplicationAssignedHandlerService>(builder);
-            R<AbTestingService, IAbTestingService>(builder);
-            R<BankAccountDataShareService, IBankAccountDataShareService>(builder);
-            R<LtlDataTables, ILtlDataTables>(builder);
+            Reg<CreditApplicationCustomerListService, ICreditApplicationCustomerListService>(builder);
+            Reg<CompanyLoans.CompanyLoanApplicationApprovalService, CompanyLoans.ICompanyLoanApplicationApprovalService>(builder);
+            Reg<CompanyLoans.CompanyLoanAgreementService, CompanyLoans.ICompanyLoanAgreementService>(builder);
+            Reg<CompanyLoans.CompanyLoanAgreementSignatureService, CompanyLoans.ICompanyLoanAgreementSignatureService>(builder);
+            Reg<LockedAgreementService, ILockedAgreementService>(builder);
+            Reg<ComplexApplicationListService, IComplexApplicationListService>(builder);
+            Reg<ComplexApplicationListReadOnlyService, IComplexApplicationListReadOnlyService>(builder);
+            Reg<PreCreditContextFactoryService, IPreCreditContextFactoryService>(builder);
+            Reg<WorkListService, IWorkListService>(builder);
+            Reg<MortgageLoanLeadsWorkListService, IMortgageLoanLeadsWorkListService>(builder);
+            Reg<ApplicationAssignedHandlerService, IApplicationAssignedHandlerService>(builder);
+            Reg<AbTestingService, IAbTestingService>(builder);
+            Reg<BankAccountDataShareService, IBankAccountDataShareService>(builder);
+            Reg<LtlDataTables, ILtlDataTables>(builder);
             builder.RegisterType<NTechEnvironmentLegacy>().As<INTechEnvironment>().SingleInstance();
 
             //Shared for all standard products
@@ -113,23 +113,23 @@ namespace nPreCredit.Code.Services
             //Product specific
             if (NEnv.IsMortgageLoansEnabled && !NEnv.IsStandardMortgageLoansEnabled)
             {
-                R<MortgageLoanWorkflowService, IMortgageLoanWorkflowService>(builder);
-                R<MortgageLoanWorkflowService, ISharedWorkflowService>(builder);
-                R<MortgageLoanWorkflowService, IMinimalSharedWorkflowService>(builder);
-                R<MortgageLoans.MortgageLoanDualAgreementService, MortgageLoans.IMortgageLoanDualAgreementService>(builder);
-                R<MortgageLoans.MortgageLoanDualApplicationAndPoaService, MortgageLoans.IMortgageLoanDualApplicationAndPoaService>(builder);
+                Reg<MortgageLoanWorkflowService, IMortgageLoanWorkflowService>(builder);
+                Reg<MortgageLoanWorkflowService, ISharedWorkflowService>(builder);
+                Reg<MortgageLoanWorkflowService, IMinimalSharedWorkflowService>(builder);
+                Reg<MortgageLoans.MortgageLoanDualAgreementService, MortgageLoans.IMortgageLoanDualAgreementService>(builder);
+                Reg<MortgageLoans.MortgageLoanDualApplicationAndPoaService, MortgageLoans.IMortgageLoanDualApplicationAndPoaService>(builder);
             }
             else if (NEnv.IsCompanyLoansEnabled)
             {
-                R<CompanyLoans.CompanyLoanWorkflowService, CompanyLoans.ICompanyLoanWorkflowService>(builder);
-                R<CompanyLoans.CompanyLoanWorkflowService, ISharedWorkflowService>(builder);
-                R<CompanyLoans.CompanyLoanWorkflowService, IMinimalSharedWorkflowService>(builder);
+                Reg<CompanyLoans.CompanyLoanWorkflowService, CompanyLoans.ICompanyLoanWorkflowService>(builder);
+                Reg<CompanyLoans.CompanyLoanWorkflowService, ISharedWorkflowService>(builder);
+                Reg<CompanyLoans.CompanyLoanWorkflowService, IMinimalSharedWorkflowService>(builder);
             }
             else if (NEnv.IsStandardUnsecuredLoansEnabled)
             {
                 builder.RegisterType<UnsecuredLoanStandardWorkflowService>().InstancePerRequest();
-                R<UnsecuredLoanStandardWorkflowService, ISharedWorkflowService>(builder);
-                R<UnsecuredLoanStandardWorkflowService, IMinimalSharedWorkflowService>(builder);
+                Reg<UnsecuredLoanStandardWorkflowService, ISharedWorkflowService>(builder);
+                Reg<UnsecuredLoanStandardWorkflowService, IMinimalSharedWorkflowService>(builder);
                 builder.RegisterType<CreditRecommendationUlStandardService>().InstancePerRequest();
                 builder.RegisterType<UnsecuredLoanStandardWorkflowService>().InstancePerRequest();
                 builder.RegisterType<UnsecuredLoanStandardAgreementService>().InstancePerRequest();
@@ -141,9 +141,9 @@ namespace nPreCredit.Code.Services
             }
             else if (NEnv.IsStandardMortgageLoansEnabled)
             {
-                R<MortgageLoanStandardWorkflowService, IMortgageLoanStandardWorkflowService>(builder);
-                R<MortgageLoanStandardWorkflowService, ISharedWorkflowService>(builder);
-                R<MortgageLoanStandardWorkflowService, IMinimalSharedWorkflowService>(builder);
+                Reg<MortgageLoanStandardWorkflowService, IMortgageLoanStandardWorkflowService>(builder);
+                Reg<MortgageLoanStandardWorkflowService, ISharedWorkflowService>(builder);
+                Reg<MortgageLoanStandardWorkflowService, IMinimalSharedWorkflowService>(builder);
                 builder.RegisterType<LoanApplicationCreditReportService>().InstancePerRequest();
                 builder.RegisterType<StandardPolicyFilters.DataSources.MortgageLoanStandardApplicationPolicyFilterDataSourceFactory>().InstancePerRequest();
                 builder.RegisterType<MortgageLoanStandardCreditCheckService>().InstancePerRequest();
@@ -158,11 +158,11 @@ namespace nPreCredit.Code.Services
                 builder.Register(x => Clients.SignicatSigningClientFactory.CreateClient()).As<Clients.ISignicatSigningClientReadOnly>();
                 builder.RegisterType<UlLegacyAdditionalQuestionsService>().InstancePerRequest();
 
-                R<ThrowExceptionMinimalSharedWorkflowService, IMinimalSharedWorkflowService>(builder);
+                Reg<ThrowExceptionMinimalSharedWorkflowService, IMinimalSharedWorkflowService>(builder);
             }
             else
             {
-                R<ThrowExceptionMinimalSharedWorkflowService, IMinimalSharedWorkflowService>(builder);
+                Reg<ThrowExceptionMinimalSharedWorkflowService, IMinimalSharedWorkflowService>(builder);
             }
 
             RIf<PolicyFilterService>(builder, PolicyFilterService.IsEnabled(NEnv.EnvSettings));
@@ -219,7 +219,7 @@ namespace nPreCredit.Code.Services
             builder.RegisterType<Plugins.PluginCompanyLoanApplicationRequestTranslator>();
             builder.RegisterType<Plugins.PluginMortgageLoanApplicationRequestTranslator>();
             builder.RegisterType<Plugins.PluginMortgageLoanSubmitAdditionalQuestionsRequestTranslator>();
-            R<CampaignCodeService, ICampaignCodeService>(builder);
+            Reg<CampaignCodeService, ICampaignCodeService>(builder);
             builder.RegisterType<SwedishDirectDebitConsentDocumentService>().InstancePerRequest();
 
             builder
@@ -245,7 +245,7 @@ namespace nPreCredit.Code.Services
                     x.Resolve<EncryptionService>(), x.Resolve<ApplicationInfoService>(), x.Resolve<ICustomerClient>()))
                 .InstancePerRequest();
 
-            R<CreditApplicationKeySequenceGenerator, ICreditApplicationKeySequenceGenerator>(builder);
+            Reg<CreditApplicationKeySequenceGenerator, ICreditApplicationKeySequenceGenerator>(builder);
             builder.Register(x => new EncryptionService(
                 NEnv.EncryptionKeys.CurrentKeyName, NEnv.EncryptionKeys.AsDictionary(),
                 x.Resolve<ICoreClock>(), x.Resolve<INTechCurrentUserMetadata>())).InstancePerRequest();
@@ -258,13 +258,13 @@ namespace nPreCredit.Code.Services
                 }).InstancePerRequest();
 
             builder.Register(x => LegacyServiceClientFactory.CreateDocumentClient(LegacyHttpServiceHttpContextUser.SharedInstance, NEnv.ServiceRegistry)).InstancePerRequest();
-            R<LoanStandardCustomerRelationService, ILoanStandardCustomerRelationService>(builder);
-            R<LinqKitQueryExpander, ILinqQueryExpander>(builder);
+            Reg<LoanStandardCustomerRelationService, ILoanStandardCustomerRelationService>(builder);
+            Reg<LinqKitQueryExpander, ILinqQueryExpander>(builder);
 
             builder.RegisterType<UpdateCreditApplicationRepository>().InstancePerRequest();
             builder.RegisterType<HandlerLimitEngine>().InstancePerRequest();
             builder.RegisterType<LoanStandardEmailTemplateService>().InstancePerRequest();
-            R<MarkdownTemplateRenderingServiceLegacyPreCredit, IMarkdownTemplateRenderingService>(builder);
+            Reg<MarkdownTemplateRenderingServiceLegacyPreCredit, IMarkdownTemplateRenderingService>(builder);
         }
     }
 }

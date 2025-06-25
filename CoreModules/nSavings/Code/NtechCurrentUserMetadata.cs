@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Security.Claims;
+using System.Security.Principal;
+using Newtonsoft.Json;
 
 namespace nSavings.Code
 {
@@ -18,16 +21,16 @@ namespace nSavings.Code
 
     public class NtechCurrentUserMetadata : INtechCurrentUserMetadata
     {
-        private readonly System.Security.Principal.IIdentity identity;
+        private readonly IIdentity identity;
 
-        public NtechCurrentUserMetadata(System.Security.Principal.IIdentity identity)
+        public NtechCurrentUserMetadata(IIdentity identity)
         {
             this.identity = identity;
         }
 
-        private T WithClaims<T>(Func<System.Security.Claims.ClaimsIdentity, T> f)
+        private T WithClaims<T>(Func<ClaimsIdentity, T> f)
         {
-            var c = this.identity as System.Security.Claims.ClaimsIdentity;
+            var c = this.identity as ClaimsIdentity;
             if (c == null)
                 return default(T);
             else
@@ -44,10 +47,7 @@ namespace nSavings.Code
 
         public bool ContextHasUser
         {
-            get
-            {
-                return WithClaims(x => new object()) == null;
-            }
+            get { return WithClaims(x => new object()) == null; }
         }
 
         public int UserId
@@ -59,26 +59,15 @@ namespace nSavings.Code
             }
         }
 
-        public string InformationMetadata
-        {
-            get
+        public string InformationMetadata =>
+            JsonConvert.SerializeObject(new
             {
-                return Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    providerUserId = UserId,
-                    providerAuthenticationLevel = AuthenticationLevel,
-                    isSigned = false
-                });
-            }
-        }
+                providerUserId = UserId,
+                providerAuthenticationLevel = AuthenticationLevel,
+                isSigned = false
+            });
 
-        public bool IsSystemUser
-        {
-            get
-            {
-                return (GetClaim("ntech.issystemuser", false) ?? "false").ToLowerInvariant() == "true";
-            }
-        }
+        public bool IsSystemUser => (GetClaim("ntech.issystemuser", false) ?? "false").ToLowerInvariant() == "true";
 
         public string AuthenticationLevel => GetClaim("ntech.authenticationlevel", true);
 

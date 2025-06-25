@@ -1,15 +1,15 @@
 var app = angular.module('app', ['ntech.forms', 'ntech.components']);
-var CustomsAccountsExportCtr = /** @class */ (function () {
-    function CustomsAccountsExportCtr($scope, //ng.IScope
+class CustomsAccountsExportCtr {
+    constructor($scope, //ng.IScope
     $http, $q, $timeout) {
         this.$http = $http;
         this.$q = $q;
         this.$timeout = $timeout;
-        var apiClient = new NTechSavingsApi.ApiClient(function (x) {
+        let apiClient = new NTechSavingsApi.ApiClient(x => {
             toastr.error(x);
             $scope.isLoading = false;
         }, $http, $q);
-        var skipDeliver = initialData.skipDeliver;
+        let skipDeliver = initialData.skipDeliver;
         $scope.skipDeliver = skipDeliver;
         $scope.p = {};
         $scope.backUrl = initialData.backUrl;
@@ -18,17 +18,17 @@ var CustomsAccountsExportCtr = /** @class */ (function () {
                 evt.preventDefault();
             }
             $scope.isLoading = true;
-            apiClient.createAndDeliverFinnishCustomsAccountsExportFile(skipDeliver).then(function (x) {
+            apiClient.createAndDeliverFinnishCustomsAccountsExportFile(skipDeliver).then(x => {
                 $scope.gotoPage(0, evt);
             });
         };
-        var tableHelper = new NTechTables.PagingHelper($q, $http);
-        $scope.gotoPage = function (pageNr, evt) {
+        let tableHelper = new NTechTables.PagingHelper($q, $http);
+        $scope.gotoPage = (pageNr, evt) => {
             if (evt) {
                 evt.preventDefault();
             }
             $scope.isLoading = true;
-            apiClient.fetchFinnishCustomsAccountsExportFiles(50, pageNr).then(function (x) {
+            apiClient.fetchFinnishCustomsAccountsExportFiles(50, pageNr).then(x => {
                 $scope.files = {
                     Page: x.PageExports,
                     TotalNrOfPages: x.TotalPageCount
@@ -40,7 +40,7 @@ var CustomsAccountsExportCtr = /** @class */ (function () {
                 $scope.isLoading = false;
             });
         };
-        $scope.toggleStatus = function (file, evt) {
+        $scope.toggleStatus = (file, evt) => {
             if (evt) {
                 evt.preventDefault();
             }
@@ -52,10 +52,9 @@ var CustomsAccountsExportCtr = /** @class */ (function () {
                 return;
             }
             if (file.CustomData) {
-                var customDataParsed = JSON.parse(file.CustomData);
-                var customDataItems = [];
-                for (var _i = 0, _a = Object.keys(customDataParsed); _i < _a.length; _i++) {
-                    var key = _a[_i];
+                let customDataParsed = JSON.parse(file.CustomData);
+                let customDataItems = [];
+                for (let key of Object.keys(customDataParsed)) {
                     if (customDataParsed[key]) {
                         customDataItems.push({ key: key, value: customDataParsed[key] });
                     }
@@ -68,7 +67,6 @@ var CustomsAccountsExportCtr = /** @class */ (function () {
         $scope.gotoPage(0, null);
         window.scope = $scope;
     }
-    CustomsAccountsExportCtr.$inject = ['$scope', '$http', '$q', '$timeout'];
-    return CustomsAccountsExportCtr;
-}());
+}
+CustomsAccountsExportCtr.$inject = ['$scope', '$http', '$q', '$timeout'];
 app.controller('ctr', CustomsAccountsExportCtr);

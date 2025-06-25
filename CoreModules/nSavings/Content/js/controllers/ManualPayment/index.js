@@ -1,73 +1,71 @@
 var app = angular.module('app', ['ntech.forms', 'ntech.components']);
-var ManualPaymentCtr = /** @class */ (function () {
-    function ManualPaymentCtr($http, $q, $timeout) {
-        var _this = this;
+class ManualPaymentCtr {
+    constructor($http, $q, $timeout) {
         this.$http = $http;
         this.$q = $q;
         this.$timeout = $timeout;
         this.KvKeySpace = 'SavingsManualPaymentsV1';
         this.KvKey = 'pendingPayments';
-        this.isValidPositiveDecimal = function (value) {
-            if (_this.isNullOrWhitespace(value))
+        this.isValidPositiveDecimal = (value) => {
+            if (this.isNullOrWhitespace(value))
                 return true;
             var v = value.toString();
             return (/^([0]|[1-9]([0-9])*)([\.|,]([0-9])+)?$/).test(v);
         };
-        this.isValidDate = function (value) {
-            if (_this.isNullOrWhitespace(value))
+        this.isValidDate = (value) => {
+            if (this.isNullOrWhitespace(value))
                 return true;
             return moment(value, "YYYY-MM-DD", true).isValid();
         };
-        this.client = new NTechSavingsApi.ApiClient(function (msg) { return toastr.error(msg); }, $http, $q);
+        this.client = new NTechSavingsApi.ApiClient(msg => toastr.error(msg), $http, $q);
         this.backUrl = initialData.backUrl;
         this.init();
         if (initialData.isTest) {
             this.testFunctions = [
                 {
                     title: 'Force register payments',
-                    run: function () {
-                        if (!_this.pendingPayments) {
+                    run: () => {
+                        if (!this.pendingPayments) {
                             toastr.info('No pending payments');
                             return;
                         }
-                        _this.registerPayments(null);
+                        this.registerPayments(null);
                     }
                 }
             ];
         }
     }
-    ManualPaymentCtr.prototype.init = function () {
-        var _this = this;
+    init() {
         this.isLoading = true;
-        this.client.keyValueStoreGet(this.KvKey, this.KvKeySpace).then(function (x) {
-            _this.isLoading = false;
+        this.client.keyValueStoreGet(this.KvKey, this.KvKeySpace).then(x => {
+            this.isLoading = false;
             if (x.Value) {
-                var pendingPayments_1 = JSON.parse(x.Value);
-                _this.client.fetchUserNameByUserId(pendingPayments_1.initiatedByUserId).then(function (x) {
-                    pendingPayments_1.initiatedByUserName = x.UserName;
-                    _this.pendingPayments = pendingPayments_1;
-                    _this.p = null;
-                    _this.payments = null;
+                let pendingPayments = JSON.parse(x.Value);
+                this.client.fetchUserNameByUserId(pendingPayments.initiatedByUserId).then(x => {
+                    pendingPayments.initiatedByUserName = x.UserName;
+                    this.pendingPayments = pendingPayments;
+                    this.p = null;
+                    this.payments = null;
                 });
             }
             else {
-                _this.pendingPayments = null;
-                _this.payments = [];
-                _this.p = {
+                this.pendingPayments = null;
+                this.payments = [];
+                this.p = {
                     amount: '',
                     bookKeepingDate: moment(initialData.today).format('YYYY-MM-DD'),
                     noteText: ''
                 };
             }
         });
-    };
-    ManualPaymentCtr.prototype.isApproveAllowed = function () {
+    }
+    isApproveAllowed() {
         if (!this.pendingPayments) {
             return false;
         }
         return this.pendingPayments.initiatedByUserId !== initialData.userId;
-    };
-    ManualPaymentCtr.prototype.isNullOrWhitespace = function (input) {
+    }
+    isNullOrWhitespace(input) {
         if (typeof input === 'undefined' || input == null)
             return true;
         if ($.type(input) === 'string') {
@@ -76,20 +74,20 @@ var ManualPaymentCtr = /** @class */ (function () {
         else {
             return false;
         }
-    };
-    ManualPaymentCtr.prototype.addPayment = function (evt) {
+    }
+    addPayment(evt) {
         if (evt) {
             evt.preventDefault();
         }
         if (!this.f.$valid) {
             return;
         }
-        var pmt = {
+        let pmt = {
             amount: parseFloat(this.p.amount.replace(',', '.')),
             bookKeepingDate: this.p.bookKeepingDate,
             noteText: this.p.noteText
         };
-        var d = this.p.bookKeepingDate;
+        let d = this.p.bookKeepingDate;
         this.p = {
             amount: '',
             bookKeepingDate: d,
@@ -98,98 +96,85 @@ var ManualPaymentCtr = /** @class */ (function () {
         this.payments.push(pmt);
         this.f.$setPristine();
         $('#amount').focus();
-    };
-    ManualPaymentCtr.prototype.removePayment = function (idx, evt) {
+    }
+    removePayment(idx, evt) {
         if (evt) {
             evt.preventDefault();
         }
         this.payments.splice(idx, 1);
-    };
-    ManualPaymentCtr.prototype.paymentSum = function (payments) {
-        var s = 0;
+    }
+    paymentSum(payments) {
+        let s = 0;
         angular.forEach(payments, function (p) {
             s = s + p.amount;
         });
         return s;
-    };
-    ManualPaymentCtr.prototype.cancelPendingPayments = function (evt) {
-        var _this = this;
+    }
+    cancelPendingPayments(evt) {
         if (evt) {
             evt.preventDefault();
         }
         this.isLoading = true;
-        this.client.keyValueStoreRemove(this.KvKey, this.KvKeySpace).then(function (x) {
-            _this.isLoading = false;
-            _this.init();
+        this.client.keyValueStoreRemove(this.KvKey, this.KvKeySpace).then(x => {
+            this.isLoading = false;
+            this.init();
         });
-    };
-    ManualPaymentCtr.prototype.registerPayments = function (evt) {
-        var _this = this;
+    }
+    registerPayments(evt) {
         if (evt) {
             evt.preventDefault();
         }
         if (!this.pendingPayments || this.pendingPayments.payments.length == 0) {
             return;
         }
-        var pendingPayments = this.pendingPayments;
+        let pendingPayments = this.pendingPayments;
         this.isLoading = true;
         //Remove before regiser since having to type them in again is way less bad than registering them twice
-        this.client.keyValueStoreRemove(this.KvKey, this.KvKeySpace).then(function (x) {
-            _this.$http({
+        this.client.keyValueStoreRemove(this.KvKey, this.KvKeySpace).then(x => {
+            this.$http({
                 method: 'POST',
                 url: initialData.registerManualPaymentUrl,
                 data: { initiatedByUserId: pendingPayments.initiatedByUserId, requests: pendingPayments.payments }
-            }).then(function (response) {
-                _this.isLoading = false;
+            }).then((response) => {
+                this.isLoading = false;
                 toastr.info('Payments registered');
-                _this.init();
-            }, function (response) {
-                _this.isLoading = false;
+                this.init();
+            }, (response) => {
+                this.isLoading = false;
                 toastr.error(response.statusText, 'Error');
             });
         });
-    };
-    ManualPaymentCtr.prototype.beginRegisterPayments = function (evt) {
-        var _this = this;
+    }
+    beginRegisterPayments(evt) {
         if (evt) {
             evt.preventDefault();
         }
         if (!this.payments || this.payments.length == 0) {
             return;
         }
-        var model = {
+        let model = {
             initiatedByUserId: initialData.userId,
             initiatedDate: moment(initialData.today).format('YYYY-MM-DD'),
             payments: this.payments
         };
         this.isLoading = true;
-        this.client.keyValueStoreSet(this.KvKey, this.KvKeySpace, JSON.stringify(model)).then(function (x) {
-            _this.isLoading = false;
-            _this.init();
+        this.client.keyValueStoreSet(this.KvKey, this.KvKeySpace, JSON.stringify(model)).then(x => {
+            this.isLoading = false;
+            this.init();
         });
-    };
-    ManualPaymentCtr.$inject = ['$http', '$q', '$timeout'];
-    return ManualPaymentCtr;
-}());
+    }
+}
+ManualPaymentCtr.$inject = ['$http', '$q', '$timeout'];
 app.controller('ctr', ManualPaymentCtr);
 var ManualPaymentNs;
 (function (ManualPaymentNs) {
-    var PaymentEditModel = /** @class */ (function () {
-        function PaymentEditModel() {
-        }
-        return PaymentEditModel;
-    }());
+    class PaymentEditModel {
+    }
     ManualPaymentNs.PaymentEditModel = PaymentEditModel;
-    var PaymentModel = /** @class */ (function () {
-        function PaymentModel() {
-        }
-        return PaymentModel;
-    }());
+    class PaymentModel {
+    }
     ManualPaymentNs.PaymentModel = PaymentModel;
-    var PendingPaymentsModel = /** @class */ (function () {
-        function PendingPaymentsModel() {
-        }
-        return PendingPaymentsModel;
-    }());
+    class PendingPaymentsModel {
+    }
     ManualPaymentNs.PendingPaymentsModel = PendingPaymentsModel;
 })(ManualPaymentNs || (ManualPaymentNs = {}));

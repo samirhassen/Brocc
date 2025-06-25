@@ -1,5 +1,5 @@
-var RiksgaldenCtrl = /** @class */ (function () {
-    function RiksgaldenCtrl($scope, $http, $q, $timeout) {
+class RiksgaldenCtrl {
+    constructor($scope, $http, $q, $timeout) {
         this.$scope = $scope;
         this.$http = $http;
         this.$q = $q;
@@ -10,19 +10,18 @@ var RiksgaldenCtrl = /** @class */ (function () {
         this.secondFileUrlPattern = initialData.secondFileUrlPattern;
         this.alsoEncryptAndSign = 'False';
     }
-    RiksgaldenCtrl.prototype.getFirstFileUrl = function () {
+    getFirstFileUrl() {
         return this.firstFileUrlPattern.replace('BBBBB', this.alsoEncryptAndSign.toString());
-    };
-    RiksgaldenCtrl.prototype.getSecondFileUrl = function () {
+    }
+    getSecondFileUrl() {
         if (!this.maxBusinessEventId) {
             return null;
         }
         else {
             return this.secondFileUrlPattern.replace('BBBBB', this.alsoEncryptAndSign.toString()).replace('NNNNN', this.maxBusinessEventId.toString());
         }
-    };
-    RiksgaldenCtrl.$inject = ['$scope', '$http', '$q'];
-    return RiksgaldenCtrl;
-}());
+    }
+}
+RiksgaldenCtrl.$inject = ['$scope', '$http', '$q'];
 var app = angular.module('app', ['ntech.forms']);
 app.controller('riksgaldenCtrl', RiksgaldenCtrl);

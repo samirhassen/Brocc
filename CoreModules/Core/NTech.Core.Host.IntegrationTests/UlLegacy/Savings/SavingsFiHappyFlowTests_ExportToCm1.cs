@@ -1,5 +1,4 @@
-﻿using nSavings.Code.Cm1;
-using NTech.Core.Host.IntegrationTests.Shared.Services;
+﻿using NTech.Core.Host.IntegrationTests.Shared.Services;
 using NTech.Core.Host.IntegrationTests.UlLegacy.Utilities;
 using NTech.Core.Module;
 using NTech.Services.Infrastructure;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using NTech.Core.Savings.Shared.Services.Cm1;
 
 namespace NTech.Core.Host.IntegrationTests.UlLegacy.Savings
 {

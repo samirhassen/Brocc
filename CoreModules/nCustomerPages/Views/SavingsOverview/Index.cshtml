@@ -10,10 +10,15 @@
     </script>
     @Scripts.Render("~/Content/js/bundle-savingsoverview")
 }
+
 <div class="fixed" ng-show="currentMenuItemName">
     <div class="miniture mobile" ng-click="showMenu=!showMenu">
-        <a ng-hide="showMenu" href="" class="item"><img src="~/Content/img/icons-menu.png" /></a>
-        <a ng-show="showMenu" href="" class="item"><img src="~/Content/img/icons-close-menu.png" /></a>
+        <a ng-hide="showMenu" href="" class="item">
+            <img src="~/Content/img/icons-menu.png" alt="open-menu"/>
+        </a>
+        <a ng-show="showMenu" href="" class="item">
+            <img src="~/Content/img/icons-close-menu.png" alt="close-menu"/>
+        </a>
     </div>
     <div class="order">
         <div class="submenu mobile" ng-show="showMenu">
@@ -21,7 +26,7 @@
         </div>
         <div class="desktopmenu desktop">
             @Html.Partial("Index_Menu")
-        </div>   
+        </div>
     </div>
 </div>
 <div class="content" style="" ng-view>
@@ -37,20 +42,20 @@
 @Html.Partial("Index_Closures")
 
 @section LastInHead {
-    @if(ViewBag.HasAffiliateTracking)
+    @if (ViewBag.HasAffiliateTracking)
     {
         <script>
             function ntechSetCookie(name, value) {
-                var cookieName = name; // Name of your cookie
-                var cookieValue = value; // Value of your cookie
-                var expirationTime = 2592000; // One month in seconds
+                const cookieName = name; // Name of your cookie
+                const cookieValue = value; // Value of your cookie
+                let expirationTime = 2592000; // One month in seconds
                 expirationTime = expirationTime * 1000; // Converts expirationtime to milliseconds
-                var date = new Date(); 
-                var dateTimeNow = date.getTime(); 
- 
+                let date = new Date();
+                const dateTimeNow = date.getTime();
+
                 date.setTime(dateTimeNow + expirationTime); // Sets expiration time (Time now + one month)
-                var date = date.toUTCString(); // Converts milliseconds to UTC time string
-                document.cookie = cookieName+"="+cookieValue+"; expires="+date+"; path=/; domain=." + location.hostname.replace(/^www\./i, ""); // Sets cookie for all subdomains
+                date = date.toUTCString(); // Converts milliseconds to UTC time string
+                document.cookie = cookieName + "=" + cookieValue + "; expires=" + date + "; path=/; domain=." + location.hostname.replace(/^www\./i, ""); // Sets cookie for all subdomains
             }
             @Html.Raw(ViewBag.AffiliateCookieScripts)
         </script>
@@ -59,7 +64,7 @@
 }
 
 @section FirstInBody {
-    @if(ViewBag.HasAffiliateTracking)
+    @if (ViewBag.HasAffiliateTracking)
     {
         @Html.Raw(ViewBag.AffiliateGtmTag2)
     }

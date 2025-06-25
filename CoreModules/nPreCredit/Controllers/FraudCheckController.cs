@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web.Mvc;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace nPreCredit.Controllers
 {

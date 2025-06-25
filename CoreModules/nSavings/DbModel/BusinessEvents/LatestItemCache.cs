@@ -4,26 +4,27 @@ using System.Linq;
 
 namespace nSavings.DbModel.BusinessEvents
 {
-    public class LatestItemCache<ItemType, ValueType> where ValueType : struct
+    public class LatestItemCache<TItem, TValue> where TValue : struct
     {
-        private readonly List<ItemType> orderedItems;
-        private readonly Func<ItemType, DateTime> getDate;
-        private readonly Func<ItemType, ValueType?> getValue;
+        private readonly List<TItem> orderedItems;
+        private readonly Func<TItem, DateTime> getDate;
+        private readonly Func<TItem, TValue?> getValue;
 
-        private int nextIndex = 0;
+        private int nextIndex;
         private DateTime currentDate;
-        private ValueType? currentValue = null;
+        private TValue? currentValue;
 
-        public LatestItemCache(IEnumerable<ItemType> items, Func<ItemType, DateTime> getDate, Func<ItemType, ValueType?> getValue, bool itemsIsOrderedAscAlready)
+        public LatestItemCache(IEnumerable<TItem> items, Func<TItem, DateTime> getDate,
+            Func<TItem, TValue?> getValue, bool itemsIsOrderedAscAlready)
         {
             //BEWARE: This leans on the fact that orderby is a stable sort (this is in the specs) so you change to like .net core or something else make sure the new one is stable as well or multiple items with the same date will have undefined behaviour
-            this.orderedItems = itemsIsOrderedAscAlready ? items.ToList() : items.OrderBy(getDate).ToList();
+            orderedItems = itemsIsOrderedAscAlready ? items.ToList() : items.OrderBy(getDate).ToList();
             this.getValue = getValue;
             this.getDate = getDate;
-            this.currentDate = DateTime.MinValue;
+            currentDate = DateTime.MinValue;
         }
 
-        public ValueType? GetCurrentValue(DateTime d)
+        public TValue? GetCurrentValue(DateTime d)
         {
             if (currentDate == d)
                 return currentValue;
@@ -40,14 +41,18 @@ namespace nSavings.DbModel.BusinessEvents
                 currentValue = getValue(item);
                 nextIndex++;
             }
+
             return currentValue;
         }
     }
+
     public static class LatestItemCache
     {
-        public static LatestItemCache<ItemType, ValueType> Create<ItemType, ValueType>(IEnumerable<ItemType> items, Func<ItemType, DateTime> getDate, Func<ItemType, ValueType?> getValue, bool itemsIsOrderedAscAlready) where ValueType : struct
+        public static LatestItemCache<TItem, TValue> Create<TItem, TValue>(IEnumerable<TItem> items,
+            Func<TItem, DateTime> getDate, Func<TItem, TValue?> getValue, bool itemsIsOrderedAscAlready)
+            where TValue : struct
         {
-            return new LatestItemCache<ItemType, ValueType>(items, getDate, getValue, itemsIsOrderedAscAlready);
+            return new LatestItemCache<TItem, TValue>(items, getDate, getValue, itemsIsOrderedAscAlready);
         }
     }
 }

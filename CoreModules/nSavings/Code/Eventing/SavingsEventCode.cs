@@ -1,7 +1,6 @@
-﻿namespace nSavings
+﻿namespace nSavings.Code.Eventing;
+
+public enum SavingsEventCode
 {
-    public enum SavingsEventCode
-    {
-        TimeMachineTimeChanged
-    }
+    TimeMachineTimeChanged
 }

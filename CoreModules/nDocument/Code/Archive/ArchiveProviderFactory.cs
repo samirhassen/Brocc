@@ -8,16 +8,11 @@ namespace nDocument.Code.Archive
         public static IArchiveProvider Create()
         {
             var realProvider = CreateI();
-            if (NEnv.IsHardeningEnabled)
-            {
-                return new HardenedArchiveProvider(realProvider);
-            }
-            else
-                return realProvider;
+            return IsHardeningEnabled ? new HardenedArchiveProvider(realProvider) : realProvider;
         }
 
         //Used when migrating providers. Backup provider = provider we are migrating from.
-        public static bool IsBackupProviderSet = NEnv.IsBackupProviderSet; 
+        public static bool IsBackupProviderSet = NEnv.IsBackupProviderSet;
 
         public static IArchiveProvider CreateBackup()
         {
@@ -28,18 +23,20 @@ namespace nDocument.Code.Archive
 
         public static bool IsKnownCodedErrorMessage(string errorMessage)
         {
-            return errorMessage != null && errorMessage.IsOneOf(Code.Archive.HardenedArchiveProvider.FileTypeNotAllowedCode);
+            return errorMessage != null &&
+                   errorMessage.IsOneOf(HardenedArchiveProvider.FileTypeNotAllowedCode);
         }
 
         private static IArchiveProvider CreateI()
         {
-            var providerName = NEnv.StorageProvider;
+            var providerName = StorageProvider;
             switch (providerName)
             {
-                case NEnv.StorageProviderCode.Azure: return new AzureArchiveProvider();
-                case NEnv.StorageProviderCode.Aws: return new AwsArchiveProvider(); 
-                case NEnv.StorageProviderCode.Disk: return new DiskArchiveProvider();
-                case NEnv.StorageProviderCode.Sqlite: return new SqliteArchiveProvider(() => NEnv.SqliteStorageProviderDatabaseFile);
+                case StorageProviderCode.Azure: return new AzureArchiveProvider();
+                case StorageProviderCode.Aws: return new AwsArchiveProvider();
+                case StorageProviderCode.Disk: return new DiskArchiveProvider();
+                case StorageProviderCode.Sqlite:
+                    return new SqliteArchiveProvider(() => SqliteStorageProviderDatabaseFile);
                 default:
                     throw new NotImplementedException();
             }
@@ -47,13 +44,14 @@ namespace nDocument.Code.Archive
 
         private static IArchiveProvider CreateBackupI()
         {
-            var providerName = NEnv.BackupStorageProvider;
+            var providerName = BackupStorageProvider;
             switch (providerName)
             {
-                case NEnv.StorageProviderCode.Azure: return new AzureArchiveProvider();
-                case NEnv.StorageProviderCode.Aws: return new AwsArchiveProvider();
-                case NEnv.StorageProviderCode.Disk: return new DiskArchiveProvider();
-                case NEnv.StorageProviderCode.Sqlite: return new SqliteArchiveProvider(() => NEnv.SqliteStorageProviderDatabaseFile);
+                case StorageProviderCode.Azure: return new AzureArchiveProvider();
+                case StorageProviderCode.Aws: return new AwsArchiveProvider();
+                case StorageProviderCode.Disk: return new DiskArchiveProvider();
+                case StorageProviderCode.Sqlite:
+                    return new SqliteArchiveProvider(() => SqliteStorageProviderDatabaseFile);
                 default:
                     throw new NotImplementedException();
             }

@@ -1,36 +1,37 @@
-﻿using NTech.Banking.CivicRegNumbers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NTech.Banking.CivicRegNumbers;
 
-namespace nSavings.Code
+namespace nSavings.Code;
+
+public class CreditReportClient : AbstractServiceClient
 {
-    public class CreditReportClient : AbstractServiceClient
+    protected override string ServiceName => "nCreditReport";
+
+    public class FetchNameAndAddressResult
     {
-        protected override string ServiceName => "nCreditReport";
+        public bool Success { get; set; }
+        public bool IsInvalidCredentialsError { get; set; }
+        public bool IsTimeoutError { get; set; }
+        public List<Item> Items { get; set; }
 
-        public class FetchNameAndAddressResult
+        public class Item
         {
-            public bool Success { get; set; }
-            public bool IsInvalidCredentialsError { get; set; }
-            public bool IsTimeoutError { get; set; }
-            public List<Item> Items { get; set; }
-            public class Item
+            public string Name { get; set; }
+            public string Value { get; set; }
+        }
+    }
+
+    public FetchNameAndAddressResult FetchNameAndAddress(string providerName, ICivicRegNumber civicRegNr,
+        List<string> requestedItemNames, int customerId)
+    {
+        return Begin()
+            .PostJson("PersonInfo/FetchNameAndAddress", new
             {
-                public string Name { get; set; }
-                public string Value { get; set; }
-            }
-        }
-
-        public FetchNameAndAddressResult FetchNameAndAddress(string providerName, ICivicRegNumber civicRegNr, List<string> requestedItemNames, int customerId)
-        {
-            return Begin()
-                .PostJson("PersonInfo/FetchNameAndAddress", new
-                {
-                    providerName = providerName,
-                    civicRegNr = civicRegNr.NormalizedValue,
-                    requestedItemNames,
-                    customerId
-                })
-                .ParseJsonAs<FetchNameAndAddressResult>();
-        }
+                providerName = providerName,
+                civicRegNr = civicRegNr.NormalizedValue,
+                requestedItemNames,
+                customerId
+            })
+            .ParseJsonAs<FetchNameAndAddressResult>();
     }
 }

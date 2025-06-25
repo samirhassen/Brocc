@@ -1,0 +1,83 @@
+@using nSavings.ViewModel.FixedRateProduct.Common
+@model nSavings.ViewModel.FixedRateProduct.ProductItemsViewModel
+
+@if (!Model.Products.Any())
+{
+    <tr>
+        <td colspan="7" class="text-center text-gray-400">No products</td>
+    </tr>
+}
+else
+{
+    foreach (var product in Model.Products)
+    {
+        <tr class="@(Model.GrayedOut ? "bg-gray-50 text-gray-500 border-b" : "") my-3">
+            <td class="py-3">@product.Name</td>
+            <td>@product.InterestRate%</td>
+            <td>@product.TermInMonths</td>
+            <td>@product.ValidFrom.ToString("yyyy-MM-dd")</td>
+            @if (product.ValidTo != null)
+            {
+                <td>@product.ValidTo.Value.ToString("yyyy-MM-dd")</td>
+            }
+            else
+            {
+                <td></td>
+            }
+            @if (product.ResponseStatus == ResponseStatus.Pending)
+            {
+                <td><span class="text-yellow-500 bg-yellow-100 rounded-lg p-2">Pending</span></td>
+            }
+            else if (product.ResponseStatus == ResponseStatus.Rejected)
+            {
+                <td><span class="text-red-500 bg-red-100 rounded-lg p-2">Rejected</span></td>
+            }
+            else if (product.ValidFrom < DateTime.Now && (product.ValidTo == null || product.ValidTo > DateTime.Now))
+            {
+                <td><span class="text-green-500 bg-green-100 rounded-lg p-2">Active</span></td>
+            }
+            else if (product.ValidTo != null && product.ValidTo < DateTime.Now)
+            {
+                <td><span class="text-gray-500 bg-gray-100 rounded-lg p-2">Expired</span></td>
+            }
+            else
+            {
+                <td><span class="text-blue-500 bg-blue-100 rounded-lg p-2">Upcoming</span></td>
+            }
+            <td class="py-3">
+                @if (Model.AllowEdit)
+                {
+                    <div class="grid grid-cols-3 items-center">
+                        <button class="text-sm font-small text-gray-500 hover:text-gray-800"
+                                @@click="showModal = true"
+                                hx-get="/Ui/FixedRateProductManagement/@product.Id/edit" hx-target="#modal-content"
+                                hx-swap="innerHTML"
+                                title="Edit product '@product.Name'">
+                            <i class="fas fa-pen-to-square"></i>
+                        </button>
+                        @if (product.ResponseStatus == ResponseStatus.Pending && User.Identity.Name != product.UpdatedBy)
+                        {
+                            <div
+                                class="grid grid-cols-2 col-span-2 items-center border-white rounded-md overflow-hidden">
+                                <button
+                                    class="text-sm font-medium text-white bg-green-400 hover:bg-green-500 focus:z-10 focus:outline-none"
+                                    title="Approve product '@product.Name'"
+                                    hx-get="/Ui/FixedRateProductManagement/@product.Id/respond/approve"
+                                    hx-on="htmx:afterRequest: window.location.reload()">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button
+                                    class="text-sm font-medium text-white bg-red-400 hover:bg-red-500 focus:z-10 focus:outline-none"
+                                    title="Reject product '@product.Name'"
+                                    hx-get="/Ui/FixedRateProductManagement/@product.Id/respond/reject"
+                                    hx-on="htmx:afterRequest: window.location.reload()">
+                                    <i class="fas fa-times "></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </td>
+        </tr>
+    }
+}

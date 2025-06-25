@@ -1,24 +1,24 @@
-﻿using NTech.Services.Infrastructure;
-using nUser.DbModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Web.Mvc;
+using NTech.Services.Infrastructure;
+using nUser.DbModel;
 
 namespace nUser.Controllers
 {
     public class UserController : NController
     {
-
         private static ActionResult BadRequest(string msg) => new HttpStatusCodeResult(HttpStatusCode.BadRequest, msg);
 
         [AllowAnonymous]
         [HttpPost]
         public ActionResult IsValidCivicRegNr(string civicRegNr)
         {
-            string normalizedValue;
-            if (FinnishCivicRegNumber.IsValidFinnishCivicRegNr(civicRegNr, out normalizedValue))
+            if (FinnishCivicRegNumber.IsValidFinnishCivicRegNr(civicRegNr, out var normalizedValue))
             {
                 return Json2(new
                 {
@@ -26,14 +26,12 @@ namespace nUser.Controllers
                     value = normalizedValue
                 });
             }
-            else
+
+            return Json2(new
             {
-                return Json2(new
-                {
-                    isValid = false,
-                    value = civicRegNr
-                });
-            }
+                isValid = false,
+                value = civicRegNr
+            });
         }
 
         //This exists in addition to GetAll to eventually remove GetAll so we can start getting explicit roles on the apis
@@ -62,7 +60,9 @@ namespace nUser.Controllers
                     CreationDate = u.CreationDate,
                     Name = u.DisplayName,
                     DeletionDate = u.DeletionDate,
-                    DeletedBy = u.DeletedById == null ? null : context.Users.FirstOrDefault(x => x.Id == u.DeletedById).DisplayName
+                    DeletedBy = u.DeletedById == null
+                        ? null
+                        : context.Users.FirstOrDefault(x => x.Id == u.DeletedById).DisplayName
                 });
 
                 return Json2(result.ToList());
@@ -79,7 +79,8 @@ namespace nUser.Controllers
         public ActionResult GetDisplayNamesAndUserIds(List<int> userIds)
         {
             userIds = userIds ?? new List<int>();
-            return Json2(new UsersContext().Users.Where(x => userIds.Contains(x.Id)).ToList().Select(x => new { UserId = x.Id, x.DisplayName }).ToList());
+            return Json2(new UsersContext().Users.Where(x => userIds.Contains(x.Id)).ToList()
+                .Select(x => new { UserId = x.Id, x.DisplayName }).ToList());
         }
 
         [HttpPost]
@@ -87,8 +88,13 @@ namespace nUser.Controllers
         {
             using (var c = new UsersContext())
             {
-                var p = c.Users.Where(x => x.Id == this.CurrentUserId).Select(x => new { x.ProviderName, x.IsSystemUser }).SingleOrDefault();
-                return Json2(new { providerName = p?.ProviderName, isProvider = !string.IsNullOrWhiteSpace(p?.ProviderName), userExists = p != null, isSystemUser = (p?.IsSystemUser ?? false) });
+                var p = c.Users.Where(x => x.Id == this.CurrentUserId)
+                    .Select(x => new { x.ProviderName, x.IsSystemUser }).SingleOrDefault();
+                return Json2(new
+                {
+                    providerName = p?.ProviderName, isProvider = !string.IsNullOrWhiteSpace(p?.ProviderName),
+                    userExists = p != null, isSystemUser = (p?.IsSystemUser ?? false)
+                });
             }
         }
 
@@ -117,12 +123,14 @@ namespace nUser.Controllers
             return Create(request, r => r.Group == "Admin" ? "Use CreateAdmin instead" : null);
         }
 
-        private bool TryCreateUserEntity(string createdByUserId, string displayName, out User user, out string failedMessage, Action<User> initAdditional = null)
+        private bool TryCreateUserEntity(string createdByUserId, string displayName, out User user,
+            out string failedMessage, Action<User> initAdditional = null)
         {
             user = null;
 
             var v = new NTechUserNameValidator();
-            if (!v.TryValidateUserName(displayName, NTechUserNameValidator.UserNameTypeCode.DisplayUserName, out failedMessage))
+            if (!v.TryValidateUserName(displayName, NTechUserNameValidator.UserNameTypeCode.DisplayUserName,
+                    out failedMessage))
             {
                 return false;
             }
@@ -144,7 +152,7 @@ namespace nUser.Controllers
         [NTechAuthorizeAndPermissions(Permissions = new[] { "editAdminBegin" })]
         public ActionResult CreateAdminSimple(string displayName, DateTime startDate, DateTime endDate)
         {
-            var u = this.User.Identity as System.Security.Claims.ClaimsIdentity;
+            var u = User.Identity as ClaimsIdentity;
             var userId = u?.FindFirst("ntech.userid")?.Value;
 
             if (userId == null)
@@ -185,7 +193,7 @@ namespace nUser.Controllers
         [NTechAuthorizeAndPermissions(Permissions = new[] { "editUserBegin" })]
         public ActionResult CreateRegularUserSimple(string displayName)
         {
-            var u = this.User.Identity as System.Security.Claims.ClaimsIdentity;
+            var u = User.Identity as ClaimsIdentity;
             var userId = u?.FindFirst("ntech.userid")?.Value;
 
             if (userId == null)
@@ -211,7 +219,7 @@ namespace nUser.Controllers
         [NTechAuthorizeAndPermissions(Permissions = new[] { "editUserBegin" })]
         public ActionResult CreateProviderSimple(string displayName, string providerName)
         {
-            var u = this.User.Identity as System.Security.Claims.ClaimsIdentity;
+            var u = User.Identity as ClaimsIdentity;
             var userId = u?.FindFirst("ntech.userid")?.Value;
 
             if (userId == null)
@@ -224,7 +232,8 @@ namespace nUser.Controllers
                 return BadRequest("Missing providerName");
 
             var v = new NTechUserNameValidator();
-            if (!v.TryValidateUserName(providerName, NTechUserNameValidator.UserNameTypeCode.DisplayUserName, out var invalidProviderNameMessage))
+            if (!v.TryValidateUserName(providerName, NTechUserNameValidator.UserNameTypeCode.DisplayUserName,
+                    out var invalidProviderNameMessage))
             {
                 return BadRequest("Invalid providerName: " + invalidProviderNameMessage);
             }
@@ -232,7 +241,7 @@ namespace nUser.Controllers
             using (var db = new UsersContext())
             {
                 if (!TryCreateUserEntity(userId, displayName, out var user, out var failedMessage,
-                    initAdditional: x => x.ProviderName = providerName.Trim()))
+                        initAdditional: x => x.ProviderName = providerName.Trim()))
                 {
                     return BadRequest(failedMessage);
                 }
@@ -249,7 +258,7 @@ namespace nUser.Controllers
         [NTechAuthorizeAndPermissions(Permissions = new[] { "editAdminBegin" })]
         public ActionResult CreatSystemUserSimple(string displayName)
         {
-            var u = this.User.Identity as System.Security.Claims.ClaimsIdentity;
+            var u = User.Identity as ClaimsIdentity;
             var userId = u?.FindFirst("ntech.userid")?.Value;
 
             if (userId == null)
@@ -261,7 +270,7 @@ namespace nUser.Controllers
             using (var db = new UsersContext())
             {
                 if (!TryCreateUserEntity(userId, displayName, out var user, out var failedMessage,
-                    initAdditional: x => x.IsSystemUser = true))
+                        initAdditional: x => x.IsSystemUser = true))
                 {
                     return BadRequest(failedMessage);
                 }
@@ -278,7 +287,7 @@ namespace nUser.Controllers
         [NTechAuthorizeAndPermissions(Permissions = new[] { "editUserBegin" })]
         public ActionResult DeactivateUser(int userId)
         {
-            var loggedInUserId = this.CurrentUserId;
+            var loggedInUserId = CurrentUserId;
 
             if (loggedInUserId == userId)
             {
@@ -301,7 +310,9 @@ namespace nUser.Controllers
                 userToDelete.DeletedById = loggedInUserId;
                 userToDelete.DeletionDate = DateTime.Now;
 
-                var groups = context.GroupMemberships.Where(gm => gm.User.Id == userId).ToList();
+                var groups = context.GroupMemberships.Where(gm => gm.User.Id == userId)
+                    .Include(groupMembership => groupMembership.GroupMembershipCancellation)
+                    .ToList();
                 foreach (var group in groups)
                 {
                     context.GroupMembershipCancellations.RemoveRange(group.GroupMembershipCancellation);
@@ -345,13 +356,13 @@ namespace nUser.Controllers
         private ActionResult Create(CreateUserRequest request, Func<CreateUserRequest, string> checkGroup)
         {
             Func<string, EmptyResult> badRequest = s =>
-                {
-                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    Response.StatusDescription = s;
-                    return new EmptyResult();
-                };
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                Response.StatusDescription = s;
+                return new EmptyResult();
+            };
 
-            var u = this.User.Identity as System.Security.Claims.ClaimsIdentity;
+            var u = this.User.Identity as ClaimsIdentity;
             var userId = u?.FindFirst("ntech.userid")?.Value;
 
             if (userId == null)
@@ -380,7 +391,9 @@ namespace nUser.Controllers
                     return badRequest("A user with that DisplayName already exists");
                 if (request.WsFedName != null && request.WsFedProviderName != null)
                 {
-                    if (db.Users.Any(x => x.AuthenticationMechanisms.Any(y => y.AuthenticationProvider == request.WsFedProviderName && y.UserIdentity == request.WsFedName)))
+                    if (db.Users.Any(x => x.AuthenticationMechanisms.Any(y =>
+                            y.AuthenticationProvider == request.WsFedProviderName &&
+                            y.UserIdentity == request.WsFedName)))
                         return badRequest("A user already exists with that federated account");
                 }
 
@@ -406,7 +419,8 @@ namespace nUser.Controllers
                 if (request.WsFedName != null && request.WsFedProviderName != null)
                 {
                     var v = new NTechUserNameValidator();
-                    if (!v.TryValidateUserName(request.WsFedName, NTechUserNameValidator.UserNameTypeCode.ActiveDirectoryUserName, out failedMessage))
+                    if (!v.TryValidateUserName(request.WsFedName,
+                            NTechUserNameValidator.UserNameTypeCode.ActiveDirectoryUserName, out failedMessage))
                     {
                         return badRequest("Invalid WsFedName: " + failedMessage);
                     }
@@ -425,6 +439,7 @@ namespace nUser.Controllers
 
                 db.SaveChanges();
             }
+
             return Json2(new { Id = groupMembership.Id });
         }
     }

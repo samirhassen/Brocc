@@ -17,14 +17,8 @@ namespace nCustomer.DbModel
 
         public bool IsChangeTrackingEnabled
         {
-            get
-            {
-                return Configuration.AutoDetectChangesEnabled;
-            }
-            set
-            {
-                Configuration.AutoDetectChangesEnabled = value;
-            }
+            get => Configuration.AutoDetectChangesEnabled;
+            set => Configuration.AutoDetectChangesEnabled = value;
         }
 
         public void DetectChanges() => ChangeTracker.DetectChanges();

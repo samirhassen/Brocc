@@ -1,79 +1,66 @@
-var InitialCustomerInfo = /** @class */ (function () {
-    function InitialCustomerInfo() {
+class InitialCustomerInfo {
+}
+class ContactInfo {
+}
+class CustomerItem {
+}
+class CustomerInfoController {
+    constructor() {
     }
-    return InitialCustomerInfo;
-}());
-var ContactInfo = /** @class */ (function () {
-    function ContactInfo() {
-    }
-    return ContactInfo;
-}());
-var CustomerItem = /** @class */ (function () {
-    function CustomerItem() {
-    }
-    return CustomerItem;
-}());
-var CustomerInfoController = /** @class */ (function () {
-    function CustomerInfoController() {
-    }
-    CustomerInfoController.prototype.toggleContactInfo = function (evt) {
-        var _this = this;
+    toggleContactInfo(evt) {
         if (evt) {
             evt.preventDefault();
         }
         if (!this.contactInfo) {
-            this.fetchcustomeritems(this.customer.customerId, ['firstName', 'lastName', 'addressStreet', 'addressZipcode', 'addressCity', 'addressCountry', 'phone', 'email'], function (items) {
-                _this.contactInfo = {
+            this.fetchcustomeritems(this.customer.customerId, ['firstName', 'lastName', 'addressStreet', 'addressZipcode', 'addressCity', 'addressCountry', 'phone', 'email'], (items) => {
+                this.contactInfo = {
                     isOpen: true,
-                    firstName: _this.getArrayItemValue(items, 'firstName'),
-                    lastName: _this.getArrayItemValue(items, 'lastName'),
-                    addressStreet: _this.getArrayItemValue(items, 'addressStreet'),
-                    addressCity: _this.getArrayItemValue(items, 'addressCity'),
-                    addressZipcode: _this.getArrayItemValue(items, 'addressZipcode'),
-                    addressCountry: _this.getArrayItemValue(items, 'addressCountry'),
-                    phone: _this.getArrayItemValue(items, 'phone'),
-                    email: _this.getArrayItemValue(items, 'email')
+                    firstName: this.getArrayItemValue(items, 'firstName'),
+                    lastName: this.getArrayItemValue(items, 'lastName'),
+                    addressStreet: this.getArrayItemValue(items, 'addressStreet'),
+                    addressCity: this.getArrayItemValue(items, 'addressCity'),
+                    addressZipcode: this.getArrayItemValue(items, 'addressZipcode'),
+                    addressCountry: this.getArrayItemValue(items, 'addressCountry'),
+                    phone: this.getArrayItemValue(items, 'phone'),
+                    email: this.getArrayItemValue(items, 'email')
                 };
-            }, function (msg) {
+            }, (msg) => {
                 toastr.warning(msg);
             });
         }
         else {
             this.contactInfo.isOpen = !this.contactInfo.isOpen;
         }
-    };
-    CustomerInfoController.prototype.unlockCivicRegNr = function (evt) {
-        var _this = this;
+    }
+    unlockCivicRegNr(evt) {
         if (evt) {
             evt.preventDefault();
         }
-        this.fetchcustomeritems(this.customer.customerId, ['civicRegNr'], function (items) {
-            _this.civicRegNr = _this.getArrayItemValue(items, 'civicRegNr');
-        }, function (msg) {
+        this.fetchcustomeritems(this.customer.customerId, ['civicRegNr'], (items) => {
+            this.civicRegNr = this.getArrayItemValue(items, 'civicRegNr');
+        }, (msg) => {
             toastr.warning(msg);
         });
-    };
-    CustomerInfoController.prototype.formatmissing = function (i) {
+    }
+    formatmissing(i) {
         if (!i) {
             return '-';
         }
         else {
             return i;
         }
-    };
-    CustomerInfoController.prototype.getArrayItemValue = function (items, name) {
-        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
-            var i = items_1[_i];
+    }
+    getArrayItemValue(items, name) {
+        for (let i of items) {
             if (i.name == name) {
                 return i.value;
             }
         }
         return null;
-    };
-    return CustomerInfoController;
-}());
-var CustomerInfoComponent = /** @class */ (function () {
-    function CustomerInfoComponent() {
+    }
+}
+class CustomerInfoComponent {
+    constructor() {
         this.bindings = {
             customer: '<',
             fetchcustomeritems: '<'
@@ -81,6 +68,5 @@ var CustomerInfoComponent = /** @class */ (function () {
         this.controller = CustomerInfoController;
         this.templateUrl = 'customerinfo.html'; //In Shared/Component_CustomerInfo.cshtml
     }
-    return CustomerInfoComponent;
-}());
+}
 angular.module('ntech.components').component('customerinfo', new CustomerInfoComponent());

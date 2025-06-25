@@ -1,8 +1,10 @@
-﻿using NTech.Core.Module.Shared.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using NTech.Core.Module.Shared.Database;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings
+namespace NTech.Core.Savings.Shared.DbModel
 {
     public class SharedSavingsInterestRate : InfrastructureBaseItem
     {

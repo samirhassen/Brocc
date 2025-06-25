@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "~/Views/Shared/_EmbeddedCustomerPagesImitationLayout.cshtml";
+    ViewBag.Title = "Fortsätt ansökan";
+    ViewBag.AngularDeclaration = "ng-app=\"app\" ng-controller=\"ctr\" ng-cloak translate-cloak";
+    ViewBag.LoaderDeclaration = "ng-show=\"isLoading\"";
+}
+
+@section Scripts {
+    <script>
+        initialData = parseUtf8Base64InitialData('@Html.Raw(ViewBag.JsonInitialData)')
+    </script>
+    @Scripts.Render("~/Content/js/bundle-login-with-eid-signature")
+}
+<div class="content">
+    <div class="flex-container">
+        <div class="align-center">
+            <div class="text-center">
+            @if (NEnv.IsSkinningEnabled)
+            {
+                <img src="@Url.Content("~/Skinning/img/customer-page-logo.png")" style="max-height:50px">
+            }
+            else
+            {
+                <span>Ansökan</span>
+            }
+            </div>
+            <div style="padding-top:60px;">
+                <h3 class="text-center">Logga in</h3>
+                <p class="text-center pb-3">för att fortsätta med ansökan</p>
+            </div>
+            <div style="padding-top:60px;">
+                @Html.Partial("LoginWithEidSignature_SharedForm", new { SubmitButtonClasses = "n-main-btn n-green-btn" })
+            </div> 
+        </div>     
+    </div>
+    
+    
+</div>
+

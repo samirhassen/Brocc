@@ -1,22 +1,23 @@
-﻿using nCredit.Code;
+﻿using System;
+using System.Linq;
+using System.Xml.Linq;
 using nCredit.DbModel.BusinessEvents;
 using nCredit.Excel;
 using NTech.Banking.BookKeeping;
 using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Services.Infrastructure.NTechWs;
-using System;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace nCredit.WebserviceMethods.Reports
 {
-    public class MortgageLoanBookKeepingReportMethod : FileStreamWebserviceMethod<MortgageLoanBookKeepingReportMethod.Request>
+    public class
+        MortgageLoanBookKeepingReportMethod : FileStreamWebserviceMethod<MortgageLoanBookKeepingReportMethod.Request>
     {
         public override string Path => "Reports/MortgageLoanBookKeeping";
 
         public override bool IsEnabled => NEnv.IsMortgageLoansEnabled;
 
-        protected override ActionResult.FileStream DoExecuteFileStream(NTechWebserviceMethodRequestContext requestContext, Request request)
+        protected override ActionResult.FileStream DoExecuteFileStream(
+            NTechWebserviceMethodRequestContext requestContext, Request request)
         {
             Validate(request, x =>
             {
@@ -38,7 +39,8 @@ namespace nCredit.WebserviceMethods.Reports
                         x.BookKeepingDate >= request.FromDate.Value && x.BookKeepingDate <= request.ToDate.Value);
 
                 var trs = BookKeepingFileManager.CreateEligableTransactions(transactions, ruleSet);
-                var sieFile = BookKeepingFileManager.CreateSieFileFromTransactions(trs, ruleSet, new CoreClock(), null, requestContext.Service().KeyValueStore,
+                var sieFile = BookKeepingFileManager.CreateSieFileFromTransactions(trs, ruleSet, new CoreClock(), null,
+                    requestContext.Service().KeyValueStore,
                     NEnv.BookKeepingAccountPlan);
 
                 var allTransactions = sieFile.Verifications.SelectMany(x => x.Transactions.Select(y => new
@@ -71,7 +73,9 @@ namespace nCredit.WebserviceMethods.Reports
                     allTransactions.Col(x => x.VerRegDate, ExcelType.Date, "VerRegDate"),
                     allTransactions.Col(x => x.Account, ExcelType.Text, "Account"),
                     allTransactions.Col(x => x.Amount, ExcelType.Number, "Amount"),
-                    allTransactions.Col(x => x.VerRegDate.HasValue ? int.Parse(x.VerRegDate.Value.ToString("yyyyMM")) : new int?(), ExcelType.Number, "Period", nrOfDecimals: 0, isNumericId: true));
+                    allTransactions.Col(
+                        x => x.VerRegDate.HasValue ? int.Parse(x.VerRegDate.Value.ToString("yyyyMM")) : new int?(),
+                        ExcelType.Number, "Period", nrOfDecimals: 0, isNumericId: true));
 
                 var client = requestContext.Service().DocumentClientHttpContext;
                 var result = client.CreateXlsx(excelRequest);

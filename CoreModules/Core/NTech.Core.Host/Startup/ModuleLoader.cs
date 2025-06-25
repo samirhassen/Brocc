@@ -1,18 +1,22 @@
-﻿using NTech.Core.Module;
+﻿using NTech.Core.Credit;
+using NTech.Core.Customer;
+using NTech.Core.Module;
+using NTech.Core.PreCredit;
+using NTech.Core.User;
 
 namespace NTech.Core.Host.Startup
 {
     public static class ModuleLoader
     {
-        public static readonly Lazy<List<NTechModule>> AllModules = new Lazy<List<NTechModule>>(() =>
+        public static readonly Lazy<List<NTechModule>> AllModules = new(() =>
         {
             //TODO: Add dynamic loading of clients adaptation modules in addition to this
-            var moduleTypes = new Type[]
+            var moduleTypes = new[]
             {
-                typeof(Credit.CreditNTechModule),
-                typeof(Customer.CustomerNTechModule),
-                typeof(PreCredit.PreCreditNTechModule),
-                typeof(User.UserNTechModule)
+                typeof(CreditNTechModule),
+                typeof(CustomerNTechModule),
+                typeof(PreCreditNTechModule),
+                typeof(UserNTechModule)
             };
 
             var allModules = new List<NTechModule>();
@@ -21,7 +25,8 @@ namespace NTech.Core.Host.Startup
             {
                 try
                 {
-                    allModules.Add((NTechModule)moduleType.GetConstructor(Type.EmptyTypes).Invoke(new object[] { }));
+                    allModules.Add(
+                        (NTechModule)moduleType.GetConstructor(Type.EmptyTypes).Invoke(Array.Empty<object>()));
                 }
                 catch (Exception ex)
                 {
@@ -34,33 +39,26 @@ namespace NTech.Core.Host.Startup
 
         public static IMvcBuilder ConfigureActiveModules(this IMvcBuilder source, NEnv env)
         {
-            var allModules = ModuleLoader.AllModules.Value;
-            foreach (var module in allModules)
+            var allModules = AllModules.Value;
+            foreach (var module in allModules.Where(m => m.IsActive(env)))
             {
-                var isModuleActive = module.IsActive(env);
-                if (isModuleActive)
-                {
-                    source.AddApplicationPart(module.SourceAssembly);
-                }
+                source.AddApplicationPart(module.SourceAssembly);
             }
-            source
-                .ConfigureApplicationPartManager(partManager =>
-                 {
-                     var allModules = ModuleLoader.AllModules.Value;
-                     foreach (var module in allModules)
-                     {
-                         if (!module.IsActive(env))
-                         {
-                             var part = partManager.ApplicationParts.Where(x => x.Name == module.PartName).FirstOrDefault();
-                             if (part != null)
-                             {
-                                 partManager.ApplicationParts.Remove(part);
-                             }
-                         }
-                     }
-                 });
+
+            source.ConfigureApplicationPartManager(partManager =>
+            {
+                foreach (var module in AllModules.Value.Where(m => !m.IsActive(env)))
+                {
+                    var part = partManager.ApplicationParts
+                        .FirstOrDefault(x => x.Name == module.PartName);
+                    if (part != null)
+                    {
+                        partManager.ApplicationParts.Remove(part);
+                    }
+                }
+            });
 
             return source;
         }
-    }    
+    }
 }

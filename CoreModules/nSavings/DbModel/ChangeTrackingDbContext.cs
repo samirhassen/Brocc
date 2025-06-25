@@ -13,9 +13,9 @@ namespace nSavings.DbModel
     {
         private void DetectChangedIfAutoDetectIsOff()
         {
-            if (!this.Configuration.AutoDetectChangesEnabled)
+            if (!Configuration.AutoDetectChangesEnabled)
             {
-                this.ChangeTracker?.DetectChanges();
+                ChangeTracker?.DetectChanges();
             }
         }
 
@@ -42,7 +42,7 @@ namespace nSavings.DbModel
 
                 throw new DbEntityValidationException(
                     "Entity Validation Failed - errors follow:\n" +
-                    sb.ToString(), ex
+                    sb, ex
                 );
             }
         }
@@ -58,26 +58,30 @@ namespace nSavings.DbModel
             DetectChangedIfAutoDetectIsOff();
             return base.SaveChangesAsync();
         }
-
+        
         #region "Default Constructors"
 
         public ChangeTrackingDbContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
         }
 
-        public ChangeTrackingDbContext(DbConnection existingConnection, bool contextOwnsConnection) : base(existingConnection, contextOwnsConnection)
+        public ChangeTrackingDbContext(DbConnection existingConnection, bool contextOwnsConnection) : base(
+            existingConnection, contextOwnsConnection)
         {
         }
 
-        public ChangeTrackingDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext) : base(objectContext, dbContextOwnsObjectContext)
+        public ChangeTrackingDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext) : base(
+            objectContext, dbContextOwnsObjectContext)
         {
         }
 
-        public ChangeTrackingDbContext(string nameOrConnectionString, DbCompiledModel model) : base(nameOrConnectionString, model)
+        public ChangeTrackingDbContext(string nameOrConnectionString, DbCompiledModel model) : base(
+            nameOrConnectionString, model)
         {
         }
 
-        public ChangeTrackingDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection) : base(existingConnection, model, contextOwnsConnection)
+        public ChangeTrackingDbContext(DbConnection existingConnection, DbCompiledModel model,
+            bool contextOwnsConnection) : base(existingConnection, model, contextOwnsConnection)
         {
         }
 

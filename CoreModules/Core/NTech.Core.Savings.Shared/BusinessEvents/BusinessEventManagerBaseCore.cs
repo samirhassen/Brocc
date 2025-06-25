@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
-using NTech.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Newtonsoft.Json;
 using NTech.Core.Module.Shared.Database;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Savings.Shared.Database;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings.DbModel.BusinessEvents
+namespace NTech.Core.Savings.Shared.BusinessEvents
 {
     public class BusinessEventManagerBaseCore
     {

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Duende.IdentityModel.Client;
+using Newtonsoft.Json;
 using nGccCustomerApplication.Code;
 using Serilog;
 using System;
@@ -30,7 +31,7 @@ namespace nGccCustomerApplication
                 client.BaseAddress = new Uri(NEnv.ServiceRegistry.Internal["nPreCredit"]);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.SetBearerToken(bearerToken);
+                AuthorizationHeaderExtensions.SetBearerToken(client, bearerToken); 
                 var response = client.PostAsJsonAsync(uri, input).Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -68,7 +69,7 @@ namespace nGccCustomerApplication
                 client.BaseAddress = new Uri(NEnv.ServiceRegistry.Internal["nPreCredit"]);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.SetBearerToken(bearerToken);
+                Duende.IdentityModel.Client.AuthorizationHeaderExtensions.SetBearerToken(client, bearerToken);
                 var response = await client.PostAsJsonAsync(uri, input);
                 if (response.IsSuccessStatusCode)
                 {
@@ -189,14 +190,17 @@ namespace nGccCustomerApplication
         public ApplicationState GetApplicationState(string token)
         {
             var result = Call<StateWrapper<ApplicationState>>("api/creditapplication-wrapper-direct/fetch-application-state", new { token = token });
-
-            var activeState = result?.Item2?.State?.ActiveState;
-            HandleAttachedFiles(token, activeState);
-
-            if (result.Item1)
-                return result.Item2.State;
-            else
+            if (result == null)
                 return null;
+
+
+                var activeState = result?.Item2?.State?.ActiveState;
+                HandleAttachedFiles(token, activeState);
+
+                if (result.Item1)
+                    return result.Item2.State;
+                else
+                    return null;
         }
 
         public async Task<ApplicationState> GetApplicationStateAsync(string token)
@@ -214,7 +218,7 @@ namespace nGccCustomerApplication
             else
                 return null;
         }
-        
+
         public async Task<bool> GetIsSatAccountDataSharingEnabled(string token)
         {
             var result = await CallAsync<IsSatAccountDataSharingEnabledWrapper>("api/creditapplication-wrapper-direct/get-is-sat-account-data-sharing-enabled", new

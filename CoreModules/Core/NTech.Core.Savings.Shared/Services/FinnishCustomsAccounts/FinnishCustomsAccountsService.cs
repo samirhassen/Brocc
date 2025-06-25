@@ -1,21 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using nSavings.Code.Services.FinnishCustomsAccounts;
-using NTech.Banking.BankAccounts.Fi;
 using NTech.Banking.CivicRegNumbers.Fi;
-using NTech.Core;
+using NTech.Banking.Shared.BankAccounts.Fi;
 using NTech.Core.Module;
 using NTech.Core.Module.Shared.Clients;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Module.Shared.Services;
 using NTech.Core.Savings.Shared.Database;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
-namespace nSavings.Code.Services
+namespace NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts
 {
     public class FinnishCustomsAccountsService
     {
@@ -249,7 +249,7 @@ namespace nSavings.Code.Services
                         var wsContext = new FinnishCustomsAccountsWebservice.LoggingContextModel();
                         try
                         {
-                            if (!finnishCustomsAccountsWebservice.TryReportUpdate(tulliFile, wsContext))
+                            if (!finnishCustomsAccountsWebservice.TryReportUpdate(   tulliFile, wsContext))
                             {
                                 throw new Exception($"Finnish customs export failed with error or validation error: {wsContext.CustomsErrorMessage}");
                             }

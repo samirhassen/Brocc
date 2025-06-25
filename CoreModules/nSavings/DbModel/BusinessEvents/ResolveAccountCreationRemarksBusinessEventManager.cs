@@ -1,7 +1,9 @@
-﻿using NTech.Core;
+﻿using System.Linq;
+using NTech.Core;
 using NTech.Core.Module.Shared.Infrastructure;
 using NTech.Core.Savings.Shared.Database;
-using System.Linq;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 
 namespace nSavings.DbModel.BusinessEvents
 {
@@ -9,7 +11,9 @@ namespace nSavings.DbModel.BusinessEvents
     {
         private readonly SavingsContextFactory contextFactory;
 
-        public ResolveAccountCreationRemarksBusinessEventManager(INTechCurrentUserMetadata user, ICoreClock clock, SavingsContextFactory contextFactory, IClientConfigurationCore clientConfiguration) : base(user, clock, clientConfiguration)
+        public ResolveAccountCreationRemarksBusinessEventManager(INTechCurrentUserMetadata user, ICoreClock clock,
+            SavingsContextFactory contextFactory, IClientConfigurationCore clientConfiguration) : base(user, clock,
+            clientConfiguration)
         {
             this.contextFactory = contextFactory;
         }
@@ -33,6 +37,7 @@ namespace nSavings.DbModel.BusinessEvents
                     failedMessage = "No such account";
                     return false;
                 }
+
                 if (account.Status != SavingsAccountStatusCode.FrozenBeforeActive.ToString())
                 {
                     failedMessage = "Wrong account status";
@@ -40,29 +45,31 @@ namespace nSavings.DbModel.BusinessEvents
                 }
 
                 var evt = AddBusinessEvent(BusinessEventType.AccountCreationRemarkResolution, context);
-                bool wasOpened = false;
-                if (resolutionAction == "Open")
+                var wasOpened = false;
+                switch (resolutionAction)
                 {
-                    SetStatus(account, SavingsAccountStatusCode.Active, evt, context);
-                    AddComment("Account opened after pending remarks checked", "AccountCreationRemarkResolution_Opened", account, context);
-                    wasOpened = true;
-                }
-                else if (resolutionAction == "Close")
-                {
-                    SetStatus(account, SavingsAccountStatusCode.Closed, evt, context);
-                    AddComment("Account closed after pending remarks checked", "AccountCreationRemarkResolution_Closed", account, context);
-                }
-                else
-                {
-                    failedMessage = "Invalid resolutionAction";
-                    return false;
+                    case "Open":
+                        SetStatus(account, SavingsAccountStatusCode.Active, evt, context);
+                        AddComment("Account opened after pending remarks checked",
+                            "AccountCreationRemarkResolution_Opened", account, context);
+                        wasOpened = true;
+                        break;
+                    case "Close":
+                        SetStatus(account, SavingsAccountStatusCode.Closed, evt, context);
+                        AddComment("Account closed after pending remarks checked",
+                            "AccountCreationRemarkResolution_Closed", account, context);
+                        break;
+                    default:
+                        failedMessage = "Invalid resolutionAction";
+                        return false;
                 }
 
                 context.SaveChanges();
 
                 if (wasOpened)
                 {
-                    TrySendWelcomeEmail(account.SavingsAccountNr, context, $"OnResolveRemarks_{account.SavingsAccountNr}");
+                    TrySendWelcomeEmail(account.SavingsAccountNr, context,
+                        $"OnResolveRemarks_{account.SavingsAccountNr}");
                     context.SaveChanges();
                 }
 
@@ -72,7 +79,8 @@ namespace nSavings.DbModel.BusinessEvents
             }
         }
 
-        private SavingsAccountComment AddComment(string commentText, string eventType, SavingsAccountHeader savingsAccount, ISavingsContext context)
+        private SavingsAccountComment AddComment(string commentText, string eventType,
+            SavingsAccountHeader savingsAccount, ISavingsContext context)
         {
             var c = new SavingsAccountComment
             {

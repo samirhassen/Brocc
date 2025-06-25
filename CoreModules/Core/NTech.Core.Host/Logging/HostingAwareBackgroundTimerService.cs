@@ -12,10 +12,12 @@
             return lastErrorLogTime.Value.Add(ErrorLogFrequency) < now;
         }
 
-        protected virtual void LogOnTickError(Exception lastException, int nrOfErrorsSinceLastHandleCall) { }
+        protected virtual void LogOnTickError(Exception lastException, int nrOfErrorsSinceLastHandleCall)
+        {
+        }
 
-        protected virtual TimeSpan ErrorLogFrequency { get { return TimeSpan.FromMinutes(30); } }
-        protected virtual TimeSpan? DelayBeforeFirstTick { get { return TimeSpan.Zero; } }
+        protected virtual TimeSpan ErrorLogFrequency => TimeSpan.FromMinutes(30);
+        protected virtual TimeSpan? DelayBeforeFirstTick => TimeSpan.Zero;
 
         private CancellationTokenSource runningToken;
 
@@ -75,11 +77,8 @@
         public Task StopAsync(CancellationToken cancellationToken)
         {
             var t = runningToken;
-            if (t == null)
-            {
-                return Task.CompletedTask;
-            };
-            t.Cancel();
+
+            t?.Cancel();
             return Task.CompletedTask;
         }
 
@@ -89,7 +88,7 @@
 
     public class BackgroundServiceStarter<T> : IHostedService where T : IHostedService
     {
-        readonly T backgroundService;
+        private readonly T backgroundService;
 
         public BackgroundServiceStarter(T backgroundService)
         {

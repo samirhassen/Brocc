@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace nPreCredit.Code.Services
 {

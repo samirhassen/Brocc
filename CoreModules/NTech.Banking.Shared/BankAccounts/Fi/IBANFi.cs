@@ -1,15 +1,16 @@
 ﻿using System;
-using NTech.Banking.Shared.BankAccounts;
+using NTech.Banking.BankAccounts;
 
-namespace NTech.Banking.BankAccounts.Fi
+namespace NTech.Banking.Shared.BankAccounts.Fi
 {
     public class IBANFi : IBAN, IBankAccountNumber
     {
-
         public new string TwoLetterCountryIsoCode => "FI";
         public new BankAccountNumberTypeCode AccountType => BankAccountNumberTypeCode.IBANFi;
 
-        private IBANFi(string iban) : base(iban) { }
+        private IBANFi(string iban) : base(iban)
+        {
+        }
 
         public new static bool IsValid(string value)
         {
@@ -18,15 +19,12 @@ namespace NTech.Banking.BankAccounts.Fi
 
         public new static IBANFi Parse(string iban)
         {
-            IBANFi parsedValue;
-            if(!TryParse(iban, out parsedValue))
+            if (!TryParse(iban, out var parsedValue))
             {
                 throw new Exception("Invalid iban");
             }
-            else
-            {
-                return parsedValue;
-            }
+
+            return parsedValue;
         }
 
         public static bool TryParse(string iban, out IBANFi parsedValue)
@@ -46,7 +44,7 @@ namespace NTech.Banking.BankAccounts.Fi
             // Pure characters for FI is always exactly 18 in length. 
             if (iban.Length != 18)
                 return false;
-            
+
             parsedValue = new IBANFi(iban);
 
             return true;

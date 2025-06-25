@@ -1,8 +1,6 @@
 ﻿using Moq;
 using nCustomer;
 using Newtonsoft.Json;
-using nSavings.Controllers;
-using nSavings.DbModel.BusinessEvents;
 using NTech.Banking.CivicRegNumbers.Fi;
 using NTech.Core.Customer.Database;
 using NTech.Core.Customer.Shared.Services;
@@ -14,7 +12,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NTech.Core.Savings.Database;
-using nSavings.Code.Services;
+using NTech.Core.Savings.Shared.BusinessEvents;
+using NTech.Core.Savings.Shared.Services;
 
 namespace NTech.Core.Host.IntegrationTests.UlLegacy.Savings
 {

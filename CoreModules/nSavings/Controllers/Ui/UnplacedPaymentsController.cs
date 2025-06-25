@@ -1,9 +1,12 @@
-﻿using nSavings.DbModel.BusinessEvents;
-using NTech.Services.Infrastructure;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
+using nSavings.Code.Services;
+using nSavings.DbModel;
+using NTech.Core.Savings.Shared.BusinessEvents;
+using NTech.Core.Savings.Shared.DbModel;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [NTechAuthorizeSavingsMiddle]
     public class UnplacedPaymentsController : NController
@@ -14,11 +17,11 @@ namespace nSavings.Controllers
         {
             using (var context = new SavingsContext())
             {
-                var unplacedPayments = PaymentDomainModel.CreateForAllNotFullyPlaced(context, 
-                    Service.GetEncryptionService(GetCurrentUserMetadata()),
+                var unplacedPayments = PaymentDomainModel.CreateForAllNotFullyPlaced(context,
+                    ControllerServiceFactory.GetEncryptionService(GetCurrentUserMetadata()),
                     IncomingPaymentHeaderItemCode.NoteText, IncomingPaymentHeaderItemCode.OcrReference);
 
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     payments = unplacedPayments
                         .Select(x => new
@@ -42,7 +45,8 @@ namespace nSavings.Controllers
         {
             using (var context = new SavingsContext())
             {
-                var unplacedPayment = PaymentDomainModel.CreateForSinglePayment(paymentId, context, Service.GetEncryptionService(GetCurrentUserMetadata()),
+                var unplacedPayment = PaymentDomainModel.CreateForSinglePayment(paymentId, context,
+                    ControllerServiceFactory.GetEncryptionService(GetCurrentUserMetadata()),
                     IncomingPaymentHeaderItemCode.OcrReference);
                 var ocr = unplacedPayment.GetItem(IncomingPaymentHeaderItemCode.OcrReference);
                 string matchedSavingsAccountNrs = null;
@@ -50,7 +54,8 @@ namespace nSavings.Controllers
                 {
                     matchedSavingsAccountNrs = string.Join(", ", context
                         .SavingsAccountHeaders
-                        .Where(x => x.DatedStrings.Any(y => y.Name == DatedSavingsAccountStringCode.OcrDepositReference.ToString() && y.Value == ocr))
+                        .Where(x => x.DatedStrings.Any(y =>
+                            y.Name == DatedSavingsAccountStringCode.OcrDepositReference.ToString() && y.Value == ocr))
                         .Select(x => x.SavingsAccountNr).ToList());
                 }
 
@@ -74,7 +79,7 @@ namespace nSavings.Controllers
                     })
                     .ToList();
 
-                ViewBag.JsonInitialData = this.EncodeInitialData(new
+                ViewBag.JsonInitialData = EncodeInitialData(new
                 {
                     payment = new
                     {
@@ -84,8 +89,10 @@ namespace nSavings.Controllers
                         PaymentDate = unplacedPayment.PaymentDate,
                         UnplacedAmount = unplacedPayment.GetUnplacedAmount(Clock.Today)
                     },
-                    findSavingsAccountByReferenceNrOrSavingsAccountNrUrl = Url.Action("FindByReferenceNrOrSavingsAccountNr", "ApiUnplacedPayments"),
-                    fetchEncryptedPaymentItemValue = Url.Action("FetchEncryptedPaymentItemValue", "ApiUnplacedPayments"),
+                    findSavingsAccountByReferenceNrOrSavingsAccountNrUrl =
+                        Url.Action("FindByReferenceNrOrSavingsAccountNr", "ApiUnplacedPayments"),
+                    fetchEncryptedPaymentItemValue =
+                        Url.Action("FetchEncryptedPaymentItemValue", "ApiUnplacedPayments"),
                     paymentPlacementSuggestionUrl = Url.Action("PaymentPlacementSuggestion", "ApiUnplacedPayments"),
                     placePaymentUrl = Url.Action("PlacePayment", "ApiUnplacedPayments"),
                     repayPaymentUrl = Url.Action("RepayPayment", "ApiUnplacedPayments"),

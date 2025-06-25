@@ -1,18 +1,22 @@
-﻿using Microsoft.Owin;
-using Serilog;
-using Serilog.Core.Enrichers;
-using System;
-using System.Threading.Tasks;
-using System.Linq;
-using Serilog.Core;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Owin;
+using Serilog;
+using Serilog.Context;
+using Serilog.Core;
+using Serilog.Core.Enrichers;
 
 namespace NTech.Services.Infrastructure
 {
     public class NTechLoggingMiddleware : OwinMiddleware
     {
-        private string serviceName;
+        private readonly string serviceName;
 
         public NTechLoggingMiddleware(OwinMiddleware next, string serviceName) : base(next)
         {
@@ -21,7 +25,7 @@ namespace NTech.Services.Infrastructure
 
         public static IEnumerable<ILogEventEnricher> GetProperties(IOwinContext context)
         {
-            var version = System.Reflection.Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString();
+            var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
             if (version != null)
                 yield return new PropertyEnricher("ServiceVersion", version);
 
@@ -33,36 +37,33 @@ namespace NTech.Services.Infrastructure
             if (remoteIp != null)
                 yield return new PropertyEnricher("RemoteIp", remoteIp);
 
-            var user = (context?.Authentication?.User?.Identity) as ClaimsIdentity;
-            if (user != null)
-            {
-                var userId = user?.FindFirst("ntech.userid")?.Value;
-                if (!string.IsNullOrWhiteSpace(userId))
-                    yield return new PropertyEnricher("UserId", userId);
-            }
+            if (!(context?.Authentication?.User?.Identity is ClaimsIdentity user)) yield break;
+
+            var userId = user.FindFirst("ntech.userid")?.Value;
+            if (!string.IsNullOrWhiteSpace(userId))
+                yield return new PropertyEnricher("UserId", userId);
         }
 
         private IEnumerable<ILogEventEnricher> GetPropertiesI(IOwinContext context)
         {
             var props = GetProperties(context);
 
-            if (serviceName == null)
-                return props;
-            else
-                return props.Concat(new[] { new PropertyEnricher("ServiceName", serviceName) });
+            return serviceName == null
+                ? props
+                : props.Concat(new[] { new PropertyEnricher("ServiceName", serviceName) });
         }
 
         public override async Task Invoke(IOwinContext context)
         {
-            using (Serilog.Context.LogContext.PushProperties(GetPropertiesI(context).ToArray()))
+            using (LogContext.PushProperties(GetPropertiesI(context).ToArray()))
             {
-                var timer = System.Diagnostics.Stopwatch.StartNew();
+                var timer = Stopwatch.StartNew();
                 try
                 {
                     await Next.Invoke(context);
                     timer.Stop();
                 }
-                catch (System.Threading.ThreadAbortException)
+                catch (ThreadAbortException)
                 {
                     throw;
                 }

@@ -15,7 +15,7 @@ ntech.forms = (function () {
     function isValidPositiveDecimal(value) {
         if (isNullOrWhitespace(value))
             return true;
-        var v = value.toString();
+        let v = value.toString();
         return (/^([0]|[1-9]([0-9])*)([\.|,]([0-9])+)?$/).test(v);
     }
     function isValidDecimal(value) {
@@ -30,22 +30,27 @@ ntech.forms = (function () {
     function replaceAll(str, find, replace) {
         return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
     }
-    return { isNullOrWhitespace: isNullOrWhitespace, isValidPositiveDecimal: isValidPositiveDecimal, isValidDecimal: isValidDecimal, replaceAll: replaceAll };
+    return {
+        isNullOrWhitespace: isNullOrWhitespace,
+        isValidPositiveDecimal: isValidPositiveDecimal,
+        isValidDecimal: isValidDecimal,
+        replaceAll: replaceAll
+    };
 }());
 (function (window, document) {
     'use strict';
     angular
         .module('ntech.forms', [])
         .factory('ntechEncryptionService', function ntechEncryptionServiceFactory() {
-        var allNames = [];
-        var allGroups = {};
-        var clearText = {};
-        var hasClearText = {};
-        var isDecrypting = {};
-        var config = null;
+        let allNames = [];
+        let allGroups = {};
+        let clearText = {};
+        let hasClearText = {};
+        let isDecrypting = {};
+        let config = null;
         function contains(a, obj) {
-            for (var i = 0; i < a.length; i++) {
-                if (a[i] === obj) {
+            for (const item of a) {
+                if (item === obj) {
                     return true;
                 }
             }
@@ -59,7 +64,7 @@ ntech.forms = (function () {
                 if (!allGroups[groupName]) {
                     allGroups[groupName] = [];
                 }
-                var g = allGroups[groupName];
+                let g = allGroups[groupName];
                 if (!contains(g, name)) {
                     g.push(name);
                 }
@@ -72,19 +77,19 @@ ntech.forms = (function () {
             return config.onDecrypted(name, clearText);
         }
         function doDecrypt(names) {
-            var dnames = [];
-            for (var i = 0; i < names.length; i++) {
-                if (!clearText[names[i]]) {
-                    dnames.push(names[i]);
+            let dnames = [];
+            for (const element of names) {
+                if (!clearText[element]) {
+                    dnames.push(element);
                 }
             }
             if (dnames.length > 0) {
-                for (var k = 0; k < dnames.length; k++) {
-                    isDecrypting[dnames[k]] = true;
+                for (const element of dnames) {
+                    isDecrypting[element] = true;
                 }
                 return decrypt(dnames).then(function (result) {
-                    for (var j = 0; j < result.length; j++) {
-                        var r = result[j];
+                    for (const element of result) {
+                        let r = element;
                         hasClearText[r.name] = true;
                         clearText[r.name] = r.clearText;
                         isDecrypting[r.name] = null;
@@ -98,8 +103,12 @@ ntech.forms = (function () {
         }
         return {
             registerName: registerName,
-            decryptAll: function () { doDecrypt(allNames); },
-            decryptGroup: function (groupName) { doDecrypt(allGroups[groupName]); },
+            decryptAll: function () {
+                doDecrypt(allNames);
+            },
+            decryptGroup: function (groupName) {
+                doDecrypt(allGroups[groupName]);
+            },
             decrypt: function (nameOrNames) {
                 if (isArray(nameOrNames)) {
                     doDecrypt(nameOrNames);
@@ -109,36 +118,42 @@ ntech.forms = (function () {
                 }
             },
             areAllDecrypted: function () {
-                for (var i = 0; i < allNames.length; i++) {
-                    if (!hasClearText[allNames[i]]) {
+                for (const element of allNames) {
+                    if (!hasClearText[element]) {
                         return false;
                     }
                 }
                 return true;
             },
             isGroupDecrypted: function (groupName) {
-                var g = allGroups[groupName];
+                let g = allGroups[groupName];
                 if (!g) {
                     return false;
                 }
-                for (var i = 0; i < g.length; i++) {
-                    if (!hasClearText[g[i]]) {
+                for (const element of g) {
+                    if (!hasClearText[element]) {
                         return false;
                     }
                 }
                 return true;
             },
-            isDecrypted: function (name) { return hasClearText[name] === true; },
-            isDecrypting: function (name) { return isDecrypting[name] === true; },
+            isDecrypted: function (name) {
+                return hasClearText[name] === true;
+            },
+            isDecrypting: function (name) {
+                return isDecrypting[name] === true;
+            },
             isAnyDecrypting: function () {
-                for (var i = 0; i < allNames.length; i++) {
-                    if (isDecrypting[allNames[i]]) {
+                for (const element of allNames) {
+                    if (isDecrypting[element]) {
                         return true;
                     }
                 }
                 return false;
             },
-            getClearText: function (name) { return clearText[name]; },
+            getClearText: function (name) {
+                return clearText[name];
+            },
             configure: function (cfg) {
                 config = cfg;
             }
@@ -154,26 +169,16 @@ ntech.forms = (function () {
                 templateUrl: 'encryptedBlock',
                 transclude: true,
                 link: function (scope, el, attrs, ctrl, transclude) {
-                    var crypto = ntechEncryptionService;
+                    let crypto = ntechEncryptionService;
                     crypto.registerName(scope.item, scope.groupName);
                     scope.decrypt = function (names) {
                         return crypto.decrypt(scope.item);
                     };
                     scope.isDecrypted = function () {
-                        if (crypto.isDecrypted(scope.item)) {
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
+                        return !!(crypto.isDecrypted(scope.item));
                     };
                     scope.isDecrypting = function () {
-                        if (crypto.isDecrypting(scope.item)) {
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
+                        return !!(crypto.isDecrypting(scope.item));
                     };
                     scope.isAnyDecrypting = function () {
                         return crypto.isAnyDecrypting();
@@ -189,7 +194,7 @@ ntech.forms = (function () {
             link: function (scope, elm, attr, ctrl) {
                 if (!ctrl)
                     return;
-                var isValid = scope.isValid();
+                let isValid = scope.isValid();
                 ctrl.$parsers.push(function (modelValue, viewValue) {
                     if (isValid(modelValue)) {
                         ctrl.$setValidity('custom', true);
@@ -210,8 +215,7 @@ ntech.forms = (function () {
             link: function (scope, elm, attr, ctrl) {
                 if (!ctrl)
                     return;
-                var isValid = scope.isValid();
-                ctrl.$asyncValidators.isValidCustomAsync = isValid;
+                ctrl.$asyncValidators.isValidCustomAsync = scope.isValid();
             }
         };
     })
@@ -222,12 +226,12 @@ ntech.forms = (function () {
                 link: function (scope, ele, attr, ctrl) {
                     if (!ctrl)
                         return;
-                    var isValid = scope.isValid();
+                    let isValid = scope.isValid();
                     if (!isValid) {
                         isValid = ntech.forms.isValidPositiveDecimal;
                     }
                     ctrl.$parsers.unshift(function (viewValue) {
-                        var v;
+                        let v;
                         if (!ntech.forms.isNullOrWhitespace(viewValue)) {
                             v = ntech.forms.replaceAll(viewValue.toString().replace(/\s/g, ""), ",", ".");
                         }
@@ -256,8 +260,8 @@ ntech.forms = (function () {
             scope: { errorTarget: '=bootstrapValidation' },
             link: function (scope, element, attrs, formCtrl) {
                 element.find('.form-group').each(function () {
-                    var t = 'formgroup';
-                    if (scope.errorTarget == 'parent') {
+                    let t = 'formgroup';
+                    if (scope.errorTarget === 'parent') {
                         t = 'parent';
                     }
                     var formGroup = $(this);

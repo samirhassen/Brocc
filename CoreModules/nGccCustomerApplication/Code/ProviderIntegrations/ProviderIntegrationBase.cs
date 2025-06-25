@@ -1,10 +1,9 @@
-﻿using NTech.Banking.BankAccounts.Fi;
+﻿using NTech.Banking.Shared.BankAccounts.Fi;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace nGccCustomerApplication.Code.ProviderIntegrations
 {

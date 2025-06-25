@@ -30,10 +30,12 @@ $gutter-width: 10px;
     margin-right: -$gutter-width;
     margin-left: -$gutter-width;
   }
+
   .form-horizontal .form-group {
     margin-right: -$gutter-width;
     margin-left: -$gutter-width;
   }
+
   > * [class*="col-"],
   > * [class*=" col-"] {
     padding-right: $gutter-width;
@@ -54,6 +56,7 @@ body.modal-open {
   overflow-y: hidden;
   height: 100vh;
 }
+
 /*headers*/
 
 /* iframe-container used for credit report previews */
@@ -247,9 +250,9 @@ h4.custom-breadcrumb {
 }
 
 h4.custom-breadcrumb a {
- color: #1A69C5;
- margin-right: 4px;
- text-decoration: underline;
+  color: #1A69C5;
+  margin-right: 4px;
+  text-decoration: underline;
 }
 
 h4.custom-breadcrumb a:hover {
@@ -354,17 +357,18 @@ a.n-anchor.n-longer:hover {
 
 //-always to allow styling spans like the anchors to allow readonly
 .n-longer-always {
-    width: auto;
-    display: block;
-    background-color: $backdrop-color;
-    border: 1px solid $backdrop-color;
-    min-height: 22px;
+  width: auto;
+  display: block;
+  background-color: $backdrop-color;
+  border: 1px solid $backdrop-color;
+  min-height: 22px;
 }
+
 .n-star-always {
-    color: #dbaf36;
-    font-size: 20px;
-    line-height: 14px;
-    margin-top: 5px
+  color: #dbaf36;
+  font-size: 20px;
+  line-height: 14px;
+  margin-top: 5px
 }
 
 
@@ -410,6 +414,7 @@ a.n-anchor.n-longer:hover {
   -moz-transform: translateX(-5px);
   transform: translateX(-5px);
 }
+
 .n-unlock:hover::after,
 .n-unlock:focus::after {
   color: #dbaf36;
@@ -463,6 +468,7 @@ a.n-anchor.n-longer:hover {
   -moz-transition: 0.3s;
   transition: 0.3s;
 }
+
 .chevron-bg:hover {
   background-color: #b8deff;
 }
@@ -544,7 +550,7 @@ a.n-purple-btn .glyphicon {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s,
-    box-shadow ease-in-out 0.15s;
+  box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   color: #ccc;
   background-color: #232323;
@@ -677,7 +683,7 @@ a:visited.logout-link:hover {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s,
-    box-shadow ease-in-out 0.15s;
+  box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   color: #fff;
   background-color: #424242;
@@ -688,6 +694,7 @@ a:visited.logout-link:hover {
   height: auto;
   width: 100%;
 }
+
 /*NAV END*/
 
 /*Bo functions*/
@@ -1013,9 +1020,9 @@ footer .releaseNumber {
   border-bottom-color: #1a69c4;
   border-right-color: #1a69c4;
   -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.075),
-    0 0 8px rgba(102, 175, 233, 0.8);
+  0 0 8px rgba(102, 175, 233, 0.8);
   box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.075),
-    0 0 8px rgba(102, 175, 233, 0.8);
+  0 0 8px rgba(102, 175, 233, 0.8);
   outline: 0;
 }
 
@@ -1607,21 +1614,26 @@ a.n-white-btn {
   margin-top: -2px;
   background-color: $backdrop-color;
   padding: 11px 0 5px 0;
+
   .custom-header .custom-header-text {
     margin-left: 15px;
   }
+
   .block-area {
     padding-bottom: 70px;
   }
+
   &.fixed-border {
     padding-top: 0px;
     border-top: none;
     border-bottom: none;
+
     .block-toggle {
       border-bottom: 1px solid #000000;
       padding-bottom: 3px;
     }
   }
+
   &.fluid-border {
     .block-area {
       border-top: 1px solid #000000;
@@ -1710,22 +1722,25 @@ label {
 
 /*lines*/
 
-.hr-section.custom-line{
-   border-top: 1.5px dashed #cdcdcd;
+.hr-section.custom-line {
+  border-top: 1.5px dashed #cdcdcd;
 }
 
 /*common*/
 
-.pt-0{
+.pt-0 {
   padding-top: 0;
 }
-.pb-0{
+
+.pb-0 {
   padding-bottom: 0;
 }
-.mt-0{
+
+.mt-0 {
   margin-top: 0;
 }
-.mb-0{
+
+.mb-0 {
   margin-bottom: 0;
 }
 
@@ -1952,15 +1967,15 @@ textarea:-moz-placeholder {
   animation: spinner 1500ms infinite linear;
   border-radius: 0.5em;
   -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
-    rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0,
-    rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+  rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
+  rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0,
+  rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
+  rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
   box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
-    rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0,
-    rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+  rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
+  rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0,
+  rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
+  rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
 }
 
 .table tbody > tr.open-inner-separator > td {
@@ -1985,6 +2000,7 @@ textarea:-moz-placeholder {
     transform: rotate(360deg);
   }
 }
+
 @-moz-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
@@ -2001,6 +2017,7 @@ textarea:-moz-placeholder {
     transform: rotate(360deg);
   }
 }
+
 @-o-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
@@ -2017,6 +2034,7 @@ textarea:-moz-placeholder {
     transform: rotate(360deg);
   }
 }
+
 @keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
@@ -2033,10 +2051,12 @@ textarea:-moz-placeholder {
     transform: rotate(360deg);
   }
 }
+
 /*END SPINNER*/
 
 #shellmenu {
   background-color: transparent;
+
   a {
     color: $backdrop-color;
     background-color: $header-bg-color;
@@ -2046,21 +2066,26 @@ textarea:-moz-placeholder {
     padding-top: 18px;
     padding-bottom: 12px;
   }
+
   /* We are overriding the colors choices in the boostrap theme we use but didnt actually change the them so hacking that in here to not
          get a white background
        */
   .dropdown-menu {
     background-color: $header-bg-color;
   }
+
   a:hover {
     background-color: $header-bg-color-weak;
   }
+
   .open > a:hover {
     background-color: $header-bg-color-weak;
   }
+
   .dropdown-menu .divider {
     background-color: $backdrop-color;
   }
+
   /* Anchors have 20 left padding by default while the p:s have a 15 margin so they end up being unaligned */
   .navbar-text {
     padding-left: 5px;
@@ -2101,6 +2126,7 @@ textarea:-moz-placeholder {
   bottom: 20px;
   right: 5%;
 }
+
 /* end test functions corner popup */
 
 .text-ntech-inactive {
@@ -2224,6 +2250,7 @@ textarea:-moz-placeholder {
   color: #777777; /* Borrowed from bootstrap text-muted */
   margin-left: 10px;
 }
+
 /*End Secure Messages*/
 
 .application-text-link-container {
@@ -2232,5 +2259,5 @@ textarea:-moz-placeholder {
 
 /* After upgrading npx-quill the width collapsed for no apparent reason. this is used to fix it. */
 .fix-quill-width quill-editor {
-    width:100%;
+  width: 100%;
 }

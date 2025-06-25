@@ -1,8 +1,11 @@
-﻿using IdentityServer4.AccessTokenValidation;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using NTech.Core.Module;
-using System.Security.Claims;
 
 namespace NTech.Core.Host.Startup
 {
@@ -13,10 +16,11 @@ namespace NTech.Core.Host.Startup
             "nTechSystemUser", "nBackOfficeUserLogin", "nBackOfficeEmbeddedUserLogin"
         };
 
-        public static bool ValidateAudience(IEnumerable<string> audiences, Microsoft.IdentityModel.Tokens.SecurityToken securityToken, Microsoft.IdentityModel.Tokens.TokenValidationParameters validationParameters)
+        public static bool ValidateAudience(IEnumerable<string> audiences,
+            SecurityToken securityToken,
+            TokenValidationParameters validationParameters)
         {
-            var t = securityToken as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-            if (t == null)
+            if (securityToken is not JwtSecurityToken t)
                 return false;
             if (!t.Claims.Any(x => x.Type == "client_id" && AllowedBearerTokenClientIds.Contains(x.Value)))
                 return false;
@@ -35,33 +39,31 @@ namespace NTech.Core.Host.Startup
                     .Build();
             });
 
-        public static Microsoft.AspNetCore.Authentication.AuthenticationBuilder AddUserModuleBearerTokenAuthentication(this IServiceCollection source, NEnv env) => source
+        public static AuthenticationBuilder AddUserModuleBearerTokenAuthentication(
+            this IServiceCollection source, NEnv env) => source
             .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
             .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme,
                 jwtOptions =>
                 {
                     jwtOptions.Authority = env.ServiceRegistry.Internal.ServiceUrl("nUser", "id").ToString();
                     jwtOptions.RequireHttpsMetadata = env.IsProduction;
-                    jwtOptions.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    jwtOptions.TokenValidationParameters = new TokenValidationParameters
                     {
-                        AudienceValidator = BearerTokenLogin.ValidateAudience
+                        AudienceValidator = ValidateAudience
                     };
 
                     jwtOptions.SaveToken = true;
                     jwtOptions.Events = new JwtBearerEvents
                     {
-                        OnTokenValidated = (context) =>
+                        OnTokenValidated = context =>
                         {
                             //Add the access token to claims                            
-                            var token = context.SecurityToken as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-                            if (token == null)
+                            if (context.SecurityToken is not JwtSecurityToken token)
                             {
                                 return Task.FromResult(0);
                             }
 
                             var identity = context.Principal;
-
-                            var subjectClaim = identity.Claims;
 
                             var newClaimsIdentity = new ClaimsIdentity(
                                 context.Scheme.Name,
@@ -74,7 +76,7 @@ namespace NTech.Core.Host.Startup
 
                             // keep the access token for api login
                             if (!newClaimsIdentity.HasClaim(x => x.Type == "access_token"))
-                                newClaimsIdentity.AddClaim(new System.Security.Claims.Claim("access_token", token.RawData));
+                                newClaimsIdentity.AddClaim(new Claim("access_token", token.RawData));
 
                             context.Principal = new ClaimsPrincipal(newClaimsIdentity);
                             context.Success();

@@ -1,10 +1,9 @@
 var NTechComponents;
 (function (NTechComponents) {
-    var NTechComponentControllerBaseTemplate = /** @class */ (function () {
-        function NTechComponentControllerBaseTemplate(ntechComponentService) {
-            var _this = this;
+    class NTechComponentControllerBaseTemplate {
+        constructor(ntechComponentService) {
             this.ntechComponentService = ntechComponentService;
-            this.isNullOrWhitespace = function (input) {
+            this.isNullOrWhitespace = (input) => {
                 if (typeof input === 'undefined' || input == null)
                     return true;
                 if ($.type(input) === 'string') {
@@ -14,20 +13,20 @@ var NTechComponents;
                     return false;
                 }
             };
-            this.isValidPositiveDecimal = function (value) {
-                if (_this.isNullOrWhitespace(value))
+            this.isValidPositiveDecimal = (value) => {
+                if (this.isNullOrWhitespace(value))
                     return true;
                 var v = value.toString();
                 return (/^([0]|[1-9]([0-9])*)([\.|,]([0-9])+)?$/).test(v);
             };
-            this.isValidDecimal = function (value) {
-                if (_this.isNullOrWhitespace(value))
+            this.isValidDecimal = (value) => {
+                if (this.isNullOrWhitespace(value))
                     return true;
                 var v = value.toString();
                 return (/^([-]?[0]|[1-9]([0-9])*)([\.|,]([0-9])+)?$/).test(v);
             };
-            this.parseDecimalOrNull = function (n) {
-                if (_this.isNullOrWhitespace(n) || !_this.isValidDecimal(n)) {
+            this.parseDecimalOrNull = (n) => {
+                if (this.isNullOrWhitespace(n) || !this.isValidDecimal(n)) {
                     return null;
                 }
                 if ($.type(n) === 'string') {
@@ -37,17 +36,17 @@ var NTechComponents;
                     return parseFloat(n);
                 }
             };
-            this.isValidDate = function (value) {
-                if (_this.isNullOrWhitespace(value))
+            this.isValidDate = (value) => {
+                if (this.isNullOrWhitespace(value))
                     return true;
                 return moment(value, "YYYY-MM-DD", true).isValid();
             };
-            this.isValidMonth = function (value) {
-                if (_this.isNullOrWhitespace(value))
+            this.isValidMonth = (value) => {
+                if (this.isNullOrWhitespace(value))
                     return true;
                 return moment(value + '-01', "YYYY-MM-DD", true).isValid();
             };
-            this.isValidURL = function (value) {
+            this.isValidURL = (value) => {
                 //From: https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
                 var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
                     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
@@ -57,51 +56,51 @@ var NTechComponents;
                     '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
                 return !!pattern.test(value);
             };
-            this.isValidPositiveInt = function (value) {
-                if (_this.isNullOrWhitespace(value))
+            this.isValidPositiveInt = (value) => {
+                if (this.isNullOrWhitespace(value))
                     return true;
                 var v = value.toString();
                 return (/^(\+)?([0-9]+)$/.test(v));
             };
-            this.isValidEmail = function (value) {
+            this.isValidEmail = (value) => {
                 //Just to help the user in case they mix up the fields. Not trying to ensure it's actually possible to send email here
-                if (_this.isNullOrWhitespace(value)) {
+                if (this.isNullOrWhitespace(value)) {
                     return true;
                 }
                 var i = value.indexOf('@');
                 return value.length >= 3 && i > 0 && i < (value.length - 1);
             };
-            this.isValidPhoneNr = function (value) {
-                if (_this.isNullOrWhitespace(value)) {
+            this.isValidPhoneNr = (value) => {
+                if (this.isNullOrWhitespace(value)) {
                     return true;
                 }
                 return !(/[a-z]/i.test(value));
             };
-            this.asDate = function (d) {
+            this.asDate = (d) => {
                 if (!d) {
                     return null;
                 }
-                var dd = new NTechDates.DateOnly(d.yearMonthDay); //Serialization
+                let dd = new NTechDates.DateOnly(d.yearMonthDay); //Serialization
                 return dd.asDate();
             };
-            this.formatDateOnlyForEdit = function (d) {
-                if (_this.isNullOrWhitespace(d)) {
+            this.formatDateOnlyForEdit = (d) => {
+                if (this.isNullOrWhitespace(d)) {
                     return '';
                 }
                 else {
                     return new NTechDates.DateOnly(d.yearMonthDay).toString();
                 }
             };
-            this.formatNumberForEdit = function (n) {
-                if (_this.isNullOrWhitespace(n)) {
+            this.formatNumberForEdit = (n) => {
+                if (this.isNullOrWhitespace(n)) {
                     return '';
                 }
                 else {
                     return n.toString().replace('.', ',');
                 }
             };
-            this.formatNumberForStorage = function (n) {
-                if (_this.isNullOrWhitespace(n)) {
+            this.formatNumberForStorage = (n) => {
+                if (this.isNullOrWhitespace(n)) {
                     return '';
                 }
                 else {
@@ -109,44 +108,44 @@ var NTechComponents;
                 }
             };
         }
-        NTechComponentControllerBaseTemplate.prototype.$onInit = function () {
+        $onInit() {
             if (this.ntechComponentService.ntechLog.isDebugMode) {
                 window['ntechDebug'] = window['ntechDebug'] || {};
                 window['ntechDebug'][this.componentName()] = this;
             }
-        };
-        NTechComponentControllerBaseTemplate.prototype.$postLink = function () {
+        }
+        $postLink() {
             this.postLink();
-        };
-        NTechComponentControllerBaseTemplate.prototype.$onDestroy = function () {
-        };
-        NTechComponentControllerBaseTemplate.prototype.$onChanges = function (changesObj) {
+        }
+        $onDestroy() {
+        }
+        $onChanges(changesObj) {
             this.onChanges();
-        };
-        NTechComponentControllerBaseTemplate.prototype.$doCheck = function () {
+        }
+        $doCheck() {
             this.onDoCheck();
-        };
-        NTechComponentControllerBaseTemplate.prototype.onDoCheck = function () {
-        };
-        NTechComponentControllerBaseTemplate.prototype.onChanges = function () {
-        };
-        NTechComponentControllerBaseTemplate.prototype.postLink = function () {
-        };
-        NTechComponentControllerBaseTemplate.prototype.logDebug = function (message) {
-            this.ntechComponentService.ntechLog.logDebug("".concat(this.componentName(), ": ").concat(message));
-        };
-        NTechComponentControllerBaseTemplate.prototype.signalReloadRequired = function () {
+        }
+        onDoCheck() {
+        }
+        onChanges() {
+        }
+        postLink() {
+        }
+        logDebug(message) {
+            this.ntechComponentService.ntechLog.logDebug(`${this.componentName()}: ${message}`);
+        }
+        signalReloadRequired() {
             this.logDebug('signalReloadRequired');
             this.ntechComponentService.signalReloadRequired({ sourceComponentName: this.componentName() });
-        };
+        }
         /**
          * https://stackoverflow.com/a/35599724/2928868
          * Minus the length-check.
          * Should work for all valid IBANs. https://www.iban.com/structure
          * @param input
          */
-        NTechComponentControllerBaseTemplate.prototype.isValidIBAN = function (input) {
-            var mod97 = function (value) {
+        isValidIBAN(input) {
+            let mod97 = (value) => {
                 var checksum = value.slice(0, 2), fragment;
                 for (var offset = 2; offset < value.length; offset += 7) {
                     fragment = String(checksum) + value.substring(offset, offset + 7);
@@ -162,16 +161,16 @@ var NTechComponents;
                 return false;
             }
             // rearrange country code and check digits, and convert chars to ints
-            digits = (code[3] + code[1] + code[2]).replace(/[A-Z]/g, function (letter) { return String(letter.charCodeAt(0) - 55); });
+            digits = (code[3] + code[1] + code[2]).replace(/[A-Z]/g, (letter) => String(letter.charCodeAt(0) - 55));
             // final check
             return mod97(digits) === 1;
-        };
-        NTechComponentControllerBaseTemplate.prototype.isValidIBANFI = function (v) {
-            var isLetter = function (str) {
+        }
+        isValidIBANFI(v) {
+            let isLetter = (str) => {
                 return str.length === 1 && str.match(/[a-z]/i);
             };
-            var parseNum = function (x) { return parseFloat(x.replace(',', '.')); };
-            var modulo = function (divident, divisor) {
+            let parseNum = (x) => parseFloat(x.replace(',', '.'));
+            let modulo = (divident, divisor) => {
                 var partLength = 10;
                 while (divident.length > partLength) {
                     var part = parseNum(divident.substring(0, partLength).replace(',', '.'));
@@ -179,7 +178,7 @@ var NTechComponents;
                 }
                 return parseNum(divident) % divisor;
             };
-            var isNullOrWhitespace = function (input) {
+            let isNullOrWhitespace = (input) => {
                 if (typeof input === 'undefined' || input == null)
                     return true;
                 if ($.type(input) === 'string') {
@@ -192,7 +191,7 @@ var NTechComponents;
             if (isNullOrWhitespace(v)) {
                 return true;
             }
-            var value = v.toString();
+            let value = v.toString();
             //https://en.wikipedia.org/wiki/International_Bank_Account_Number#Check_digits
             if (!value) {
                 return false;
@@ -223,43 +222,40 @@ var NTechComponents;
             //Interpret the string as a decimal integer and compute the remainder of that number on division by 97
             var rem = modulo(d, 97);
             return rem === 1;
-        };
-        NTechComponentControllerBaseTemplate.prototype.getUiGatewayUrl = function (moduleName, moduleLocalPath, queryStringParameters) {
+        }
+        getUiGatewayUrl(moduleName, moduleLocalPath, queryStringParameters) {
             if (moduleLocalPath[0] === '/') {
                 moduleLocalPath = moduleLocalPath.substring(1);
             }
-            var p = "/Ui/Gateway/".concat(moduleName, "/").concat(moduleLocalPath);
+            let p = `/Ui/Gateway/${moduleName}/${moduleLocalPath}`;
             if (queryStringParameters) {
-                var s = moduleLocalPath.indexOf('?') >= 0 ? '&' : '?';
-                for (var _i = 0, queryStringParameters_1 = queryStringParameters; _i < queryStringParameters_1.length; _i++) {
-                    var q = queryStringParameters_1[_i];
+                let s = moduleLocalPath.indexOf('?') >= 0 ? '&' : '?';
+                for (let q of queryStringParameters) {
                     if (!this.isNullOrWhitespace(q[1])) {
-                        p += "".concat(s).concat(q[0], "=").concat(encodeURIComponent(decodeURIComponent(q[1])));
+                        p += `${s}${q[0]}=${encodeURIComponent(decodeURIComponent(q[1]))}`;
                         s = '&';
                     }
                 }
             }
             return p;
-        };
-        NTechComponentControllerBaseTemplate.prototype.getLocalModuleUrl = function (moduleLocalPath, queryStringParameters) {
+        }
+        getLocalModuleUrl(moduleLocalPath, queryStringParameters) {
             if (moduleLocalPath[0] === '/') {
                 moduleLocalPath = moduleLocalPath.substring(1);
             }
-            var p = "/".concat(moduleLocalPath);
+            let p = `/${moduleLocalPath}`;
             if (queryStringParameters) {
-                var s = moduleLocalPath.indexOf('?') >= 0 ? '&' : '?';
-                for (var _i = 0, queryStringParameters_2 = queryStringParameters; _i < queryStringParameters_2.length; _i++) {
-                    var q = queryStringParameters_2[_i];
+                let s = moduleLocalPath.indexOf('?') >= 0 ? '&' : '?';
+                for (let q of queryStringParameters) {
                     if (!this.isNullOrWhitespace(q[1])) {
-                        p += "".concat(s).concat(q[0], "=").concat(encodeURIComponent(decodeURIComponent(q[1])));
+                        p += `${s}${q[0]}=${encodeURIComponent(decodeURIComponent(q[1]))}`;
                         s = '&';
                     }
                 }
             }
             return p;
-        };
-        return NTechComponentControllerBaseTemplate;
-    }());
+        }
+    }
     NTechComponents.NTechComponentControllerBaseTemplate = NTechComponentControllerBaseTemplate;
 })(NTechComponents || (NTechComponents = {}));
 ;

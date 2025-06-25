@@ -1,11 +1,4 @@
-﻿using Newtonsoft.Json;
-using nSavings.Code;
-using nSavings.Code.Services;
-using NTech;
-using NTech.Banking.BankAccounts.Fi;
-using NTech.Core.Module.Shared.Infrastructure;
-using NTech.Services.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
@@ -14,13 +7,22 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using nSavings.Code;
+using nSavings.Code.nUser;
+using nSavings.Code.Services;
+using nSavings.Controllers.Api;
+using NTech;
+using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Services.Infrastructure;
+using NTech.Services.Infrastructure.NTechWs;
 
 namespace nSavings.Controllers
 {
     public abstract class NController : Controller
     {
-        private static readonly Lazy<MemoryCache> cache = new Lazy<MemoryCache>(() => MemoryCache.Default);
-        private IClock clock = ClockFactory.SharedInstance;
+        private static readonly Lazy<MemoryCache> Cache = new(() => MemoryCache.Default);
 
         protected const string XlsxContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -35,33 +37,34 @@ namespace nSavings.Controllers
         {
             get
             {
-                if (serviceFactory == null)
-                {
-                    serviceFactory = new ControllerServiceFactory(
-                        this.Url,
-                        this.GetUserDisplayNameByUserId,
-                        this.Clock,
-                        new Lazy<NTech.Services.Infrastructure.NTechWs.INTechWsUrlService>(() => Api.ApiHostController.ApiHost.Value));
-                }
-                return serviceFactory;
+                return serviceFactory ??= new ControllerServiceFactory(
+                    Url,
+                    GetUserDisplayNameByUserId,
+                    Clock,
+                    new Lazy<INTechWsUrlService>(() =>
+                        ApiHostController.ApiHost.Value));
             }
         }
 
         protected int GetCurrentUserIdWithTestSupport()
         {
             if (NEnv.IsProduction)
-                return this.CurrentUserId;
-            else
+                return CurrentUserId;
+
+            //Assumes we are past parsing this already
+            var p = Request.InputStream.Position;
+            Request.InputStream.Position = 0;
+            using var ms = new MemoryStream();
+            Request.InputStream.CopyTo(ms);
+            Request.InputStream.Position = p;
+            try
             {
-                //Assumes we are past parsing this already
-                var p = this.Request.InputStream.Position;
-                this.Request.InputStream.Position = 0;
-                using (var ms = new MemoryStream())
-                {
-                    this.Request.InputStream.CopyTo(ms);
-                    this.Request.InputStream.Position = p;
-                    return JsonConvert.DeserializeAnonymousType(System.Text.Encoding.UTF8.GetString(ms.ToArray()), new { testUserId = (int?)null })?.testUserId ?? this.CurrentUserId;
-                }
+                return JsonConvert.DeserializeAnonymousType(Encoding.UTF8.GetString(ms.ToArray()),
+                    new { testUserId = (int?)null })?.testUserId ?? CurrentUserId;
+            }
+            catch (JsonSerializationException)
+            {
+                return CurrentUserId;
             }
         }
 
@@ -75,62 +78,34 @@ namespace nSavings.Controllers
         /// </script>
         ///
         /// </summary>
-        protected string EncodeInitialData<T>(T data)
+        protected static string EncodeInitialData<T>(T data)
         {
-            return Convert.ToBase64String(Encoding.GetEncoding("iso-8859-1").GetBytes(JsonConvert.SerializeObject(data)));
+            return Convert.ToBase64String(
+                Encoding.GetEncoding("iso-8859-1").GetBytes(JsonConvert.SerializeObject(data)));
         }
 
-        public ClaimsIdentity Identity
-        {
-            get
-            {
-                return this.User.Identity as ClaimsIdentity;
-            }
-        }
+        public ClaimsIdentity Identity => User.Identity as ClaimsIdentity;
 
         public INTechCurrentUserMetadata GetCurrentUserMetadata()
         {
-            return new NTechCurrentUserMetadataImpl(this.Identity);
+            return new NTechCurrentUserMetadataImpl(Identity);
         }
 
-        protected IClock Clock
-        {
-            get
+        protected IClock Clock { get; } = ClockFactory.SharedInstance;
+
+        protected int CurrentUserId => int.Parse(Identity.FindFirst("ntech.userid").Value);
+
+        protected string CurrentUserAuthenticationLevel => Identity.FindFirst("ntech.authenticationlevel").Value;
+
+        public string InformationMetadata =>
+            JsonConvert.SerializeObject(new
             {
-                return clock;
-            }
-        }
+                providerUserId = CurrentUserId,
+                providerAuthenticationLevel = CurrentUserAuthenticationLevel,
+                isSigned = false
+            });
 
-        protected int CurrentUserId
-        {
-            get
-            {
-                return int.Parse(Identity.FindFirst("ntech.userid").Value);
-            }
-        }
-
-        protected string CurrentUserAuthenticationLevel
-        {
-            get
-            {
-                return Identity.FindFirst("ntech.authenticationlevel").Value;
-            }
-        }
-
-        public string InformationMetadata
-        {
-            get
-            {
-                return JsonConvert.SerializeObject(new
-                {
-                    providerUserId = CurrentUserId,
-                    providerAuthenticationLevel = CurrentUserAuthenticationLevel,
-                    isSigned = false
-                });
-            }
-        }
-
-        protected bool TryParseDataUrl(string dataUrl, out string mimeType, out byte[] binaryData)
+        protected static bool TryParseDataUrl(string dataUrl, out string mimeType, out byte[] binaryData)
         {
             var result = Regex.Match(dataUrl, @"data:(?<type>.+?);base64,(?<data>.+)");
             if (!result.Success)
@@ -139,40 +114,35 @@ namespace nSavings.Controllers
                 binaryData = null;
                 return false;
             }
-            else
-            {
-                mimeType = result.Groups["type"].Value.Trim();
-                binaryData = Convert.FromBase64String(result.Groups["data"].Value.Trim());
-                return true;
-            }
+
+            mimeType = result.Groups["type"].Value.Trim();
+            binaryData = Convert.FromBase64String(result.Groups["data"].Value.Trim());
+            return true;
         }
 
-        protected string GetUserDisplayNameByUserId(string userId)
+        protected static string GetUserDisplayNameByUserId(string userId)
         {
             var c = new UserClient();
             var d = c.GetUserDisplayNamesByUserId();
-            if (d.ContainsKey(userId))
-                return d[userId];
-            else
-                return $"User {userId}";
+            return d.TryGetValue(userId, out var value) ? value : $"User {userId}";
         }
 
         protected T WithCache<T>(string key, Func<T> produce) where T : class
         {
-            var val = cache.Value.Get(key) as T;
-            if (val != null)
+            if (Cache.Value.Get(key) is T val)
                 return val;
             val = produce();
-            cache.Value.Set(key, val, DateTimeOffset.Now.AddMinutes(5));
+            Cache.Value.Set(key, val, DateTimeOffset.Now.AddMinutes(5));
             return val;
         }
 
         private string GetClaim(string name)
         {
-            return (this?.User?.Identity as System.Security.Claims.ClaimsIdentity)?.FindFirst(name)?.Value;
+            return (User?.Identity as ClaimsIdentity)?.FindFirst(name)?.Value;
         }
 
-        protected void GetProviderUserProperties(List<string> errors, out bool isProvider, out string providerName, out int userId, out string informationMetadata)
+        protected void GetProviderUserProperties(List<string> errors, out bool isProvider, out string providerName,
+            out int userId, out string informationMetadata)
         {
             var isProviderClaim = GetClaim("ntech.isprovider");
             if (string.IsNullOrWhiteSpace(isProviderClaim))
@@ -221,7 +191,8 @@ namespace nSavings.Controllers
             }
         }
 
-        protected void GetSystemUserProperties(List<string> errors, out bool isSystemUser, out int userId, out string informationMetadata)
+        protected void GetSystemUserProperties(List<string> errors, out bool isSystemUser, out int userId,
+            out string informationMetadata)
         {
             var isSystemUserClaim = GetClaim("ntech.issystemuser");
 
@@ -287,7 +258,7 @@ namespace nSavings.Controllers
             return s + $"#!/Details/{savingsAccountNr}";
         }
 
-        private dynamic CreateUserMessage(string title, string text, Uri link)
+        private static dynamic CreateUserMessage(string title, string text, Uri link)
         {
             dynamic m = new ExpandoObject();
             m.Title = title;
@@ -316,15 +287,13 @@ namespace nSavings.Controllers
 
         private void ConsumeInfoMessageOnNextPageLoad()
         {
-            var s = this?.HttpContext?.Session;
-            if (s != null)
-            {
-                ViewBag.Message = s["infoMessageOnNextPageLoad"];
-                s["infoMessageOnNextPageLoad"] = null;
-            }
+            var s = HttpContext?.Session;
+            if (s == null) return;
+            ViewBag.Message = s["infoMessageOnNextPageLoad"];
+            s["infoMessageOnNextPageLoad"] = null;
         }
 
-        protected string InferBankNameFromIbanFi(IBANFi iban)
+        protected static string InferBankNameFromIbanFi(IBANFi iban)
         {
             try
             {
@@ -337,7 +306,7 @@ namespace nSavings.Controllers
             }
         }
 
-        protected ActionResult Json2(object data)
+        protected static ActionResult Json2(object data)
         {
             return new JsonNetActionResult
             {

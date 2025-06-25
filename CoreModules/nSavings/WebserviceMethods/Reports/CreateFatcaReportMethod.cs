@@ -1,6 +1,7 @@
 ﻿using NTech.Services.Infrastructure.NTechWs;
 using System;
 using System.IO;
+using nSavings.Controllers.Api;
 
 namespace nSavings.WebserviceMethods.Reports
 {

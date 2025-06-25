@@ -1,6 +1,7 @@
-﻿using nTest.RandomDataSource;
+﻿using System.IO;
 using System.Web.Configuration;
 using System.Web.Hosting;
+using nTest.RandomDataSource;
 
 namespace nTest.Code
 {
@@ -8,38 +9,28 @@ namespace nTest.Code
     {
         private static DbSingleton instance;
         private static object instanceLock = new object();
-        private IDocumentDatabase db;
+        public IDocumentDatabase Db { get; }
 
-        private static string DbConnectionString
-        {
-            get
-            {
-                return WebConfigurationManager.ConnectionStrings[NEnv.UseSqlServerDocumentDb ? "TestSqlServerDb" : "TestSqliteDb"]?.ConnectionString;
-            }
-        }
+        private static string DbConnectionString =>
+            WebConfigurationManager
+                .ConnectionStrings[NEnv.UseSqlServerDocumentDb ? "TestSqlServerDb" : "TestSqliteDb"]
+                ?.ConnectionString;
 
         private DbSingleton()
         {
             if (NEnv.UseSqlServerDocumentDb)
             {
-                db = new SqlDocumentDatabase(DbConnectionString);
+                Db = new SqlDocumentDatabase(DbConnectionString);
             }
             else
             {
                 var f = SqliteDocumentDatabase.ParseFileFromConnectionString(DbConnectionString);
                 if (!f.Exists)
                 {
-                    System.IO.Directory.CreateDirectory(f.Directory.FullName);
+                    Directory.CreateDirectory(f.Directory.FullName);
                 }
-                db = SqliteDocumentDatabase.FromFile(f);
-            }
-        }
 
-        public IDocumentDatabase Db
-        {
-            get
-            {
-                return db;
+                Db = SqliteDocumentDatabase.FromFile(f);
             }
         }
 
@@ -47,17 +38,14 @@ namespace nTest.Code
         {
             get
             {
-                if (instance == null)
+                if (instance != null) return instance;
+                lock (instanceLock)
                 {
-                    lock (instanceLock)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new DbSingleton();
-                            HostingEnvironment.RegisterObject(instance);
-                        }
-                    }
+                    if (instance != null) return instance;
+                    instance = new DbSingleton();
+                    HostingEnvironment.RegisterObject(instance);
                 }
+
                 return instance;
             }
         }
@@ -71,10 +59,12 @@ namespace nTest.Code
         {
             try
             {
-                if (instance != null)
-                    instance.Db.Dispose();
+                instance?.Db.Dispose();
             }
-            catch { /* Ignored */ }
+            catch
+            {
+                /* Ignored */
+            }
         }
     }
 }

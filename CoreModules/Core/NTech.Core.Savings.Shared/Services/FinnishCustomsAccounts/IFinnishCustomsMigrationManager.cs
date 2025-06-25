@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 
-namespace nSavings.Code.Services.FinnishCustomsAccounts
+namespace NTech.Core.Savings.Shared.Services.FinnishCustomsAccounts
 {
     /// <summary>
     /// Things that differ between core and legacy where we want to delay migration

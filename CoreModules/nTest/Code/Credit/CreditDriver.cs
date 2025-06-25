@@ -1,18 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using Newtonsoft.Json;
+using NTech.Banking.BankAccounts.Se;
 using NTech.Core;
 using nTest.Code;
 using nTest.RandomDataSource;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 namespace nTest.Controllers
 {
     public class CreditDriver : ICoreClock
     {
-        private DateTimeOffset currentTime;        
+        private DateTimeOffset currentTime;
         private Action<string> logCall;
         private readonly IRandomnessSource random;
         private readonly DateTime? stopAtDate;
@@ -31,7 +33,7 @@ namespace nTest.Controllers
 
 
         public DateTimeOffset Now => currentTime;
-        public DateTime Today => Now.Date;        
+        public DateTime Today => Now.Date;
 
         private CreditDriver(IRandomnessSource random, Action<string> logCall = null, DateTime? stopAtDate = null)
         {
@@ -60,22 +62,26 @@ namespace nTest.Controllers
 
         private void CallWithLoggingA(Action a, string text)
         {
-            CallWithLoggingF<object>(() => { a(); return null; }, text);
+            CallWithLoggingF<object>(() =>
+            {
+                a();
+                return null;
+            }, text);
         }
 
         internal void SimulateOneDay(bool skipPayments = false, bool isSimple = false)
         {
             CallWithLoggingA(() =>
-                {
-                    var unpaidInvoices = GetAllUnpaidInvoices().Select(x => new Flaggable<InvoiceModel>(x)).ToList();
-                    SimluateOneDayI(() => unpaidInvoices, false, false, skipPayments: skipPayments, isSimple: isSimple);
-                }, "SimulateOneDay");
+            {
+                var unpaidInvoices = GetAllUnpaidInvoices().Select(x => new Flaggable<InvoiceModel>(x)).ToList();
+                SimluateOneDayI(() => unpaidInvoices, false, false, skipPayments: skipPayments, isSimple: isSimple);
+            }, "SimulateOneDay");
         }
 
         internal string AddCustomApplication2(string scenarioData, Dictionary<string, string> outputDataContext)
         {
             var data = JsonConvert.DeserializeAnonymousType(
-                System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
+                Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
                 new { applicationJson = "" });
 
             var repo = new TestPersonRepository(NEnv.ClientCfg.Country.BaseCountry, DbSingleton.SharedInstance.Db);
@@ -84,7 +90,8 @@ namespace nTest.Controllers
             CallWithLoggingA(() =>
             {
                 //NOTE: If you change automate to true here and the user changes the application json to remove DisableAutomation you will get concurrency issues
-                var applicationNr = CreateApplication(null, false, TimeMachine.SharedInstance.GetCurrentTime().Date, customApplicationJson: data.applicationJson);
+                var applicationNr = CreateApplication(null, false, TimeMachine.SharedInstance.GetCurrentTime().Date,
+                    customApplicationJson: data.applicationJson);
                 if (outputDataContext != null)
                     outputDataContext["applicationNr"] = applicationNr;
                 logCall($"ApplicationNr: {applicationNr}");
@@ -95,8 +102,8 @@ namespace nTest.Controllers
         internal void CreateMortgageLoan(string scenarioData, Dictionary<string, string> outputDataContext)
         {
             var data = JsonConvert.DeserializeAnonymousType(
-               System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
-               new { applicationNr = "" });
+                Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
+                new { applicationNr = "" });
 
             CallWithLoggingA(() =>
             {
@@ -105,11 +112,12 @@ namespace nTest.Controllers
             }, "CreateMortgageLoan");
         }
 
-        internal void FlagCustomersAsExternallyOnboarded(string scenarioData, Dictionary<string, string> outputDataContext)
+        internal void FlagCustomersAsExternallyOnboarded(string scenarioData,
+            Dictionary<string, string> outputDataContext)
         {
             var data = JsonConvert.DeserializeAnonymousType(
-               System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
-               new { applicationNr = "" });
+                Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
+                new { applicationNr = "" });
 
             CallWithLoggingA(() =>
             {
@@ -121,10 +129,7 @@ namespace nTest.Controllers
 
         internal void SimulateOneYear()
         {
-            CallWithLoggingA(() =>
-            {
-                Repeat(c => SimulateOneMonthI(true, c.IsLast), 12);
-            }, "SimulateOneYear");
+            CallWithLoggingA(() => { Repeat(c => SimulateOneMonthI(true, c.IsLast), 12); }, "SimulateOneYear");
         }
 
         public void SimulateOneMonth()
@@ -134,7 +139,8 @@ namespace nTest.Controllers
 
         public void SimulateOneMonthSimple(bool skipPayments = false)
         {
-            CallWithLoggingA(() => SimulateOneMonthI(true, true, isSimple: true, skipPayments: skipPayments), "SimulateOneMonthSimple");
+            CallWithLoggingA(() => SimulateOneMonthI(true, true, isSimple: true, skipPayments: skipPayments),
+                "SimulateOneMonthSimple");
         }
 
         private class RepeatContext
@@ -154,25 +160,28 @@ namespace nTest.Controllers
             }
         }
 
-        private static Lazy<NTech.Banking.BankAccounts.Se.BankGiroNumberSe> randomSwedishBankgiroNr = new Lazy<NTech.Banking.BankAccounts.Se.BankGiroNumberSe>(() =>
-        {
-            var b = new BankAccountGenerator();
+        private static Lazy<BankGiroNumberSe> randomSwedishBankgiroNr =
+            new Lazy<BankGiroNumberSe>(() =>
+            {
+                var b = new BankAccountGenerator();
 
-            return b.GenerateSwedishBankGiroNr(new RandomnessSource(null)) as NTech.Banking.BankAccounts.Se.BankGiroNumberSe;
-        });
+                return b.GenerateSwedishBankGiroNr(new RandomnessSource(null)) as
+                    BankGiroNumberSe;
+            });
 
         private void AddSomeIncomingPayments(List<Flaggable<InvoiceModel>> unpaidInvoices)
         {
             var payments = new List<Tuple<decimal, string>>();
-            
+
             var today = Today;
             foreach (var creditGroup in unpaidInvoices.Where(x => !x.IsFlagged).GroupBy(x => x.Item.CreditNr).ToList())
             {
-                if(creditGroup.Any(x => x.Item.DueDate == today))
+                if (creditGroup.Any(x => x.Item.DueDate == today))
                 {
-                    foreach(var notificationToPay in creditGroup)
+                    foreach (var notificationToPay in creditGroup)
                     {
-                        payments.Add(Tuple.Create(notificationToPay.Item.UnpaidAmount, notificationToPay.Item.OcrPaymentReference));
+                        payments.Add(Tuple.Create(notificationToPay.Item.UnpaidAmount,
+                            notificationToPay.Item.OcrPaymentReference));
                         notificationToPay.IsFlagged = true;
                     }
                 }
@@ -188,19 +197,22 @@ namespace nTest.Controllers
                 {
                     dataUrl = pf.ToDataUrl(pf.Create_Camt_054_001_02File(payments, bookkeepingDate: today));
                     formatName = "camt.054.001.02";
-                    fileName = $"nTestIncomingPaymentFile_{currentTime.ToString("yyyy-MM-dd")}_{Guid.NewGuid().ToString()}.xml";
+                    fileName =
+                        $"nTestIncomingPaymentFile_{currentTime.ToString("yyyy-MM-dd")}_{Guid.NewGuid().ToString()}.xml";
                 }
                 else if (NEnv.ClientCfg.Country.BaseCountry == "SE")
                 {
-                    dataUrl = pf.ToDataUrl(pf.Create_BgMax_File(currentTime.DateTime, payments.Select(x => new TestPaymentFileCreator.Payment
-                    {
-                        Amount = x.Item1,
-                        BookkeepingDate = today,
-                        OcrReference = x.Item2,
-                        PayerName = "N " + x.Item2
-                    }).ToList(), clientBankGiroNr: randomSwedishBankgiroNr.Value.NormalizedValue));
+                    dataUrl = pf.ToDataUrl(pf.Create_BgMax_File(currentTime.DateTime, payments.Select(x =>
+                        new TestPaymentFileCreator.Payment
+                        {
+                            Amount = x.Item1,
+                            BookkeepingDate = today,
+                            OcrReference = x.Item2,
+                            PayerName = "N " + x.Item2
+                        }).ToList(), clientBankGiroNr: randomSwedishBankgiroNr.Value.NormalizedValue));
                     formatName = "bgmax";
-                    fileName = $"nTestIncomingPaymentFile_{currentTime.ToString("yyyy-MM-dd")}_{Guid.NewGuid().ToString()}.txt";
+                    fileName =
+                        $"nTestIncomingPaymentFile_{currentTime.ToString("yyyy-MM-dd")}_{Guid.NewGuid().ToString()}.txt";
                 }
                 else
                     throw new NotImplementedException();
@@ -223,7 +235,8 @@ namespace nTest.Controllers
                 var creditClient = new CreditDriverCreditClient();
                 var maxCreditTransactionDate = creditClient.GetMaxTransactionDate();
 
-                if (maxCreditTransactionDate.HasValue && TimeMachine.SharedInstance.GetCurrentTime().Date.Date < maxCreditTransactionDate.Value.Date)
+                if (maxCreditTransactionDate.HasValue && TimeMachine.SharedInstance.GetCurrentTime().Date.Date <
+                    maxCreditTransactionDate.Value.Date)
                 {
                     NLog.Warning("CreditDriver.Init moved time forward to the latest credit transaction");
                     MoveTime(maxCreditTransactionDate.Value.AddDays(1), TimeOfDay.Morning);
@@ -231,7 +244,8 @@ namespace nTest.Controllers
             }
         }
 
-        public static CreditDriver Begin(IRandomnessSource random, Action<string> logCall = null, DateTime? stopAtDate = null)
+        public static CreditDriver Begin(IRandomnessSource random, Action<string> logCall = null,
+            DateTime? stopAtDate = null)
         {
             var d = new CreditDriver(random, logCall: logCall, stopAtDate: stopAtDate);
             d.Init();
@@ -247,7 +261,7 @@ namespace nTest.Controllers
         internal string CreateSavingsAccount(string scenarioData, Dictionary<string, string> outputDataContext)
         {
             var data = JsonConvert.DeserializeAnonymousType(
-                System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
+                Encoding.UTF8.GetString(Convert.FromBase64String(scenarioData)),
                 new { applicationJson = "" });
 
             var repo = new TestPersonRepository(NEnv.ClientCfg.Country.BaseCountry, DbSingleton.SharedInstance.Db);
@@ -265,12 +279,14 @@ namespace nTest.Controllers
         }
 
         //simple means nothing "new" is added. So no new credits or applications.
-        private void SimluateOneDayI(Func<List<Flaggable<InvoiceModel>>> getUnpaidInvoices, bool isPartOfLongRun, bool isLastDayOfRun, bool isSimple = false, bool skipPayments = false)
+        private void SimluateOneDayI(Func<List<Flaggable<InvoiceModel>>> getUnpaidInvoices, bool isPartOfLongRun,
+            bool isLastDayOfRun, bool isSimple = false, bool skipPayments = false)
         {
             MoveTime(currentTime, TimeOfDay.Morning);
 
             RunMorningSchedule(isPartOfLongRun, isLastDayOfRun);
-            if (currentTime.Day == 5 && !isSimple && !NEnv.IsMortgageLoansEnabled && !NEnv.IsStandardUnsecuredLoansEnabled)
+            if (currentTime.Day == 5 && !isSimple && !NEnv.IsMortgageLoansEnabled &&
+                !NEnv.IsStandardUnsecuredLoansEnabled)
             {
                 //TODO: This should be an option and be related to the dates of termination letters and not run if scheduled
                 CallWithLoggingA(() => SendAllEligableToDebtCollection(), "Send to debt collection");
@@ -283,8 +299,12 @@ namespace nTest.Controllers
             {
                 var nrApproved = random.NextIntBetween(1, 3);
                 var nrRejected = random.NextIntBetween(0, 3);
-                Repeat(c => CallWithLoggingA(() => CreateApplication(true, true, currentTime.Date), "Creating approved application"), nrApproved);
-                Repeat(c => CallWithLoggingA(() => CreateApplication(false, true, currentTime.Date), "Creating rejected application"), nrRejected);
+                Repeat(
+                    c => CallWithLoggingA(() => CreateApplication(true, true, currentTime.Date),
+                        "Creating approved application"), nrApproved);
+                Repeat(
+                    c => CallWithLoggingA(() => CreateApplication(false, true, currentTime.Date),
+                        "Creating rejected application"), nrRejected);
 
                 if (nrApproved > 0)
                 {
@@ -322,7 +342,8 @@ namespace nTest.Controllers
 
         public bool HasFutureStopDate() => stopAtDate.HasValue && currentTime.Date.Date < stopAtDate.Value;
 
-        private void SimulateOneMonthI(bool isPartOfLongRun, bool isLastMonthOfRun, bool isSimple = false, bool skipPayments = false)
+        private void SimulateOneMonthI(bool isPartOfLongRun, bool isLastMonthOfRun, bool isSimple = false,
+            bool skipPayments = false)
         {
             MoveTime(currentTime.AddDays(1), TimeOfDay.Morning);
 
@@ -332,12 +353,14 @@ namespace nTest.Controllers
             {
                 if (stopAtDate.HasValue && currentTime.Date.Date >= stopAtDate.Value)
                     return;
-                
+
                 var isLastDayOfMonth = IsLastDayOfMonth(currentTime);
                 var date = currentTime.Date;
-                SimluateOneDayI(() => unpaidInvoices, isPartOfLongRun, isLastMonthOfRun && isLastDayOfMonth, isSimple: isSimple, skipPayments: skipPayments);
-                var newInvoices = GetAllUnpaidInvoices(notificationDate: date).Select(x => new Flaggable<InvoiceModel>(x)).ToList();
-                if(newInvoices.Count > 0)
+                SimluateOneDayI(() => unpaidInvoices, isPartOfLongRun, isLastMonthOfRun && isLastDayOfMonth,
+                    isSimple: isSimple, skipPayments: skipPayments);
+                var newInvoices = GetAllUnpaidInvoices(notificationDate: date)
+                    .Select(x => new Flaggable<InvoiceModel>(x)).ToList();
+                if (newInvoices.Count > 0)
                 {
                     Log($"{newInvoices.Count} invoices created");
                     unpaidInvoices.AddRange(newInvoices);
@@ -361,9 +384,14 @@ namespace nTest.Controllers
             {
                 switch (td)
                 {
-                    case TimeOfDay.Morning: return new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, 6, 0, 0, 0, newTime.Offset);
-                    case TimeOfDay.Midday: return new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, 12, 0, 0, 0, newTime.Offset);
-                    case TimeOfDay.Evening: return new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, 18, 0, 0, 0, newTime.Offset);
+                    case TimeOfDay.Morning:
+                        return new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, 6, 0, 0, 0, newTime.Offset);
+                    case TimeOfDay.Midday:
+                        return new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, 12, 0, 0, 0,
+                            newTime.Offset);
+                    case TimeOfDay.Evening:
+                        return new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, 18, 0, 0, 0,
+                            newTime.Offset);
                     default: throw new NotImplementedException();
                 }
             };
@@ -395,7 +423,8 @@ namespace nTest.Controllers
             return c.GetAllUnpaidNotifications(notificationDate);
         }
 
-        private static IDictionary<string, string> CreateSchedulerData(bool isPartOfLongRun, bool isLastDayOfMonth, bool isLastDayOfRun)
+        private static IDictionary<string, string> CreateSchedulerData(bool isPartOfLongRun, bool isLastDayOfMonth,
+            bool isLastDayOfRun)
         {
             var d = new Dictionary<string, string>();
             var skippedJobNames = new HashSet<string>();
@@ -455,13 +484,17 @@ namespace nTest.Controllers
         public void RunMorningSchedule(bool isPartOfLongRun, bool isLastDayOfRun)
         {
             var schedulerData = CreateSchedulerData(isPartOfLongRun, IsLastDayOfMonth(currentTime), isLastDayOfRun);
-            CallWithLoggingA(() => new CreditDriverSchedulerClient().TriggerTimeslot("Morning", schedulerData: schedulerData), "RunMorningSchedule");
+            CallWithLoggingA(
+                () => new CreditDriverSchedulerClient().TriggerTimeslot("Morning", schedulerData: schedulerData),
+                "RunMorningSchedule");
         }
 
         public void RunEveningSchedule(bool isPartOfLongRun, bool isLastDayOfRun)
         {
             var schedulerData = CreateSchedulerData(isPartOfLongRun, IsLastDayOfMonth(currentTime), isLastDayOfRun);
-            CallWithLoggingA(() => new CreditDriverSchedulerClient().TriggerTimeslot("Evening", schedulerData: schedulerData), "RunEveningSchedule");
+            CallWithLoggingA(
+                () => new CreditDriverSchedulerClient().TriggerTimeslot("Evening", schedulerData: schedulerData),
+                "RunEveningSchedule");
         }
 
         private void SendAllEligableToDebtCollection()
@@ -474,7 +507,8 @@ namespace nTest.Controllers
             bool? isAccepted,
             bool automate,
             DateTime now,
-            Tuple<string, IDictionary<string, string>, IDictionary<string, string>> customApplicationJsonAndPerson = null,
+            Tuple<string, IDictionary<string, string>, IDictionary<string, string>> customApplicationJsonAndPerson =
+                null,
             string customApplicationJson = null)
         {
             var repo = new TestPersonRepository(NEnv.ClientCfg.Country.BaseCountry, DbSingleton.SharedInstance.Db);
@@ -495,8 +529,10 @@ namespace nTest.Controllers
                 appJson = customApplicationJson;
                 getPerson = () =>
                 {
-                    var a = JsonConvert.DeserializeAnonymousType(appJson, new { Items = new[] { new { Name = "", Group = "", Value = "" } } });
-                    var civicRegNr = a.Items.Where(x => x.Group == "applicant1" && x.Name == "civicRegNr").Single().Value;
+                    var a = JsonConvert.DeserializeAnonymousType(appJson,
+                        new { Items = new[] { new { Name = "", Group = "", Value = "" } } });
+                    var civicRegNr = a.Items.Where(x => x.Group == "applicant1" && x.Name == "civicRegNr").Single()
+                        .Value;
                     return repo.GetI(NEnv.ClientCfg.Country.BaseCountry, civicRegNr);
                 };
             }
@@ -504,7 +540,8 @@ namespace nTest.Controllers
             {
                 var person = repo.GenerateNewTestPerson(isAccepted.Value, random, now);
                 getPerson = () => person;
-                appJson = new TestApplicationGenerator().CreateApplicationJson(person, null, isAccepted.Value, random, NEnv.DefaultProviderName, false);
+                appJson = new TestApplicationGenerator().CreateApplicationJson(person, null, isAccepted.Value, random,
+                    NEnv.DefaultProviderName, false);
             }
 
             var c = new CreditDriverPreCreditClient();

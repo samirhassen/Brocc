@@ -136,6 +136,6 @@ namespace nCreditReport
         }
 
         public static T RunWithExclusiveLock<T>(string lockName, Func<T> ifLockAquired, Func<T> ifAlreadyLocked, TimeSpan? waitForLock = null) =>
-            NTechPerServiceExclusiveLock.RunWithExclusiveLock(lockName, ifLockAquired, ifAlreadyLocked, waitForLock: waitForLock);
+            NTechPerServiceExclusiveLock.RunWithExclusiveLock(lockName, ifLockAquired, ifAlreadyLocked, acquireTimeout: waitForLock);
     }
 }

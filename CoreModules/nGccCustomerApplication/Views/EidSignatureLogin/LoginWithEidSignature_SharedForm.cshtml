@@ -1,0 +1,22 @@
+﻿@model dynamic
+@Styles.Render("~/Content/css/bundle-base")
+@Styles.Render("~/Content/css/bundle-magellan-customerapplication")
+<form name="fc" novalidate method="post" action="@Url.Action("StartLogin", "EidSignatureLogin")" ng-submit="onSubmit($event)">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8">
+            <div class="form-group pb-1" ng-class="{ 'has-error' : fc.$invalid && fc.$submitted }">
+                <label ng-if="baseCountry === 'FI'" class="control-label" translate="eidlogin_civicnr">Personbeteckning (ddmmyy-xxxx)</label>
+                @*<label ng-if="baseCountry === 'SE'" class="control-label">Personnummer (yyyymmddxxxx)</label>*@
+                <input type="text" name="civicRegNr" autocomplete="off" ng-model="civicRegNr" class="form-control" required custom-validate="isValidCivicNr" />
+                <span class="help-block" ng-show="fc.$submitted && fc.civicRegNr.$error.required" translate="required_field">This field is required</span>
+                <span class="help-block" ng-show="fc.$submitted && fc.civicRegNr.$error.custom" translate="invalid_civicnr">Invalid civic registration number</span>
+                <input type="hidden" name="targetName" value="@Html.Raw(ViewBag.TargetName)" />
+                <input type="hidden" name="targetCustomData" value="@Html.Raw(ViewBag.TargetCustomData)" />
+                <input type="hidden" name="externalApplicationVariables" value="@Html.Raw(ViewBag.ExternalApplicationVariables)" />
+            </div>
+        </div>
+    </div>
+    <div class="pt-2 text-center">
+        <button type="submit" ng-disabled="fc.$invalid" class="@Model.SubmitButtonClasses" translate="eidlogin_bankid">Bank ID</button>
+    </div>
+</form>

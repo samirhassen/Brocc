@@ -1,11 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+using Duende.IdentityModel.Client;
+using Newtonsoft.Json;
+using nGccCustomerApplication.Code;
 using nGccCustomerApplication.Controllers;
+using NTech.Core.Module.Shared.Infrastructure;
+using NTech.Legacy.Module.Shared.Infrastructure;
 using NTech.Services.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Xml.Linq;
 
 namespace nGccCustomerApplication
@@ -67,7 +74,7 @@ namespace nGccCustomerApplication
                 return Tuple.Create(Req("ntech.automationuser.username"), Req("ntech.automationuser.password"));
             }
         }
-
+        public static bool IsCustomerPagesKycQuestionsEnabled => ClientCfg.IsFeatureEnabled("feature.nGccCustomerApplication.kyc");
         public static string GetSelfCachingSystemUserBearerToken()
         {
             return NTechCache.WithCache("9ac532c38e-45cads7-83ac-34676d9ebbdasd9d", TimeSpan.FromMinutes(5), () =>
@@ -253,5 +260,139 @@ namespace nGccCustomerApplication
         }
 
         public static string CurrentServiceName => "nGccCustomerApplication";
+
+        public static bool IsGccCustomerApplicationKycQuestionsEnabled => ClientCfg.IsFeatureEnabled("feature.gcccustomerapplication.kyc");
+
+
+        public static bool IsMortgageLoansEnabled => ClientCfg.IsFeatureEnabled("ntech.feature.mortgageloans");
+
+        public static bool IsStandardMortgageLoansEnabled => IsMortgageLoansEnabled && ClientCfg.IsFeatureEnabled("ntech.feature.mortgageloans.standard");
+
+        public static bool IsUnsecuredLoansEnabled => ClientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans");
+
+        public static string LogFolder => Req("ntech.logfolder");
+
+        public static bool IsStandardUnsecuredLoansEnabled => IsUnsecuredLoansEnabled && ClientCfg.IsFeatureEnabled("ntech.feature.unsecuredloans.standard");
+        public static bool IsStandardMlOrUlEnabled => IsUnsecuredLoansEnabled || IsStandardMortgageLoansEnabled;
+        public static bool IsConsumerCreditStandardProviderApiLoggingEnabled => (Opt("ntech.gcccustomerapplication.isconsumercreditstandardproviderapiloggingenabled") ?? "false")?.ToLowerInvariant() == "true";
+        public static bool IsStandardEmbeddedGccCustomerApplicationEnabled => IsStandardMlOrUlEnabled;
+        public static bool IsBackButtonPreventDisabled => NTechCache.WithCacheS("e8240e31-cd4a-4afb-b9c8-ce0a073f920b", TimeSpan.FromMinutes(5), () =>
+            (Opt("ntech.gcccustomerapplication.disableBackButtonPrevent") ?? "false")?.ToLower() == "true");
+        public static bool IsCreditOverviewActive => ClientCfg.IsFeatureEnabled("ntech.feature.gcccustomerapplication.creditoverview") && ServiceRegistry.ContainsService("nCredit");
+
+        public static bool IsSavingsOverviewActive => ClientCfg.IsFeatureEnabled("ntech.feature.gcccustomerapplication.savingsoverview") && ServiceRegistry.ContainsService("nSavings");
+
+        public static bool IsBalanzia => ClientCfg.ClientName.Equals("balanzia", StringComparison.OrdinalIgnoreCase);
+
+        public static bool IsSavingsApplicationActive => ClientCfg.IsFeatureEnabled("ntech.feature.gcccustomerapplication.savingsapplication") && ServiceRegistry.ContainsService("nSavings");
+
+        public static bool SkipInitialCompanyLoanScoring => Opt("ntech.gcccustomerapplication.skipinitialcompanyloanscoring")?.ToLowerInvariant()?.Trim() == "true";
+        public static bool IsEmbeddedMortageLoanGccCustomerApplicationEnabled
+        {
+            get
+            {
+                if (!IsMortgageLoansEnabled)
+                    return false;
+
+                return ClientCfg.IsFeatureEnabled("ntech.gcccustomerapplication.embeddedmortageloancustomerpage") || (Opt("ntech.gcccustomerapplication.embeddedmortageloanGccCustomerApplicationenabled") == "true");
+            }
+        }
+
+        private static Lazy<NTech.Banking.BankAccounts.Fi.IBANToBICTranslator> iBANToBICTranslatorInstance = new Lazy<NTech.Banking.BankAccounts.Fi.IBANToBICTranslator>(() => new NTech.Banking.BankAccounts.Fi.IBANToBICTranslator());
+
+        public static NTech.Banking.BankAccounts.Fi.IBANToBICTranslator IBANToBICTranslatorInstance => iBANToBICTranslatorInstance.Value;
+
+        public static NTech.Banking.CivicRegNumbers.CivicRegNumberParser BaseCivicRegNumberParser => NTechCache.WithCache("BaseCivicRegNumberParser", TimeSpan.FromMinutes(5), () => new NTech.Banking.CivicRegNumbers.CivicRegNumberParser(ClientCfg.Country.BaseCountry));
+
+
+        public static bool IsTranslationCacheDisabled => (Opt("ntech.gcccustomerapplication.translation.cachedisabled") ?? "false") == "true";
+
+
+        public static string TranslationOverrideEmbeddedFileWithThisLocalFilePath => Opt("ntech.gcccustomerapplication.translation.overridefilepath");
+        private static NTechEnvironment E => NTechEnvironment.Instance;
+
+        public static bool IsDirectEidAuthenticationModeEnabled =>
+         E.IsFeatureEnabledWithAppSettingOverride("ntech.gcccustomerapplication.allowdirecteidlogin", ClientCfg);
+        public static bool IsEmbeddedSiteEidLoginApiEnabled =>
+        E.IsFeatureEnabledWithAppSettingOverride("ntech.gcccustomerapplication.allowembeddedsiteapieidlogin", ClientCfg);
+
+        public static HashSet<string> AllTrackedExternalVariables
+        {
+            get
+            {
+                var h = new HashSet<string>();
+                var s1 = SavingsAffiliateTrackingModelSettings;
+                if (s1.IsEnabled)
+                    s1.ExternalVariables.ToList().ForEach(x => h.Add(x));
+                h.Add("cc"); //campaign code
+                h.Add("pp"); //provider name
+                return h;
+            }
+        }
+
+        public static AffiliateTrackingModel.Settings SavingsAffiliateTrackingModelSettings
+        {
+            get
+            {
+                var f = E.StaticResourceFile("ntech.gcccustomerapplication.savingsaffiliatetrackingfile", "savings-affiliatetracking.txt", false);
+                if (f.Exists)
+                {
+                    return AffiliateTrackingModel.CreateSettings(NTechSimpleSettings.ParseSimpleSettingsFile(f.FullName));
+                }
+                return new AffiliateTrackingModel.Settings
+                {
+                    IsEnabled = false
+                };
+            }
+        }
+
+
+        public static string SystemUserBearerToken
+        {
+            get
+            {
+                return NTechCache.WithCache("d88f8ffc-ed37-486f-9545-3a6f35d484db", TimeSpan.FromMinutes(3), () =>
+                {              
+                    var client = new HttpClient();
+                    var credentials = SystemUserUserNameAndPassword;
+                    var token = client.RequestPasswordTokenAsync(new PasswordTokenRequest()
+                    {
+                        Address = ServiceRegistry.Internal.ServiceUrl("nUser", "id/connect/token").ToString(),
+                        ClientId = "nTechSystemUser",
+                        ClientSecret = "nTechSystemUser",
+                        UserName = credentials.Item1,
+                        Password = credentials.Item2,
+                        Scope = "nTech1"
+                    });
+
+                    if (token.Result.IsError)
+                    {
+                        throw new Exception("Bearer token login failed in nTest event automation :" + token.Result.Error);
+                    }
+
+                    return token.Result.AccessToken;
+                });
+            }
+        }
+        public static Tuple<string, string> SystemUserUserNameAndPassword
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(Opt("ntech.gcccustomerapplication.systemuser.username")))
+                    return Tuple.Create(Req("ntech.gcccustomerapplication.systemuser.username"), Req("ntech.gcccustomerapplication.systemuser.password"));
+                else
+                    return Tuple.Create(Req("ntech.automationuser.username"), Req("ntech.automationuser.password"));
+            }
+        }
+        public static bool IsSkinningEnabled => NTechCache.WithCacheS($"ntech.cache.skinningenabled", TimeSpan.FromMinutes(5), () => NEnv.SkinningRootFolder?.Exists ?? false);
+        public static DirectoryInfo SkinningRootFolder => E.ClientResourceDirectory("ntech.skinning.rootfolder", "Skinning", false);
+
+        public static bool IsCreditTokenAuthenticationModeEnabled => IsCreditOverviewActive && ClientCfg.IsFeatureEnabled("ntech.feature.gcccustomerapplication.allowcredittokenlogin");
+
+        public static IClientConfigurationCore ClientCfgCore =>
+            NTechCache.WithCache("nGccCustomerApplication.ClientCfgCore", TimeSpan.FromMinutes(15), () => ClientConfigurationCoreFactory.CreateUsingNTechEnvironment(E));
+        public static string NTechCdnUrl => Opt("ntech.cdn.rooturl");
+        public static FileInfo SkinningCssFile => E.ClientResourceFile("ntech.skinning.cssfile", Path.Combine(SkinningRootFolder.FullName, "css\\skinning.css"), false);
+        public static bool IsSkinningCssEnabled => NTechCache.WithCacheS($"ntech.cache.skinningcssenabled", TimeSpan.FromMinutes(5), () => NEnv.SkinningCssFile?.Exists ?? false);
     }
 }

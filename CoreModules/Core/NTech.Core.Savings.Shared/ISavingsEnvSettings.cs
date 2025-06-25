@@ -4,6 +4,7 @@ using NTech.Banking.BankAccounts.Se;
 using NTech.Core.Module.Shared;
 using System;
 using System.IO;
+using NTech.Banking.Shared.BankAccounts.Fi;
 
 namespace NTech.Core.Savings.Shared
 {
@@ -12,5 +13,6 @@ namespace NTech.Core.Savings.Shared
         decimal MaxAllowedSavingsCustomerBalance { get; }
         string OutgoingPaymentFileCustomerMessagePattern { get; }
         IBANFi OutgoingPaymentIban { get; }
+        int IncomingPaymentDepositeGracePeriodInDays { get; }
     }
 }

@@ -1,7 +1,8 @@
-﻿using NTech.Services.Infrastructure;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using nSavings.Code;
+using NTech.Services.Infrastructure;
 
-namespace nSavings.Controllers
+namespace nSavings.Controllers.Ui
 {
     [NTechAuthorizeSavingsMiddle]
     public class ManualPaymentController : NController
@@ -10,11 +11,11 @@ namespace nSavings.Controllers
         [Route("Ui/Payments/RegisterManual")]
         public ActionResult Index()
         {
-            ViewBag.JsonInitialData = this.EncodeInitialData(new
+            ViewBag.JsonInitialData = EncodeInitialData(new
             {
                 registerManualPaymentUrl = Url.Action("Create", "ApiCreateManualPayment"),
                 today = Clock.Today,
-                userId = this.CurrentUserId,
+                userId = CurrentUserId,
                 isTest = !NEnv.IsProduction
             });
             return View();

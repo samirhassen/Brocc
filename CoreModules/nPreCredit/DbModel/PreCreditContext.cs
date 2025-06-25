@@ -34,7 +34,13 @@ namespace nPreCredit
         public virtual DbSet<CreditApplicationCancellation> CreditApplicationCancellations { get; set; }
         public virtual DbSet<CreditDecisionPauseItem> CreditDecisionPauseItems { get; set; }
         public virtual DbSet<CreditDecisionSearchTerm> CreditDecisionSearchTerms { get; set; }
-        public virtual DbSet<MortgageLoanCreditApplicationHeaderExtension> MortgageLoanCreditApplicationHeaderExtensions { get; set; }
+
+        public virtual DbSet<MortgageLoanCreditApplicationHeaderExtension> MortgageLoanCreditApplicationHeaderExtensions
+        {
+            get;
+            set;
+        }
+
         public virtual DbSet<CreditApplicationEvent> CreditApplicationEvents { get; set; }
         public virtual DbSet<CreditApplicationDocumentHeader> CreditApplicationDocumentHeaders { get; set; }
         public virtual DbSet<KeyValueItem> KeyValueItems { get; set; }
@@ -45,7 +51,13 @@ namespace nPreCredit
         public virtual DbSet<CreditApplicationListMember> CreditApplicationListMembers { get; set; }
         public virtual DbSet<CreditApplicationListOperation> CreditApplicationListOperations { get; set; }
         public virtual DbSet<CreditApplicationCustomerListMember> CreditApplicationCustomerListMembers { get; set; }
-        public virtual DbSet<CreditApplicationCustomerListOperation> CreditApplicationCustomerListOperations { get; set; }
+
+        public virtual DbSet<CreditApplicationCustomerListOperation> CreditApplicationCustomerListOperations
+        {
+            get;
+            set;
+        }
+
         public virtual DbSet<CreditDecisionItem> CreditDecisionItems { get; set; }
         public virtual DbSet<ComplexApplicationListItem> ComplexApplicationListItems { get; set; }
         public virtual DbSet<HComplexApplicationListItem> HComplexApplicationListItems { get; set; }
@@ -68,7 +80,9 @@ namespace nPreCredit
             this.Configuration.AutoDetectChangesEnabled = false;
         }
 
-        private static System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<T> ConfigureInfrastructureFields<T>(System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<T> t) where T : InfrastructureBaseItem
+        private static System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<T>
+            ConfigureInfrastructureFields<T>(System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<T> t)
+            where T : InfrastructureBaseItem
         {
             t.Property(e => e.Timestamp).IsRequired().IsRowVersion();
             t.Property(e => e.ChangedById).IsRequired();
@@ -82,7 +96,8 @@ namespace nPreCredit
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            Func<bool, IndexAnnotation> index = isUnique => new IndexAnnotation(new IndexAttribute() { IsUnique = isUnique });
+            Func<bool, IndexAnnotation> index = isUnique =>
+                new IndexAnnotation(new IndexAttribute() { IsUnique = isUnique });
 
             modelBuilder.Entity<CreditApplicationKeySequence>().HasKey(x => x.Id);
 
@@ -93,7 +108,8 @@ namespace nPreCredit
                 ch.Property(x => x.CustomerId).IsRequired();
                 ch.Property(x => x.Value).IsRequired();
                 ch.Property(x => x.Name).IsRequired().HasMaxLength(128);
-                ch.HasOptional(x => x.ReplacesFraudControlProperty).WithMany(x => x.ReplacedByFraudControlProperties).HasForeignKey(x => x.ReplacesFraudControlProperty_Id);
+                ch.HasOptional(x => x.ReplacesFraudControlProperty).WithMany(x => x.ReplacedByFraudControlProperties)
+                    .HasForeignKey(x => x.ReplacesFraudControlProperty_Id);
                 ch.Property(x => x.IsCurrentData).IsRequired();
             });
 
@@ -103,87 +119,110 @@ namespace nPreCredit
                 ch.HasKey(x => x.ApplicationNr);
                 ch.Property(x => x.NrOfApplicants).IsRequired();
                 ch.Property(x => x.ProviderName).IsRequired().HasMaxLength(100);
-                ch.Property(x => x.ApplicationType).HasMaxLength(50).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.ApplicationType).HasMaxLength(50)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 ch.HasMany(x => x.SearchTerms);
-                ch.Property(x => x.ApplicationDate).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.IsActive).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.CreditCheckStatus).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.HasMany(x => x.CreditDecisions).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
+                ch.Property(x => x.ApplicationDate).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.IsActive).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.CreditCheckStatus).IsRequired().HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.HasMany(x => x.CreditDecisions).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
                 ch.HasOptional(x => x.CurrentCreditDecision).WithMany().HasForeignKey(x => x.CurrentCreditDecisionId);
-                ch.HasMany(x => x.FraudControls).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
-                ch.HasMany(x => x.Cancellations).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.FraudControls).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.Cancellations).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
                 ch.HasOptional(x => x.MortgageLoanExtension).WithRequired(x => x.Application);
 
-                ch.Property(x => x.CustomerCheckStatus).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.AgreementStatus).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.FraudCheckStatus).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.IsFinalDecisionMade).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.CustomerCheckStatus).IsRequired().HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.AgreementStatus).IsRequired().HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.FraudCheckStatus).IsRequired().HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.IsFinalDecisionMade).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 ch.Property(x => x.FinalDecisionById);
                 ch.Property(x => x.FinalDecisionDate);
-                ch.Property(x => x.IsPartiallyApproved).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.IsPartiallyApproved).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 ch.Property(x => x.PartiallyApprovedById);
                 ch.Property(x => x.PartiallyApprovedDate);
                 ch.Property(x => x.IsRejected).IsRequired();
                 ch.Property(x => x.RejectedDate);
                 ch.Property(x => x.RejectedById);
-                ch.Property(x => x.IsCancelled).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.IsCancelled).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 ch.Property(x => x.CancelledDate);
                 ch.Property(x => x.CancelledBy);
                 ch.Property(x => x.CancelledState).HasMaxLength(100);
                 ch.Property(x => x.ArchivedDate);
                 ch.HasMany(x => x.Approvals).WithRequired(x => x.Application).HasForeignKey(x => x.ApplicationNr);
-                ch.Property(x => x.WaitingForAdditionalInformationDate).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.HideFromManualListsUntilDate).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.CanSkipAdditionalQuestions).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.WaitingForAdditionalInformationDate)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.HideFromManualListsUntilDate)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.CanSkipAdditionalQuestions)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 ch.HasMany(x => x.Events).WithRequired(x => x.Application).HasForeignKey(x => x.ApplicationNr);
                 ch.HasMany(x => x.Documents).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
-                ch.HasMany(x => x.PauseItems).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
-                ch.HasMany(x => x.ListMemberships).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
-                ch.HasMany(x => x.ListMembershipOperations).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
-                ch.HasMany(x => x.CustomerListMemberships).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
-                ch.HasMany(x => x.CustomerListMembershipOperations).WithRequired(x => x.CreditApplication).HasForeignKey(x => x.ApplicationNr);
-                ch.HasMany(x => x.ComplexApplicationListItems).WithRequired(x => x.Application).HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.PauseItems).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.ListMemberships).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.ListMembershipOperations).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.CustomerListMemberships).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.CustomerListMembershipOperations).WithRequired(x => x.CreditApplication)
+                    .HasForeignKey(x => x.ApplicationNr);
+                ch.HasMany(x => x.ComplexApplicationListItems).WithRequired(x => x.Application)
+                    .HasForeignKey(x => x.ApplicationNr);
             });
 
             var cs = modelBuilder.Entity<CreditApplicationSearchTerm>();
             ConfigureInfrastructureFields(cs);
             cs.HasRequired(x => x.CreditApplication).WithMany(x => x.SearchTerms).HasForeignKey(x => x.ApplicationNr);
             cs.Property(x => x.ApplicationNr).HasColumnAnnotation(IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationSearchTeBrmCoveringIndex", 3)
-                        }));
+                new IndexAnnotation(new[]
+                {
+                    new IndexAttribute("CreditApplicationSearchTeBrmCoveringIndex", 3)
+                }));
             cs.HasKey(x => x.Id);
             cs.Property(x => x.Name).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationSearchTermNameIndex", 1),
-                            new IndexAttribute("CreditApplicationSearchTermCoveringIndex", 1)
-                        }));
+                new IndexAnnotation(new[]
+                {
+                    new IndexAttribute("CreditApplicationSearchTermNameIndex", 1),
+                    new IndexAttribute("CreditApplicationSearchTermCoveringIndex", 1)
+                }));
             cs.Property(x => x.Value).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationSearchTermValueIndex", 1),
-                            new IndexAttribute("CreditApplicationSearchTermCoveringIndex", 2)
-                        }));
+                new IndexAnnotation(new[]
+                {
+                    new IndexAttribute("CreditApplicationSearchTermValueIndex", 1),
+                    new IndexAttribute("CreditApplicationSearchTermCoveringIndex", 2)
+                }));
 
             var ci = modelBuilder.Entity<CreditApplicationItem>();
             ConfigureInfrastructureFields(ci);
             ci.HasRequired(x => x.CreditApplication).WithMany(x => x.Items).HasForeignKey(x => x.ApplicationNr);
             ci.HasKey(x => x.Id);
             ci.Property(x => x.AddedInStepName);
-            ci.Property(x => x.GroupName).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationItemNamesIndex", 1),
-                            new IndexAttribute("CreditApplicationItemGroupNameIndex", 1),
-                        }));
+            ci.Property(x => x.GroupName).IsRequired().HasMaxLength(100).HasColumnAnnotation(
+                IndexAnnotation.AnnotationName,
+                new IndexAnnotation(new[]
+                {
+                    new IndexAttribute("CreditApplicationItemNamesIndex", 1),
+                    new IndexAttribute("CreditApplicationItemGroupNameIndex", 1),
+                }));
             ci.Property(x => x.Name).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationItemNamesIndex", 2),
-                            new IndexAttribute("CreditApplicationItemNameIndex", 1),
-                        }));
+                new IndexAnnotation(new[]
+                {
+                    new IndexAttribute("CreditApplicationItemNamesIndex", 2),
+                    new IndexAttribute("CreditApplicationItemNameIndex", 1),
+                }));
             ci.Property(x => x.Value).IsRequired();
 
             Cfg<EncryptedValue>(modelBuilder, ev =>
@@ -200,7 +239,8 @@ namespace nPreCredit
             {
                 e.HasKey(x => x.Id);
                 ConfigureInfrastructureFields(e);
-                e.Property(x => x.DecisionDate).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                e.Property(x => x.DecisionDate).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 e.Property(x => x.DecisionById).IsRequired();
                 e.Property(x => x.WasAutomated).IsRequired();
                 e.Property(x => x.AcceptedDecisionModel).IsRequired();
@@ -210,7 +250,8 @@ namespace nPreCredit
             {
                 e.HasKey(x => x.Id);
                 ConfigureInfrastructureFields(e);
-                e.Property(x => x.DecisionDate).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                e.Property(x => x.DecisionDate).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 e.Property(x => x.DecisionById).IsRequired();
                 e.Property(x => x.WasAutomated).IsRequired();
                 e.Property(x => x.RejectedDecisionModel).IsRequired();
@@ -259,7 +300,8 @@ namespace nPreCredit
                 fc.HasMany(x => x.FraudControlItems);
                 fc.Property(x => x.Status).IsRequired();
                 fc.Property(x => x.RejectionReasons);
-                fc.HasOptional(x => x.ReplacesFraudControl).WithMany(x => x.ReplacedByFraudControls).HasForeignKey(x => x.ReplacesFraudControl_Id);
+                fc.HasOptional(x => x.ReplacesFraudControl).WithMany(x => x.ReplacedByFraudControls)
+                    .HasForeignKey(x => x.ReplacesFraudControl_Id);
                 fc.Property(x => x.IsCurrentData).IsRequired();
             });
 
@@ -267,7 +309,8 @@ namespace nPreCredit
             {
                 item.HasKey(x => x.Id);
                 ConfigureInfrastructureFields(item);
-                item.HasOptional(x => x.FraudControl).WithMany(x => x.FraudControlItems).HasForeignKey(x => x.FraudControl_Id);
+                item.HasOptional(x => x.FraudControl).WithMany(x => x.FraudControlItems)
+                    .HasForeignKey(x => x.FraudControl_Id);
             });
 
             Cfg<CreditApplicationComment>(modelBuilder, e =>
@@ -286,7 +329,8 @@ namespace nPreCredit
             {
                 e.HasKey(x => x.Token);
                 e.Property(x => x.Token).HasMaxLength(60);
-                e.HasRequired(x => x.CreditApplication).WithMany(x => x.OneTimeTokens).HasForeignKey(x => x.ApplicationNr);
+                e.HasRequired(x => x.CreditApplication).WithMany(x => x.OneTimeTokens)
+                    .HasForeignKey(x => x.ApplicationNr);
                 ConfigureInfrastructureFields(e);
                 e.Property(x => x.TokenType).IsRequired().HasMaxLength(100);
                 e.Property(x => x.TokenExtraData);
@@ -301,7 +345,8 @@ namespace nPreCredit
                 ConfigureInfrastructureFields(e);
 
                 e.HasKey(x => x.Id);
-                e.Property(x => x.Key).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                e.Property(x => x.Key).IsRequired().HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 e.Property(x => x.Value);
             });
 
@@ -345,7 +390,8 @@ namespace nPreCredit
                 ConfigureInfrastructureFields(e);
 
                 e.HasKey(x => x.Id);
-                e.HasMany(x => x.Items).WithRequired(x => x.CreditApprovalBatch).HasForeignKey(x => x.CreditApprovalBatchHeaderId);
+                e.HasMany(x => x.Items).WithRequired(x => x.CreditApprovalBatch)
+                    .HasForeignKey(x => x.CreditApprovalBatchHeaderId);
                 e.Property(x => x.ApprovedById).IsRequired();
                 e.Property(x => x.ApprovedDate).IsRequired();
             });
@@ -358,9 +404,11 @@ namespace nPreCredit
                 e.Property(x => x.CreditNr).HasMaxLength(128);
                 e.Property(x => x.ApprovalType).IsRequired().HasMaxLength(128);
                 e.Property(x => x.ApprovedAmount).IsRequired();
-                e.Property(x => x.DecisionById); //Not required since this may be automated in the future in which case there really isnt a person who made the decision
+                e.Property(x =>
+                    x.DecisionById); //Not required since this may be automated in the future in which case there really isnt a person who made the decision
                 e.Property(x => x.ApprovedById).IsRequired();
-                e.HasMany(x => x.Overrides).WithRequired(x => x.BatchItem).HasForeignKey(x => x.CreditApprovalBatchItemId);
+                e.HasMany(x => x.Overrides).WithRequired(x => x.BatchItem)
+                    .HasForeignKey(x => x.CreditApprovalBatchItemId);
             });
 
             Cfg<CreditApprovalBatchItemOverride>(modelBuilder, e =>
@@ -377,21 +425,24 @@ namespace nPreCredit
                 ConfigureInfrastructureFields(e);
 
                 e.HasKey(x => x.Id);
-                e.Property(x => x.ApplicationNr).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                e.Property(x => x.ApplicationNr).IsRequired().HasMaxLength(100).HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
                     new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationChangeLogItemApplicationNrsIndex", 1),
-                        }));
-                e.Property(x => x.Name).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                    {
+                        new IndexAttribute("CreditApplicationChangeLogItemApplicationNrsIndex", 1),
+                    }));
+                e.Property(x => x.Name).IsRequired().HasMaxLength(100).HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
                     new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationChangeLogItemNamesIndex", 2),
-                        }));
-                e.Property(x => x.GroupName).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                    {
+                        new IndexAttribute("CreditApplicationChangeLogItemNamesIndex", 2),
+                    }));
+                e.Property(x => x.GroupName).IsRequired().HasMaxLength(100).HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
                     new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditApplicationChangeLogItemGroupNamesIndex", 3),
-                        }));
+                    {
+                        new IndexAttribute("CreditApplicationChangeLogItemGroupNamesIndex", 3),
+                    }));
                 e.Property(x => x.OldValue).IsRequired().HasMaxLength(100);
                 e.Property(x => x.TransactionType).IsRequired().HasMaxLength(100);
             });
@@ -401,7 +452,8 @@ namespace nPreCredit
                 ConfigureInfrastructureFields(e);
 
                 e.HasKey(x => x.Id);
-                e.Property(x => x.CustomerId).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                e.Property(x => x.CustomerId).IsRequired()
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
                 e.Property(x => x.IsCheckpointActive).IsRequired();
                 e.Property(x => x.IsReasonTextEncrypted).IsRequired();
                 e.Property(x => x.ReasonText).HasMaxLength(2000);
@@ -423,28 +475,36 @@ namespace nPreCredit
             Cfg<CreditDecisionSearchTerm>(modelBuilder, e =>
             {
                 e.HasKey(x => x.Id);
-                e.Property(x => x.TermName).IsRequired().HasMaxLength(128).HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                e.Property(x => x.TermName).IsRequired().HasMaxLength(128).HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
                     new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditDecisionSearchTermSearchIdx1", 1),
-                        })); ;
-                e.Property(x => x.TermValue).IsRequired().HasMaxLength(128).HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                    {
+                        new IndexAttribute("CreditDecisionSearchTermSearchIdx1", 1),
+                    }));
+                e.Property(x => x.TermValue).IsRequired().HasMaxLength(128).HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
                     new IndexAnnotation(new[]
-                        {
-                            new IndexAttribute("CreditDecisionSearchTermSearchIdx1", 2),
-                        }));
+                    {
+                        new IndexAttribute("CreditDecisionSearchTermSearchIdx1", 2),
+                    }));
             });
 
             Cfg<MortgageLoanCreditApplicationHeaderExtension>(modelBuilder, ch =>
             {
                 ConfigureInfrastructureFields(ch);
                 ch.HasKey(x => x.ApplicationNr);
-                ch.Property(x => x.CustomerOfferStatus).IsRequired().HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.AdditionalQuestionsStatus).HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.DocumentCheckStatus).HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.InitialCreditCheckStatus).HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.FinalCreditCheckStatus).HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
-                ch.Property(x => x.DirectDebitCheckStatus).HasMaxLength(100).HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.CustomerOfferStatus).IsRequired().HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.AdditionalQuestionsStatus).HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.DocumentCheckStatus).HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.InitialCreditCheckStatus).HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.FinalCreditCheckStatus).HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
+                ch.Property(x => x.DirectDebitCheckStatus).HasMaxLength(100)
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, index(false));
             });
 
             Cfg<CreditApplicationEvent>(modelBuilder, ch =>
@@ -454,14 +514,21 @@ namespace nPreCredit
                 ch.Property(x => x.EventType).IsRequired().HasMaxLength(100);
                 ch.Property(x => x.EventDate).IsRequired();
                 ch.Property(x => x.TransactionDate).IsRequired().HasColumnType("date");
-                ch.HasMany(x => x.CreatedExtensions).WithRequired(x => x.CreatedByBusinessEvent).HasForeignKey(x => x.CreatedByBusinessEventId);
-                ch.HasMany(x => x.CreatedCreditApplicationListOperations).WithOptional(x => x.ByEvent).HasForeignKey(x => x.CreditApplicationEventId);
-                ch.HasMany(x => x.CreatedCreditApplicationCustomerListOperations).WithOptional(x => x.ByEvent).HasForeignKey(x => x.CreditApplicationEventId);
-                ch.HasMany(x => x.CreatedCreditApplicationChangeLogItems).WithOptional(x => x.EditEvent).HasForeignKey(x => x.EditEventId);
+                ch.HasMany(x => x.CreatedExtensions).WithRequired(x => x.CreatedByBusinessEvent)
+                    .HasForeignKey(x => x.CreatedByBusinessEventId);
+                ch.HasMany(x => x.CreatedCreditApplicationListOperations).WithOptional(x => x.ByEvent)
+                    .HasForeignKey(x => x.CreditApplicationEventId);
+                ch.HasMany(x => x.CreatedCreditApplicationCustomerListOperations).WithOptional(x => x.ByEvent)
+                    .HasForeignKey(x => x.CreditApplicationEventId);
+                ch.HasMany(x => x.CreatedCreditApplicationChangeLogItems).WithOptional(x => x.EditEvent)
+                    .HasForeignKey(x => x.EditEventId);
 
-                ch.HasMany(x => x.CreatedComplexApplicationListItems).WithRequired(x => x.CreatedByEvent).HasForeignKey(x => x.CreatedByEventId).WillCascadeOnDelete(false);
-                ch.HasMany(x => x.ChangedComplexApplicationListItems).WithRequired(x => x.LatestChangeEvent).HasForeignKey(x => x.LatestChangeEventId).WillCascadeOnDelete(false);
-                ch.HasMany(x => x.CreatedHComplexApplicationListItems).WithOptional(x => x.ChangeEvent).HasForeignKey(x => x.ChangeEventId).WillCascadeOnDelete(false);
+                ch.HasMany(x => x.CreatedComplexApplicationListItems).WithRequired(x => x.CreatedByEvent)
+                    .HasForeignKey(x => x.CreatedByEventId).WillCascadeOnDelete(false);
+                ch.HasMany(x => x.ChangedComplexApplicationListItems).WithRequired(x => x.LatestChangeEvent)
+                    .HasForeignKey(x => x.LatestChangeEventId).WillCascadeOnDelete(false);
+                ch.HasMany(x => x.CreatedHComplexApplicationListItems).WithOptional(x => x.ChangeEvent)
+                    .HasForeignKey(x => x.ChangeEventId).WillCascadeOnDelete(false);
             });
 
             Cfg<CreditApplicationDocumentHeader>(modelBuilder, ch =>
@@ -621,12 +688,15 @@ namespace nPreCredit
 
                 ch.HasKey(x => new { x.WorkListHeaderId, x.ItemId });
                 ch.Property(x => x.ItemId).IsRequired().HasMaxLength(128);
-                ch.Property(x => x.WorkListHeaderId).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderUIdx") { Order = 1, IsUnique = true }));
-                ch.Property(x => x.OrderNr).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderUIdx") { Order = 2, IsUnique = true }));
+                ch.Property(x => x.WorkListHeaderId).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(new IndexAttribute("OrderUIdx") { Order = 1, IsUnique = true }));
+                ch.Property(x => x.OrderNr).IsRequired().HasColumnAnnotation(IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(new IndexAttribute("OrderUIdx") { Order = 2, IsUnique = true }));
                 ch.Property(x => x.TakenByUserId);
                 ch.Property(x => x.TakenDate);
                 ch.Property(x => x.CompletedDate);
-                ch.HasMany(x => x.Properties).WithRequired(x => x.Item).HasForeignKey(x => new { x.WorkListHeaderId, x.ItemId });
+                ch.HasMany(x => x.Properties).WithRequired(x => x.Item)
+                    .HasForeignKey(x => new { x.WorkListHeaderId, x.ItemId });
             });
 
             Cfg<WorkListItemProperty>(modelBuilder, ch =>
@@ -637,7 +707,8 @@ namespace nPreCredit
                 ch.Property(x => x.IsEncrypted).IsRequired();
                 ch.Property(x => x.Name).IsRequired().HasMaxLength(128);
                 ch.Property(x => x.DataTypeName).IsRequired().HasMaxLength(128);
-                ch.Property(x => x.Value).HasMaxLength(128); //Not required since null is a reasonable value to want to store
+                ch.Property(x => x.Value)
+                    .HasMaxLength(128); //Not required since null is a reasonable value to want to store
             });
 
             Cfg<WorkListFilterItem>(modelBuilder, ch =>
@@ -688,7 +759,9 @@ namespace nPreCredit
                 ch.HasKey(x => x.Id);
                 ch.Property(x => x.RuleSetName).HasMaxLength(256).IsRequired();
                 ch.Property(x => x.RuleSetModelData).IsRequired();
-                ch.Property(x => x.SlotName).HasMaxLength(128); //Not required since we use null to represent inactive so we can have a normal unique index
+                ch.Property(x => x.SlotName)
+                    .HasMaxLength(
+                        128); //Not required since we use null to represent inactive so we can have a normal unique index
             });
         }
 
@@ -697,12 +770,15 @@ namespace nPreCredit
             a(mb.Entity<T>());
         }
 
-        public static T RunWithExclusiveLock<T>(string lockName, Func<T> ifLockAquired, Func<T> ifAlreadyLocked, TimeSpan? waitForLock = null) =>
-            NTechPerServiceExclusiveLock.RunWithExclusiveLock(lockName, ifLockAquired, ifAlreadyLocked, waitForLock: waitForLock);
+        public static T RunWithExclusiveLock<T>(string lockName, Func<T> ifLockAquired, Func<T> ifAlreadyLocked,
+            TimeSpan? waitForLock = null) =>
+            NTechPerServiceExclusiveLock.RunWithExclusiveLock(lockName, ifLockAquired, ifAlreadyLocked,
+                acquireTimeout: waitForLock);
 
         public static void InitDatabase()
         {
-            System.Data.Entity.Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<PreCreditContext, Migrations.Configuration>());
+            System.Data.Entity.Database.SetInitializer(
+                new System.Data.Entity.MigrateDatabaseToLatestVersion<PreCreditContext, Migrations.Configuration>());
             using (var context = new PreCreditContext())
             {
                 context.Database.Initialize(false);
@@ -718,7 +794,8 @@ namespace nPreCredit
         {
             if (this.Database.CurrentTransaction == null)
             {
-                throw new Exception("This methods writes directly to the database so it needs bo done in an ambient transaction.");
+                throw new Exception(
+                    "This methods writes directly to the database so it needs bo done in an ambient transaction.");
             }
         }
 
@@ -765,7 +842,9 @@ namespace nPreCredit
                     //Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
                     //Unroll it to actually show what's up
                     //Max 20 items to prevent potentially huge errors (number is very arbitrary)
-                    var errors = ex.EntityValidationErrors.SelectMany(y => y.ValidationErrors.Select(z => $"{z.PropertyName}: {z.ErrorMessage}")).Distinct().Take(20).ToList();
+                    var errors = ex.EntityValidationErrors
+                        .SelectMany(y => y.ValidationErrors.Select(z => $"{z.PropertyName}: {z.ErrorMessage}"))
+                        .Distinct().Take(20).ToList();
                     if (errors.Count == 0)
                         throw;
                     throw new Exception($"Validation failed for one or more entities: {string.Join(", ", errors)}", ex);

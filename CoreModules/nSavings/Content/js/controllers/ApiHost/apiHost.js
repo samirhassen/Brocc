@@ -1,7 +1,6 @@
 var app = angular.module('app', ['pascalprecht.translate', 'ngCookies', 'ntech.forms', 'ntech.components']);
-var ApiHostCtr = /** @class */ (function () {
-    function ApiHostCtr($http, $q, $filter, $scope, trafficCop) {
-        var _this = this;
+class ApiHostCtr {
+    constructor($http, $q, $filter, $scope, trafficCop) {
         this.$http = $http;
         this.$q = $q;
         this.$filter = $filter;
@@ -15,11 +14,10 @@ var ApiHostCtr = /** @class */ (function () {
             whiteListedReturnUrl: this.initialData.whiteListedReturnUrl
         };
         this.isLoading = trafficCop.pending.all > 0;
-        trafficCop.addStateChangeListener(function () {
-            _this.isLoading = trafficCop.pending.all > 0;
+        trafficCop.addStateChangeListener(() => {
+            this.isLoading = trafficCop.pending.all > 0;
         });
     }
-    ApiHostCtr.$inject = ['$http', '$q', '$filter', '$scope', 'trafficCop'];
-    return ApiHostCtr;
-}());
+}
+ApiHostCtr.$inject = ['$http', '$q', '$filter', '$scope', 'trafficCop'];
 app.controller('apiHostCtr', ApiHostCtr);
