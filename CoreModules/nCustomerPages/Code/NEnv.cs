@@ -131,7 +131,7 @@ public static class NEnv
             if (!string.IsNullOrWhiteSpace(Opt("ntech.customerpages.systemuser.username")))
                 return Tuple.Create(Req("ntech.customerpages.systemuser.username"),
                     Req("ntech.customerpages.systemuser.password"));
-            
+
             return Tuple.Create(Req("ntech.automationuser.username"), Req("ntech.automationuser.password"));
         }
     }
@@ -249,6 +249,8 @@ public static class NEnv
 
     public static CivicRegNumberParser BaseCivicRegNumberParser => NTechCache.WithCache("BaseCivicRegNumberParser",
         TimeSpan.FromMinutes(5), () => new CivicRegNumberParser(ClientCfg.Country.BaseCountry));
+
+    public static string PenaltyFees => Req("ntech.customerpages.penaltyfees");
 
     public static DirectoryInfo PdfTemplateFolder =>
         E.ClientResourceDirectory("ntech.pdf.templatefolder", "PdfTemplates", true);

@@ -278,7 +278,6 @@ public class SavingsStandardApplicationController : SavingsBaseController
         return View();
     }
 
-
     private static int GetFullYearsSince(DateTimeOffset d)
     {
         var t = Clock.Today;

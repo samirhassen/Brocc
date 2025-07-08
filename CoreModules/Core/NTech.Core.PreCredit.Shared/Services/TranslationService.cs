@@ -1,19 +1,18 @@
-﻿using nPreCredit;
-using NTech.Core.Module;
-using NTech.Core.Module.Shared.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using nPreCredit;
+using NTech.Core.Module;
+using NTech.Core.Module.Shared.Infrastructure;
 
 namespace NTech.Core.PreCredit.Shared.Services
 {
     public class TranslationService
     {
         private readonly IPreCreditEnvSettings envSettings;
-        private static Lazy<FewItemsCache> cache = new Lazy<FewItemsCache>(() => new FewItemsCache());
+        private static readonly Lazy<FewItemsCache> Cache = new Lazy<FewItemsCache>(() => new FewItemsCache());
 
         public TranslationService(IPreCreditEnvSettings envSettings)
         {
@@ -22,85 +21,74 @@ namespace NTech.Core.PreCredit.Shared.Services
 
         public Dictionary<string, Dictionary<string, string>> GetTranslationTable()
         {
-            Func<Dictionary<string, Dictionary<string, string>>> load = () =>
+            return envSettings.IsTranslationCacheDisabled
+                ? Load()
+                : Cache.Value.WithCache("tr:application-translations", TimeSpan.FromMinutes(30), Load);
+
+            Dictionary<string, Dictionary<string, string>> Load()
             {
                 var t = GetEmbeddedXmlTranslationTable("Translations.xml");
 
-                Action<string> loadSimpleTranslationFile = lang =>
+                LoadSimpleTranslationFile("sv");
+                LoadSimpleTranslationFile("en");
+
+                if (!envSettings.IsMortgageLoansEnabled || !t.TryGetValue("en", out var en)) return t;
+
+                // TODO: Remove this eventually. This is a transition hack to allow the swedish only translations for
+                // mortgage concepts from translations-sv.txt to show up in the english backoffice
+                foreach (var kv in t["sv"].Where(kv => !en.ContainsKey(kv.Key)))
                 {
-                    if (!t.ContainsKey(lang))
-                        t.Add(lang, new Dictionary<string, string>());
-
-                    foreach (var k in WithEmbeddedStream($"translations-{lang}.txt", s => NTechSimpleSettingsCore.SimpleSettingsLinesToDictionary(s.ReadAllLines())))
-                    {
-                        t[lang][k.Key] = k.Value;
-                    }
-                };
-
-                loadSimpleTranslationFile("sv");
-                loadSimpleTranslationFile("en");
-
-                if (envSettings.IsMortgageLoansEnabled && t.ContainsKey("en"))
-                {
-                    //TODO: Remove this eventually. This is a transition hack to allow the swedish only translations for mortage concepts from translations-sv.txt to show up in the english backoffice
-                    var en = t["en"];
-
-                    foreach (var kv in t["sv"])
-                    {
-                        if (!en.ContainsKey(kv.Key))
-                            en[kv.Key] = kv.Value;
-                    }
+                    en[kv.Key] = kv.Value;
                 }
 
                 return t;
-            };
-            if (envSettings.IsTranslationCacheDisabled)
-                return load();
-            else
-                return cache.Value.WithCache($"tr:application-translations", TimeSpan.FromMinutes(30), load);
+
+                void LoadSimpleTranslationFile(string lang)
+                {
+                    if (!t.ContainsKey(lang)) t.Add(lang, new Dictionary<string, string>());
+
+                    foreach (var k in WithEmbeddedStream($"translations-{lang}.txt",
+                                 s => NTechSimpleSettingsCore.SimpleSettingsLinesToDictionary(s.ReadAllLines())))
+                    {
+                        t[lang][k.Key] = k.Value;
+                    }
+                }
+            }
         }
 
         private Dictionary<string, Dictionary<string, string>> GetEmbeddedXmlTranslationTable(string filename)
         {
-            Func<Dictionary<string, Dictionary<string, string>>> load = () =>
+            var t = GetTranslationTableI(filename);
+
+            if (envSettings.IsProduction) return t;
+
+            // Add the key as translation for languages where it is missing to make fixing missing translations easier
+            var allKeys = t.SelectMany(x => x.Value.Select(y => y.Key)).Distinct();
+            foreach (var key in allKeys)
             {
-                var t = GetTranslationTableI(filename);
-
-                if (!envSettings.IsProduction)
+                foreach (var lang in t.Keys.Where(lang => !t[lang].ContainsKey(key)))
                 {
-                    //Add the key as translation for langs where it is missing to make fixing missing translations easier
-                    var allKeys = t.SelectMany(x => x.Value.Select(y => y.Key)).Distinct();
-                    foreach (var key in allKeys)
-                    {
-                        foreach (var lang in t.Keys)
-                        {
-                            if (!t[lang].ContainsKey(key))
-                            {
-                                t[lang][key] = $"(*){key}";
-                            }
-                        }
-                    }
+                    t[lang][key] = $"(*){key}";
                 }
+            }
 
-                return t;
-            };
-            return load();
+            return t;
         }
 
         public static T WithEmbeddedStream<T>(string filename, Func<Stream, T> f)
         {
             var resourceName = $"NTech.Core.PreCredit.Shared.Resources.{filename}";
-            using (Stream stream = typeof(TranslationService).Assembly.GetManifestResourceStream(resourceName))
+            using (var stream = typeof(TranslationService).Assembly.GetManifestResourceStream(resourceName))
             {
                 return f(stream);
             }
         }
 
-        private Dictionary<string, Dictionary<string, string>> GetTranslationTableI(string filename)
+        private static Dictionary<string, Dictionary<string, string>> GetTranslationTableI(string filename)
         {
             return WithEmbeddedStream(filename, stream =>
             {
-                XDocument doc = XDocuments.Load(stream);
+                var doc = XDocuments.Load(stream);
 
                 var translationTable = new Dictionary<string, Dictionary<string, string>>();
 
@@ -114,8 +102,11 @@ namespace NTech.Core.PreCredit.Shared.Services
                         {
                             translationTable.Add(ttrLang, new Dictionary<string, string>());
                         }
+
                         var langTable = translationTable[ttrLang];
-                        if (!string.IsNullOrWhiteSpace(ttr.Value))
+                        if (tr.Attribute("allowWhitespace") != null)
+                            langTable[key] = ttr.Value;
+                        else if (!string.IsNullOrWhiteSpace(ttr.Value))
                             langTable[key] = ttr.Value.Trim();
                     }
                 }

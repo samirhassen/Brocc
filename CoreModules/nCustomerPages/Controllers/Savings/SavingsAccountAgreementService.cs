@@ -37,12 +37,36 @@ public class SavingsAccountAgreementService
         context["contact"] = contactInfo;
 
         var sc = new SystemUserSavingsClient();
-        if (!sc.TryGetCurrentInterestRateForStandardAccount(out var interestRatePercent))
+        decimal interestRatePercent;
+        var accountTypeCode = applicationItems[nameof(SavingsApplicationItemName.savingsAccountTypeCode)];
+        switch (accountTypeCode)
         {
-            pdfBytes = null;
-            failedMessage = "There is no interest rate defined for standard accounts.";
-            return false;
+            case "StandardAccount":
+                if (!sc.TryGetCurrentInterestRateForStandardAccount(out interestRatePercent))
+                {
+                    pdfBytes = null;
+                    failedMessage = "There is no interest rate defined for standard accounts.";
+                    return false;
+                }
+
+                break;
+            case "FixedInterestAccount":
+                var productId = applicationItems[nameof(SavingsApplicationItemName.fixedInterestProduct)];
+                if (!sc.TryGetFixedInterestRate(productId, out var fixedRate))
+                {
+                    pdfBytes = null;
+                    failedMessage = "There is no interest rate defined for fixed rate accounts.";
+                    return false;
+                }
+
+                interestRatePercent = fixedRate.InterestRate;
+                break;
+            default:
+                pdfBytes = null;
+                failedMessage = $"Unknown account type: {accountTypeCode}";
+                return false;
         }
+
 
         var iban = IBANFi.Parse(applicationItems[nameof(SavingsApplicationItemName.withdrawalIban)]);
         context["interestRate"] = (interestRatePercent / 100m).ToString("P");

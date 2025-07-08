@@ -38,18 +38,8 @@ public class ApiCreateSavingsAccountController : NController
 
             var service = new SavingsAccountCreationService(CoreClock.SharedInstance,
                 SerilogLoggingService.SharedInstance, customerClient,
-                x => mailSender.TrySendWelcomeEmail(x.SavingsAccountNr, x.Context, x.SendingLocation), x =>
-                {
-                    using var context = new SavingsContext();
-                    return x.AccountType switch
-                    {
-                        SavingsAccountTypeCode.StandardAccount => ChangeInterestRateBusinessEventManager
-                            .GetCurrentInterestRateForNewAccounts(context, x.AccountType, x.Date) != null,
-                        SavingsAccountTypeCode.FixedInterestAccount => FixedAccountProductBusinessEventManager
-                            .RateValidAt(context, x.Product!.Value, x.Date),
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-                }, mgr, Service.ContextFactory, ControllerServiceFactory.CustomerRelationsMerge);
+                (acc, ctx, loc) => mailSender.TrySendWelcomeEmail(acc, ctx, loc),
+                CheckInterestRateExists, mgr, Service.ContextFactory, ControllerServiceFactory.CustomerRelationsMerge);
 
             return Json2(service.CreateAccount(request));
         }
@@ -59,5 +49,18 @@ public class ApiCreateSavingsAccountController : NController
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, ex.Message);
             throw;
         }
+    }
+
+    private static bool CheckInterestRateExists(SavingsAccountTypeCode accountType, Guid? product, DateTime date)
+    {
+        using var context = new SavingsContext();
+        return accountType switch
+        {
+            SavingsAccountTypeCode.StandardAccount => ChangeInterestRateBusinessEventManager
+                .GetCurrentInterestRateForNewAccounts(context, accountType, date) != null,
+            SavingsAccountTypeCode.FixedInterestAccount => FixedAccountProductBusinessEventManager.RateValidAt(context,
+                product!.Value, date),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }

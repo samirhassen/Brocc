@@ -10,7 +10,8 @@ namespace NTech.Core.Savings.Shared.DbModel
         Capital,
         CapitalizedInterest,
         ShouldBePaidToCustomer,
-        WithheldCapitalizedInterestTax
+        WithheldCapitalizedInterestTax,
+        PenaltyFee
     }
 
     public class LedgerAccountTransaction : InfrastructureBaseItem

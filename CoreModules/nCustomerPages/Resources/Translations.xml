@@ -195,7 +195,7 @@
     <tr>
         <key>ssa_kontotyp</key>
         <sv>Välj kontotyp</sv>
-        <fi>Valitse tilityyppiä</fi>
+        <fi>Valitse tilityyppi</fi>
     </tr>
     <tr>
         <key>ssa_kontouppgifter</key>
@@ -210,7 +210,7 @@
     <tr>
         <key>ssa_kontotyp_fixed_description</key>
         <sv>Sparkonto med fast ränta över en förbestämd bindningstid.</sv>
-        <fi>Säästötili, jolla on kiinteä korko ennalta määrätyn määräajan kuluessa.</fi>
+        <fi>Säästötili, jolla on kiinteä korko ennalta määrätyn määräajan ajan.</fi>
     </tr>
     <tr>
         <key>ssa_uppgifter</key>
@@ -231,6 +231,31 @@
         <key>ssa_kontotyp_fast</key>
         <sv>Fast ränta</sv>
         <fi>Kiinteä korko</fi>
+    </tr>
+    <tr allowWhitespace="true">
+        <key>ssa_rate_to_pre</key>
+        <sv>Upp till</sv>
+        <fi>Korko jopa</fi>
+    </tr>
+    <tr allowWhitespace="true">
+        <key>ssa_rate_to_post</key>
+        <sv>% ränta</sv>
+        <fi> %</fi>
+    </tr>
+    <tr allowWhitespace="true">
+        <key>ssa_flex_rate_pre</key>
+        <sv></sv>
+        <fi>Korko </fi>
+    </tr>
+    <tr allowWhitespace="true">
+        <key>ssa_flex_rate_post</key>
+        <sv>% ränta</sv>
+        <fi> %</fi>
+    </tr>
+    <tr>
+        <key>ssa_term_months</key>
+        <sv>månader</sv>
+        <fi>kuukautta</fi>
     </tr>
     <tr>
         <key>ssa_civicnr</key>
@@ -275,7 +300,7 @@
     <tr>
         <key>ssa_withdrawaliban</key>
         <sv>IBAN för mottagarkonto vid uttag</sv>
-        <fi>Vastaanottajatilin IBAN nostoja varten</fi>
+        <fi>Vastatili tilinostoja varten (IBAN)</fi>
     </tr>
     <tr>
         <key>ssa_consent</key>
@@ -299,7 +324,7 @@
     <tr>
         <key>ssa_kycandsign</key>
         <sv>Kundkännedom och signering</sv>
-        <fi>Asiakastietoisuus ja allekirjoitus</fi>
+        <fi>Asiakastuntemus ja allekirjoitus</fi>
     </tr>
     <tr>
         <key>ssa_pepinitialquestion</key>
@@ -505,6 +530,11 @@
         <sv>Uttag</sv>
         <fi>Nosto</fi>
     </tr>
+	<tr>
+		<key>sao_details_tt_withdrawalpenaltyfee</key>
+		<sv>Straffavgift vid uttag</sv>
+		<fi>Peruuttamisen sakkomaksu</fi>
+	</tr>
     <tr>
         <key>sao_details_tt_ycap</key>
         <sv>Kapitaliserad ränta (årsränta)</sv>
@@ -697,6 +727,21 @@
         <sv>Belopp</sv>
         <fi>Summa</fi>
     </tr>
+	<tr>
+		<key>sao_withdrawals_penalty</key>
+		<sv>Straffavgift</sv>
+		<fi>Sakkomaksu</fi>
+	</tr>
+	<tr>
+		<key>sao_withdrawals_matureat</key>
+		<sv>Avtalstid</sv>
+		<fi>Sopimuskausi</fi>
+	</tr>
+	<tr>
+		<key>sao_withdrawals_penalty_text</key>
+		<sv>Observera att en straffavgift om 2,5 % av det uttagna beloppet kommer att debiteras om uttaget sker före den avtalade löptiden har löpt ut.</sv>
+		<fi>Huomioithan, että 2,5 % sakkomaksu nostetusta summasta lisätään, jos nosto tehdään ennen sovittua eräpäivää.</fi>
+	</tr>
     <tr>
         <key>sao_withdrawals_cmt</key>
         <sv>Meddelande till mottagaren</sv>

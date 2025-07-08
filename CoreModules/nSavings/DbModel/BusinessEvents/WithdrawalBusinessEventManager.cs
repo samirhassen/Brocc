@@ -34,6 +34,7 @@ namespace nSavings.DbModel.BusinessEvents
             public DateTimeOffset? RequestDate { get; set; }
             public int? RequestedByCustomerId { get; set; }
             public int? RequestedByHandlerUserId { get; set; }
+            public decimal? PenaltyFees { get; set; }
         }
 
         public bool TryCreateNew(WithdrawalRequest request, bool allowSkipUniqueOperationToken, bool allowCheckpoint,
@@ -69,7 +70,7 @@ namespace nSavings.DbModel.BusinessEvents
             var context = encryptionContext.Context;
 
             evt = null;
-
+            BusinessEvent evtWithdrawalPenaltyFee = new BusinessEvent();
             if (request == null)
             {
                 failedMessage = "Missing everything";
@@ -122,6 +123,8 @@ namespace nSavings.DbModel.BusinessEvents
                 {
                     x.MainCustomerId,
                     x.Status,
+                    x.MaturesAt,
+                    x.AccountTypeCode,
                     CapitalBalance =
                         x.Transactions.Where(y => y.AccountCode == LedgerAccountTypeCode.Capital.ToString())
                             .Sum(y => (decimal?)y.Amount) ?? 0m
@@ -141,6 +144,7 @@ namespace nSavings.DbModel.BusinessEvents
             }
 
             request.WithdrawalAmount = Math.Round(request.WithdrawalAmount.Value, 2);
+           
             if (h.CapitalBalance < request.WithdrawalAmount.Value)
             {
                 failedMessage = "Balance < Withdrawal amount";
@@ -156,6 +160,28 @@ namespace nSavings.DbModel.BusinessEvents
             {
                 failedMessage = "Withdrawals suspended";
                 return false;
+            }
+
+            bool hasPenalty = false;
+            decimal? penaltyAmount = 0;
+            string penaltyComments = string.Empty;
+            if (h.AccountTypeCode == nameof(SavingsAccountTypeCode.FixedInterestAccount))
+            {
+                if (h.MaturesAt == null)
+                {
+                    failedMessage = "Missing MatureAt date";
+                    return false;
+                }
+
+                if (Clock.Now.Date <= h.MaturesAt)
+                {
+                    evtWithdrawalPenaltyFee = AddBusinessEvent(BusinessEventType.WithdrawalPenaltyFee, context);
+
+                    hasPenalty = true;
+                    penaltyAmount = Math.Round(Convert.ToDecimal(request.WithdrawalAmount * request.PenaltyFees / 100), 2);
+                    request.WithdrawalAmount = request.WithdrawalAmount - penaltyAmount;
+                    penaltyComments = "Penalty amount :" + penaltyAmount;
+                }
             }
 
             var w = new OutgoingPaymentHeader
@@ -178,6 +204,22 @@ namespace nSavings.DbModel.BusinessEvents
                 request.WithdrawalAmount.Value, evt, w.BookKeepingDate,
                 savingsAccountNr: request.SavingsAccountNr,
                 outgoingPayment: w);
+
+
+            //Penalty Transactions 
+            if (hasPenalty)
+            {
+                AddTransaction(context, LedgerAccountTypeCode.Capital,
+               -penaltyAmount.Value, evtWithdrawalPenaltyFee, w.BookKeepingDate,
+               savingsAccountNr: request.SavingsAccountNr,
+               outgoingPayment: w);
+
+                AddTransaction(context, LedgerAccountTypeCode.PenaltyFee,
+                penaltyAmount.Value, evtWithdrawalPenaltyFee, w.BookKeepingDate,
+                savingsAccountNr: request.SavingsAccountNr,
+                outgoingPayment: w);
+            }
+
 
             AddItem(OutgoingPaymentHeaderItemCode.CustomerMessage,
                 string.IsNullOrWhiteSpace(request.CustomCustomerMessageText)
@@ -207,8 +249,8 @@ namespace nSavings.DbModel.BusinessEvents
 
             //Comment
             AddComment(
-                $"Withdrawal of {request.WithdrawalAmount.GetValueOrDefault().ToString("C", CommentFormattingCulture)}",
-                BusinessEventType.Withdrawal, context, savingsAccountNr: request.SavingsAccountNr);
+      $"Withdrawal of {request.WithdrawalAmount.GetValueOrDefault().ToString("C", CommentFormattingCulture)} " + penaltyComments,
+      BusinessEventType.Withdrawal, context, savingsAccountNr: request.SavingsAccountNr);
 
             ////////////////////////////////////////////////
             //////////////// Handle encryption /////////////

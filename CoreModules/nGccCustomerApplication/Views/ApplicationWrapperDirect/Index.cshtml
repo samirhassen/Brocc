@@ -6,148 +6,161 @@
 <head>
     <title>Brocc</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <link rel="icon" href="~/Content/img/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="~/Content/img/favicon-32x32.png" type="image/png" />
-    <link rel="apple-touch-icon" sizes="48x48" href="~/Content/img/icon-48x48.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/img/icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="96x96" href="~/Content/img/icon-96x96.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/img/icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="~/Content/img/icon-192x192.png" />
-    <link rel="apple-touch-icon" sizes="256x256" href="~/Content/img/icon-256x256.png" />
-    <link rel="apple-touch-icon" sizes="384x384" href="~/Content/img/icon-384x384.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="~/Content/img/icon-512x512.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="icon" href="~/Content/img/favicon.svg" type="image/svg+xml"/>
+    <link rel="icon" href="~/Content/img/favicon-32x32.png" type="image/png"/>
+    <link rel="apple-touch-icon" sizes="48x48" href="~/Content/img/icon-48x48.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/img/icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="96x96" href="~/Content/img/icon-96x96.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/img/icon-144x144.png"/>
+    <link rel="apple-touch-icon" sizes="192x192" href="~/Content/img/icon-192x192.png"/>
+    <link rel="apple-touch-icon" sizes="256x256" href="~/Content/img/icon-256x256.png"/>
+    <link rel="apple-touch-icon" sizes="384x384" href="~/Content/img/icon-384x384.png"/>
+    <link rel="apple-touch-icon" sizes="512x512" href="~/Content/img/icon-512x512.png"/>
 
     @Styles.Render("~/Content/css/bundle-balanzia-wrapper-direct")
 </head>
 <body ng-app="app" ng-controller="ctr" ng-cloak translate-cloak>
-    <div class="content_wrap">
-        <div class="header">
-            <div class="logo_area">
-                <a href="#"><img src="~/Content/img/brocc-logo.png" alt="Brocc Finance AB" /></a>
+<div class="content_wrap">
+    <div class="header">
+        <div class="logo_area">
+            <a href="#"><img src="~/Content/img/brocc-logo.png" alt="Brocc Finance AB"/></a>
+        </div>
+        <div class="flag_area">
+            <div class="flag_icon finnish">
+                <a href="#" ng-click="changeLanguage('fi', $event)"
+                   ng-class="{ 'unselected_language': (currentLanguage() == 'sv') }">
+                    FI
+                </a>
             </div>
-            <div class="flag_area">
-                <div class="flag_icon finnish">
-                    <a href="#" ng-click="changeLanguage('fi', $event)" ng-class="{ 'unselected_language': (currentLanguage() == 'sv') }">
-                        FI
-                    </a>
-                </div>
-                <div class="flag_icon swedish">
-                    <a href="#" ng-click="changeLanguage('sv', $event)" ng-class="{ 'unselected_language': (currentLanguage() == 'fi') }">
-                        SV
-                    </a>
-                </div>
-            </div>
-            <div class="menu_area">
-                &nbsp;
+            <div class="flag_icon swedish">
+                <a href="#" ng-click="changeLanguage('sv', $event)"
+                   ng-class="{ 'unselected_language': (currentLanguage() == 'fi') }">
+                    SV
+                </a>
             </div>
         </div>
-        <div class="bg-white warning">
-            <p translate="ansokan_warning">Hej! Balanzia har bytt namn till Brocc. Tills vidare använder den här sidan fortfarande Balanzia som domän.</p>
-        </div>
-        <div class="bg-white">
-            <div>
-                <!--status wrap-->
-                <div class="status" ng-if="currentStateStepNr()">
-                    <div class="item done">
-                        <div class="circle">&#x2714;</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() <= 2" class="item">
-                        <div class="circle">2</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() > 2" class="item done">
-                        <div class="circle">&#x2714;</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() <= 3" class="item">
-                        <div class="circle">3</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() > 3" class="item done">
-                        <div class="circle">&#x2714;</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() <= 4 && isBankAccountDataSharingEnabled" class="item">
-                        <div class="circle">4</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() > 4 && isBankAccountDataSharingEnabled" class="item done">
-                        <div class="circle">&#x2714;</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() <= 5 && isBankAccountDataSharingEnabled" class="item">
-                        <div class="circle">5</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() <= 5 && !isBankAccountDataSharingEnabled" class="item">
-                        <div class="circle">4</div>
-                    </div>
-                    <div ng-if="currentStateStepNr() > 5" class="item done">
-                        <div class="circle">&#x2714;</div>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-
-                <!--Additional questions-->
-                <p ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'" class="text-center centered_section" translate="ansokan_kf_text">
-                    För att vi ska kunna gå vidare med din ansökan behöver du svara på några kompletterande frågor. Vi har, precis som banker, en lagstadgad skyldighet att identifiera och känna våra kunder.
-                    Utöver personuppgifterna krävs tillräckliga uppgifter om bl.a. kundens verksamhet och ekonomiska ställning.
-                </p>
-                <div ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'" class="text-center centered_section personal-info-link-container">
-                    <a target="_blank" rel="nofollow" ng-href="{{'ansokan_kf_uri' | translate}}" translate="ansokan_kf_link">Information om hur Brocc Finance AB behandlar mina personuppgifter.</a>
-                </div>
-
-                <!--medlåntagare signering + fallback om onnisttu inte svarar för sökande 1-->
-                <p ng-if="currentStateName() == 'ShouldSignAgreements'" class="text-center centered_section" translate="ansokan_sg_text">
-                    Läs noga igenom avtal och villkor innan du signerar!
-                </p>
-                <br/>
-
-            </div>
-            <div class="bg-gray">
-                <!--väntar på final approvement, dvs allt är inskickat-->
-                <p ng-if="currentStateName() == 'IsAwaitingFinalApproval'" class="fields_area centered_section text-center" translate="ansokan_finalapproval_text">
-                    Din ansökan är mottagen!
-                </p>
-
-                <div ng-if="currentStateName() == 'ClosedAsAccepted'" class="fields_area centered_section">
-                    <div>
-                        <p class="text-center" translate="ansokan_closed_accepted_text">Din ansökan är godkänd, utbetalning sker inom en arbetsdag = Hakemuksesi on hyväksytty. Laina maksetaan yhden arkipäivän kuluessa.</p>
-                    </div>
-                </div>
-                <div ng-if="currentStateName() == 'ClosedAsOther'" class="fields_area centered_section">
-                    <div>
-                        <p class="text-center" translate="ansokan_closed_text">Din ansökan är avslutad.</p>
-                    </div>
-                </div>
-                <div ng-if="currentStateName() == 'IsWaitingForClient'" class="fields_area centered_section">
-                    <div>
-                        <p class="text-center" translate="ansokan_active_awaitingclient_text">Din ansökan behandlas!</p>
-                    </div>
-                </div>
-
-                <!--PSD2-->
-                <div ng-show="currentStateName() == 'ShouldChooseDocumentSource'" class="fields_area centered_section">
-                    @Html.Partial("Index_DocumentSource")
-                </div>
-
-                <!-- If possible make the dom handling of files work with ng-if -->
-                <div ng-show="currentStateName() == 'IsWatingForDocumentUpload'" class="fields_area centered_section">
-                    @Html.Partial("Index_DocumentCheck")
-                </div>
-
-                <div ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'" class="fields_area centered_section">
-                    @Html.Partial("Index_AdditionalQuestions")
-                </div>
-
-                <div ng-if="currentStateName() == 'ShouldSignAgreements'" class="fields_area centered_section">
-                    @Html.Partial("Index_Agreements")
-                </div>
-            </div>
-        </div>
-        <div ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'" class="demo-functions">
-            <p ng-show="isTest"><a href="#" ng-click="aq.loadTestData($event)">fyll i samma som föregående ansökan (endast i test)</a></p>
+        <div class="menu_area">
+            &nbsp;
         </div>
     </div>
+    <div class="bg-white warning">
+        <p translate="ansokan_warning">Hej! Balanzia har bytt namn till Brocc. Tills vidare använder den här sidan
+            fortfarande Balanzia som domän.</p>
+    </div>
+    <div class="bg-white">
+        <div>
+            <!--status wrap-->
+            <div class="status" ng-if="currentStateStepNr()">
+                <div class="item done">
+                    <div class="circle">&#x2714;</div>
+                </div>
+                <div ng-if="currentStateStepNr() <= 2" class="item">
+                    <div class="circle">2</div>
+                </div>
+                <div ng-if="currentStateStepNr() > 2" class="item done">
+                    <div class="circle">&#x2714;</div>
+                </div>
+                <div ng-if="currentStateStepNr() <= 3" class="item">
+                    <div class="circle">3</div>
+                </div>
+                <div ng-if="currentStateStepNr() > 3" class="item done">
+                    <div class="circle">&#x2714;</div>
+                </div>
+                <div ng-if="currentStateStepNr() <= 4 && isBankAccountDataSharingEnabled" class="item">
+                    <div class="circle">4</div>
+                </div>
+                <div ng-if="currentStateStepNr() > 4 && isBankAccountDataSharingEnabled" class="item done">
+                    <div class="circle">&#x2714;</div>
+                </div>
+                <div ng-if="currentStateStepNr() <= 5 && isBankAccountDataSharingEnabled" class="item">
+                    <div class="circle">5</div>
+                </div>
+                <div ng-if="currentStateStepNr() <= 5 && !isBankAccountDataSharingEnabled" class="item">
+                    <div class="circle">4</div>
+                </div>
+                <div ng-if="currentStateStepNr() > 5" class="item done">
+                    <div class="circle">&#x2714;</div>
+                </div>
+                <div class="clear"></div>
+            </div>
 
-    <script>
-        initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
-    </script>
-    @Scripts.Render("~/Content/js/bundle-balanzia-wrapper-direct")
+            <!--Additional questions-->
+            <p ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'" class="text-center centered_section"
+               translate="ansokan_kf_text">
+                För att vi ska kunna gå vidare med din ansökan behöver du svara på några kompletterande frågor. Vi har,
+                precis som banker, en lagstadgad skyldighet att identifiera och känna våra kunder.
+                Utöver personuppgifterna krävs tillräckliga uppgifter om bl.a. kundens verksamhet och ekonomiska
+                ställning.
+            </p>
+            <div ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'"
+                 class="text-center centered_section personal-info-link-container">
+                <a target="_blank" rel="nofollow" ng-href="{{'ansokan_kf_uri' | translate}}"
+                   translate="ansokan_kf_link">Information om hur Brocc Finance AB behandlar mina personuppgifter.</a>
+            </div>
+
+            <!--medlåntagare signering + fallback om onnisttu inte svarar för sökande 1-->
+            <p ng-if="currentStateName() == 'ShouldSignAgreements'" class="text-center centered_section"
+               translate="ansokan_sg_text">
+                Läs noga igenom avtal och villkor innan du signerar!
+            </p>
+            <br/>
+
+        </div>
+        <div class="bg-gray">
+            <!--väntar på final approvement, dvs allt är inskickat-->
+            <p ng-if="currentStateName() == 'IsAwaitingFinalApproval'" class="fields_area centered_section text-center"
+               translate="ansokan_finalapproval_text">
+                Din ansökan är mottagen!
+            </p>
+
+            <div ng-if="currentStateName() == 'ClosedAsAccepted'" class="fields_area centered_section">
+                <div>
+                    <p class="text-center" translate="ansokan_closed_accepted_text">Din ansökan är godkänd, utbetalning
+                        sker inom en arbetsdag = Hakemuksesi on hyväksytty. Laina maksetaan yhden arkipäivän
+                        kuluessa.</p>
+                </div>
+            </div>
+            <div ng-if="currentStateName() == 'ClosedAsOther'" class="fields_area centered_section">
+                <div>
+                    <p class="text-center" translate="ansokan_closed_text">Din ansökan är avslutad.</p>
+                </div>
+            </div>
+            <div ng-if="currentStateName() == 'IsWaitingForClient'" class="fields_area centered_section">
+                <div>
+                    <p class="text-center" translate="ansokan_active_awaitingclient_text">Din ansökan behandlas!</p>
+                </div>
+            </div>
+
+            <!--PSD2-->
+            <div ng-show="currentStateName() == 'ShouldChooseDocumentSource'" class="fields_area centered_section">
+                @Html.Partial("Index_DocumentSource")
+            </div>
+
+            <!-- If possible make the dom handling of files work with ng-if -->
+            <div ng-show="currentStateName() == 'IsWatingForDocumentUpload'" class="fields_area centered_section">
+                @Html.Partial("Index_DocumentCheck")
+            </div>
+
+            <div ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'" class="fields_area centered_section">
+                @Html.Partial("Index_AdditionalQuestions")
+            </div>
+
+            <div ng-if="currentStateName() == 'ShouldSignAgreements'" class="fields_area centered_section">
+                @Html.Partial("Index_Agreements")
+            </div>
+        </div>
+    </div>
+    <div ng-if="currentStateName() == 'ShouldAnswerAdditionalQuestions'" class="demo-functions">
+        <p ng-show="isTest"><a href="#" ng-click="aq.loadTestData($event)">fyll i samma som föregående ansökan (endast i
+                test)</a></p>
+    </div>
+</div>
+
+<script>
+    initialData = JSON.parse(atob('@Html.Raw(ViewBag.JsonInitialData)'))
+</script>
+@Scripts.Render("~/Content/js/bundle-balanzia-wrapper-direct")
 </body>
 </html>

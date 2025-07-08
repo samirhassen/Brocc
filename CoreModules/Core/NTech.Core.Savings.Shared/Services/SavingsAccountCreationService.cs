@@ -17,18 +17,17 @@ namespace NTech.Core.Savings.Shared.Services
         private readonly ILoggingService _loggingService;
         private readonly ICustomerClient _customerClient;
 
-        private readonly Action<(string SavingsAccountNr, ISavingsContext Context, string SendingLocation)>
-            _sendWelcomeEmail;
+        private readonly Action<string, ISavingsContext, string> _sendWelcomeEmail;
 
-        private readonly Func<(SavingsAccountTypeCode Value, Guid? product, DateTime Today), bool> _hasInterestRateFor;
+        private readonly Func<SavingsAccountTypeCode, Guid?, DateTime, bool> _hasInterestRateFor;
         private readonly CreateSavingsAccountBusinessEventManager _createAccountMgr;
         private readonly SavingsContextFactory _contextFactory;
         private readonly ICustomerRelationsMergeService _relationsMergeService;
 
         public SavingsAccountCreationService(
             ICoreClock clock, ILoggingService loggingService, ICustomerClient customerClient,
-            Action<(string SavingsAccountNr, ISavingsContext Context, string SendingLocation)> sendWelcomeEmail,
-            Func<(SavingsAccountTypeCode AccountType, Guid? Product, DateTime Date), bool> hasInterestRateFor,
+            Action<string, ISavingsContext, string> sendWelcomeEmail,
+            Func<SavingsAccountTypeCode, Guid?, DateTime, bool> hasInterestRateFor,
             CreateSavingsAccountBusinessEventManager createAccountMgr, SavingsContextFactory contextFactory,
             ICustomerRelationsMergeService relationsMergeService)
         {
@@ -69,7 +68,7 @@ namespace NTech.Core.Savings.Shared.Services
                     throw new NTechCoreWebserviceException("Missing or invalid fixedInterestProduct")
                         { IsUserFacing = true, ErrorHttpStatusCode = 400 };
 
-                if (!_hasInterestRateFor((savingsAccountTypeCodeP.Value, product, _clock.Today)))
+                if (!_hasInterestRateFor(savingsAccountTypeCodeP.Value, product, _clock.Today))
                 {
                     throw new NTechCoreWebserviceException("Account type has no active interest rate")
                         { IsUserFacing = true, ErrorHttpStatusCode = 400 };
@@ -120,8 +119,8 @@ namespace NTech.Core.Savings.Shared.Services
                         $"Failed to merge savings account relation on new account {savingsAccount?.SavingsAccountNr}");
                 }
 
-                _sendWelcomeEmail((savingsAccount.SavingsAccountNr, context,
-                    $"OnCreate_{savingsAccount.SavingsAccountNr}"));
+                _sendWelcomeEmail(savingsAccount.SavingsAccountNr, context,
+                    $"OnCreate_{savingsAccount.SavingsAccountNr}");
 
                 context.SaveChanges();
 

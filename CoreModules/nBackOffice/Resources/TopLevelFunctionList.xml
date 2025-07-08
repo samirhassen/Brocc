@@ -1,424 +1,436 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <FunctionsList>
-  <SubGroupOrder>
-    <SgOrderItem>Credit</SgOrderItem>
-    <SgOrderItem>Savings</SgOrderItem>
-    <SgOrderItem>Core</SgOrderItem>
-  </SubGroupOrder>
-  <Functions systemName="All" groupName="All">
-	<Function>
-		<MenuGroup>System</MenuGroup>
-		<MenuSubGroup>Core</MenuSubGroup>
-		<MenuName>Settings</MenuName>
-		<Module>nBackOffice</Module>
-		<Url>s/settings/list</Url>
-	</Function>
-  </Functions>
-  <Functions systemName="ConsumerCreditFi" groupName="Middle">
-    <Function>
-	  <RequireFeaturesAll>ntech.feature.unsecuredloans|ntech.feature.precredit</RequireFeaturesAll>
-      <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Application management</MenuName>
-      <Module>nPreCredit</Module>
-      <Url>CreditManagement/CreditApplications</Url>
-    </Function>
-    <Function>
-	  <RequireFeaturesAll>ntech.feature.unsecuredloans.standard|ntech.feature.precredit</RequireFeaturesAll>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Application management</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/unsecured-loan-application/applications</Url>
-    </Function>
-    <Function>
-	  <RequireFeaturesAll>ntech.feature.mortgageloans.standard|ntech.feature.precredit</RequireFeaturesAll>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Application management</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/mortgage-loan-application/applications</Url>
-    </Function>	  
-    <Function>
-	  <RequireFeaturesAll>ntech.feature.unsecuredloans.standard|ntech.feature.precredit</RequireFeaturesAll>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Register application</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/unsecured-loan-application/register-application</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.mortgageloans">
-	  <NotAllowedIfFeaturesAny>ntech.feature.mortgageloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Mortgage loan applications</MenuName>
-      <Module>nPreCredit</Module>
-      <Url>Ui/MortgageLoan/Search</Url>
-    </Function>
-    <Function>
-	  <RequireFeaturesAll>ntech.feature.companyloans|ntech.feature.precredit</RequireFeaturesAll>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Company loan applications</MenuName>
-      <Module>nPreCredit</Module>
-      <Url>Ui/CompanyLoan/Search</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Credit search</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/Credit</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans">
-      <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Precollection</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/PreCollection/WorkLists</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans|ntech.feature.companyloans|ntech.feature.mortgageloans.standard">
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Termination letter management</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/default-management/termination-letter</Url>
-    </Function>
-    <Function>
-      <RequireFeaturesAll>ntech.feature.securemessages</RequireFeaturesAll>
-      <RequireFeaturesAny>ntech.feature.unsecuredloans|ntech.feature.mortgageloans|ntech.feature.companyloans</RequireFeaturesAny>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Secure messages</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/secure-messages/list</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans|ntech.feature.companyloans|ntech.feature.mortgageloans.standard">
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Debt collection management</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/default-management/debt-collection</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Outgoing payments</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/OutgoingPayments/List</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Import incoming payment file</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/credit-payments/import-incoming-paymentfile</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Manual payment registration</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/Payments/RegisterManual</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Manual payment registration</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/Payments/RegisterManual</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Unplaced payments</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/UnplacedPayments/List</Url>
-    </Function>
-    <Function>
-      <RequireFeaturesAny>ntech.feature.customercheckpoints</RequireFeaturesAny>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Assign customer checkpoints</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/customer-checkpoints/main</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.einvoicefi.v1">
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>E-Invoice error list</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/EInvoiceFi/ErrorList</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans">
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Change terms management</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/ChangeTermsManagement</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.mortgageloan.manualcreate">
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Manually register credit</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/MortgageLoan/Create</Url>
-    </Function>
-    <Function featureToggle="ntech.precredit.manualsignatures">
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Manual signatures</MenuName>
-      <Module>nPreCredit</Module>
-      <Url>Ui/Document/DocumentsToSign</Url>
-    </Function>
-    <Function>
-      <RequireFeaturesAll>ntech.feature.manualCreditReports</RequireFeaturesAll>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Manual creditreports</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/manual-creditreports</Url>
-    </Function>
-	<Function>
-		<RequireFeaturesAll>ntech.feature.mortgageloans.standard|ntech.feature.mortgageloans.manualregister</RequireFeaturesAll>
-		<MenuGroup>Manual registration</MenuGroup>
-		<MenuSubGroup>Credit</MenuSubGroup>
-		<MenuName>Register mortage loan</MenuName>
-		<Module>nBackOffice</Module>
-		<Url>s/ml-se/register</Url>		
-	</Function>
-	<Function>
-		<RequireFeaturesAll>ntech.feature.mortgageloans.standard|ntech.feature.mortgageloans.manualregister</RequireFeaturesAll>
-		<MenuGroup>Manual registration</MenuGroup>
-		<MenuSubGroup>Credit</MenuSubGroup>
-		<MenuName>Generate loan nrs</MenuName>
-		<Module>nBackOffice</Module>
-		<Url>s/ml-se/loan-nrs</Url>		
-	</Function>		  
-  </Functions>
-  <Functions systemName="ConsumerCreditFi" groupName="High">
-    <Function featureToggle="ntech.feature.unsecuredloans">
-      <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Approve applications</MenuName>
-      <Module>nPreCredit</Module>
-      <Url>CreditDecision/CreditApplicationsToApprove</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Scheduled tasks</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/scheduled-tasks/notifications</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Analytics</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Reports</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/Reports</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans">
-      <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Analytics</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Vintage reports</MenuName>
-      <Module>nDataWarehouse</Module>
-      <Url>ui/s/vintage-reports</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans">
-      <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Analytics</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Dashboard</MenuName>
-      <Module>nDataWarehouse</Module>
-      <Url>Dashboard</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans">
-      <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Analytics</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Application management monitor</MenuName>
-      <Module>nPreCredit</Module>
-      <Url>CreditManagementMonitor</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.campaignui">
-      <MenuGroup>Analytics</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Campaigns</MenuName>
-      <Module>nPreCredit</Module>
-      <Url>Ui/Campaigns</Url>
-    </Function>
-    <Function>
-	  <NotAllowedIfFeaturesAny>ntech.feature.mortgageloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Product settings</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Change reference interest rate</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/ChangeReferenceInterestRate/List</Url>
-    </Function>
-    <Function>
-	  <RequireFeaturesAny>ntech.feature.mortgageloans.standard</RequireFeaturesAny>
-      <MenuGroup>Product settings</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Change reference interest rate</MenuName>
-      <Module>nBackoffice</Module>
-      <Url>s/fixed-reference-interest/change-rates</Url>
-    </Function>
-    <Function>
-	  <RequireFeaturesAny>ntech.feature.mortgageloans.standard</RequireFeaturesAny>
-      <MenuGroup>Product settings</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Loan owner management</MenuName>
-      <Module>nBackoffice</Module>
-      <Url>s/loan-owner-management/edit-owners</Url>
-    </Function>
-    <Function>
-      <MenuGroup>User</MenuGroup>
-      <MenuName>Approve user</MenuName>
-      <Module>nBackoffice</Module>
-      <Url>s/user-management/approve-user</Url>
-    </Function>
-    <Function>
-      <MenuGroup>User</MenuGroup>
-      <MenuName>Create administrator</MenuName>
-      <Module>nBackoffice</Module>
-      <Url>s/user-management/create-admin</Url>
-    </Function>
-    <Function>
-	  <RequireFeaturesAny>ntech.feature.unsecuredloans|ntech.feature.mortgageloans</RequireFeaturesAny>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Correct and close credits</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/CorrectAndCloseCredit</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.unsecuredloans">
-      <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
-      <MenuGroup>Analytics</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Precollection statistics</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/PreCollectionManagement/History</Url>
-    </Function>
-    <Function featureToggle="ntech.feature.companyloans">
-      <MenuGroup>Product settings</MenuGroup>
-      <MenuSubGroup>Credit</MenuSubGroup>
-      <MenuName>Company loan - Import loans</MenuName>
-      <Module>nCredit</Module>
-      <Url>Ui/CompanyLoan/Import</Url>
-    </Function>
-  </Functions>
-  <Functions groupName="Admin">
-    <Function>
-      <MenuGroup>User</MenuGroup>
-      <MenuName>User administration</MenuName>
-      <Module>nBackoffice</Module>
-      <Url>s/user-management/administer-users</Url>
-    </Function>
-    <Function>
-      <MenuGroup>System</MenuGroup>
-      <MenuName>System Health</MenuName>
-      <Module>nBackoffice</Module>
-      <Url>s/system-health/errors</Url>
-    </Function>
-    <Function>
-      <MenuGroup>System</MenuGroup>
-      <MenuName>Job runner</MenuName>
-      <Module>nScheduler</Module>
-      <Url>Ui/ScheduledJobs</Url>
-    </Function>
-    <Function>
-      <MenuGroup>User</MenuGroup>
-      <MenuName>Api keys</MenuName>
-      <Module>nBackoffice</Module>
-      <Url>s/api-keys/list</Url>
-    </Function>	  
-  </Functions>
-  <Functions systemName="ConsumerSavingsFi" groupName="Middle">
-    <Function>
-      <MenuGroup>Applications</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Account creation remarks</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/AccountCreationRemarks</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Import incoming payment file</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/IncomingPayments/ImportFile</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Account search</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/SavingsAccount</Url>
-    </Function>
-    <Function>
-      <RequireFeaturesAll>ntech.feature.securemessages</RequireFeaturesAll>
-      <RequiresOtherModulesAll>nSavings</RequiresOtherModulesAll>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Secure messages</MenuName>
-      <Module>nBackOffice</Module>
-      <Url>s/secure-messages/list</Url>
-    </Function> 
-    <Function>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Change external account management</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/SavingsAccounts/ChangeExternalAccountManagement</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Unplaced deposits</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/UnplacedPayments/List</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Payments</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Outgoing payments</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/OutgoingPayments/List</Url>
-    </Function>
-  </Functions>
-  <Functions systemName="ConsumerSavingsFi" groupName="High">
-    <Function>
-      <MenuGroup>Product settings</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Change interest rate</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/InterestRateChange</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Analytics</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Reports</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/Reports</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Product settings</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Riksgälden/Insättningsgaranti</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/Riksgalden</Url>
-    </Function>
-    <Function>
-      <MenuGroup>Life cycle</MenuGroup>
-      <MenuSubGroup>Savings</MenuSubGroup>
-      <MenuName>Scheduled tasks</MenuName>
-      <Module>nSavings</Module>
-      <Url>Ui/BookkeepingFiles/List</Url>
-    </Function>
-  </Functions>
+    <SubGroupOrder>
+        <SgOrderItem>Credit</SgOrderItem>
+        <SgOrderItem>Savings</SgOrderItem>
+        <SgOrderItem>Core</SgOrderItem>
+    </SubGroupOrder>
+    <Functions systemName="All" groupName="All">
+        <Function>
+            <MenuGroup>System</MenuGroup>
+            <MenuSubGroup>Core</MenuSubGroup>
+            <MenuName>Settings</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/settings/list</Url>
+        </Function>
+    </Functions>
+    <Functions systemName="ConsumerCreditFi" groupName="Middle">
+        <Function>
+            <RequireFeaturesAll>ntech.feature.unsecuredloans|ntech.feature.precredit</RequireFeaturesAll>
+            <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Application management</MenuName>
+            <Module>nPreCredit</Module>
+            <Url>CreditManagement/CreditApplications</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.unsecuredloans.standard|ntech.feature.precredit</RequireFeaturesAll>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Application management</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/unsecured-loan-application/applications</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.mortgageloans.standard|ntech.feature.precredit</RequireFeaturesAll>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Application management</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/mortgage-loan-application/applications</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.unsecuredloans.standard|ntech.feature.precredit</RequireFeaturesAll>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Register application</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/unsecured-loan-application/register-application</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.mortgageloans">
+            <NotAllowedIfFeaturesAny>ntech.feature.mortgageloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Mortgage loan applications</MenuName>
+            <Module>nPreCredit</Module>
+            <Url>Ui/MortgageLoan/Search</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.companyloans|ntech.feature.precredit</RequireFeaturesAll>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Company loan applications</MenuName>
+            <Module>nPreCredit</Module>
+            <Url>Ui/CompanyLoan/Search</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Credit search</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/Credit</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.unsecuredloans">
+            <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Precollection</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/PreCollection/WorkLists</Url>
+        </Function>
+        <Function
+                featureToggle="ntech.feature.unsecuredloans|ntech.feature.companyloans|ntech.feature.mortgageloans.standard">
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Termination letter management</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/default-management/termination-letter</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.securemessages</RequireFeaturesAll>
+            <RequireFeaturesAny>ntech.feature.unsecuredloans|ntech.feature.mortgageloans|ntech.feature.companyloans
+            </RequireFeaturesAny>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Secure messages</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/secure-messages/list</Url>
+        </Function>
+        <Function
+                featureToggle="ntech.feature.unsecuredloans|ntech.feature.companyloans|ntech.feature.mortgageloans.standard">
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Debt collection management</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/default-management/debt-collection</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Outgoing payments</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/OutgoingPayments/List</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Import incoming payment file</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/credit-payments/import-incoming-paymentfile</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Manual payment registration</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/Payments/RegisterManual</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Manual payment registration</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/Payments/RegisterManual</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Unplaced payments</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/UnplacedPayments/List</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAny>ntech.feature.customercheckpoints</RequireFeaturesAny>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Assign customer checkpoints</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/customer-checkpoints/main</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.einvoicefi.v1">
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>E-Invoice error list</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/EInvoiceFi/ErrorList</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.unsecuredloans">
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Change terms management</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/ChangeTermsManagement</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.mortgageloan.manualcreate">
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Manually register credit</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/MortgageLoan/Create</Url>
+        </Function>
+        <Function featureToggle="ntech.precredit.manualsignatures">
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Manual signatures</MenuName>
+            <Module>nPreCredit</Module>
+            <Url>Ui/Document/DocumentsToSign</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.manualCreditReports</RequireFeaturesAll>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Manual creditreports</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/manual-creditreports</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.mortgageloans.standard|ntech.feature.mortgageloans.manualregister
+            </RequireFeaturesAll>
+            <MenuGroup>Manual registration</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Register mortage loan</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/ml-se/register</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.mortgageloans.standard|ntech.feature.mortgageloans.manualregister
+            </RequireFeaturesAll>
+            <MenuGroup>Manual registration</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Generate loan nrs</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/ml-se/loan-nrs</Url>
+        </Function>
+    </Functions>
+    <Functions systemName="ConsumerCreditFi" groupName="High">
+        <Function featureToggle="ntech.feature.unsecuredloans">
+            <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Approve applications</MenuName>
+            <Module>nPreCredit</Module>
+            <Url>CreditDecision/CreditApplicationsToApprove</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Scheduled tasks</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/scheduled-tasks/notifications</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Analytics</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Reports</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/Reports</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.unsecuredloans">
+            <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Analytics</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Vintage reports</MenuName>
+            <Module>nDataWarehouse</Module>
+            <Url>ui/s/vintage-reports</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.unsecuredloans">
+            <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Analytics</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Dashboard</MenuName>
+            <Module>nDataWarehouse</Module>
+            <Url>Dashboard</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.unsecuredloans">
+            <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Analytics</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Application management monitor</MenuName>
+            <Module>nPreCredit</Module>
+            <Url>CreditManagementMonitor</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.campaignui">
+            <MenuGroup>Analytics</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Campaigns</MenuName>
+            <Module>nPreCredit</Module>
+            <Url>Ui/Campaigns</Url>
+        </Function>
+        <Function>
+            <NotAllowedIfFeaturesAny>ntech.feature.mortgageloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Product settings</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Change reference interest rate</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/ChangeReferenceInterestRate/List</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAny>ntech.feature.mortgageloans.standard</RequireFeaturesAny>
+            <MenuGroup>Product settings</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Change reference interest rate</MenuName>
+            <Module>nBackoffice</Module>
+            <Url>s/fixed-reference-interest/change-rates</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAny>ntech.feature.mortgageloans.standard</RequireFeaturesAny>
+            <MenuGroup>Product settings</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Loan owner management</MenuName>
+            <Module>nBackoffice</Module>
+            <Url>s/loan-owner-management/edit-owners</Url>
+        </Function>
+        <Function>
+            <MenuGroup>User</MenuGroup>
+            <MenuName>Approve user</MenuName>
+            <Module>nBackoffice</Module>
+            <Url>s/user-management/approve-user</Url>
+        </Function>
+        <Function>
+            <MenuGroup>User</MenuGroup>
+            <MenuName>Create administrator</MenuName>
+            <Module>nBackoffice</Module>
+            <Url>s/user-management/create-admin</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAny>ntech.feature.unsecuredloans|ntech.feature.mortgageloans</RequireFeaturesAny>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Correct and close credits</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/CorrectAndCloseCredit</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.unsecuredloans">
+            <NotAllowedIfFeaturesAny>ntech.feature.unsecuredloans.standard</NotAllowedIfFeaturesAny>
+            <MenuGroup>Analytics</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Precollection statistics</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/PreCollectionManagement/History</Url>
+        </Function>
+        <Function featureToggle="ntech.feature.companyloans">
+            <MenuGroup>Product settings</MenuGroup>
+            <MenuSubGroup>Credit</MenuSubGroup>
+            <MenuName>Company loan - Import loans</MenuName>
+            <Module>nCredit</Module>
+            <Url>Ui/CompanyLoan/Import</Url>
+        </Function>
+    </Functions>
+    <Functions groupName="Admin">
+        <Function>
+            <MenuGroup>User</MenuGroup>
+            <MenuName>User administration</MenuName>
+            <Module>nBackoffice</Module>
+            <Url>s/user-management/administer-users</Url>
+        </Function>
+        <Function>
+            <MenuGroup>System</MenuGroup>
+            <MenuName>System Health</MenuName>
+            <Module>nBackoffice</Module>
+            <Url>s/system-health/errors</Url>
+        </Function>
+        <Function>
+            <MenuGroup>System</MenuGroup>
+            <MenuName>Job runner</MenuName>
+            <Module>nScheduler</Module>
+            <Url>Ui/ScheduledJobs</Url>
+        </Function>
+        <Function>
+            <MenuGroup>User</MenuGroup>
+            <MenuName>Api keys</MenuName>
+            <Module>nBackoffice</Module>
+            <Url>s/api-keys/list</Url>
+        </Function>
+    </Functions>
+    <Functions systemName="ConsumerSavingsFi" groupName="Middle">
+        <Function>
+            <MenuGroup>Applications</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Account creation remarks</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/AccountCreationRemarks</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Import incoming payment file</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/IncomingPayments/ImportFile</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Account search</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/SavingsAccount</Url>
+        </Function>
+        <Function>
+            <RequireFeaturesAll>ntech.feature.securemessages</RequireFeaturesAll>
+            <RequiresOtherModulesAll>nSavings</RequiresOtherModulesAll>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Secure messages</MenuName>
+            <Module>nBackOffice</Module>
+            <Url>s/secure-messages/list</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Change external account management</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/SavingsAccounts/ChangeExternalAccountManagement</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Unplaced deposits</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/UnplacedPayments/List</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Payments</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Outgoing payments</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/OutgoingPayments/List</Url>
+        </Function>
+    </Functions>
+    <Functions systemName="ConsumerSavingsFi" groupName="High">
+        <Function>
+            <MenuGroup>Product settings</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Change interest rate</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/InterestRateChange</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Product settings</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Manage fixed interest rates</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/FixedRateProductManagement</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Analytics</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Reports</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/Reports</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Product settings</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Riksgälden/Insättningsgaranti</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/Riksgalden</Url>
+        </Function>
+        <Function>
+            <MenuGroup>Life cycle</MenuGroup>
+            <MenuSubGroup>Savings</MenuSubGroup>
+            <MenuName>Scheduled tasks</MenuName>
+            <Module>nSavings</Module>
+            <Url>Ui/BookkeepingFiles/List</Url>
+        </Function>
+    </Functions>
 </FunctionsList>

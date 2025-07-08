@@ -117,6 +117,7 @@ public class YearlyInterestCapitalizationBusinessEventManager(int userId, string
                 x.CreatedByBusinessEventId,
                 AccountCreationDate = x.CreatedByEvent.TransactionDate,
                 AccountTypeCode = x.AccountTypeCode.ToString(),
+                FixedInterestProduct = x.FixedInterestProduct,
                 Status = x
                     .DatedStrings
                     .Where(y => y.TransactionDate <= historicalDate &&
@@ -158,6 +159,10 @@ public class YearlyInterestCapitalizationBusinessEventManager(int userId, string
                         AppliesToAccountsSinceBusinessEventId = y.AppliesToAccountsSinceBusinessEventId
                     }).ToList());
 
+        var fixedInterestRates = context.FixedAccountProductQueryable
+            .Include(p => p.CreatedAtBusinessEvent)
+            .ToDictionary(p => p.Id, p => p);
+
         var allNrs = allActiveAccounts.Select(x => x.SavingsAccountNr).ToArray();
         var result = new Dictionary<string, decimal?>(allNrs.Length);
         IDictionary<string, IList<ResultModel.DayResultModel>> interestAmountParts =
@@ -167,21 +172,46 @@ public class YearlyInterestCapitalizationBusinessEventManager(int userId, string
             var accounts = allActiveAccounts
                 .Where(x => nrGroup.Contains(x.SavingsAccountNr))
                 .ToList()
-                .Select(x => new InputModel
+                .Select(x =>
                 {
-                    SavingsAccountNr = x.SavingsAccountNr,
-                    CreatedByBusinessEventId = x.CreatedByBusinessEventId,
-                    AccountCreationDate = x.AccountCreationDate,
-                    LatestCapitalizationInterestFromDate = x.LatestInterestCapitalizationToDate?.AddDays(1),
-                    OrderedCapitalTransactions = x
-                        .CapitalTransactions
-                        .Select(y => new InputModel.CapitalTransactionModel
-                        {
-                            Amount = y.Amount,
-                            InterestFromDate = y.InterestFromDate
-                        })
-                        .ToList(),
-                    OrderedInterestRateChanges = interestRateChanges[x.AccountTypeCode]
+                    var fixedInterest =
+                        x.FixedInterestProduct != null &&
+                        fixedInterestRates.TryGetValue(x.FixedInterestProduct, out var fi)
+                            ? fi
+                            : null;
+                    return new InputModel
+                    {
+                        SavingsAccountNr = x.SavingsAccountNr,
+                        CreatedByBusinessEventId = x.CreatedByBusinessEventId,
+                        AccountCreationDate = x.AccountCreationDate,
+                        LatestCapitalizationInterestFromDate = x.LatestInterestCapitalizationToDate?.AddDays(1),
+                        OrderedCapitalTransactions = x
+                            .CapitalTransactions
+                            .Select(y => new InputModel.CapitalTransactionModel
+                            {
+                                Amount = y.Amount,
+                                InterestFromDate = y.InterestFromDate
+                            })
+                            .ToList(),
+                        OrderedInterestRateChanges = x.AccountTypeCode ==
+                                                     nameof(SavingsAccountTypeCode.FixedInterestAccount)
+                            ?
+                            [
+                                new InputModel.InterestRateChangeModel
+                                {
+                                    InterestRatePercent = fixedInterest.InterestRatePercent,
+                                    ValidFromDate = fixedInterest.ValidFrom,
+                                    AppliesToAccountsSinceBusinessEventId = fixedInterest.CreatedAtBusinessEvent.Id
+                                }
+                            ]
+                            : interestRateChanges[x.AccountTypeCode].Select(y =>
+                                new InputModel.InterestRateChangeModel
+                                {
+                                    InterestRatePercent = y.InterestRatePercent,
+                                    ValidFromDate = y.ValidFromDate,
+                                    AppliesToAccountsSinceBusinessEventId = y.AppliesToAccountsSinceBusinessEventId
+                                }).ToList()
+                    };
                 })
                 .ToList();
 
@@ -298,7 +328,7 @@ public class YearlyInterestCapitalizationBusinessEventManager(int userId, string
 
         if (accounts.Any(x =>
                 !interestRateChanges.ContainsKey(x.AccountTypeCode) &&
-                !fixedInterestRates.ContainsKey(x.FixedInterestProduct)))
+                !(x.FixedInterestProduct != null && fixedInterestRates.ContainsKey(x.FixedInterestProduct))))
         {
             failedMessage = "Some accounttypes have no active interest rate";
             result = null;
@@ -307,7 +337,10 @@ public class YearlyInterestCapitalizationBusinessEventManager(int userId, string
 
         var models = accounts.Select(x =>
         {
-            var fixedInterest = fixedInterestRates.TryGetValue(x.FixedInterestProduct, out var fi) ? fi : null;
+            var fixedInterest =
+                x.FixedInterestProduct != null && fixedInterestRates.TryGetValue(x.FixedInterestProduct, out var fi)
+                    ? fi
+                    : null;
             return new InputModel
             {
                 SavingsAccountNr = x.SavingsAccountNr,

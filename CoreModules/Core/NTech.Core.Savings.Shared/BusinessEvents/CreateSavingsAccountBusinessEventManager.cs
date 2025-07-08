@@ -142,15 +142,15 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
 
             var customerId = customerClient.GetCustomerId(civicRegNr);
 
-            if (savingsAccountTypeCode is SavingsAccountTypeCode.StandardAccount &&
-                context.SavingsAccountHeadersQueryable.Any(x =>
-                    x.MainCustomerId == customerId && x.Status != nameof(SavingsAccountStatusCode.Closed)))
-            {
-                failedMessage = "Customer already has a standard account that is not closed";
-                savingsAccount = null;
-                ocrPaymentReference = null;
-                return false;
-            }
+            //if (savingsAccountTypeCode is SavingsAccountTypeCode.StandardAccount &&
+            //    context.SavingsAccountHeadersQueryable.Any(x =>
+            //        x.MainCustomerId == customerId && x.Status != nameof(SavingsAccountStatusCode.Closed)))
+            //{
+            //    failedMessage = "Customer already has a standard account that is not closed";
+            //    savingsAccount = null;
+            //    ocrPaymentReference = null;
+            //    return false;
+            //}
 
             var savingsAccountNr = applicationItems
                 .SingleOrDefault(x => x.Item1 == nameof(SavingsApplicationItemName.savingsAccountNr))?.Item2;

@@ -152,6 +152,7 @@ namespace nCustomerPages.Code
             string customTransactionText,
             string requestAuthenticationMethod,
             string requestIpAddress,
+            decimal? penaltyFees,
             out string failedMessage, out CreateWithdrawalResult result)
         {
             var r = Begin()
@@ -165,7 +166,8 @@ namespace nCustomerPages.Code
                     customCustomerMessageText,
                     customTransactionText,
                     requestAuthenticationMethod,
-                    requestIpAddress
+                    requestIpAddress,
+                    penaltyFees
                 });
             if (r.StatusCode == 400)
             {
@@ -244,6 +246,8 @@ namespace nCustomerPages.Code
                 public string AccountTypeCode { get; set; }
                 public string ToIban { get; set; }
                 public decimal? WithdrawableAmount { get; set; }
+                public DateTime? MaturesAt { get; set; }
+
             }
         }
         public WithdrawalsInitialDataResult GetWithdrawalsInitialData()

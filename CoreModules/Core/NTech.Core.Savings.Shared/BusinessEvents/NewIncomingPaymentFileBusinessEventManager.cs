@@ -148,7 +148,7 @@ namespace NTech.Core.Savings.Shared.BusinessEvents
                 {
                     var currentCustomerBalance = accountBalanceByCustomerId[externalPayment.Match.MainCustomerId];
 
-                    int gracePeriodDaysDiff = (Clock.Now.Date - externalPayment.Match.EventDate.Date).Days;
+                    int gracePeriodDaysDiff = (pmt.BookKeepingDate - externalPayment.Match.EventDate.Date).Days;
                     if (gracePeriodDaysDiff > incomingPaymentDepositeGracePeriodInDays && externalPayment.Match.AccountTypeCode == nameof(SavingsAccountTypeCode.FixedInterestAccount))
                     {
                         notPlacedReasonsMessage = "Customer fixed rate account has passed grace period";

@@ -1924,13 +1924,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Content\js\components\" />
-    <Folder Include="Content\js\infrastructure\" />
-    <Folder Include="Content\js\ntech_shared\common\" />
-    <Folder Include="Content\js\ntech_shared\components\components\" />
-    <Folder Include="Content\js\ntech_shared\components\infrastructure\" />
-    <Folder Include="Content\js\ntech_shared\legacy\" />
     <Content Include="n\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1942,6 +1935,10 @@
     <ProjectReference Include="..\Core\NTech.Core.Module.Shared\NTech.Core.Module.Shared.csproj">
       <Project>{bdf0291f-c4c0-43eb-a346-0160f22f0822}</Project>
       <Name>NTech.Core.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\NTech.Core.Savings.Shared\NTech.Core.Savings.Shared.csproj">
+      <Project>{DCA79F2E-E757-49EE-AEF2-96289091622E}</Project>
+      <Name>NTech.Core.Savings.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\NTech.Banking.Shared\NTech.Banking.Shared.csproj">
       <Project>{8e8913c4-048d-4af1-9344-9494e917da35}</Project>
@@ -1955,6 +1952,15 @@
       <Project>{ec01086d-ab48-4f92-ab30-0563f6cb2b28}</Project>
       <Name>NTech.Services.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\js\components\" />
+    <Folder Include="Content\js\infrastructure\" />
+    <Folder Include="Content\js\ntech_shared\common\" />
+    <Folder Include="Content\js\ntech_shared\components\components\" />
+    <Folder Include="Content\js\ntech_shared\components\infrastructure\" />
+    <Folder Include="Content\js\ntech_shared\legacy\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

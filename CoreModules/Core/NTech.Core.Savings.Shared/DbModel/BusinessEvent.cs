@@ -14,6 +14,7 @@ namespace NTech.Core.Savings.Shared.DbModel
         YearlyInterestCapitalization,
         MonthlyInterestCapitalization,
         Withdrawal,
+        WithdrawalPenaltyFee,
         AccountClosure,
         PlacementOfUnplacedPayment,
         RepaymentOfUnplacedPayment,

@@ -57,15 +57,18 @@ app.controller('withdrawalsCtr', ['$scope', '$http', '$q', '$timeout', '$route',
         if (!a) {
             return
         }
-        $scope.step.current = $scope.step.current  + 1
+        $scope.step.current = $scope.step.current + 1
+        var amount = parseFloat(ntech.forms.replaceAll($scope.w.withdrawalAmount.toString().replace(/\s/g, ""), ",", "."));
         $scope.pendingWithdrawal = {
-            withdrawalAmount: parseFloat(ntech.forms.replaceAll($scope.w.withdrawalAmount.toString().replace(/\s/g, ""), ",", ".")),
+            withdrawalAmount: amount,
             savingsAccountNr: a.SavingsAccountNr,
             expectedToIban: a.ToIban,
+            penaltyFees: a.PenaltyFeesPercentage,
             expectedToIbanFormatted: a.ToIbanFormatted,
             customCustomerMessageText: $scope.w.customCustomerMessageText,
             customTransactionText: $scope.w.customTransactionText,
-            uniqueOperationToken: $scope.d.UniqueOperationToken
+            uniqueOperationToken: $scope.d.UniqueOperationToken,
+            matureAt: a.MaturesAt
         }
         $scope.w = null
     }
@@ -85,7 +88,7 @@ app.controller('withdrawalsCtr', ['$scope', '$http', '$q', '$timeout', '$route',
         }
         $scope.step.current = $scope.step.current + 1
         var r = angular.copy($scope.pendingWithdrawal)
-        mainService.isLoading = true        
+        mainService.isLoading = true    
         $http({
             method: 'POST',
             url: initialData.apiUrls.createWithdrawal,

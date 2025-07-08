@@ -250,6 +250,8 @@ public class ApiCustomerPagesController : NController
         public string ToIban { get; set; }
         public int MainCustomerId { get; set; }
         public decimal WithdrawableAmount { get; set; }
+        public DateTime? MaturesAt { get; set; }
+
     }
 
     private IQueryable<WithdrawalSavingsAccountModel> GetWithdrawalSavingsAccountModels(
@@ -263,6 +265,7 @@ public class ApiCustomerPagesController : NController
                 AccountTypeCode = x.AccountTypeCode.ToString(),
                 MainCustomerId = x.MainCustomerId,
                 Status = x.Status,
+                MaturesAt = x.MaturesAt,
                 ToIban = x
                     .DatedStrings
                     .Where(y => y.Name == nameof(DatedSavingsAccountStringCode.WithdrawalIban))
@@ -290,7 +293,8 @@ public class ApiCustomerPagesController : NController
                 x.SavingsAccountNr,
                 x.AccountTypeCode,
                 x.ToIban,
-                x.WithdrawableAmount
+                x.WithdrawableAmount,
+                x.MaturesAt
             })
             .ToList();
         return Json2(new
@@ -378,7 +382,8 @@ public class ApiCustomerPagesController : NController
         string customCustomerMessageText,
         string customTransactionText,
         string requestAuthenticationMethod,
-        string requestIpAddress)
+        string requestIpAddress,
+        decimal? penaltyFees)
     {
         if (string.IsNullOrWhiteSpace(savingsAccountNr))
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing savingsAccountNr");
@@ -394,20 +399,21 @@ public class ApiCustomerPagesController : NController
 
         var mgr = new WithdrawalBusinessEventManager(CurrentUserId, InformationMetadata);
         if (!mgr.TryCreateNew(new WithdrawalBusinessEventManager.WithdrawalRequest
-            {
-                SavingsAccountNr = savingsAccountNr,
-                WithdrawalAmount = withdrawalAmount,
-                CustomCustomerMessageText = customCustomerMessageText,
-                CustomTransactionText = customTransactionText,
-                ToIban = model
+        {
+            SavingsAccountNr = savingsAccountNr,
+            WithdrawalAmount = withdrawalAmount,
+            CustomCustomerMessageText = customCustomerMessageText,
+            CustomTransactionText = customTransactionText,
+            ToIban = model
                     .ToIban, //Never change this to expectedToIban since the user could potentially influence the expectedToIban
-                UniqueOperationToken = uniqueOperationToken,
-                RequestAuthenticationMethod = requestAuthenticationMethod,
-                RequestIpAddress = requestIpAddress,
-                RequestDate = Clock.Now,
-                RequestedByCustomerId = customerId.Value,
-                RequestedByHandlerUserId = null
-            }, false, false, out var failedMessage, out _))
+            UniqueOperationToken = uniqueOperationToken,
+            RequestAuthenticationMethod = requestAuthenticationMethod,
+            RequestIpAddress = requestIpAddress,
+            RequestDate = Clock.Now,
+            RequestedByCustomerId = customerId.Value,
+            RequestedByHandlerUserId = null,
+            PenaltyFees = penaltyFees
+        }, false, false, out var failedMessage, out _))
         {
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest, failedMessage);
         }
@@ -442,7 +448,10 @@ public class ApiCustomerPagesController : NController
             .Where(x => x.MainCustomerId == customerId.Value && x.SavingsAccountNr == savingsAccountNr)
             .Select(x => new
             {
-                x.Status, x.CreatedByBusinessEventId, x.CreatedTransactionDate, x.StatusBusinessEventId,
+                x.Status,
+                x.CreatedByBusinessEventId,
+                x.CreatedTransactionDate,
+                x.StatusBusinessEventId,
                 x.AccountTypeCode
             })
             .SingleOrDefault();

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using nCustomerPages.Code;
 using Newtonsoft.Json;
 using NTech.Banking.Shared.BankAccounts.Fi;
+using NTech.Core.Savings.Shared.DbModel.SavingsAccountFlexible;
 using Serilog;
 
 namespace nCustomerPages.Controllers.Savings;
@@ -185,6 +186,9 @@ public class SavingsOverviewController : SavingsBaseController
                 x.AccountTypeCode,
                 x.WithdrawableAmount,
                 x.ToIban,
+                x.MaturesAt,
+                PenaltyFeesPercentage = (string.IsNullOrEmpty(Convert.ToString(x.MaturesAt)) ? 0 : ((x.AccountTypeCode == nameof(SavingsAccountTypeCode.FixedInterestAccount) &&
+                                 Clock.Now.Date <= x.MaturesAt) ? Convert.ToDecimal(NEnv.PenaltyFees.Replace(".", ",")) : 0)),
                 ToIbanFormatted = x.ToIban != null
                     ? new
                     {
@@ -210,7 +214,8 @@ public class SavingsOverviewController : SavingsBaseController
         decimal? withdrawalAmount,
         string uniqueOperationToken,
         string customCustomerMessageText,
-        string customTransactionText)
+        string customTransactionText,
+        decimal? penaltyFees)
     {
         var requestAuthenticationMethod = this.User.Identity.AuthenticationType;
         var requestIpAddress = this.HttpContext?.GetOwinContext()?.Request?.RemoteIpAddress;
@@ -219,7 +224,7 @@ public class SavingsOverviewController : SavingsBaseController
         if (c.TryCreateWithdrawal(
                 savingsAccountNr, expectedToIban, withdrawalAmount,
                 uniqueOperationToken, customCustomerMessageText, customTransactionText,
-                requestAuthenticationMethod, requestIpAddress, out var failedMessage, out var result))
+                requestAuthenticationMethod, requestIpAddress, penaltyFees, out var failedMessage, out var result))
         {
             return Json2(result);
         }

@@ -94,7 +94,7 @@ public class AccountMaturityBusinessEventManager(
             CommentText = "Converted from fixed interest account",
             SavingsAccount = account,
             SavingsAccountNr = accountNr,
-            EventType = "BusinessEvent_" + evt.EventType
+            EventType = $"BusinessEvent_{evt.EventType}"
         });
 
         await context.SaveChangesAsync(ct);

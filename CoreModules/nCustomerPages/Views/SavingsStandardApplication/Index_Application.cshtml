@@ -25,7 +25,9 @@
                                  ng-class="{'selected': accountType === 'flex'}"
                                  ng-click="selectAccountType('flex')">
                                 <span translate="ssa_kontotyp_flex">Flexibel ränta</span>
-                                <span style="grid-column: 3">{{ flexInterestRate }}%</span>
+                                <span style="grid-column: 3"><span
+                                        translate="ssa_flex_rate_pre"></span>{{ flexInterestRate }}<span
+                                        translate="ssa_flex_rate_post">% ränta</span></span>
                                 <span class="account-type-description"
                                       translate="ssa_kontotyp_flex_description">
                                     Flexibelt sparkonto med rörlig ränta.
@@ -35,8 +37,9 @@
                                  ng-class="{'selected': accountType === 'fixed'}"
                                  ng-click="selectAccountType('fixed')">
                                 <span translate="ssa_kontotyp_fast">Fast ränta</span>
-                                <span style="grid-column: 3">Från {{ fixedRateProducts[0].interestRatePercent
-                                    }}%</span>
+                                <span style="grid-column: 3"><span
+                                        translate="ssa_rate_to_pre">Upp till</span> {{ fixedRateProducts.at(-1).interestRatePercent
+                                    }}<span translate="ssa_rate_to_post">% ränta</span></span>
                                 <span class="account-type-description"
                                       translate="ssa_kontotyp_fixed_description">
                                     Sparkonto med fast ränta över en förbestämd bindningstid.
@@ -50,7 +53,7 @@
                                  ng-click="selectProduct(product.id)"
                                  ng-class="{'selected': selectedProduct === product.id}">
                                 <span class="fp-rate">{{ product.interestRatePercent }}%</span>
-                                <span class="fp-length">{{ product.termInMonths }} månader</span>
+                                <span class="fp-length">{{ product.termInMonths }} <span translate="ssa_term_months">månader</span></span>
                             </div>
                         </div>
                     </div>

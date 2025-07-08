@@ -347,8 +347,6 @@
         </Content>
         <Content Include="Service References\Application Insights\ConnectedService.json"/>
         <Content Include="nuser.connectionstrings.config"/>
-        <Content Include="nuser.appsettings.debug.config"/>
-        <Content Include="nuser.connectionstrings.debug.config"/>
         <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
             <SubType>Designer</SubType>
         </None>

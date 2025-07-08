@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using nCustomerPages.Code.Clients.Savings.Contract;
+using Serilog;
 
 namespace nCustomerPages.Code;
 
@@ -121,5 +122,22 @@ public class SystemUserSavingsClient : AbstractSystemUserServiceClient
         return Begin()
             .Get("Api/FixedRateProduct/GetActiveProducts")
             .ParseJsonAs<List<FixedRateProduct>>();
+    }
+
+    public bool TryGetFixedInterestRate(string productId, out FixedRateProduct interestRatePercent)
+    {
+        try
+        {
+            interestRatePercent = Begin()
+                .Get($"Api/FixedRateProduct/{productId}")
+                .ParseJsonAs<FixedRateProduct>();
+            return true;
+        }
+        catch (Exception e)
+        {
+            NLog.Warning(e, "Could not fetch fixed interest rate with id {ProductId}", productId);
+            interestRatePercent = null;
+            return false;
+        }
     }
 }

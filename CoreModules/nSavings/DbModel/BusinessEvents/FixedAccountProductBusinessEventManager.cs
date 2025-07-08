@@ -145,8 +145,8 @@ public class FixedAccountProductBusinessEventManager(
     {
         var product = ctx.FixedAccountProducts.Find(productId.ToString());
 
-        if (product == null) return false;
-        return product.ValidFrom < date && (product.ValidTo == null || product.ValidTo > date);
+        return product is { Response: true } &&
+               product.ValidFrom <= date && (product.ValidTo == null || product.ValidTo > date);
     }
 
     private void ApplyUpdates(FixedAccountProduct currentProduct, ProductViewModel newProduct,

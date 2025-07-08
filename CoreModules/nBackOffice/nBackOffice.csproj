@@ -234,11 +234,9 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="nbackoffice.appsettings.debug.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\PublishProfiles\Dev.pubxml" />
     <EmbeddedResource Include="Resources\TopLevelFunctionList.xml" />
     <Content Include="Skinning\img\menu-header-logo.png" />
     <Content Include="s\**\*.*" />

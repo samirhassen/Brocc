@@ -6,6 +6,8 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\BaCS.publish\nSavings</_PublishTargetUrl>
+    <History>True|2025-06-26T11:44:20.0418763Z||;</History>
+    <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/Antlr3.Runtime.dll">
@@ -15,10 +17,172 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>06/19/2025 16:10:47</publishTime>
+      <publishTime>06/30/2025 09:56:55</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>06/19/2025 16:10:47</publishTime>
+      <publishTime>06/30/2025 09:56:54</publishTime>
+    </File>
+    <File Include="bin/App_Web_bookkeepingfiles.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:49</publishTime>
+    </File>
+    <File Include="bin/App_Web_changeexternalaccountmanagement.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:42</publishTime>
+    </File>
+    <File Include="bin/App_Web_cm1amlexport.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:50</publishTime>
+    </File>
+    <File Include="bin/App_Web_components.cshtml.639c3968.dll">
+      <publishTime>06/27/2025 10:16:59</publishTime>
+    </File>
+    <File Include="bin/App_Web_component_customerinfo.cshtml.639c3968.dll">
+      <publishTime>06/27/2025 10:17:00</publishTime>
+    </File>
+    <File Include="bin/App_Web_component_modaldialog.cshtml.bec553b6.dll">
+      <publishTime>06/27/2025 10:16:58</publishTime>
+    </File>
+    <File Include="bin/App_Web_component_savingsaccountdocuments.cshtml.bec553b6.dll">
+      <publishTime>06/27/2025 10:16:59</publishTime>
+    </File>
+    <File Include="bin/App_Web_customsaccountsexport.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:51</publishTime>
+    </File>
+    <File Include="bin/App_Web_dailykycscreen.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:53</publishTime>
+    </File>
+    <File Include="bin/App_Web_docs.cshtml.707f9c90.dll">
+      <publishTime>06/27/2025 10:16:27</publishTime>
+    </File>
+    <File Include="bin/App_Web_error.cshtml.c0b6c42e.dll">
+      <publishTime>06/27/2025 10:16:28</publishTime>
+    </File>
+    <File Include="bin/App_Web_fatcaexport.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:54</publishTime>
+    </File>
+    <File Include="bin/App_Web_hideshowexecutebutton.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:55</publishTime>
+    </File>
+    <File Include="bin/App_Web_importfile.cshtml.b6ae3819.dll">
+      <publishTime>06/27/2025 10:16:32</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.2069671d.dll">
+      <publishTime>06/27/2025 10:17:04</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.209fb533.dll">
+      <publishTime>06/27/2025 10:16:37</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:42</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.27942e58.dll">
+      <publishTime>06/27/2025 10:16:29</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.2f9f1766.dll">
+      <publishTime>06/27/2025 10:16:41</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.34631e4.dll">
+      <publishTime>06/27/2025 10:16:39</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.4a96327e.dll">
+      <publishTime>06/27/2025 10:16:38</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.72516138.dll">
+      <publishTime>06/27/2025 10:16:26</publishTime>
+    </File>
+    <File Include="bin/App_Web_index.cshtml.799cf353.dll">
+      <publishTime>06/27/2025 10:16:33</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_accountclosure.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:43</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_calculate.cshtml.799cf353.dll">
+      <publishTime>06/27/2025 10:16:34</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_customer.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:44</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_details.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:44</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_details_accountdetails.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:45</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_pending.cshtml.799cf353.dll">
+      <publishTime>06/27/2025 10:16:34</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_preview.cshtml.799cf353.dll">
+      <publishTime>06/27/2025 10:16:35</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_search.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:45</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_upcomingchanges.cshtml.799cf353.dll">
+      <publishTime>06/27/2025 10:16:36</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_withdrawalaccount.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:46</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_withdrawalaccountchange.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:47</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_withdrawalaccount_history.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:47</publishTime>
+    </File>
+    <File Include="bin/App_Web_index_withdrawals.cshtml.25f09717.dll">
+      <publishTime>06/27/2025 10:16:48</publishTime>
+    </File>
+    <File Include="bin/App_Web_list.cshtml.365baa7d.dll">
+      <publishTime>06/27/2025 10:17:03</publishTime>
+    </File>
+    <File Include="bin/App_Web_loggedout.cshtml.c0b6c42e.dll">
+      <publishTime>06/27/2025 10:16:28</publishTime>
+    </File>
+    <File Include="bin/App_Web_place.cshtml.2069671d.dll">
+      <publishTime>06/27/2025 10:17:04</publishTime>
+    </File>
+    <File Include="bin/App_Web_place_place.cshtml.2069671d.dll">
+      <publishTime>06/27/2025 10:17:06</publishTime>
+    </File>
+    <File Include="bin/App_Web_place_repay.cshtml.2069671d.dll">
+      <publishTime>06/27/2025 10:17:07</publishTime>
+    </File>
+    <File Include="bin/App_Web_savingsaccountcomments.cshtml.639c3968.dll">
+      <publishTime>06/27/2025 10:17:00</publishTime>
+    </File>
+    <File Include="bin/App_Web_trapetsamlexport.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:55</publishTime>
+    </File>
+    <File Include="bin/App_Web_treasuryamlexport.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:56</publishTime>
+    </File>
+    <File Include="bin/App_Web_usermessage.cshtml.639c3968.dll">
+      <publishTime>06/27/2025 10:17:01</publishTime>
+    </File>
+    <File Include="bin/App_Web__createproduct.cshtml.27942e58.dll">
+      <publishTime>06/27/2025 10:16:30</publishTime>
+    </File>
+    <File Include="bin/App_Web__layout.cshtml.639c3968.dll">
+      <publishTime>06/27/2025 10:17:02</publishTime>
+    </File>
+    <File Include="bin/App_Web__productitems.cshtml.27942e58.dll">
+      <publishTime>06/27/2025 10:16:30</publishTime>
+    </File>
+    <File Include="bin/App_Web__productlist.cshtml.27942e58.dll">
+      <publishTime>06/27/2025 10:16:31</publishTime>
+    </File>
+    <File Include="bin/App_Web__scheduledtasklayout.cshtml.5814bfce.dll">
+      <publishTime>06/27/2025 10:16:58</publishTime>
+    </File>
+    <File Include="bin/App_Web__viewstart.cshtml.65a2d1ee.dll">
+      <publishTime>06/27/2025 10:17:07</publishTime>
+    </File>
+    <File Include="bin/bookkeepingfiles.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:50</publishTime>
+    </File>
+    <File Include="bin/changeexternalaccountmanagement.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:42</publishTime>
+    </File>
+    <File Include="bin/cm1amlexport.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:51</publishTime>
     </File>
     <File Include="bin/CommonMark.dll">
       <publishTime>03/13/2025 14:36:19</publishTime>
@@ -26,41 +190,74 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/CommonMark.pdb">
       <publishTime>03/13/2025 14:36:19</publishTime>
     </File>
+    <File Include="bin/components.cshtml.639c3968.compiled">
+      <publishTime>06/27/2025 10:17:00</publishTime>
+    </File>
+    <File Include="bin/component_customerinfo.cshtml.639c3968.compiled">
+      <publishTime>06/27/2025 10:17:00</publishTime>
+    </File>
+    <File Include="bin/component_modaldialog.cshtml.bec553b6.compiled">
+      <publishTime>06/27/2025 10:16:59</publishTime>
+    </File>
+    <File Include="bin/component_savingsaccountdocuments.cshtml.bec553b6.compiled">
+      <publishTime>06/27/2025 10:16:59</publishTime>
+    </File>
     <File Include="bin/Content/dist/bundle.min.css">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min.js">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min2.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min2.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min3.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min3.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min4.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="bin/Content/dist/bundle.min4.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
+    </File>
+    <File Include="bin/customsaccountsexport.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:52</publishTime>
+    </File>
+    <File Include="bin/dailykycscreen.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:53</publishTime>
+    </File>
+    <File Include="bin/Dapper.dll">
+      <publishTime>03/13/2025 14:36:19</publishTime>
+    </File>
+    <File Include="bin/docs.cshtml.707f9c90.compiled">
+      <publishTime>06/27/2025 10:16:27</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>06/16/2024 22:46:24</publishTime>
     </File>
     <File Include="bin/EntityFramework.SqlServer.dll">
       <publishTime>06/16/2024 22:47:02</publishTime>
+    </File>
+    <File Include="bin/error.cshtml.c0b6c42e.compiled">
+      <publishTime>06/27/2025 10:16:28</publishTime>
+    </File>
+    <File Include="bin/fatcaexport.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:54</publishTime>
+    </File>
+    <File Include="bin/hideshowexecutebutton.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:55</publishTime>
     </File>
     <File Include="bin/ICSharpCode.SharpZipLib.dll">
       <publishTime>01/29/2023 15:59:00</publishTime>
@@ -82,6 +279,81 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="bin/IdentityServer3.AccessTokenValidation.pdb">
       <publishTime>03/13/2025 14:36:19</publishTime>
+    </File>
+    <File Include="bin/importfile.cshtml.b6ae3819.compiled">
+      <publishTime>06/27/2025 10:16:32</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.2069671d.compiled">
+      <publishTime>06/27/2025 10:17:04</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.209fb533.compiled">
+      <publishTime>06/27/2025 10:16:38</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:43</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.27942e58.compiled">
+      <publishTime>06/27/2025 10:16:29</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.2f9f1766.compiled">
+      <publishTime>06/27/2025 10:16:41</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.34631e4.compiled">
+      <publishTime>06/27/2025 10:16:40</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.4a96327e.compiled">
+      <publishTime>06/27/2025 10:16:39</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.72516138.compiled">
+      <publishTime>06/27/2025 10:16:27</publishTime>
+    </File>
+    <File Include="bin/index.cshtml.799cf353.compiled">
+      <publishTime>06/27/2025 10:16:33</publishTime>
+    </File>
+    <File Include="bin/index_accountclosure.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:43</publishTime>
+    </File>
+    <File Include="bin/index_calculate.cshtml.799cf353.compiled">
+      <publishTime>06/27/2025 10:16:34</publishTime>
+    </File>
+    <File Include="bin/index_customer.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:44</publishTime>
+    </File>
+    <File Include="bin/index_details.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:45</publishTime>
+    </File>
+    <File Include="bin/index_details_accountdetails.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:45</publishTime>
+    </File>
+    <File Include="bin/index_pending.cshtml.799cf353.compiled">
+      <publishTime>06/27/2025 10:16:35</publishTime>
+    </File>
+    <File Include="bin/index_preview.cshtml.799cf353.compiled">
+      <publishTime>06/27/2025 10:16:36</publishTime>
+    </File>
+    <File Include="bin/index_search.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:46</publishTime>
+    </File>
+    <File Include="bin/index_upcomingchanges.cshtml.799cf353.compiled">
+      <publishTime>06/27/2025 10:16:37</publishTime>
+    </File>
+    <File Include="bin/index_withdrawalaccount.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:46</publishTime>
+    </File>
+    <File Include="bin/index_withdrawalaccountchange.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:47</publishTime>
+    </File>
+    <File Include="bin/index_withdrawalaccount_history.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:48</publishTime>
+    </File>
+    <File Include="bin/index_withdrawals.cshtml.25f09717.compiled">
+      <publishTime>06/27/2025 10:16:48</publishTime>
+    </File>
+    <File Include="bin/list.cshtml.365baa7d.compiled">
+      <publishTime>06/27/2025 10:17:03</publishTime>
+    </File>
+    <File Include="bin/loggedout.cshtml.c0b6c42e.compiled">
+      <publishTime>06/27/2025 10:16:28</publishTime>
     </File>
     <File Include="bin/Microsoft.Bcl.AsyncInterfaces.dll">
       <publishTime>03/13/2025 23:07:22</publishTime>
@@ -156,10 +428,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/25/2021 23:43:20</publishTime>
     </File>
     <File Include="bin/nSavings.dll">
-      <publishTime>06/19/2025 15:53:46</publishTime>
+      <publishTime>06/30/2025 09:56:37</publishTime>
     </File>
     <File Include="bin/nSavings.pdb">
-      <publishTime>06/19/2025 15:53:46</publishTime>
+      <publishTime>06/30/2025 09:56:37</publishTime>
     </File>
     <File Include="bin/NTech.Banking.Shared.dll">
       <publishTime>06/10/2025 18:19:32</publishTime>
@@ -174,25 +446,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/19/2025 15:53:39</publishTime>
     </File>
     <File Include="bin/NTech.Core.Savings.Shared.dll">
-      <publishTime>06/19/2025 15:53:40</publishTime>
+      <publishTime>06/30/2025 09:56:30</publishTime>
     </File>
     <File Include="bin/NTech.Core.Savings.Shared.pdb">
-      <publishTime>06/19/2025 15:53:40</publishTime>
+      <publishTime>06/30/2025 09:56:30</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.dll">
-      <publishTime>06/19/2025 15:53:40</publishTime>
+      <publishTime>06/26/2025 14:39:10</publishTime>
     </File>
     <File Include="bin/NTech.Legacy.Module.Shared.pdb">
-      <publishTime>06/19/2025 15:53:40</publishTime>
+      <publishTime>06/26/2025 14:39:10</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll">
-      <publishTime>06/19/2025 15:53:38</publishTime>
+      <publishTime>06/26/2025 14:39:07</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.dll.config">
       <publishTime>06/18/2025 12:10:08</publishTime>
     </File>
     <File Include="bin/NTech.Services.Infrastructure.pdb">
-      <publishTime>06/19/2025 15:53:38</publishTime>
+      <publishTime>06/26/2025 14:39:07</publishTime>
     </File>
     <File Include="bin/Nustache.Core.dll">
       <publishTime>04/21/2019 13:58:48</publishTime>
@@ -208,6 +480,15 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="bin/Owin.dll">
       <publishTime>03/13/2025 14:36:20</publishTime>
+    </File>
+    <File Include="bin/place.cshtml.2069671d.compiled">
+      <publishTime>06/27/2025 10:17:06</publishTime>
+    </File>
+    <File Include="bin/place_place.cshtml.2069671d.compiled">
+      <publishTime>06/27/2025 10:17:06</publishTime>
+    </File>
+    <File Include="bin/place_repay.cshtml.2069671d.compiled">
+      <publishTime>06/27/2025 10:17:07</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>02/15/2022 06:38:32</publishTime>
@@ -302,6 +583,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/roslyn/VBCSCompiler.exe.config">
       <publishTime>02/15/2022 06:38:42</publishTime>
     </File>
+    <File Include="bin/savingsaccountcomments.cshtml.639c3968.compiled">
+      <publishTime>06/27/2025 10:17:01</publishTime>
+    </File>
     <File Include="bin/Serilog.dll">
       <publishTime>03/13/2025 14:36:20</publishTime>
     </File>
@@ -380,8 +664,35 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/System.Web.WebPages.Razor.dll">
       <publishTime>10/20/2023 22:33:58</publishTime>
     </File>
+    <File Include="bin/trapetsamlexport.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:56</publishTime>
+    </File>
+    <File Include="bin/treasuryamlexport.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:57</publishTime>
+    </File>
+    <File Include="bin/usermessage.cshtml.639c3968.compiled">
+      <publishTime>06/27/2025 10:17:02</publishTime>
+    </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>03/13/2025 14:36:22</publishTime>
+    </File>
+    <File Include="bin/_createproduct.cshtml.27942e58.compiled">
+      <publishTime>06/27/2025 10:16:30</publishTime>
+    </File>
+    <File Include="bin/_layout.cshtml.639c3968.compiled">
+      <publishTime>06/27/2025 10:17:03</publishTime>
+    </File>
+    <File Include="bin/_productitems.cshtml.27942e58.compiled">
+      <publishTime>06/27/2025 10:16:31</publishTime>
+    </File>
+    <File Include="bin/_productlist.cshtml.27942e58.compiled">
+      <publishTime>06/27/2025 10:16:31</publishTime>
+    </File>
+    <File Include="bin/_scheduledtasklayout.cshtml.5814bfce.compiled">
+      <publishTime>06/27/2025 10:16:58</publishTime>
+    </File>
+    <File Include="bin/_viewstart.cshtml.65a2d1ee.compiled">
+      <publishTime>06/27/2025 10:17:08</publishTime>
     </File>
     <File Include="Content/css/bootstrap.min.css">
       <publishTime>03/13/2025 14:36:15</publishTime>
@@ -396,34 +707,34 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/13/2025 14:36:15</publishTime>
     </File>
     <File Include="Content/dist/bundle.min.css">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min.js">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min2.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min2.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min3.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min3.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min4.ttf">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/dist/bundle.min4.woff2">
-      <publishTime>06/19/2025 16:10:34</publishTime>
+      <publishTime>06/30/2025 09:56:33</publishTime>
     </File>
     <File Include="Content/fonts/glyphicons-halflings-regular.eot">
       <publishTime>03/13/2025 14:36:15</publishTime>
@@ -447,163 +758,163 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/13/2025 14:36:06</publishTime>
     </File>
     <File Include="Content/js/components-old/customerinfo.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/components/modalDialog-component.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/components/savingsAccountDocuments-component.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/componentsbase.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/AccountCreationRemarks/accountcreationremarks-index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/ApiHost/apiHost.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/BookkeepingFiles/index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/DailyKycScreen/index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/FatcaExport/index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/IncomingPayments/importfile.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/InterestRateChange/interestratechange-index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/ManualPayment/index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/OutgoingPayments/index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/Reports/index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/Riksgalden/index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/changeexternalaacountmanagement.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-accountclosure.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-customer.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-details.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-index.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-search.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-withdrawalaccount.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-withdrawalaccountchange.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/SavingsAccount/savingsaccount-withdrawals.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/ScheduledTasks/cm1amlexport.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/ScheduledTasks/customsAccountsExport.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/ScheduledTasks/treasuryamlexport.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/Shared/savingsAccountComments.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/TrapetsAmlExport/trapetsamlexport.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/UnplacedPayments/unplacedpayment-main.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/UnplacedPayments/unplacedpayment-place.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/controllers/UnplacedPayments/unplacedpayment-repay.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/infrastructure/ntech.controllerbase.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/legacy-globals.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech-forms.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/angular-fileupload.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.booleans.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.dates.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.linq.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/common/ntech.navigationtarget.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechInput-component.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechTablePager-component.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechTestFunctions-component.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/components/ntechWsDocs-component.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.componentservice.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.controllerbase.template.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.eventhost.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httpinterceptor.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.httptrafficcopservice.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.localstorageservice.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/components/infrastructure/ntech.loggingservice.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/ntech_shared/legacy/ntech.js.shared.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/js/savings-api-client.js">
-      <publishTime>06/19/2025 16:10:30</publishTime>
+      <publishTime>06/30/2025 09:56:36</publishTime>
     </File>
     <File Include="Content/jsexternal/angular-cookies.min.js">
       <publishTime>03/13/2025 14:36:15</publishTime>
@@ -720,16 +1031,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/10/2025 18:02:53</publishTime>
     </File>
     <File Include="nsavings.appsettings.config">
-      <publishTime>06/19/2025 15:15:07</publishTime>
+      <publishTime>06/27/2025 16:55:06</publishTime>
+    </File>
+    <File Include="nsavings.appsettings.debug.config">
+      <publishTime>06/19/2025 15:10:55</publishTime>
+    </File>
+    <File Include="nSavings.connectionstrings.config">
+      <publishTime>06/13/2025 00:18:49</publishTime>
+    </File>
+    <File Include="nsavings.connectionstrings.debug.config">
+      <publishTime>06/23/2025 09:46:29</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>06/19/2025 15:12:56</publishTime>
+      <publishTime>06/26/2025 12:14:16</publishTime>
     </File>
     <File Include="packages.lock.json">
-      <publishTime>06/19/2025 15:12:56</publishTime>
+      <publishTime>06/26/2025 12:14:16</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>06/19/2025 16:10:36</publishTime>
+      <publishTime>06/30/2025 09:56:40</publishTime>
     </File>
     <File Include="Views/AccountCreationRemarks/Index.cshtml">
       <publishTime>06/10/2025 16:07:35</publishTime>
@@ -759,7 +1079,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/10/2025 16:07:35</publishTime>
     </File>
     <File Include="Views/InterestRateChange/Index.cshtml">
-      <publishTime>06/10/2025 18:02:53</publishTime>
+      <publishTime>06/26/2025 14:35:36</publishTime>
     </File>
     <File Include="Views/InterestRateChange/Index_Calculate.cshtml">
       <publishTime>03/13/2025 14:36:15</publishTime>
@@ -888,7 +1208,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/13/2025 14:36:15</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>06/19/2025 15:12:56</publishTime>
+      <publishTime>06/26/2025 12:14:17</publishTime>
     </File>
   </ItemGroup>
 </Project>
